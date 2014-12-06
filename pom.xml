@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.jmxtrans.jmxtrans2</groupId>
+    <artifactId>jmxtrans2</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>jmxtrans2-embeded</module>
+        <module>jmxtrans2-agent</module>
+        <module>jmxtrans2-standalone</module>
+    </modules>
+
+    <developers>
+        <developer>
+            <id>1</id>
+            <name>Jon Stevens</name>
+            <email>latchkey@gmail.com</email>
+        </developer>
+        <developer>
+            <id>2</id>
+            <name>Henri Gomez</name>
+            <email>henri.gomez@gmail.com</email>
+        </developer>
+        <developer>
+            <id>3</id>
+            <name>Cyrille Le Clerc</name>
+            <email>cleclerc@cloudbees.com</email>
+        </developer>
+        <developer>
+            <id>gehel</id>
+            <name>Guillaume Lederrey</name>
+            <email>guillaume.lederrey@gmail.com</email>
+            <url>http://slashdevslashrandom.wordpress.com/</url>
+            <organization>Nestlé Nespresso SA</organization>
+            <organizationUrl>http://www.nespresso.com</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+    <url>http://www.jmxtrans.org</url>
+
+    <scm>
+        <connection>scm:git:git@github.com:jmxtrans/jmxtrans2.git</connection>
+        <developerConnection>scm:git:git@github.com:jmxtrans/jmxtrans2.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/jmxtrans/jmxtrans2</url>
+    </scm>
+
+    <properties>
+        <!--
+            Maximum number of checkstyle violations allowed. Build will fail
+            if there are more than this number of violations. Feel free to
+            increase this number if you have a reason. The goal is not to be
+            dogmatic, but to provide consistency in the code.
+        -->
+        <checkstyle.max.allowed.violations>0</checkstyle.max.allowed.violations>
+        <github.global.server>github</github.global.server>
+        <!-- some versions used by multiple dependencies -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+</project>

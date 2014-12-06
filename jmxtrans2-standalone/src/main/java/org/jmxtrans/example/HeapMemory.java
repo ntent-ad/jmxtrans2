@@ -1,0 +1,41 @@
+package org.jmxtrans.example;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
+import java.io.File;
+
+import org.jmxtrans.JmxTransformer;
+import org.jmxtrans.cli.JmxTransConfiguration;
+import org.jmxtrans.guice.JmxTransModule;
+import org.jmxtrans.model.JmxProcess;
+import org.jmxtrans.util.JsonPrinter;
+import org.jmxtrans.util.JsonUtils;
+
+/**
+ * Shows how to process a file.
+ * 
+ * @author jon
+ */
+public class HeapMemory {
+
+	/**
+     *
+     */
+	public static void main(String[] args) throws Exception {
+
+		JmxProcess process = JsonUtils.getJmxProcess(new File("heapmemory.json"));
+		new JsonPrinter(System.out).print(process);
+
+		Injector injector = Guice.createInjector(new JmxTransModule(new JmxTransConfiguration()));
+		JmxTransformer transformer = injector.getInstance(JmxTransformer.class);
+		transformer.executeStandalone(process);
+
+		// for (int i = 0; i < 160; i++) {
+		// JmxUtils.execute(jmx);
+		// Thread.sleep(1000);
+		// }
+
+		System.out.println("done!");
+	}
+}
