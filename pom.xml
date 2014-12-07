@@ -46,10 +46,9 @@
     </developers>
 
     <modules>
-        <module>jmxtrans2-embeded</module>
         <module>jmxtrans2-agent</module>
+        <module>jmxtrans2-embeded</module>
         <module>jmxtrans2-standalone</module>
-        <module>build-tools</module>
     </modules>
 
     <scm>
