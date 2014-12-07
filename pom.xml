@@ -379,18 +379,10 @@
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>2.13</version>
                     <configuration>
-                        <configLocation>checkstyle/checkstyle.xml</configLocation>
-                        <headerLocation>checkstyle/LICENSE.txt</headerLocation>
+                        <configLocation>${project.basedir}/src/etc/checkstyle.xml</configLocation>
                         <consoleOutput>true</consoleOutput>
                         <maxAllowedViolations>${verify.checkstyle.max.violations}</maxAllowedViolations>
                     </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.jmxtrans.jmxtrans2</groupId>
-                            <artifactId>build-tools</artifactId>
-                            <version>${project.version}</version>
-                        </dependency>
-                    </dependencies>
                     <executions>
                         <execution>
                             <id>checkstyle-check</id>
@@ -609,8 +601,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>2.13</version>
                 <configuration>
-                    <configLocation>checkstyle/checkstyle.xml</configLocation>
-                    <headerLocation>checkstyle/LICENSE.txt</headerLocation>
+                    <configLocation>${project.basedir}/src/etc/checkstyle.xml</configLocation>
                 </configuration>
             </plugin>
             <plugin>
