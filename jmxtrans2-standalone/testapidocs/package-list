@@ -1,0 +1,10 @@
+org.jmxtrans
+org.jmxtrans.classloader
+org.jmxtrans.cli
+org.jmxtrans.connections
+org.jmxtrans.jmx
+org.jmxtrans.model
+org.jmxtrans.model.naming
+org.jmxtrans.model.output
+org.jmxtrans.model.results
+org.jmxtrans.util
