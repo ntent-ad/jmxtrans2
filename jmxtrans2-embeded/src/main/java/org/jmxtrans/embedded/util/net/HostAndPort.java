@@ -24,7 +24,6 @@
 package org.jmxtrans.embedded.util.net;
 
 import org.jmxtrans.embedded.util.Preconditions;
-import org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
 
 import javax.annotation.Nonnull;
 

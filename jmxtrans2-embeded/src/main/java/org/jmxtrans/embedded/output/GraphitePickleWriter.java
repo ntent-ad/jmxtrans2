@@ -29,7 +29,6 @@ import org.jmxtrans.embedded.QueryResult;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
 import org.jmxtrans.embedded.util.net.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketOutputStream;
-import org.jmxtrans.embedded.util.net.SocketWriter;
 import org.jmxtrans.embedded.util.pool.ManagedGenericKeyedObjectPool;
 import org.jmxtrans.embedded.util.pool.SocketOutputStreamPoolFactory;
 import org.python.core.*;
