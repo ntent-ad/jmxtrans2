@@ -1,0 +1,9 @@
+@startuml
+
+  [Core JMX engine] as core
+
+  [JMXTrans agent] --> core
+  [JMXTrans embeded] --> core
+  [JMXTrans standalone] --> core
+
+@enduml
