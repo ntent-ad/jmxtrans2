@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>JMXTrans2 embeded &#x2013; Tag List report</title>
+    <title>JMXTrans2 standalone &#x2013; Tag List report</title>
     <style type="text/css" media="all">
       @import url("./css/maven-base.css");
       @import url("./css/maven-theme.css");
@@ -17,7 +17,7 @@
   <body class="composite">
     <div id="banner">
                     <div id="bannerLeft">
-                JMXTrans2 embeded
+                JMXTrans2 standalone
                 </div>
                     <div class="clear">
         <hr/>
@@ -30,7 +30,7 @@
         <span id="publishDate">Last Published: 2014-12-07</span>
                   &nbsp;| <span id="projectVersion">Version: 1.0-SNAPSHOT</span>
                       </div>
-            <div class="xright">                    <a href="./" title="JMXTrans2 embeded">JMXTrans2 embeded</a>
+            <div class="xright">                    <a href="./" title="JMXTrans2 standalone">JMXTrans2 standalone</a>
               
                     
       </div>
@@ -119,10 +119,95 @@
 <th>Total number of occurrences</th>
 <th>Tag strings used by tag class</th></tr>
 <tr class="b">
-<td>Todo Work</td>
-<td>0</td>
+<td><a href="#tag_class_3">Todo Work</a></td>
+<td>18</td>
 <td>todo, @todo, fixme, @fixme</td></tr></table>
-<p>Each tag is detailed below:</p></div>
+<p>Each tag is detailed below:</p>
+<div class="section">
+<h3><a name="Todo_Work"></a><a name="tag_class_3">Todo Work</a></h3>
+<p><b>Number of occurrences found in the code: 18</b></p>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>org.jmxtrans.JmxTransformer</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>Make something here, maybe watch for files?</td>
+<td><a href="./xref/org/jmxtrans/JmxTransformer.html#116">116</a></td></tr>
+<tr class="a">
+<td>Quartz issue, need to sleep</td>
+<td><a href="./xref/org/jmxtrans/JmxTransformer.html#198">198</a></td></tr>
+<tr class="b">
+<td>should use a FileVisitor (Once we update to Java 7)</td>
+<td><a href="./xref/org/jmxtrans/JmxTransformer.html#424">424</a></td></tr>
+<tr class="a">
+<th>org.jmxtrans.ManagedJmxTransformerProcess</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>Only start/stop working, the setters don't fire update on JmxProcess</td>
+<td><a href="./xref/org/jmxtrans/ManagedJmxTransformerProcess.html#14">14</a></td></tr>
+<tr class="a">
+<th>org.jmxtrans.connections.JMXConnectionParams</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>This class has been extracted as a simple holder to break the dependency between the JMXConnectionFactory and the Server. There is probably a cleaner way to do this, but this will come later.</td>
+<td><a href="./xref/org/jmxtrans/connections/JMXConnectionParams.html#16">16</a></td></tr>
+<tr class="a">
+<th>org.jmxtrans.model.Server</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>shouldn't we just return a null in this case ?</td>
+<td><a href="./xref/org/jmxtrans/model/Server.html#155">155</a></td></tr>
+<tr class="a">
+<td>the params for this method should be Set&lt;Server&gt; as there are multiple assumptions that they are unique</td>
+<td><a href="./xref/org/jmxtrans/model/Server.html#437">437</a></td></tr>
+<tr class="b">
+<th>org.jmxtrans.model.output.GangliaWriter</th>
+<th>Line</th></tr>
+<tr class="a">
+<td>This is far from covering all cases.</td>
+<td><a href="./xref/org/jmxtrans/model/output/GangliaWriter.html#229">229</a></td></tr>
+<tr class="b">
+<td>Wasteful use of high capacity types (eg Short =&gt; INT32)</td>
+<td><a href="./xref/org/jmxtrans/model/output/GangliaWriter.html#230">230</a></td></tr>
+<tr class="a">
+<th>org.jmxtrans.model.output.Settings</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>settings parsing is very tolerant. It will try its best to return default values, silently ignoring parsing errors. Except in the case of primitive int settings, where is raises an IllegalArgumentException. We should resolve this incoherence, probably by always raising an exception when the setting cannot be parsed.</td>
+<td><a href="./xref/org/jmxtrans/model/output/Settings.html#5">5</a></td></tr>
+<tr class="a">
+<td>resolution of settings (via PropertyResolver.resolveMap()) is not consistent. Settings added by other means than setSettings() are never resolved.</td>
+<td><a href="./xref/org/jmxtrans/model/output/Settings.html#10">10</a></td></tr>
+<tr class="b">
+<th>org.jmxtrans.model.output.SettingsTests</th>
+<th>Line</th></tr>
+<tr class="a">
+<td>behaviour is incoherent with the way getIntegerSettings() works</td>
+<td><a href="./xref-test/org/jmxtrans/model/output/SettingsTests.html#143">143</a></td></tr>
+<tr class="b">
+<td>behaviour is incoherent with the way getIntegerSettings() works</td>
+<td><a href="./xref-test/org/jmxtrans/model/output/SettingsTests.html#160">160</a></td></tr>
+<tr class="a">
+<th>org.jmxtrans.model.output.VelocityWriter</th>
+<th>Line</th></tr>
+<tr class="b">
+<td>Auto-generated method stub</td>
+<td><a href="./xref/org/jmxtrans/model/output/VelocityWriter.html#36">36</a></td></tr>
+<tr class="a">
+<td>--No comment--</td>
+<td><a href="./xref/org/jmxtrans/model/output/VelocityWriter.html#40">40</a></td></tr>
+<tr class="b">
+<th>org.jmxtrans.util.LocalJMXConnector</th>
+<th>Line</th></tr>
+<tr class="a">
+<td>--No comment--</td>
+<td><a href="./xref/org/jmxtrans/util/LocalJMXConnector.html#57">57</a></td></tr>
+<tr class="b">
+<td>--No comment--</td>
+<td><a href="./xref/org/jmxtrans/util/LocalJMXConnector.html#61">61</a></td></tr>
+<tr class="a">
+<td>--No comment--</td>
+<td><a href="./xref/org/jmxtrans/util/LocalJMXConnector.html#65">65</a></td></tr></table></div></div>
       </div>
     </div>
     <div class="clear">

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>JMXTrans2 embeded &#x2013; Surefire Report</title>
+    <title>JMXTrans2 standalone &#x2013; Surefire Report</title>
     <style type="text/css" media="all">
       @import url("./css/maven-base.css");
       @import url("./css/maven-theme.css");
@@ -17,7 +17,7 @@
   <body class="composite">
     <div id="banner">
                     <div id="bannerLeft">
-                JMXTrans2 embeded
+                JMXTrans2 standalone
                 </div>
                     <div class="clear">
         <hr/>
@@ -30,7 +30,7 @@
         <span id="publishDate">Last Published: 2014-12-07</span>
                   &nbsp;| <span id="projectVersion">Version: 1.0-SNAPSHOT</span>
                       </div>
-            <div class="xright">                    <a href="./" title="JMXTrans2 embeded">JMXTrans2 embeded</a>
+            <div class="xright">                    <a href="./" title="JMXTrans2 standalone">JMXTrans2 standalone</a>
               
                     
       </div>
@@ -141,12 +141,12 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td>51</td>
+<td>133</td>
 <td>0</td>
 <td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>1.173</td></tr></table><br />
+<td>2</td>
+<td>98.496%</td>
+<td>7.883</td></tr></table><br />
 <p>Note: failures are anticipated and checked for with assertions while errors are unanticipated.</p><br /></div>
 <div class="section">
 <h2><a name="Package_List"></a>Package List</h2><a name="Package_List"></a>
@@ -161,279 +161,118 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td><a href="#org.jmxtrans.embedded.output">org.jmxtrans.embedded.output</a></td>
-<td>7</td>
+<td><a href="#org.jmxtrans.jmx">org.jmxtrans.jmx</a></td>
+<td>6</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.099</td></tr>
+<td>0.253</td></tr>
 <tr class="a">
-<td><a href="#org.jmxtrans.embedded.util.pool">org.jmxtrans.embedded.util.pool</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.014</td></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded.util.json">org.jmxtrans.embedded.util.json</a></td>
+<td><a href="#org.jmxtrans.model.naming">org.jmxtrans.model.naming</a></td>
 <td>4</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
 <td>0.009</td></tr>
-<tr class="a">
-<td><a href="#org.jmxtrans.embedded.spring">org.jmxtrans.embedded.spring</a></td>
-<td>4</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.962</td></tr>
 <tr class="b">
-<td><a href="#org.jmxtrans.embedded.util">org.jmxtrans.embedded.util</a></td>
-<td>3</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.007</td></tr>
-<tr class="a">
-<td><a href="#org.jmxtrans.embedded.config">org.jmxtrans.embedded.config</a></td>
-<td>18</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.043</td></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded">org.jmxtrans.embedded</a></td>
-<td>8</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.036</td></tr>
-<tr class="a">
-<td><a href="#org.jmxtrans.embedded.util.concurrent">org.jmxtrans.embedded.util.concurrent</a></td>
-<td>6</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.003</td></tr></table><br />
-<p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p>
-<div class="section">
-<h3><a name="org.jmxtrans.embedded.output"></a>org.jmxtrans.embedded.output</h3><a name="org.jmxtrans.embedded.output"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<th></th>
-<th>Class</th>
-<th>Tests</th>
-<th>Errors </th>
-<th>Failures</th>
-<th>Skipped</th>
-<th>Success Rate</th>
-<th>Time</th></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded.outputCopperEggWriterTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.outputCopperEggWriterTest">CopperEggWriterTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.007</td></tr>
-<tr class="a">
-<td><a href="#org.jmxtrans.embedded.outputStackdriverWriterTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.outputStackdriverWriterTest">StackdriverWriterTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.002</td></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded.outputLibratoWriterTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.outputLibratoWriterTest">LibratoWriterTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.058</td></tr>
-<tr class="a">
-<td><a href="#org.jmxtrans.embedded.outputCsvWriterTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.outputCsvWriterTest">CsvWriterTest</a></td>
-<td>4</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.032</td></tr></table></div>
-<div class="section">
-<h3><a name="org.jmxtrans.embedded.util.pool"></a>org.jmxtrans.embedded.util.pool</h3><a name="org.jmxtrans.embedded.util.pool"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<th></th>
-<th>Class</th>
-<th>Tests</th>
-<th>Errors </th>
-<th>Failures</th>
-<th>Skipped</th>
-<th>Success Rate</th>
-<th>Time</th></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded.util.poolManagedGenericKeyedObjectPoolTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.util.poolManagedGenericKeyedObjectPoolTest">ManagedGenericKeyedObjectPoolTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.014</td></tr></table></div>
-<div class="section">
-<h3><a name="org.jmxtrans.embedded.util.json"></a>org.jmxtrans.embedded.util.json</h3><a name="org.jmxtrans.embedded.util.json"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<th></th>
-<th>Class</th>
-<th>Tests</th>
-<th>Errors </th>
-<th>Failures</th>
-<th>Skipped</th>
-<th>Success Rate</th>
-<th>Time</th></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded.util.jsonPropertyPlaceholderResolverTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.util.jsonPropertyPlaceholderResolverTest">PropertyPlaceholderResolverTest</a></td>
-<td>3</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0</td></tr>
-<tr class="a">
-<td><a href="#org.jmxtrans.embedded.util.jsonPlaceholderEnabledJsonNodeFactoryTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.util.jsonPlaceholderEnabledJsonNodeFactoryTest">PlaceholderEnabledJsonNodeFactoryTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.009</td></tr></table></div>
-<div class="section">
-<h3><a name="org.jmxtrans.embedded.spring"></a>org.jmxtrans.embedded.spring</h3><a name="org.jmxtrans.embedded.spring"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<th></th>
-<th>Class</th>
-<th>Tests</th>
-<th>Errors </th>
-<th>Failures</th>
-<th>Skipped</th>
-<th>Success Rate</th>
-<th>Time</th></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded.springEmbeddedJmxTransBeanDefinitionParser3Test"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.springEmbeddedJmxTransBeanDefinitionParser3Test">EmbeddedJmxTransBeanDefinitionParser3Test</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.143</td></tr>
-<tr class="a">
-<td><a href="#org.jmxtrans.embedded.springEmbeddedJmxTransBeanDefinitionParser2Test"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.springEmbeddedJmxTransBeanDefinitionParser2Test">EmbeddedJmxTransBeanDefinitionParser2Test</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.156</td></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded.springEmbeddedJmxTransFactoryTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.springEmbeddedJmxTransFactoryTest">EmbeddedJmxTransFactoryTest</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.026</td></tr>
-<tr class="a">
-<td><a href="#org.jmxtrans.embedded.springEmbeddedJmxTransBeanDefinitionParser1Test"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.springEmbeddedJmxTransBeanDefinitionParser1Test">EmbeddedJmxTransBeanDefinitionParser1Test</a></td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.637</td></tr></table></div>
-<div class="section">
-<h3><a name="org.jmxtrans.embedded.util"></a>org.jmxtrans.embedded.util</h3><a name="org.jmxtrans.embedded.util"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<th></th>
-<th>Class</th>
-<th>Tests</th>
-<th>Errors </th>
-<th>Failures</th>
-<th>Skipped</th>
-<th>Success Rate</th>
-<th>Time</th></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded.utilStringUtils2Test"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.utilStringUtils2Test">StringUtils2Test</a></td>
-<td>3</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>100%</td>
-<td>0.007</td></tr></table></div>
-<div class="section">
-<h3><a name="org.jmxtrans.embedded.config"></a>org.jmxtrans.embedded.config</h3><a name="org.jmxtrans.embedded.config"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<th></th>
-<th>Class</th>
-<th>Tests</th>
-<th>Errors </th>
-<th>Failures</th>
-<th>Skipped</th>
-<th>Success Rate</th>
-<th>Time</th></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded.configConfigurationMergeTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.configConfigurationMergeTest">ConfigurationMergeTest</a></td>
+<td><a href="#org.jmxtrans.util">org.jmxtrans.util</a></td>
 <td>7</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.005</td></tr>
+<td>0.776</td></tr>
 <tr class="a">
-<td><a href="#org.jmxtrans.embedded.configConfigurationTemplatesTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.configConfigurationTemplatesTest">ConfigurationTemplatesTest</a></td>
+<td><a href="#org.jmxtrans">org.jmxtrans</a></td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.087</td></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.connections">org.jmxtrans.connections</a></td>
+<td>15</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>3.179</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.model.output">org.jmxtrans.model.output</a></td>
+<td>67</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>3.519</td></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.cli">org.jmxtrans.cli</a></td>
+<td>13</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>92.308%</td>
+<td>0.046</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.model.results">org.jmxtrans.model.results</a></td>
+<td>5</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.002</td></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.classloader">org.jmxtrans.classloader</a></td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>66.667%</td>
+<td>0.003</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.model">org.jmxtrans.model</a></td>
+<td>11</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.009</td></tr></table><br />
+<p>Note: package statistics are not computed recursively, they only sum up all of its testsuites numbers.</p>
+<div class="section">
+<h3><a name="org.jmxtrans.jmx"></a>org.jmxtrans.jmx</h3><a name="org.jmxtrans.jmx"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.jmxJmxProcessingTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.jmxJmxProcessingTests">JmxProcessingTests</a></td>
 <td>1</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.028</td></tr>
-<tr class="b">
-<td><a href="#org.jmxtrans.embedded.configConfigurationTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.configConfigurationTest">ConfigurationTest</a></td>
-<td>10</td>
+<td>0.148</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.jmxJmxResultProcessorTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.jmxJmxResultProcessorTest">JmxResultProcessorTest</a></td>
+<td>5</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.01</td></tr></table></div>
+<td>0.105</td></tr></table></div>
 <div class="section">
-<h3><a name="org.jmxtrans.embedded"></a>org.jmxtrans.embedded</h3><a name="org.jmxtrans.embedded"></a>
+<h3><a name="org.jmxtrans.model.naming"></a>org.jmxtrans.model.naming</h3><a name="org.jmxtrans.model.naming"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -445,25 +284,199 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td><a href="#org.jmxtrans.embeddedResultNameStrategyTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embeddedResultNameStrategyTest">ResultNameStrategyTest</a></td>
+<td><a href="#org.jmxtrans.model.namingKeyUtilsTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.namingKeyUtilsTests">KeyUtilsTests</a></td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.007</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.model.namingStringUtilsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.namingStringUtilsTest">StringUtilsTest</a></td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.002</td></tr></table></div>
+<div class="section">
+<h3><a name="org.jmxtrans.util"></a>org.jmxtrans.util</h3><a name="org.jmxtrans.util"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.utilWatchDirTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.utilWatchDirTest">WatchDirTest</a></td>
 <td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.103</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.utilJsonPrinterTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.utilJsonPrinterTest">JsonPrinterTest</a></td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.12</td></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.utilJsonUtilsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.utilJsonUtilsTest">JsonUtilsTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.553</td></tr></table></div>
+<div class="section">
+<h3><a name="org.jmxtrans"></a>org.jmxtrans</h3><a name="org.jmxtrans"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.jmxtransEqualsTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtransEqualsTests">EqualsTests</a></td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.087</td></tr></table></div>
+<div class="section">
+<h3><a name="org.jmxtrans.connections"></a>org.jmxtrans.connections</h3><a name="org.jmxtrans.connections"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.connectionsSocketFactoryTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.connectionsSocketFactoryTests">SocketFactoryTests</a></td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>3.141</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.connectionsJmxConnectionParamsTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.connectionsJmxConnectionParamsTests">JmxConnectionParamsTests</a></td>
+<td>12</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.038</td></tr></table></div>
+<div class="section">
+<h3><a name="org.jmxtrans.model.output"></a>org.jmxtrans.model.output</h3><a name="org.jmxtrans.model.output"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.model.outputTCollectorUDPWriterTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.outputTCollectorUDPWriterTests">TCollectorUDPWriterTests</a></td>
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.603</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.model.outputOpenTSDBGenericWriterTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.outputOpenTSDBGenericWriterTests">OpenTSDBGenericWriterTests</a></td>
+<td>21</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.557</td></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.model.outputNumberUtilsTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.outputNumberUtilsTest">NumberUtilsTest</a></td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.model.outputSettingsTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.outputSettingsTests">SettingsTests</a></td>
+<td>18</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
 <td>0.004</td></tr>
-<tr class="a">
-<td><a href="#org.jmxtrans.embeddedQueryTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embeddedQueryTest">QueryTest</a></td>
-<td>4</td>
+<tr class="b">
+<td><a href="#org.jmxtrans.model.outputBaseOutputWriterTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.outputBaseOutputWriterTests">BaseOutputWriterTests</a></td>
+<td>6</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.032</td></tr></table></div>
+<td>0</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.model.outputOpenTSDBWriterTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.outputOpenTSDBWriterTests">OpenTSDBWriterTests</a></td>
+<td>11</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>1.24</td></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.model.outputGraphiteWriterTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.outputGraphiteWriterTests">GraphiteWriterTests</a></td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.108</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.model.outputGangliaWriterTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.outputGangliaWriterTests">GangliaWriterTests</a></td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.007</td></tr></table></div>
 <div class="section">
-<h3><a name="org.jmxtrans.embedded.util.concurrent"></a>org.jmxtrans.embedded.util.concurrent</h3><a name="org.jmxtrans.embedded.util.concurrent"></a>
+<h3><a name="org.jmxtrans.cli"></a>org.jmxtrans.cli</h3><a name="org.jmxtrans.cli"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <th></th>
@@ -475,275 +488,740 @@ function toggleDisplay(elementId) {
 <th>Success Rate</th>
 <th>Time</th></tr>
 <tr class="b">
-<td><a href="#org.jmxtrans.embedded.util.concurrentDiscardingBlockingQueueTest"><img src="images/icon_success_sml.gif" alt="" /></a></td>
-<td><a href="#org.jmxtrans.embedded.util.concurrentDiscardingBlockingQueueTest">DiscardingBlockingQueueTest</a></td>
-<td>6</td>
+<td><a href="#org.jmxtrans.cliCliArgumentParserTest"><img src="images/icon_warning_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.cliCliArgumentParserTest">CliArgumentParserTest</a></td>
+<td>13</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>92.308%</td>
+<td>0.046</td></tr></table></div>
+<div class="section">
+<h3><a name="org.jmxtrans.model.results"></a>org.jmxtrans.model.results</h3><a name="org.jmxtrans.model.results"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.model.resultsIdentityValueTransformerTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.resultsIdentityValueTransformerTests">IdentityValueTransformerTests</a></td>
+<td>1</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
 <td>100%</td>
-<td>0.003</td></tr></table></div><br /></div>
+<td>0.001</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.model.resultsBooleanAsNumberValueTransformerTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.model.resultsBooleanAsNumberValueTransformerTests">BooleanAsNumberValueTransformerTests</a></td>
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.001</td></tr></table></div>
+<div class="section">
+<h3><a name="org.jmxtrans.classloader"></a>org.jmxtrans.classloader</h3><a name="org.jmxtrans.classloader"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.classloaderClassLoadingTests"><img src="images/icon_warning_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.classloaderClassLoadingTests">ClassLoadingTests</a></td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>66.667%</td>
+<td>0.003</td></tr></table></div>
+<div class="section">
+<h3><a name="org.jmxtrans.model"></a>org.jmxtrans.model</h3><a name="org.jmxtrans.model"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<th></th>
+<th>Class</th>
+<th>Tests</th>
+<th>Errors </th>
+<th>Failures</th>
+<th>Skipped</th>
+<th>Success Rate</th>
+<th>Time</th></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.modelPropertyResolverTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.modelPropertyResolverTests">PropertyResolverTests</a></td>
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.005</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.modelServerTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.modelServerTests">ServerTests</a></td>
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.002</td></tr>
+<tr class="b">
+<td><a href="#org.jmxtrans.modelMergingTests"><img src="images/icon_success_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.modelMergingTests">MergingTests</a></td>
+<td>3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+<td>0.002</td></tr></table></div><br /></div>
 <div class="section">
 <h2><a name="Test_Cases"></a>Test Cases</h2><a name="Test_Cases"></a>
 <p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p>
 <div class="section">
-<h3><a name="PropertyPlaceholderResolverTest"></a>PropertyPlaceholderResolverTest</h3><a name="org.jmxtrans.embedded.util.jsonPropertyPlaceholderResolverTest"></a>
+<h3><a name="TCollectorUDPWriterTests"></a>TCollectorUDPWriterTests</h3><a name="org.jmxtrans.model.outputTCollectorUDPWriterTests"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testResolveStringWithSystemProperty</td>
+<td>successfullySendMessageToTCollector</td>
+<td>0.565</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testSocketException</td>
+<td>0.014</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>exceptionIsThrownWhenHostIsNotDefined</td>
+<td>0.011</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>exceptionIsThrownWhenPortIsNotDefined</td>
+<td>0.013</td></tr></table></div>
+<div class="section">
+<h3><a name="OpenTSDBGenericWriterTests"></a>OpenTSDBGenericWriterTests</h3><a name="org.jmxtrans.model.outputOpenTSDBGenericWriterTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testMergedTypeNameValues1</td>
+<td>0.437</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testMergedTypeNameValues2</td>
+<td>0.043</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testMergedTypeNameValues3</td>
+<td>0.065</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testEmptyTagSetting</td>
+<td>0.12</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testTagSetting</td>
+<td>0.061</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testAddHostnameTag</td>
+<td>0.039</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testDontAddHostnameTag</td>
+<td>0.029</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testEmptyResultValues</td>
+<td>0.016</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testOneValueMatchingAttribute</td>
+<td>0.03</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testMultipleValuesWithMatchingAttribute</td>
+<td>0.045</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testNonNumericValue</td>
+<td>0.022</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testJexlNaming</td>
+<td>0.435</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testInvalidJexlNaming</td>
+<td>0.012</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testDebugOuptutResultString</td>
+<td>0.027</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testValidateValidHostPort</td>
+<td>0.011</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testPortNumberAsString</td>
+<td>0.011</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testDefaultHookMethods</td>
+<td>0.021</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testHooksCalled</td>
+<td>0.026</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testDebugEanbled</td>
+<td>0.026</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testLocalhostUnknownHostException</td>
+<td>0.053</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testNullHostTagname</td>
+<td>0.028</td></tr></table></div>
+<div class="section">
+<h3><a name="NumberUtilsTest"></a>NumberUtilsTest</h3><a name="org.jmxtrans.model.outputNumberUtilsTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testIsNumeric</td>
+<td>0</td></tr></table></div>
+<div class="section">
+<h3><a name="SettingsTests"></a>SettingsTests</h3><a name="org.jmxtrans.model.outputSettingsTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>incorrectBooleanSettings</td>
 <td>0</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testResolveStringWithDefaultValue</td>
+<td>correctIntegerSettings</td>
 <td>0</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testResolveComplexStringWithSystemProperty</td>
+<td>parsedFromStringIntSettings</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>unsetBooleanSettings</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>unsetIntSettings</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>correctBooleanSettingsWithDefault</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>wrongTypeBooleanSettings</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>typeConvertedIntSettings</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>standardStringSettings</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>unsetIntegerSettings</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>unsetStringSettings</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>parsedFromStringIntegerSettings</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>correctIntSettings</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>parsedFromInvalidStringIntSettings</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>correctBooleanSettings</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>typeConvertedIntegerSettings</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>parsedFromInvalidStringIntegerSettings</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>numberParsedAsStringSettings</td>
 <td>0</td></tr></table></div>
 <div class="section">
-<h3><a name="PlaceholderEnabledJsonNodeFactoryTest"></a>PlaceholderEnabledJsonNodeFactoryTest</h3><a name="org.jmxtrans.embedded.util.jsonPlaceholderEnabledJsonNodeFactoryTest"></a>
+<h3><a name="BaseOutputWriterTests"></a>BaseOutputWriterTests</h3><a name="org.jmxtrans.model.outputBaseOutputWriterTests"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testWithPlaceholders</td>
-<td>0.009</td></tr></table></div>
+<td>booleanValuesAreNotTransformedToNumber</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>booleanValuesAreTransformedToNumber</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>propertyResolvedIntegerSettings</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>cannotHaveNullValueInSettings</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>propertyResolvedStringSettings</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>propertyResolvedIntSettings</td>
+<td>0</td></tr></table></div>
 <div class="section">
-<h3><a name="StringUtils2Test"></a>StringUtils2Test</h3><a name="org.jmxtrans.embedded.utilStringUtils2Test"></a>
+<h3><a name="OpenTSDBWriterTests"></a>OpenTSDBWriterTests</h3><a name="org.jmxtrans.model.outputOpenTSDBWriterTests"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testDelimitedStringToList</td>
+<td>testSuccessfulSendNoOpenTSDBResponse</td>
+<td>0.869</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testSuccessfulSendOpenTSDBResponse1</td>
+<td>0.063</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testSuccessfulSendOpenTSDBResponse2</td>
+<td>0.057</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testUnknownHostException</td>
+<td>0.024</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testSocketCreationIOException</td>
+<td>0.018</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testSocketCloseIOException</td>
+<td>0.021</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testStartOutputIOException</td>
+<td>0.024</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testSendOutputIOException</td>
+<td>0.059</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testFinishOutputIOException</td>
+<td>0.063</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>exceptionThrownIfHostIsNotDefined</td>
+<td>0.022</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>exceptionThrownIfPortIsNotDefined</td>
+<td>0.02</td></tr></table></div>
+<div class="section">
+<h3><a name="GraphiteWriterTests"></a>GraphiteWriterTests</h3><a name="org.jmxtrans.model.outputGraphiteWriterTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>writeSingleResult</td>
+<td>0.107</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>hostIsRequired</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>portIsRequired</td>
+<td>0.001</td></tr></table></div>
+<div class="section">
+<h3><a name="GangliaWriterTests"></a>GangliaWriterTests</h3><a name="org.jmxtrans.model.outputGangliaWriterTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testValidationAllSettings</td>
 <td>0.005</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testJoin</td>
-<td>0.002</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testReverseTokens</td>
-<td>0</td></tr></table></div>
-<div class="section">
-<h3><a name="DiscardingBlockingQueueTest"></a>DiscardingBlockingQueueTest</h3><a name="org.jmxtrans.embedded.util.concurrentDiscardingBlockingQueueTest"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testAdd</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testPut</td>
+<td>testValidationWithoutSettings</td>
 <td>0</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testOffer</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testRemainingCapacity</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testOfferWithTimeout</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testAddAll</td>
-<td>0</td></tr></table></div>
-<div class="section">
-<h3><a name="ManagedGenericKeyedObjectPoolTest"></a>ManagedGenericKeyedObjectPoolTest</h3><a name="org.jmxtrans.embedded.util.poolManagedGenericKeyedObjectPoolTest"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testMbeanAttributeAccess</td>
-<td>0.014</td></tr></table></div>
-<div class="section">
-<h3><a name="EmbeddedJmxTransBeanDefinitionParser3Test"></a>EmbeddedJmxTransBeanDefinitionParser3Test</h3><a name="org.jmxtrans.embedded.springEmbeddedJmxTransBeanDefinitionParser3Test"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>test</td>
-<td>0.143</td></tr></table></div>
-<div class="section">
-<h3><a name="EmbeddedJmxTransBeanDefinitionParser2Test"></a>EmbeddedJmxTransBeanDefinitionParser2Test</h3><a name="org.jmxtrans.embedded.springEmbeddedJmxTransBeanDefinitionParser2Test"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>test</td>
-<td>0.156</td></tr></table></div>
-<div class="section">
-<h3><a name="EmbeddedJmxTransFactoryTest"></a>EmbeddedJmxTransFactoryTest</h3><a name="org.jmxtrans.embedded.springEmbeddedJmxTransFactoryTest"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testGetObject</td>
-<td>0.026</td></tr></table></div>
-<div class="section">
-<h3><a name="EmbeddedJmxTransBeanDefinitionParser1Test"></a>EmbeddedJmxTransBeanDefinitionParser1Test</h3><a name="org.jmxtrans.embedded.springEmbeddedJmxTransBeanDefinitionParser1Test"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>test</td>
-<td>0.637</td></tr></table></div>
-<div class="section">
-<h3><a name="ConfigurationMergeTest"></a>ConfigurationMergeTest</h3><a name="org.jmxtrans.embedded.configConfigurationMergeTest"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateAliasedQuery</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateQueryWithAttributeAlias</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateQueryWithAliasedAttributes</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateQueryWithAttributes</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateBasicQuery</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateTuningParameters</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateQueryWithOutputWriter</td>
-<td>0.001</td></tr></table></div>
-<div class="section">
-<h3><a name="ConfigurationTemplatesTest"></a>ConfigurationTemplatesTest</h3><a name="org.jmxtrans.embedded.configConfigurationTemplatesTest"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>loadAllTemplates</td>
-<td>0.028</td></tr></table></div>
-<div class="section">
-<h3><a name="ConfigurationTest"></a>ConfigurationTest</h3><a name="org.jmxtrans.embedded.configConfigurationTest"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateAliasedQuery</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateQueryWithAttributeAlias</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateQueryWithAliasedAttributes</td>
-<td>0.002</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateDisabledRootOutputWriters</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateDisabledOutputWriters</td>
-<td>0</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateQueryWithAttributes</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateBasicQuery</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateTuningParameters</td>
-<td>0.001</td></tr>
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateQueryWithOutputWriter</td>
-<td>0.001</td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>validateQueryWithGaugeAndCounterAttributes</td>
-<td>0.001</td></tr></table></div>
-<div class="section">
-<h3><a name="CopperEggWriterTest"></a>CopperEggWriterTest</h3><a name="org.jmxtrans.embedded.outputCopperEggWriterTest"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testCUESerialize</td>
-<td>0.007</td></tr></table></div>
-<div class="section">
-<h3><a name="StackdriverWriterTest"></a>StackdriverWriterTest</h3><a name="org.jmxtrans.embedded.outputStackdriverWriterTest"></a>
-<table border="1" class="bodyTable">
-<tr class="a">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testSerialize</td>
+<td>testValidationMinimalSettings</td>
 <td>0.002</td></tr></table></div>
 <div class="section">
-<h3><a name="LibratoWriterTest"></a>LibratoWriterTest</h3><a name="org.jmxtrans.embedded.outputLibratoWriterTest"></a>
+<h3><a name="KeyUtilsTests"></a>KeyUtilsTests</h3><a name="org.jmxtrans.model.namingKeyUtilsTests"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testSerialize</td>
-<td>0.058</td></tr></table></div>
+<td>testGetTypeNameValueMap</td>
+<td>0.002</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testGetConcatenatedTypeNameValues</td>
+<td>0.005</td></tr></table></div>
 <div class="section">
-<h3><a name="CsvWriterTest"></a>CsvWriterTest</h3><a name="org.jmxtrans.embedded.outputCsvWriterTest"></a>
+<h3><a name="StringUtilsTest"></a>StringUtilsTest</h3><a name="org.jmxtrans.model.namingStringUtilsTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testAlignResultsPreservesCorrectlyAlignedResults</td>
+<td>testCleanupStr</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testCleanupStrDottedKeysKept</td>
+<td>0.001</td></tr></table></div>
+<div class="section">
+<h3><a name="PropertyResolverTests"></a>PropertyResolverTests</h3><a name="org.jmxtrans.modelPropertyResolverTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testMap</td>
+<td>0.003</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testProps</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testList</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testResolveMap</td>
+<td>0.001</td></tr></table></div>
+<div class="section">
+<h3><a name="ServerTests"></a>ServerTests</h3><a name="org.jmxtrans.modelServerTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testGetHostAndPortFromUrl</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testHashCode</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testEquals</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testGetUrl</td>
+<td>0.001</td></tr></table></div>
+<div class="section">
+<h3><a name="IdentityValueTransformerTests"></a>IdentityValueTransformerTests</h3><a name="org.jmxtrans.model.resultsIdentityValueTransformerTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>identityTransformerDoesNothing</td>
+<td>0.001</td></tr></table></div>
+<div class="section">
+<h3><a name="BooleanAsNumberValueTransformerTests"></a>BooleanAsNumberValueTransformerTests</h3><a name="org.jmxtrans.model.resultsBooleanAsNumberValueTransformerTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>falseIsConvertedToNumber</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>integerIsNotModified</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>trueIsConvertedToNumber</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>stringIsNotModified</td>
+<td>0</td></tr></table></div>
+<div class="section">
+<h3><a name="MergingTests"></a>MergingTests</h3><a name="org.jmxtrans.modelMergingTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>testMerge</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>sameServerWithTwoDifferentQueriesMergesQueries</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>mergeAlreadyExistingServerDoesNotModifyList</td>
+<td>0</td></tr></table></div>
+<div class="section">
+<h3><a name="WatchDirTest"></a>WatchDirTest</h3><a name="org.jmxtrans.utilWatchDirTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>watchingFileIsNotPossible</td>
+<td>0.092</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>modifiedFileIsDetected</td>
+<td>0.006</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>deletedFileIsDetected</td>
+<td>0.003</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>createdFileIsDetected</td>
+<td>0.002</td></tr></table></div>
+<div class="section">
+<h3><a name="JsonPrinterTest"></a>JsonPrinterTest</h3><a name="org.jmxtrans.utilJsonPrinterTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>standardJsonPrinting</td>
+<td>0.071</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>prettyJsonPrinting</td>
+<td>0.049</td></tr></table></div>
+<div class="section">
+<h3><a name="JsonUtilsTest"></a>JsonUtilsTest</h3><a name="org.jmxtrans.utilJsonUtilsTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>loadingFromFile</td>
+<td>0.553</td></tr></table></div>
+<div class="section">
+<h3><a name="JmxProcessingTests"></a>JmxProcessingTests</h3><a name="org.jmxtrans.jmxJmxProcessingTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>querySimpleAttribute</td>
+<td>0.148</td></tr></table></div>
+<div class="section">
+<h3><a name="JmxResultProcessorTest"></a>JmxResultProcessorTest</h3><a name="org.jmxtrans.jmxJmxResultProcessorTest"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>canReadCompositeData</td>
+<td>0.089</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>canReadSingleBooleanValue</td>
+<td>0</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>canReadSingleIntegerValue</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>canCreateBasicResultData</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>canReadTabularData</td>
+<td>0.014</td></tr></table></div>
+<div class="section">
+<h3><a name="SocketFactoryTests"></a>SocketFactoryTests</h3><a name="org.jmxtrans.connectionsSocketFactoryTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>closedSocketIsInvalid</td>
+<td>1.139</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>createdSocketIsValid</td>
+<td>1.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>nullSocketIsInvalid</td>
+<td>1.001</td></tr></table></div>
+<div class="section">
+<h3><a name="JmxConnectionParamsTests"></a>JmxConnectionParamsTests</h3><a name="org.jmxtrans.connectionsJmxConnectionParamsTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>connectionParamsWithDifferentArrayAsEnvironmentValueAreNotEquals</td>
 <td>0.025</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testCreatesCorrectHeader</td>
-<td>0.002</td></tr>
+<td>connectionParamsSameUrlAndNoEnvironmentHaveSameHashCodes</td>
+<td>0.005</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testAlignResultsRealignsScrambledResults</td>
-<td>0.002</td></tr>
+<td>connectionParamsWithArrayAsEnvironmentValueAreEquals</td>
+<td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testCsvFileIsWrittenOutCorrectly</td>
-<td>0.003</td></tr></table></div>
+<td>connectionParamsWithDifferentEnvironmentsHaveDifferentHashCodes</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>twoDifferentConnectionParamsHaveTheSameHashCode</td>
+<td>0</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>connectionParamsSameUrlAndNoEnvironmentAreEquals</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>connectionParamsWithDifferentListsAsEnvironmentValueAreNotEquals</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>connectionParamsWithDifferentEnvironmentsAreNotEquals</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>twoDifferentConnectionParamsAreEquals</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>connectionParamsDifferentUrlAndNoEnvironmentHaveDifferentHashCodes</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>connectionParamsWithListsAsEnvironmentValueAreEquals</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>connectionParamsDifferentUrlAndNoEnvironmentAreNotEquals</td>
+<td>0</td></tr></table></div>
 <div class="section">
-<h3><a name="ResultNameStrategyTest"></a>ResultNameStrategyTest</h3><a name="org.jmxtrans.embeddedResultNameStrategyTest"></a>
+<h3><a name="CliArgumentParserTest"></a>CliArgumentParserTest</h3><a name="org.jmxtrans.cliCliArgumentParserTest"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testResolveExpression</td>
-<td>0.001</td></tr>
+<td>jsonConfigFileMustExist</td>
+<td>0.029</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testCanonicalHostNameDotsAreNotEscaped</td>
+<td>jsonConfigDirectoryCannotBeAFile</td>
 <td>0.001</td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testEscapeObjectName1</td>
+<td>jsonConfigFileCannotBeADirectory</td>
 <td>0.001</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testEscapeObjectName2</td>
+<td>runIntervalMustBeInteger</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>jsonConfigDirectoryMustExist</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>quartzConfigFileMustExist</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>canParseRunInterval</td>
+<td>0.003</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>noExceptionThrownWhenHelpIsAsked</td>
+<td>0.005</td></tr>
+<tr class="a">
+<td><a href="#org.jmxtrans.cli.CliArgumentParserTest.cannotGiveBothJsonFileAndJsonDir"><img src="images/icon_warning_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.cli.CliArgumentParserTest.cannotGiveBothJsonFileAndJsonDir">cannotGiveBothJsonFileAndJsonDir</a>
+<div class="detailToggle" style="display:inline"><a href="javascript:toggleDisplay(&apos;org.jmxtrans.cli.CliArgumentParserTest.cannotGiveBothJsonFileAndJsonDir&apos;);"><span style="display:inline;" id="org.jmxtrans.cli.CliArgumentParserTest.cannotGiveBothJsonFileAndJsonDiroff"> + </span><span style="display:none;" id="org.jmxtrans.cli.CliArgumentParserTest.cannotGiveBothJsonFileAndJsonDiron"> - </span>[ Detail ]</a></div></td>
+<td>0</td></tr>
+<tr class="b">
+<td></td>
+<td>Waiting for clarification of specs. Current behavior is to ignore the first option given, probably not what is expected by users.</td>
+<td></td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>jsonDirectoryOrJsonFileIsRequired</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>quartzConfigFileCannotBeADirectory</td>
+<td>0.001</td></tr>
+<tr class="a">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>continueOnJsonErrorIsFalseByDefault</td>
+<td>0.001</td></tr>
+<tr class="b">
+<td><img src="images/icon_success_sml.gif" alt="" /></td>
+<td>continueOnJsonErrorIsCanBeSetToTrueOrFalse</td>
 <td>0.001</td></tr></table></div>
 <div class="section">
-<h3><a name="QueryTest"></a>QueryTest</h3><a name="org.jmxtrans.embeddedQueryTest"></a>
+<h3><a name="EqualsTests"></a>EqualsTests</h3><a name="org.jmxtransEqualsTests"></a>
 <table border="1" class="bodyTable">
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testDisabledOutputWriter</td>
-<td>0.016</td></tr>
+<td>testQuery</td>
+<td>0.087</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>testExportResults</td>
-<td>0.007</td></tr>
+<td>testQuery2</td>
+<td>0</td></tr></table></div>
+<div class="section">
+<h3><a name="ClassLoadingTests"></a>ClassLoadingTests</h3><a name="org.jmxtrans.classloaderClassLoadingTests"></a>
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><a href="#org.jmxtrans.classloader.ClassLoadingTests.loadedJarCanBeAccessed"><img src="images/icon_warning_sml.gif" alt="" /></a></td>
+<td><a href="#org.jmxtrans.classloader.ClassLoadingTests.loadedJarCanBeAccessed">loadedJarCanBeAccessed</a>
+<div class="detailToggle" style="display:inline"><a href="javascript:toggleDisplay(&apos;org.jmxtrans.classloader.ClassLoadingTests.loadedJarCanBeAccessed&apos;);"><span style="display:inline;" id="org.jmxtrans.classloader.ClassLoadingTests.loadedJarCanBeAccessedoff"> + </span><span style="display:none;" id="org.jmxtrans.classloader.ClassLoadingTests.loadedJarCanBeAccessedon"> - </span>[ Detail ]</a></div></td>
+<td>0</td></tr>
+<tr class="b">
+<td></td>
+<td>Manual test</td>
+<td></td></tr>
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>basic_jmx_attribute_return_simple_result</td>
-<td>0.007</td></tr>
+<td>classCannotBeAccessedIfJarIsNotLoaded</td>
+<td>0.002</td></tr>
 <tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>test_composite_jmx_attribute</td>
-<td>0.002</td></tr></table></div><br /></div>
+<td>loadingNonExistingFileThrowsException</td>
+<td>0.001</td></tr></table></div><br /></div>
+<div class="section">
+<h2><a name="Failure_Details"></a>Failure Details</h2><a name="Failure_Details"></a>
+<p>[<a href="#Summary">Summary</a>] [<a href="#Package_List">Package List</a>] [<a href="#Test_Cases">Test Cases</a>]</p><br />
+<table border="1" class="bodyTable">
+<tr class="a">
+<td><img src="images/icon_warning_sml.gif" alt="" /></td>
+<td><a name="org.jmxtrans.cli.CliArgumentParserTest.cannotGiveBothJsonFileAndJsonDir"></a>cannotGiveBothJsonFileAndJsonDir</td></tr>
+<tr class="b">
+<td></td>
+<td>skipped: Waiting for clarification of specs. Current behavior is to ignore the first option given, probably not what is expected by users.</td></tr>
+<tr class="a">
+<td><img src="images/icon_warning_sml.gif" alt="" /></td>
+<td><a name="org.jmxtrans.classloader.ClassLoadingTests.loadedJarCanBeAccessed"></a>loadedJarCanBeAccessed</td></tr>
+<tr class="b">
+<td></td>
+<td>skipped: Manual test</td></tr></table><br /></div>
       </div>
     </div>
     <div class="clear">
