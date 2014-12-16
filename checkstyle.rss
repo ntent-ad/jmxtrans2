@@ -19,20 +19,20 @@ under the License.
 -->
 <rss version="0.91">
   <channel>
-    <title>jmxtrans2-config - Checkstyle report</title>
-    <link>http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config</link>
-    <description>jmxtrans2-config - Checkstyle report</description>
+    <title>jmxtrans2-output - Checkstyle report</title>
+    <link>http://www.jmxtrans.org/jmxtrans2/jmxtrans2-output</link>
+    <description>jmxtrans2-output - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2014</copyright>
     <item>
-      <title>File: 4,
+      <title>File: 5,
              Errors: 0,
              Warnings: 0,
              Infos: 0
       </title>
-            <link>http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html</link>
+            <link>http://www.jmxtrans.org/jmxtrans2/jmxtrans2-output/checkstyle.html</link>
       <description>
-        <p>Click <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html">here</a> for the full Checkstyle report.</p>
+        <p>Click <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-output/checkstyle.html">here</a> for the full Checkstyle report.</p>
 
         <table summary="Files" boder="1">
           <thead>
@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html#org.jmxtrans.config.ResultNameStrategy.java">org/jmxtrans/config/ResultNameStrategy.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-output/checkstyle.html#org.jmxtrans.output.AbstractOutputWriter.java">org/jmxtrans/output/AbstractOutputWriter.java</a>
                 </td>
                 <td>
                   0
@@ -60,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html#org.jmxtrans.config.Query.java">org/jmxtrans/config/Query.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-output/checkstyle.html#org.jmxtrans.output.FileOverwriterOutputWriter.java">org/jmxtrans/output/FileOverwriterOutputWriter.java</a>
                 </td>
                 <td>
                   0
@@ -74,7 +74,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html#org.jmxtrans.config.OutputWriter.java">org/jmxtrans/config/OutputWriter.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-output/checkstyle.html#org.jmxtrans.output.DevNullOutputWriter.java">org/jmxtrans/output/DevNullOutputWriter.java</a>
                 </td>
                 <td>
                   0
@@ -88,7 +88,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html#org.jmxtrans.config.QueryResult.java">org/jmxtrans/config/QueryResult.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-output/checkstyle.html#org.jmxtrans.output.RollingFileOutputWriter.java">org/jmxtrans/output/RollingFileOutputWriter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-output/checkstyle.html#org.jmxtrans.output.ConsoleOutputWriter.java">org/jmxtrans/output/ConsoleOutputWriter.java</a>
                 </td>
                 <td>
                   0
