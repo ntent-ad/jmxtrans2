@@ -19,6 +19,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-config</artifactId>
         </dependency>
@@ -29,11 +34,6 @@
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -81,7 +81,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>3.0.0</version>
                 <configuration>
                     <!-- FIXME: fix all violations and reactivate check -->
                     <failOnError>false</failOnError>

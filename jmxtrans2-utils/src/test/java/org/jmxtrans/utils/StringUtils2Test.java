@@ -21,7 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.jmxtrans.agent.util;
+package org.jmxtrans.utils;
 
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.jmxtrans.utils.StringUtils2;
