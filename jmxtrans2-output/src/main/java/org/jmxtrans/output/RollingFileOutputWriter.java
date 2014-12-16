@@ -21,7 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.output;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +36,7 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.TimeZone;
 
-import static org.jmxtrans.agent.util.ConfigurationUtils.*;
+import static org.jmxtrans.utils.ConfigurationUtils.*;
 
 public class RollingFileOutputWriter extends AbstractOutputWriter {
 

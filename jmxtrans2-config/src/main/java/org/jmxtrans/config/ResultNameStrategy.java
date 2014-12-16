@@ -21,7 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.config;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,9 +29,9 @@ import javax.management.ObjectName;
 import java.util.Map;
 
 /**
- * Build a {@linkplain org.jmxtrans.agent.QueryResult#name} from a collected metric ({@linkplain org.jmxtrans.agent.Query}).
+ * Build a {@linkplain QueryResult#name} from a collected metric ({@linkplain Query}).
  * <p/>
- * Build name must be escaped to be compatible with all {@linkplain org.jmxtrans.agent.OutputWriter}.
+ * Build name must be escaped to be compatible with all {@linkplain OutputWriter}.
  * The approach is to escape non alpha-numeric chars.
  * <p/>
  * Expressions support '#' based keywords (e.g. <code>#hostname#</code>) and with '%' based variables mapped to objectname properties.

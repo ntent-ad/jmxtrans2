@@ -23,7 +23,7 @@
  */
 package org.jmxtrans.agent;
 
-import org.jmxtrans.agent.util.StringUtils2;
+import org.jmxtrans.utils.StringUtils2;
 
 import javax.annotation.Nonnull;
 import javax.management.ObjectName;

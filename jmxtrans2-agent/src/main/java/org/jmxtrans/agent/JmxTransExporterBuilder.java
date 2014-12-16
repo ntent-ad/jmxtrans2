@@ -24,6 +24,8 @@
 package org.jmxtrans.agent;
 
 import org.jmxtrans.agent.util.PropertyPlaceholderResolver;
+import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.config.ResultNameStrategy;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

@@ -23,7 +23,9 @@
  */
 package org.jmxtrans.agent;
 
-import org.jmxtrans.agent.util.StringUtils2;
+import org.jmxtrans.config.Query;
+import org.jmxtrans.config.ResultNameStrategy;
+import org.jmxtrans.utils.StringUtils2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,9 +35,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Build a {@linkplain QueryResult#name} from a collected metric ({@linkplain Query}).
+ * Build a {@linkplain org.jmxtrans.config.QueryResult#name} from a collected metric ({@linkplain org.jmxtrans.config.Query}).
  * <p/>
- * Build name must be escaped to be compatible with all {@linkplain OutputWriter}.
+ * Build name must be escaped to be compatible with all {@linkplain org.jmxtrans.config.OutputWriter}.
  * The approach is to escape non alpha-numeric chars.
  * <p/>
  * Expressions support '#' based keywords (e.g. <code>#hostname#</code>) and with '%' based variables mapped to objectname properties.

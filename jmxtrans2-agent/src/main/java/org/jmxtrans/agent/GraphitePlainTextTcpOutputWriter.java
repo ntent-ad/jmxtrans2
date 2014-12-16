@@ -24,6 +24,8 @@
 package org.jmxtrans.agent;
 
 import org.jmxtrans.agent.util.net.HostAndPort;
+import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.output.AbstractOutputWriter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,8 +38,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-import static org.jmxtrans.agent.util.ConfigurationUtils.getInt;
-import static org.jmxtrans.agent.util.ConfigurationUtils.getString;
+import static org.jmxtrans.utils.ConfigurationUtils.getInt;
+import static org.jmxtrans.utils.ConfigurationUtils.getString;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>

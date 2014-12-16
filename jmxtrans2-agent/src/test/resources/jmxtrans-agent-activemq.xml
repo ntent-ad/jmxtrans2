@@ -58,7 +58,7 @@
         <port>2203</port>
         <namePrefix>app_123456.server.i876543.</namePrefix>
     </outputWriter>
-    <outputWriter class="org.jmxtrans.agent.ConsoleOutputWriter">
+    <outputWriter class="org.jmxtrans.output.ConsoleOutputWriter">
         <enabled>true</enabled>
     </outputWriter>
 </jmxtrans-agent>

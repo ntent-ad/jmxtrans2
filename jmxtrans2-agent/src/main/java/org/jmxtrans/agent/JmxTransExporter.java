@@ -23,6 +23,11 @@
  */
 package org.jmxtrans.agent;
 
+import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.config.Query;
+import org.jmxtrans.config.ResultNameStrategy;
+import org.jmxtrans.output.DevNullOutputWriter;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.management.MBeanServer;

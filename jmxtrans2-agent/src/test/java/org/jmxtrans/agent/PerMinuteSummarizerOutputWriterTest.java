@@ -26,6 +26,7 @@ package org.jmxtrans.agent;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
+import org.jmxtrans.config.QueryResult;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;

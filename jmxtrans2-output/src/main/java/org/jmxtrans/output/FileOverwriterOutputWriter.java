@@ -21,8 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.jmxtrans.agent;
-
+package org.jmxtrans.output;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,8 +34,8 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.TimeZone;
 
-import static org.jmxtrans.agent.util.ConfigurationUtils.getString;
-import static org.jmxtrans.agent.util.ConfigurationUtils.getBoolean;
+import static org.jmxtrans.utils.ConfigurationUtils.getString;
+import static org.jmxtrans.utils.ConfigurationUtils.getBoolean;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>

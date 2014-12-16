@@ -23,6 +23,9 @@
  */
 package org.jmxtrans.agent;
 
+import org.jmxtrans.config.Query;
+import org.jmxtrans.config.ResultNameStrategy;
+import org.jmxtrans.output.AbstractOutputWriter;
 import org.junit.*;
 
 import javax.annotation.Nonnull;
@@ -31,7 +34,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryType;
 import java.util.HashMap;
 import java.util.Map;
 

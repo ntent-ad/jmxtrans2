@@ -26,6 +26,9 @@ package org.jmxtrans.agent;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.config.Query;
+import org.jmxtrans.output.ConsoleOutputWriter;
 import org.junit.Test;
 
 import javax.management.ObjectName;
@@ -65,17 +68,17 @@ public class JmxTransExporterBuilderTest {
 
         {
             Query query = queriesByResultAlias.get("os.systemLoadAverage");
-            assertThat(query.objectName, is(new ObjectName("java.lang:type=OperatingSystem")));
-            assertThat(query.attribute, is("SystemLoadAverage"));
-            assertThat(query.resultAlias, is("os.systemLoadAverage"));
-            assertThat(query.key, is((String) null));
+            assertThat(query.getObjectName(), is(new ObjectName("java.lang:type=OperatingSystem")));
+            assertThat(query.getAttribute(), is("SystemLoadAverage"));
+            assertThat(query.getResultAlias(), is("os.systemLoadAverage"));
+            assertThat(query.getKey(), is((String) null));
         }
         {
             Query query = queriesByResultAlias.get("jvm.heapMemoryUsage.used");
-            assertThat(query.objectName, is(new ObjectName("java.lang:type=Memory")));
-            assertThat(query.attribute, is("HeapMemoryUsage"));
-            assertThat(query.resultAlias, is("jvm.heapMemoryUsage.used"));
-            assertThat(query.key, is("used"));
+            assertThat(query.getObjectName(), is(new ObjectName("java.lang:type=Memory")));
+            assertThat(query.getAttribute(), is("HeapMemoryUsage"));
+            assertThat(query.getResultAlias(), is("jvm.heapMemoryUsage.used"));
+            assertThat(query.getKey(), is("used"));
         }
         Map<String, Invocation> invocationsByResultAlias = indexInvocationsByResultAlias(jmxTransExporter.invocations);
         {
@@ -131,24 +134,24 @@ public class JmxTransExporterBuilderTest {
 
         {
             Query query = queriesByResultAlias.get("os.systemLoadAverage");
-            assertThat(query.objectName, is(new ObjectName("java.lang:type=OperatingSystem")));
-            assertThat(query.attribute, is("SystemLoadAverage"));
-            assertThat(query.resultAlias, is("os.systemLoadAverage"));
-            assertThat(query.key, is((String) null));
+            assertThat(query.getObjectName(), is(new ObjectName("java.lang:type=OperatingSystem")));
+            assertThat(query.getAttribute(), is("SystemLoadAverage"));
+            assertThat(query.getResultAlias(), is("os.systemLoadAverage"));
+            assertThat(query.getKey(), is((String) null));
         }
         {
             Query query = queriesByResultAlias.get("jvm.heapMemoryUsage.used");
-            assertThat(query.objectName, is(new ObjectName("java.lang:type=Memory")));
-            assertThat(query.attribute, is("HeapMemoryUsage"));
-            assertThat(query.resultAlias, is("jvm.heapMemoryUsage.used"));
-            assertThat(query.key, is("used"));
+            assertThat(query.getObjectName(), is(new ObjectName("java.lang:type=Memory")));
+            assertThat(query.getAttribute(), is("HeapMemoryUsage"));
+            assertThat(query.getResultAlias(), is("jvm.heapMemoryUsage.used"));
+            assertThat(query.getKey(), is("used"));
         }
     }
 
     Map<String, Query> indexQueriesByResultAlias(Iterable<Query> queries) {
         Map<String, Query> result = new HashMap<String, Query>();
         for (Query query : queries) {
-            result.put(query.resultAlias, query);
+            result.put(query.getResultAlias(), query);
         }
         return result;
     }

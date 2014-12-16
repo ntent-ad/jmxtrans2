@@ -60,7 +60,7 @@
         <namePrefix>servers.localhost.</namePrefix>
         <enabled>false</enabled>
     </outputWriter>
-    <outputWriter class="org.jmxtrans.agent.ConsoleOutputWriter">
+    <outputWriter class="org.jmxtrans.output.ConsoleOutputWriter">
         <enabled>false</enabled>
     </outputWriter>
     <collectIntervalInSeconds>12</collectIntervalInSeconds>

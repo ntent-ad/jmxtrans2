@@ -23,6 +23,8 @@
  */
 package org.jmxtrans.agent;
 
+import org.jmxtrans.config.OutputWriter;
+
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;

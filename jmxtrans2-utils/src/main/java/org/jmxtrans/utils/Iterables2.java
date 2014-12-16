@@ -21,7 +21,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.jmxtrans.agent.util.collect;
+package org.jmxtrans.utils;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;

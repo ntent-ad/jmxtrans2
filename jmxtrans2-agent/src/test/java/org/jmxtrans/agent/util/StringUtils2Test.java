@@ -24,6 +24,7 @@
 package org.jmxtrans.agent.util;
 
 import org.hamcrest.collection.IsIterableContainingInOrder;
+import org.jmxtrans.utils.StringUtils2;
 import org.junit.Test;
 
 import java.util.Arrays;

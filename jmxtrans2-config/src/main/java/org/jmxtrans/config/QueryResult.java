@@ -21,9 +21,9 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.config;
 
-import org.jmxtrans.agent.util.Preconditions2;
+import org.jmxtrans.utils.Preconditions2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

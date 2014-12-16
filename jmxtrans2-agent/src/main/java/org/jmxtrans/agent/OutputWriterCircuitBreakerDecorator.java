@@ -23,6 +23,8 @@
  */
 package org.jmxtrans.agent;
 
+import org.jmxtrans.config.OutputWriter;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -32,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jmxtrans.agent.util.ConfigurationUtils.getBoolean;
+import static org.jmxtrans.utils.ConfigurationUtils.getBoolean;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>

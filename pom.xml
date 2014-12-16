@@ -6,7 +6,7 @@
     <artifactId>jmxtrans2</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <url>http://www.jmxtrans.org</url>
+    <url>http://www.jmxtrans.org/jmxtrans2</url>
 
     <licenses>
         <license>
@@ -47,8 +47,12 @@
 
     <modules>
         <module>jmxtrans2-agent</module>
+        <module>jmxtrans2-config</module>
         <module>jmxtrans2-embeded</module>
+        <module>jmxtrans2-output</module>
+        <module>jmxtrans2-scheduler</module>
         <module>jmxtrans2-standalone</module>
+        <module>jmxtrans2-utils</module>
     </modules>
 
     <scm>
@@ -76,6 +80,41 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-agent</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-config</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-embeded</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-output</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-scheduler</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-standalone</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-utils</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
@@ -274,7 +313,7 @@
             <dependency>
                 <groupId>org.python</groupId>
                 <artifactId>jython</artifactId>
-                <version>2.5.3</version>
+                <version>2.7-b3</version>
             </dependency>
             <dependency>
                 <groupId>org.quartz-scheduler</groupId>

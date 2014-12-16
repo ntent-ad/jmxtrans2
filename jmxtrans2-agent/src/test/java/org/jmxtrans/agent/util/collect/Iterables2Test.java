@@ -23,6 +23,7 @@
  */
 package org.jmxtrans.agent.util.collect;
 
+import org.jmxtrans.utils.Iterables2;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

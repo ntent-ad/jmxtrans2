@@ -21,39 +21,27 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.output;
+
+import org.jmxtrans.config.OutputWriter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public interface OutputWriter {
-    void postConstruct(@Nonnull Map<String, String> settings);
+public class ConsoleOutputWriter extends AbstractOutputWriter implements OutputWriter {
 
-    void preDestroy();
+    @Override
+    public void writeQueryResult(@Nonnull String name, @Nullable String type, @Nullable Object value) {
+        System.out.println(name + " " + value + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS));
+    }
 
-    /**
-     * Called before metrics collection starts
-     */
-    void preCollect() throws IOException;
-
-    /**
-     * @param metricName
-     * @param metricType see {@link org.jmxtrans.agent.Query#type}
-     * @param value
-     * @throws java.io.IOException
-     */
-    void writeQueryResult(@Nonnull String metricName, @Nullable String metricType, @Nullable Object value) throws IOException;
-
-    /**
-     * <p>called after a serie of writes, typically at the end of a collection.</p>
-     * <p>Useful with batch writers.</p>
-     */
-    void postCollect() throws IOException;
-
-    void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException;
+    @Override
+    public void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException {
+        System.out.println(invocationName + " " + value + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS));
+    }
 }

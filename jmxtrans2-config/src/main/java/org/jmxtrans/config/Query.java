@@ -21,10 +21,10 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.config;
 
-import org.jmxtrans.agent.util.Preconditions2;
-import org.jmxtrans.agent.util.collect.Iterables2;
+import org.jmxtrans.utils.Preconditions2;
+import org.jmxtrans.utils.Iterables2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,27 +47,27 @@ public class Query {
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     @Nonnull
-    protected ResultNameStrategy resultNameStrategy;
+    private ResultNameStrategy resultNameStrategy;
 
     @Nonnull
-    protected final ObjectName objectName;
+    private final ObjectName objectName;
     @Nonnull
-    protected final String resultAlias;
+    private final String resultAlias;
     /**
      * The attribute to retrieve ({@link javax.management.MBeanServer#getAttribute(javax.management.ObjectName, String)})
      */
     @Nonnull
-    protected final String attribute;
+    private final String attribute;
     /**
      * If the MBean attribute value is a {@link javax.management.openmbean.CompositeData}, the key to lookup.
      */
     @Nullable
-    protected final String key;
+    private final String key;
     /**
      * If the returned value is a {@link java.util.Collection}or an array, the position of the entry to lookup.
      */
     @Nullable
-    protected final Integer position;
+    private final Integer position;
     /**
      * Attribute type like '{@code gauge}' or '{@code counter}'. Used by monitoring systems like Librato who require this information.
      */
@@ -104,7 +104,7 @@ public class Query {
      * @param position           if the returned value is a {@link java.util.Collection} or an array, the position of the entry to lookup.
      * @param type               type of the metric ('counter', 'gauge', ...)
      * @param resultAlias
-     * @param resultNameStrategy the {@link org.jmxtrans.agent.ResultNameStrategy} used during the
+     * @param resultNameStrategy the {@link ResultNameStrategy} used during the
      *                           {@link #collectAndExport(javax.management.MBeanServer, OutputWriter)} phase.
      */
     public Query(@Nonnull String objectName, @Nonnull String attribute, @Nullable String key, @Nullable Integer position,

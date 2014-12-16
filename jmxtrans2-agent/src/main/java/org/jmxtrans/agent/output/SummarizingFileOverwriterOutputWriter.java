@@ -21,7 +21,11 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.agent.output;
+
+import org.jmxtrans.agent.PerMinuteSummarizerOutputWriter;
+import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.output.FileOverwriterOutputWriter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +34,7 @@ import java.util.Map;
 
 /**
  * Waiting for a configuration extension to combine the {@link org.jmxtrans.agent.PerMinuteSummarizerOutputWriter} with the
- * {@link org.jmxtrans.agent.FileOverwriterOutputWriter}, this class hard-codes the wiring.
+ * {@link org.jmxtrans.output.FileOverwriterOutputWriter}, this class hard-codes the wiring.
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */

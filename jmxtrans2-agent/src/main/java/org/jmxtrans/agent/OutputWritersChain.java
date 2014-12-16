@@ -23,6 +23,9 @@
  */
 package org.jmxtrans.agent;
 
+import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.output.AbstractOutputWriter;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
