@@ -35,6 +35,15 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <configuration>
+                    <merge>true</merge>
+                    <message>Creating site for ${project.name} ${project.version}</message>
+                    <path>${project.artifactId}</path>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <configuration>
@@ -48,15 +57,6 @@
                 <configuration>
                     <!-- FIXME: reactivate when we have some coverage-->
                     <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <configuration>
-                    <merge>true</merge>
-                    <message>Creating site for ${project.name} ${project.version}</message>
-                    <path>${project.artifactId}</path>
                 </configuration>
             </plugin>
         </plugins>
