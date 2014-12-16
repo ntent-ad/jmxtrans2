@@ -19,3 +19,4 @@ org.jmxtrans.model.naming
 org.jmxtrans.model.output
 org.jmxtrans.model.results
 org.jmxtrans.util
+org.jmxtrans.utils

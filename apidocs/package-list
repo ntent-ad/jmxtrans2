@@ -1,10 +1,12 @@
 org.jmxtrans
 org.jmxtrans.agent
+org.jmxtrans.agent.output
 org.jmxtrans.agent.util
 org.jmxtrans.agent.util.collect
 org.jmxtrans.agent.util.net
 org.jmxtrans.classloader
 org.jmxtrans.cli
+org.jmxtrans.config
 org.jmxtrans.connections
 org.jmxtrans.embedded
 org.jmxtrans.embedded.config
@@ -28,4 +30,6 @@ org.jmxtrans.model.naming
 org.jmxtrans.model.output
 org.jmxtrans.model.results
 org.jmxtrans.monitoring
+org.jmxtrans.output
 org.jmxtrans.util
+org.jmxtrans.utils
