@@ -19,9 +19,9 @@ under the License.
 -->
 <rss version="0.91">
   <channel>
-    <title>jmxtrans2-utils - Checkstyle report</title>
-    <link>http://www.jmxtrans.org/jmxtrans2/jmxtrans2-utils</link>
-    <description>jmxtrans2-utils - Checkstyle report</description>
+    <title>jmxtrans2-config - Checkstyle report</title>
+    <link>http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config</link>
+    <description>jmxtrans2-config - Checkstyle report</description>
     <language>en-us</language>
     <copyright>&#169;2014</copyright>
     <item>
@@ -30,9 +30,9 @@ under the License.
              Warnings: 0,
              Infos: 0
       </title>
-            <link>http://www.jmxtrans.org/jmxtrans2/jmxtrans2-utils/checkstyle.html</link>
+            <link>http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html</link>
       <description>
-        <p>Click <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-utils/checkstyle.html">here</a> for the full Checkstyle report.</p>
+        <p>Click <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html">here</a> for the full Checkstyle report.</p>
 
         <table summary="Files" boder="1">
           <thead>
@@ -46,7 +46,7 @@ under the License.
           <tbody>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-utils/checkstyle.html#org.jmxtrans.utils.ConfigurationUtils.java">org/jmxtrans/utils/ConfigurationUtils.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html#org.jmxtrans.config.ResultNameStrategy.java">org/jmxtrans/config/ResultNameStrategy.java</a>
                 </td>
                 <td>
                   0
@@ -60,7 +60,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-utils/checkstyle.html#org.jmxtrans.utils.StringUtils2.java">org/jmxtrans/utils/StringUtils2.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html#org.jmxtrans.config.Query.java">org/jmxtrans/config/Query.java</a>
                 </td>
                 <td>
                   0
@@ -74,7 +74,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-utils/checkstyle.html#org.jmxtrans.utils.Iterables2.java">org/jmxtrans/utils/Iterables2.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html#org.jmxtrans.config.OutputWriter.java">org/jmxtrans/config/OutputWriter.java</a>
                 </td>
                 <td>
                   0
@@ -88,7 +88,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-utils/checkstyle.html#org.jmxtrans.utils.Preconditions2.java">org/jmxtrans/utils/Preconditions2.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-config/checkstyle.html#org.jmxtrans.config.QueryResult.java">org/jmxtrans/config/QueryResult.java</a>
                 </td>
                 <td>
                   0
