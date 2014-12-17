@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>jmxtrans2-standalone</artifactId>
-    <name>JMXTrans2 standalone</name>
+    <name>JMXTrans - standalone</name>
     <description>JMX metrics exporter</description>
 
     <properties>

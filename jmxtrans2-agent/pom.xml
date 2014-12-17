@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>jmxtrans2-agent</artifactId>
-    <name>JMX metrics exporter agent</name>
+    <name>JMXTrans - agent</name>
 
     <properties>
         <verify.cobertura.totalBranchRate>35</verify.cobertura.totalBranchRate>

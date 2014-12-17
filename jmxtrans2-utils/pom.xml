@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>jmxtrans2-utils</artifactId>
+    <name>JMXTrans - utils</name>
 
     <properties>
         <verify.cobertura.totalBranchRate>19</verify.cobertura.totalBranchRate>

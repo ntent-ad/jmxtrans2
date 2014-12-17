@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>jmxtrans2-embeded</artifactId>
-    <name>JMXTrans2 embeded</name>
+    <name>JMXTrans - embeded</name>
     <description>In process JMX metrics exporter</description>
 
     <properties>

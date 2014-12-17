@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>jmxtrans2-output</artifactId>
+    <name>JMXTrans - output</name>
 
     <properties>
         <verify.cobertura.totalBranchRate>0</verify.cobertura.totalBranchRate>
