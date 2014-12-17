@@ -28,10 +28,9 @@ import org.jmxtrans.utils.Iterables2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
+import javax.management.*;
 import javax.management.openmbean.CompositeData;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -173,10 +172,22 @@ public class Query {
                 } else {
                     outputWriter.writeQueryResult(resultName, type, value);
                 }
-            } catch (Exception e) {
-                logger.log(Level.WARNING, "Exception collecting " + on + "#" + attribute + (key == null ? "" : "#" + key), e);
+            } catch (IOException e) {
+                logCollectingException(on, e);
+            } catch (AttributeNotFoundException e) {
+                logCollectingException(on, e);
+            } catch (MBeanException e) {
+                logCollectingException(on, e);
+            } catch (ReflectionException e) {
+                logCollectingException(on, e);
+            } catch (InstanceNotFoundException e) {
+                logCollectingException(on, e);
             }
         }
+    }
+
+    private void logCollectingException(ObjectName on, Exception e) {
+        logger.log(Level.WARNING, "Exception collecting " + on + "#" + attribute + (key == null ? "" : "#" + key), e);
     }
 
     @Override
