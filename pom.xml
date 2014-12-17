@@ -644,7 +644,6 @@
             </plugin>
             <plugin>
                 <groupId>com.google.code.sortpom</groupId>
-                <groupId>com.google.code.sortpom</groupId>
                 <artifactId>maven-sortpom-plugin</artifactId>
             </plugin>
             <plugin>
