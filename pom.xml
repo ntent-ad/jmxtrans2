@@ -4,9 +4,9 @@
 
     <groupId>org.jmxtrans.jmxtrans2</groupId>
     <artifactId>jmxtrans2</artifactId>
-    <name>JMXTrans</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <name>JMXTrans</name>
     <url>http://www.jmxtrans.org/jmxtrans2</url>
 
     <licenses>
