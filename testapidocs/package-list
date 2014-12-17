@@ -4,6 +4,7 @@ org.jmxtrans.agent.util
 org.jmxtrans.agent.util.collect
 org.jmxtrans.classloader
 org.jmxtrans.cli
+org.jmxtrans.config
 org.jmxtrans.connections
 org.jmxtrans.embedded
 org.jmxtrans.embedded.config

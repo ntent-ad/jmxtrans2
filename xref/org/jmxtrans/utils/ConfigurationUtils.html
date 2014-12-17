@@ -54,7 +54,7 @@
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>          String value = getString(settings, name);
 <a class="jxr_linenumber" name="L47" href="#L47">47</a>          <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>              <strong class="jxr_keyword">return</strong> Integer.parseInt(value);
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>          } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>          } <strong class="jxr_keyword">catch</strong> (NumberFormatException e) {
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>              <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Setting '"</span> + name + <span class="jxr_string">"="</span> + value + <span class="jxr_string">"' is not an integer on "</span> + settings);
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>          }
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>      }
@@ -72,10 +72,10 @@
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">int</strong> getInt(Map&lt;String, String&gt; settings, String name, <strong class="jxr_keyword">int</strong> defaultValue) <strong class="jxr_keyword">throws</strong> IllegalArgumentException {
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>          <strong class="jxr_keyword">if</strong> (settings.containsKey(name)) {
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>  
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>              String value = settings.get(name).toString();
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>              String value = settings.get(name);
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>              <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>                  <strong class="jxr_keyword">return</strong> Integer.parseInt(value);
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>              } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>              } <strong class="jxr_keyword">catch</strong> (NumberFormatException e) {
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>                  <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Setting '"</span> + name + <span class="jxr_string">"="</span> + value + <span class="jxr_string">"' is not an integer on "</span> + settings);
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>              }
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>          } <strong class="jxr_keyword">else</strong> {
@@ -96,10 +96,10 @@
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">long</strong> getLong(Map&lt;String, String&gt; settings, String name, <strong class="jxr_keyword">long</strong> defaultValue) <strong class="jxr_keyword">throws</strong> IllegalArgumentException {
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>          <strong class="jxr_keyword">if</strong> (settings.containsKey(name)) {
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>  
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>              String value = settings.get(name).toString();
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>              String value = settings.get(name);
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>              <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>                  <strong class="jxr_keyword">return</strong> Long.parseLong(value);
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>              } <strong class="jxr_keyword">catch</strong> (Exception e) {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>              } <strong class="jxr_keyword">catch</strong> (NumberFormatException e) {
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>                  <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Setting '"</span> + name + <span class="jxr_string">"="</span> + value + <span class="jxr_string">"' is not a long on "</span> + settings);
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>              }
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>          } <strong class="jxr_keyword">else</strong> {
@@ -119,7 +119,7 @@
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">boolean</strong> getBoolean(Map&lt;String, String&gt; settings, String name, <strong class="jxr_keyword">boolean</strong> defaultValue) {
 <a class="jxr_linenumber" name="L112" href="#L112">112</a>         <strong class="jxr_keyword">if</strong> (settings.containsKey(name)) {
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> 
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>             String value = settings.get(name).toString();
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>             String value = settings.get(name);
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>             <strong class="jxr_keyword">return</strong> Boolean.parseBoolean(value);
 <a class="jxr_linenumber" name="L116" href="#L116">116</a> 
 <a class="jxr_linenumber" name="L117" href="#L117">117</a>         } <strong class="jxr_keyword">else</strong> {
@@ -140,7 +140,7 @@
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>         <strong class="jxr_keyword">if</strong> (!settings.containsKey(name)) {
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"No setting '"</span> + name + <span class="jxr_string">"' found"</span>);
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>         }
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>         <strong class="jxr_keyword">return</strong> settings.get(name).toString();
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>         <strong class="jxr_keyword">return</strong> settings.get(name);
 <a class="jxr_linenumber" name="L136" href="#L136">136</a>     }
 <a class="jxr_linenumber" name="L137" href="#L137">137</a> 
 <a class="jxr_linenumber" name="L138" href="#L138">138</a>     <em class="jxr_javadoccomment">/**</em>
@@ -154,7 +154,7 @@
 <a class="jxr_linenumber" name="L146" href="#L146">146</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> String getString(Map&lt;String, String&gt; settings, String name, String defaultValue) {
 <a class="jxr_linenumber" name="L148" href="#L148">148</a>         <strong class="jxr_keyword">if</strong> (settings.containsKey(name)) {
-<a class="jxr_linenumber" name="L149" href="#L149">149</a>             <strong class="jxr_keyword">return</strong> settings.get(name).toString();
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>             <strong class="jxr_keyword">return</strong> settings.get(name);
 <a class="jxr_linenumber" name="L150" href="#L150">150</a>         } <strong class="jxr_keyword">else</strong> {
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>             <strong class="jxr_keyword">return</strong> defaultValue;
 <a class="jxr_linenumber" name="L152" href="#L152">152</a>         }
