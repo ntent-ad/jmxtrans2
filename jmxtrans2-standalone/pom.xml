@@ -19,7 +19,7 @@
         <package.install.dir>/usr/share/${project.artifactId}</package.install.dir>
         <package.user>${project.artifactId}</package.user>
         <verify.cobertura.totalBranchRate>30</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>33</verify.cobertura.totalLineRate>
+        <verify.cobertura.totalLineRate>31</verify.cobertura.totalLineRate>
         <verify.coverage.threshold>83</verify.coverage.threshold>
         <verify.mutation.threshold>26</verify.mutation.threshold>
     </properties>
@@ -225,10 +225,6 @@
                     <message>Creating site for ${project.name} ${project.version}</message>
                     <path>${project.artifactId}</path>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

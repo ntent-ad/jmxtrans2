@@ -11,10 +11,10 @@
     <name>JMXTrans - utils</name>
 
     <properties>
-        <verify.cobertura.totalBranchRate>19</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>26</verify.cobertura.totalLineRate>
+        <verify.cobertura.totalBranchRate>10</verify.cobertura.totalBranchRate>
+        <verify.cobertura.totalLineRate>13</verify.cobertura.totalLineRate>
         <verify.coverage.threshold>53</verify.coverage.threshold>
-        <verify.mutation.threshold>19</verify.mutation.threshold>
+        <verify.mutation.threshold>10</verify.mutation.threshold>
     </properties>
 
     <dependencies>

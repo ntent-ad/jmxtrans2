@@ -23,6 +23,7 @@
  */
 package org.jmxtrans.output;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jmxtrans.config.OutputWriter;
 
 import javax.annotation.Nonnull;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@SuppressFBWarnings(value = "RI_REDUNDANT_INTERFACES", justification = "Yes, we want to make it clear that this is an OutputWriter")
 public class ConsoleOutputWriter extends AbstractOutputWriter implements OutputWriter {
 
     @Override

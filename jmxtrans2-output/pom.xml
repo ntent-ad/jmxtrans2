@@ -20,6 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
             <optional>true</optional>
         </dependency>
@@ -42,14 +47,6 @@
                     <merge>true</merge>
                     <message>Creating site for ${project.name} ${project.version}</message>
                     <path>${project.artifactId}</path>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <configuration>
-                    <!-- FIXME: fix all violations and reactivate check -->
-                    <failOnError>false</failOnError>
                 </configuration>
             </plugin>
             <plugin>

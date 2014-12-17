@@ -52,8 +52,8 @@ public class Invocation {
             throw new IllegalArgumentException("Invalid objectName '" + objectName + "'", e);
         }
         this.operationName = operationName;
-        this.params = params;
-        this.signature = signature;
+        this.params = params.clone();
+        this.signature = signature.clone();
         this.resultAlias = resultAlias;
     }
 

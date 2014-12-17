@@ -23,8 +23,6 @@
  */
 package org.jmxtrans.utils;
 
-import java.io.IOError;
-import java.io.IOException;
 import java.util.Map;
 
 /**

@@ -23,16 +23,19 @@
  */
 package org.jmxtrans.output;
 
+import org.jmxtrans.utils.IoUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.io.*;
-import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.logging.Level;
 
 import static org.jmxtrans.utils.ConfigurationUtils.getString;
 import static org.jmxtrans.utils.ConfigurationUtils.getBoolean;
@@ -50,7 +53,6 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
     protected File temporaryFile;
     protected File file = new File(SETTING_FILE_NAME_DEFAULT_VALUE);
     protected Boolean showTimeStamp;
-    private static Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
     private static DateFormat dfISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
     
     @Override
@@ -72,7 +74,7 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
             temporaryFileWriter = null;
         }
         if (temporaryFileWriter == null) {
-            temporaryFileWriter = new BufferedWriter(new FileWriter(temporaryFile, false));
+            temporaryFileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(temporaryFile, false), Charset.forName("UTF-8")));
         }
 
         return temporaryFileWriter;
@@ -104,7 +106,9 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
             // silently skip
         }
         if (temporaryFile != null) {
-            temporaryFile.delete();
+            if (!temporaryFile.delete()) {
+                logger.log(Level.WARNING, "Could not delete temporary file [" + temporaryFile.getAbsolutePath() + "].");
+            }
         }
         temporaryFile = null;
 
@@ -122,96 +126,4 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
         }
     }
 
-    public static class IoUtils {
-
-        /**
-         * Simple implementation without chunking if the source file is big.
-         *
-         * @param source
-         * @param destination
-         * @throws java.io.IOException
-         */
-        private static void doCopySmallFile(File source, File destination) throws IOException {
-            if (destination.exists() && destination.isDirectory()) {
-                throw new IOException("Can not copy file, destination is a directory: " + destination.getAbsolutePath());
-            }
-
-            FileInputStream fis = null;
-            FileOutputStream fos = null;
-            FileChannel input = null;
-            FileChannel output = null;
-            try {
-                fis = new FileInputStream(source);
-                fos = new FileOutputStream(destination, false);
-                input = fis.getChannel();
-                output = fos.getChannel();
-                output.transferFrom(input, 0, input.size());
-            } finally {
-                closeQuietly(output);
-                closeQuietly(input);
-                closeQuietly(fis);
-                closeQuietly(fos);
-            }
-            if (destination.length() != source.length()) {
-                throw new IOException("Failed to copy content from '" +
-                        source + "' (" + source.length() + "bytes) to '" + destination + "' (" + destination.length() + ")");
-            }
-
-        }
-
-        public static void closeQuietly(Closeable closeable) {
-            if (closeable == null)
-                return;
-            try {
-                closeable.close();
-            } catch (Exception e) {
-                // ignore silently
-            }
-        }
-
-        public static void closeQuietly(Writer writer) {
-            if (writer == null)
-                return;
-            try {
-                writer.close();
-            } catch (Exception e) {
-                // ignore silently
-            }
-        }
-
-        /**
-         * Needed for old JVMs where {@link java.io.InputStream} does not implement {@link java.io.Closeable}.
-         */
-        public static void closeQuietly(InputStream inputStream) {
-            if (inputStream == null)
-                return;
-            try {
-                inputStream.close();
-            } catch (Exception e) {
-                // ignore silently
-            }
-        }
-
-        private static void replaceFile(File source, File destination) throws IOException {
-            boolean destinationExists;
-            if (destination.exists()) {
-                boolean deleted = destination.delete();
-                if (deleted) {
-                    destinationExists = false;
-                } else {
-                    destinationExists = true;
-                }
-            } else {
-                destinationExists = false;
-            }
-            if (destinationExists) {
-                doCopySmallFile(source, destination);
-            } else {
-                boolean renamed = source.renameTo(destination);
-                if (!renamed) {
-                    doCopySmallFile(source, destination);
-                }
-            }
-        }
-    }
 }
