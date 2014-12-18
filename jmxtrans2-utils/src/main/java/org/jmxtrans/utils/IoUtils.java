@@ -28,21 +28,15 @@ public class IoUtils {
             if (renamed) return;
         }
 
-        FileInputStream fis = null;
         FileOutputStream fos = null;
-        FileChannel input = null;
-        FileChannel output = null;
         long initialSize = destination.length();
         try {
             fos = new FileOutputStream(destination, append);
             if (append) {
-                fos.write(("\n").getBytes("UTF-8"));
+                fos.write("\n".getBytes("UTF-8"));
             }
             fos.write(Files.readAllBytes(Paths.get(source.getAbsolutePath())));
         } finally {
-            closeQuietly(output);
-            closeQuietly(input);
-            closeQuietly(fis);
             closeQuietly(fos);
         }
         if (!append && destination.length() != source.length()) {

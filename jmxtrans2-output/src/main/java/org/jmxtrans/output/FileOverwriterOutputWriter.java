@@ -103,12 +103,10 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
         try {
             IoUtils.closeQuietly(getTemporaryFileWriter());
         } catch (IOException e) {
-            // silently skip
+            logger.log(Level.WARNING, "Could not get temporary file to delete", e);
         }
-        if (temporaryFile != null) {
-            if (!temporaryFile.delete()) {
-                logger.log(Level.WARNING, "Could not delete temporary file [" + temporaryFile.getAbsolutePath() + "].");
-            }
+        if (temporaryFile != null && !temporaryFile.delete()) {
+            logger.log(Level.WARNING, "Could not delete temporary file [" + temporaryFile.getAbsolutePath() + "].");
         }
         temporaryFile = null;
 
