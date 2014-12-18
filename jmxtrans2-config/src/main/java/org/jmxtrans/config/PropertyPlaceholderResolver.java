@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent.util;
+package org.jmxtrans.config;
 
 import java.io.Serializable;
 

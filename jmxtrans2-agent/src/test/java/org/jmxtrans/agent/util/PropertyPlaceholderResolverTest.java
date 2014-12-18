@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.agent.util;
 
+import org.jmxtrans.config.PropertyPlaceholderResolver;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

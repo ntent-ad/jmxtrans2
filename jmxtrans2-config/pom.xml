@@ -35,10 +35,10 @@
     <name>JMXTrans - config</name>
 
     <properties>
-        <verify.cobertura.totalBranchRate>0</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>0</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>0</verify.coverage.threshold>
-        <verify.mutation.threshold>0</verify.mutation.threshold>
+        <verify.cobertura.totalBranchRate>17</verify.cobertura.totalBranchRate>
+        <verify.cobertura.totalLineRate>24</verify.cobertura.totalLineRate>
+        <verify.coverage.threshold>100</verify.coverage.threshold>
+        <verify.mutation.threshold>100</verify.mutation.threshold>
     </properties>
 
     <dependencies>

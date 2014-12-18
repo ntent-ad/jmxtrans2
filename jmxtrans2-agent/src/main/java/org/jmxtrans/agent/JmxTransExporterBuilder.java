@@ -22,9 +22,12 @@
  */
 package org.jmxtrans.agent;
 
-import org.jmxtrans.agent.util.PropertyPlaceholderResolver;
+import org.jmxtrans.config.ConfigParser;
+import org.jmxtrans.config.Interval;
+import org.jmxtrans.config.PropertyPlaceholderResolver;
 import org.jmxtrans.config.OutputWriter;
 import org.jmxtrans.config.ResultNameStrategy;
+import org.jmxtrans.config.XmlConfigParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -38,7 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
@@ -78,36 +80,23 @@ public class JmxTransExporterBuilder {
 
         Element rootElement = document.getDocumentElement();
 
+        ConfigParser configParser = new XmlConfigParser(placeholderResolver, rootElement);
+
         JmxTransExporter jmxTransExporter = new JmxTransExporter();
 
-        NodeList collectIntervalNodeList = rootElement.getElementsByTagName("collectIntervalInSeconds");
-        switch (collectIntervalNodeList.getLength()) {
-            case 0:
-                // nothing to do, use default value
-                break;
-            case 1:
-                Element collectIntervalElement = (Element) collectIntervalNodeList.item(0);
-                String collectIntervalString = placeholderResolver.resolveString(collectIntervalElement.getTextContent());
-                try {
-                    jmxTransExporter.withCollectInterval(Integer.parseInt(collectIntervalString), TimeUnit.SECONDS);
-                } catch (NumberFormatException e) {
-                    throw new IllegalStateException("Invalid <collectIntervalInSeconds> value '" + collectIntervalString + "', integer expected", e);
-                }
-                break;
-            default:
-                logger.warning("More than 1 <collectIntervalInSeconds> element found (" + collectIntervalNodeList.getLength() + "), use latest");
-                Element lastCollectIntervalElement = (Element) collectIntervalNodeList.item(collectIntervalNodeList.getLength() - 1);
-                String lastCollectIntervalString = placeholderResolver.resolveString(lastCollectIntervalElement.getTextContent());
-                try {
-                    jmxTransExporter.withCollectInterval(Integer.parseInt(lastCollectIntervalString), TimeUnit.SECONDS);
-                } catch (NumberFormatException e) {
-                    throw new IllegalStateException("Invalid <collectIntervalInSeconds> value '" + lastCollectIntervalString + "', integer expected", e);
-                }
-                break;
-
+        // Collection interval
+        Interval collectionInterval = configParser.parseInterval();
+        if (collectionInterval != null) {
+            jmxTransExporter.withCollectInterval(collectionInterval.getValue(), collectionInterval.getTimeUnit());
         }
 
-        buildResultNameStrategy(rootElement, jmxTransExporter);
+        // Result name strategy
+        ResultNameStrategy resultNameStrategy = configParser.parseResultNameStrategy();
+        if (resultNameStrategy == null) {
+            resultNameStrategy = new ResultNameStrategyImpl();
+        }
+        jmxTransExporter.resultNameStrategy = resultNameStrategy;
+
         buildInvocations(rootElement, jmxTransExporter);
         buildQueries(rootElement, jmxTransExporter);
 
@@ -148,41 +137,6 @@ public class JmxTransExporterBuilder {
 
             jmxTransExporter.withInvocation(objectName, operation, resultAlias);
         }
-    }
-
-    private void buildResultNameStrategy(Element rootElement, JmxTransExporter jmxTransExporter) {
-        NodeList resultNameStrategyNodeList = rootElement.getElementsByTagName("resultNameStrategy");
-
-        ResultNameStrategy resultNameStrategy;
-        switch (resultNameStrategyNodeList.getLength()) {
-            case 0:
-                // nothing to do, use default value
-                resultNameStrategy = new ResultNameStrategyImpl();
-                break;
-            case 1:
-                Element resultNameStrategyElement = (Element) resultNameStrategyNodeList.item(0);
-                String outputWriterClass = resultNameStrategyElement.getAttribute("class");
-                if (outputWriterClass.isEmpty())
-                    throw new IllegalArgumentException("<resultNameStrategy> element must contain a 'class' attribute");
-
-                try {
-                    resultNameStrategy = (ResultNameStrategy) Class.forName(outputWriterClass).newInstance();
-                    Map<String, String> settings = new HashMap<String, String>();
-                    NodeList settingsNodeList = resultNameStrategyElement.getElementsByTagName("*");
-                    for (int j = 0; j < settingsNodeList.getLength(); j++) {
-                        Element settingElement = (Element) settingsNodeList.item(j);
-                        settings.put(settingElement.getNodeName(), placeholderResolver.resolveString(settingElement.getTextContent()));
-                    }
-                    resultNameStrategy.postConstruct(settings);
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("Exception instantiating " + outputWriterClass, e);
-                }
-
-                break;
-            default:
-                throw new IllegalStateException("More than 1 <resultNameStrategy> element found (" + resultNameStrategyNodeList.getLength() + ")");
-        }
-        jmxTransExporter.resultNameStrategy = resultNameStrategy;
     }
 
     private void buildOutputWriters(Element rootElement, JmxTransExporter jmxTransExporter) {
