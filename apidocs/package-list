@@ -1,7 +1,6 @@
 org.jmxtrans
 org.jmxtrans.agent
 org.jmxtrans.agent.output
-org.jmxtrans.agent.util
 org.jmxtrans.agent.util.collect
 org.jmxtrans.agent.util.net
 org.jmxtrans.classloader
