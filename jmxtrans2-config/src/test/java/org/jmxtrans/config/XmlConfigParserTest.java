@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.config;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,52 +30,92 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import java.util.concurrent.TimeUnit;
-
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class XmlConfigParserTest {
 
+    private Document configDocument;
+    private Element config;
+
+    @Before
+    public void createEmptyConfig() throws ParserConfigurationException {
+        configDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        config = configDocument.createElement("jmxtrans");
+        configDocument.appendChild(config);
+    }
+
     @Test
     public void intervalIsNullWhenNotInConfig() throws ParserConfigurationException {
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        Element config = doc.createElement("jmxtrans");
-        doc.appendChild(config);
-
         ConfigParser parser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
         assertThat(parser.parseInterval()).isNull();
     }
 
     @Test
     public void intervalIsReadCorrectly() throws ParserConfigurationException {
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        Element config = doc.createElement("jmxtrans");
-        doc.appendChild(config);
-
-        Element interval = doc.createElement("collectIntervalInSeconds");
+        Element interval = configDocument.createElement("collectIntervalInSeconds");
         interval.setTextContent("10");
         config.appendChild(interval);
 
         ConfigParser parser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        assertThat(parser.parseInterval()).isEqualTo(new Interval(10, TimeUnit.SECONDS));
+        assertThat(parser.parseInterval()).isEqualTo(new Interval(10, SECONDS));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void intervalMustBeAnInteger() throws ParserConfigurationException {
+        Element interval = configDocument.createElement("collectIntervalInSeconds");
+        interval.setTextContent("abc");
+        config.appendChild(interval);
+
+        new XmlConfigParser(new PropertyPlaceholderResolver(), config).parseInterval();
     }
 
     @Test(expected = IllegalStateException.class)
     public void multipleIntervalsAreNotAllowed() throws ParserConfigurationException {
-        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        Element config = doc.createElement("jmxtrans");
-        doc.appendChild(config);
-
-        Element interval = doc.createElement("collectIntervalInSeconds");
+        Element interval = configDocument.createElement("collectIntervalInSeconds");
         interval.setTextContent("10");
         config.appendChild(interval);
 
-        Element secondInterval = doc.createElement("collectIntervalInSeconds");
+        Element secondInterval = configDocument.createElement("collectIntervalInSeconds");
         secondInterval.setTextContent("20");
         config.appendChild(secondInterval);
 
+        new XmlConfigParser(new PropertyPlaceholderResolver(), config).parseInterval();
+    }
+
+    @Test
+    public void resultNameStrategyIsNullWhenNotInConfig() throws ParserConfigurationException {
         ConfigParser parser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        parser.parseInterval();
+        assertThat(parser.parseResultNameStrategy()).isNull();
+    }
+
+    @Test
+    public void resultNameStrategyWithoutParametersIsInstantiated() throws ParserConfigurationException {
+        Element resultNameStrategyConfig = configDocument.createElement("resultNameStrategy");
+        resultNameStrategyConfig.setAttribute("class", DummyResultNameStrategy.class.getName());
+        config.appendChild(resultNameStrategyConfig);
+
+        ConfigParser parser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
+
+        ResultNameStrategy resultNameStrategy = parser.parseResultNameStrategy();
+        assertThat(resultNameStrategy).isNotNull();
+        assertThat(resultNameStrategy).isExactlyInstanceOf(DummyResultNameStrategy.class);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void resultNameStrategyWithoutClassIsInvalid() throws ParserConfigurationException {
+        Element resultNameStrategyConfig = configDocument.createElement("resultNameStrategy");
+        config.appendChild(resultNameStrategyConfig);
+
+        new XmlConfigParser(new PropertyPlaceholderResolver(), config).parseResultNameStrategy();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void multipleResultNameStrategyAreNotAllowed() throws ParserConfigurationException {
+        config.appendChild(configDocument.createElement("resultNameStrategy"));
+        config.appendChild(configDocument.createElement("resultNameStrategy"));
+
+        new XmlConfigParser(new PropertyPlaceholderResolver(), config).parseResultNameStrategy();
     }
 
 }

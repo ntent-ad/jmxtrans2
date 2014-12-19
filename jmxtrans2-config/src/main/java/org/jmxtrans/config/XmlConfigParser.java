@@ -76,12 +76,12 @@ public class XmlConfigParser implements ConfigParser {
                 break;
             case 1:
                 Element resultNameStrategyElement = (Element) resultNameStrategyNodeList.item(0);
-                String outputWriterClass = resultNameStrategyElement.getAttribute("class");
-                if (outputWriterClass.isEmpty())
+                String resultNameStrategyClass = resultNameStrategyElement.getAttribute("class");
+                if (resultNameStrategyClass.isEmpty())
                     throw new IllegalArgumentException("<resultNameStrategy> element must contain a 'class' attribute");
 
                 try {
-                    resultNameStrategy = (ResultNameStrategy) Class.forName(outputWriterClass).newInstance();
+                    resultNameStrategy = (ResultNameStrategy) Class.forName(resultNameStrategyClass).newInstance();
                     Map<String, String> settings = new HashMap<String, String>();
                     NodeList settingsNodeList = resultNameStrategyElement.getElementsByTagName("*");
                     for (int j = 0; j < settingsNodeList.getLength(); j++) {
@@ -90,7 +90,7 @@ public class XmlConfigParser implements ConfigParser {
                     }
                     resultNameStrategy.postConstruct(settings);
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Exception instantiating " + outputWriterClass, e);
+                    throw new IllegalArgumentException("Exception instantiating " + resultNameStrategyClass, e);
                 }
                 break;
             default:
