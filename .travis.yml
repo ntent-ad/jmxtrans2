@@ -1,8 +1,9 @@
 language: java
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y graphviz
-install: mvn compile -DskipTests=true -Dmaven.javadoc.skip=true -Dcobertura.skip=true -B -V -pl !jmxtrans2-standalone
+sudo: false
+cache:
+  directories:
+  - $HOME/.m2
+install: mvn compile -DskipTests=true -Dmaven.javadoc.skip=true -Dcobertura.skip=true -B -V
 before_script: "git clone -b travis `git config --get remote.origin.url` target/travis"
 script: mvn verify -B -V -PwithMutationTests -pl !jmxtrans2-standalone
 after_success:
