@@ -84,12 +84,12 @@
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>                  <strong class="jxr_keyword">break</strong>;
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>              <strong class="jxr_keyword">case</strong> 1:
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>                  Element resultNameStrategyElement = (Element) resultNameStrategyNodeList.item(0);
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>                  String outputWriterClass = resultNameStrategyElement.getAttribute(<span class="jxr_string">"class"</span>);
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>                  <strong class="jxr_keyword">if</strong> (outputWriterClass.isEmpty())
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>                  String resultNameStrategyClass = resultNameStrategyElement.getAttribute(<span class="jxr_string">"class"</span>);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>                  <strong class="jxr_keyword">if</strong> (resultNameStrategyClass.isEmpty())
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>                      <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"&lt;resultNameStrategy&gt; element must contain a 'class' attribute"</span>);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>                  <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>                      resultNameStrategy = (ResultNameStrategy) Class.forName(outputWriterClass).newInstance();
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>                      resultNameStrategy = (ResultNameStrategy) Class.forName(resultNameStrategyClass).newInstance();
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>                      Map&lt;String, String&gt; settings = <strong class="jxr_keyword">new</strong> HashMap&lt;String, String&gt;();
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>                      NodeList settingsNodeList = resultNameStrategyElement.getElementsByTagName(<span class="jxr_string">"*"</span>);
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>                      <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> j = 0; j &lt; settingsNodeList.getLength(); j++) {
@@ -98,7 +98,7 @@
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>                      }
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>                      resultNameStrategy.postConstruct(settings);
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>                  } <strong class="jxr_keyword">catch</strong> (Exception e) {
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>                      <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Exception instantiating "</span> + outputWriterClass, e);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>                      <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Exception instantiating "</span> + resultNameStrategyClass, e);
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>                  }
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>                  <strong class="jxr_keyword">break</strong>;
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>              <strong class="jxr_keyword">default</strong>:
