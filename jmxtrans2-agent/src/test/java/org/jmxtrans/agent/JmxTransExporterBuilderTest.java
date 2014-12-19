@@ -25,7 +25,9 @@ package org.jmxtrans.agent;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import org.jmxtrans.config.Invocation;
 import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.config.OutputWriterCircuitBreakerDecorator;
 import org.jmxtrans.config.Query;
 import org.jmxtrans.output.ConsoleOutputWriter;
 import org.junit.Test;
@@ -49,9 +51,15 @@ public class JmxTransExporterBuilderTest {
         assertThat(jmxTransExporter.collectIntervalTimeUnit, is(TimeUnit.SECONDS));
 
         OutputWriter decoratedOutputWriter = jmxTransExporter.outputWriter;
+
+        // OutputWritersChain
+        assertTrue(decoratedOutputWriter.getClass().equals(OutputWritersChain.class));
+        OutputWritersChain outputWritersChain = (OutputWritersChain) decoratedOutputWriter;
+        assertThat(outputWritersChain.outputWriters.size(), is(1));
+
         // CircuitBreaker
-        assertTrue(decoratedOutputWriter.getClass().equals(OutputWriterCircuitBreakerDecorator.class));
-        OutputWriterCircuitBreakerDecorator circuitBreakerDecorator = (OutputWriterCircuitBreakerDecorator) decoratedOutputWriter;
+        assertTrue(outputWritersChain.outputWriters.get(0).getClass().equals(OutputWriterCircuitBreakerDecorator.class));
+        OutputWriterCircuitBreakerDecorator circuitBreakerDecorator = (OutputWriterCircuitBreakerDecorator) outputWritersChain.outputWriters.get(0);
         assertThat(circuitBreakerDecorator.isDisabled(), is(false));
 
         // Graphite Writer

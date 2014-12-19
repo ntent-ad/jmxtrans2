@@ -22,7 +22,9 @@
  */
 package org.jmxtrans.config;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 public interface ConfigParser {
 
@@ -32,4 +34,12 @@ public interface ConfigParser {
     @Nullable
     ResultNameStrategy parseResultNameStrategy();
 
+    @Nonnull
+    Collection<Query> parseQueries(@Nonnull ResultNameStrategy resultNameStrategy);
+
+    @Nonnull
+    Collection<Invocation> parseInvocations();
+
+    @Nonnull
+    Collection<OutputWriter> parseOutputWriters();
 }

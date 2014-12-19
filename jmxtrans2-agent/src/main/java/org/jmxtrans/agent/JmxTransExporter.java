@@ -22,16 +22,18 @@
  */
 package org.jmxtrans.agent;
 
+import org.jmxtrans.config.Interval;
+import org.jmxtrans.config.Invocation;
 import org.jmxtrans.config.OutputWriter;
 import org.jmxtrans.config.Query;
 import org.jmxtrans.config.ResultNameStrategy;
 import org.jmxtrans.output.DevNullOutputWriter;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,7 +57,7 @@ public class JmxTransExporter {
      */
     protected OutputWriter outputWriter = new DevNullOutputWriter();
 
-    protected ResultNameStrategy resultNameStrategy;
+    private ResultNameStrategy resultNameStrategy;
     protected int collectInterval = 10;
     protected TimeUnit collectIntervalTimeUnit = TimeUnit.SECONDS;
     private Logger logger = Logger.getLogger(getClass().getName());
@@ -74,28 +76,34 @@ public class JmxTransExporter {
     private MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
     private ScheduledFuture scheduledFuture;
 
-    public JmxTransExporter withQuery(@Nonnull String objectName, @Nonnull String attribute, @Nonnull String resultAlias) {
-        return withQuery(objectName, attribute, null, null, null, resultAlias);
+    @Nonnull
+    public JmxTransExporter withQueries(@Nonnull Collection<Query> queries) {
+        this.queries.addAll(queries);
+        return this;
     }
 
-    public JmxTransExporter withQuery(@Nonnull String objectName, @Nonnull String attribute, @Nullable String key,
-                                      @Nullable Integer position, @Nullable String type, @Nonnull String resultAlias) {
-        Query query = new Query(objectName, attribute, key, position, type, resultAlias, this.resultNameStrategy);
-        queries.add(query);
+    @Nonnull
+    public JmxTransExporter withInvocations(@Nonnull Collection<Invocation> invocations) {
+        this.invocations.addAll(invocations);
         return this;
     }
-    public JmxTransExporter withInvocation(@Nonnull String objectName, @Nonnull String operation, @Nullable String resultAlias) {
-        invocations.add(new Invocation(objectName, operation, new Object[0], new String[0], resultAlias));
-        return this;
-    }
-    public JmxTransExporter withOutputWriter(OutputWriter outputWriter) {
+
+    @Nonnull
+    public JmxTransExporter withOutputWriter(@Nonnull OutputWriter outputWriter) {
         this.outputWriter = outputWriter;
         return this;
     }
 
-    public JmxTransExporter withCollectInterval(int collectInterval, @Nonnull TimeUnit collectIntervalTimeUnit) {
-        this.collectInterval = collectInterval;
-        this.collectIntervalTimeUnit = collectIntervalTimeUnit;
+    @Nonnull
+    public JmxTransExporter withResultNameStrategy(@Nonnull ResultNameStrategy resultNameStrategy) {
+        this.resultNameStrategy = resultNameStrategy;
+        return this;
+    }
+
+    @Nonnull
+    public JmxTransExporter withCollectInterval(@Nonnull Interval interval) {
+        this.collectInterval = interval.getValue();
+        this.collectIntervalTimeUnit = interval.getTimeUnit();
         return this;
     }
 

@@ -25,11 +25,17 @@ package org.jmxtrans.config;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Integer.parseInt;
+import static java.util.Collections.unmodifiableCollection;
 
 public class XmlConfigParser implements ConfigParser {
 
@@ -42,6 +48,7 @@ public class XmlConfigParser implements ConfigParser {
         this.configurationRoot = configurationRoot;
     }
 
+    @Nullable
     @Override
     public Interval parseInterval() {
         Interval result;
@@ -65,6 +72,7 @@ public class XmlConfigParser implements ConfigParser {
         return result;
     }
 
+    @Nullable
     @Override
     public ResultNameStrategy parseResultNameStrategy() {
         NodeList resultNameStrategyNodeList = configurationRoot.getElementsByTagName("resultNameStrategy");
@@ -97,5 +105,78 @@ public class XmlConfigParser implements ConfigParser {
                 throw new IllegalStateException("More than 1 <resultNameStrategy> element found (" + resultNameStrategyNodeList.getLength() + ")");
         }
         return resultNameStrategy;
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Query> parseQueries(@Nonnull ResultNameStrategy resultNameStrategy) {
+        List<Query> result = new ArrayList<Query>();
+        NodeList queries = configurationRoot.getElementsByTagName("query");
+        for (int i = 0; i < queries.getLength(); i++) {
+            Element queryElement = (Element) queries.item(i);
+            String objectName = queryElement.getAttribute("objectName");
+            String attribute = queryElement.getAttribute("attribute");
+            String key = queryElement.hasAttribute("key") ? queryElement.getAttribute("key") : null;
+            String resultAlias = queryElement.getAttribute("resultAlias");
+            String type = queryElement.getAttribute("type");
+            Integer position;
+            try {
+                position = queryElement.hasAttribute("position") ? Integer.parseInt(queryElement.getAttribute("position")) : null;
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid 'position' attribute for query objectName=" + objectName +
+                        ", attribute=" + attribute + ", resultAlias=" + resultAlias);
+
+            }
+            Query query = new Query(objectName, attribute, key, position, type, resultAlias, resultNameStrategy);
+            result.add(query);
+        }
+        return unmodifiableCollection(result);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<Invocation> parseInvocations() {
+        List<Invocation> result = new ArrayList<Invocation>();
+        NodeList invocations = configurationRoot.getElementsByTagName("invocation");
+        for (int i = 0; i < invocations.getLength(); i++) {
+            Element invocationElement = (Element) invocations.item(i);
+            String objectName = invocationElement.getAttribute("objectName");
+            String operation = invocationElement.getAttribute("operation");
+            String resultAlias = invocationElement.getAttribute("resultAlias");
+
+            result.add(new Invocation(objectName, operation, new Object[0], new String[0], resultAlias));
+        }
+        return unmodifiableCollection(result);
+    }
+
+    @Nonnull
+    @Override
+    public Collection<OutputWriter> parseOutputWriters() {
+        List<OutputWriter> outputWriters = new ArrayList<OutputWriter>();
+
+        NodeList outputWriterNodeList = configurationRoot.getElementsByTagName("outputWriter");
+
+        for (int i = 0; i < outputWriterNodeList.getLength(); i++) {
+            Element outputWriterElement = (Element) outputWriterNodeList.item(i);
+            String outputWriterClass = outputWriterElement.getAttribute("class");
+            if (outputWriterClass.isEmpty()) {
+                throw new IllegalArgumentException("<outputWriter> element must contain a 'class' attribute");
+            }
+            try {
+                OutputWriter outputWriter = (OutputWriter) Class.forName(outputWriterClass).newInstance();
+                Map<String, String> settings = new HashMap<String, String>();
+                NodeList settingsNodeList = outputWriterElement.getElementsByTagName("*");
+                for (int j = 0; j < settingsNodeList.getLength(); j++) {
+                    Element settingElement = (Element) settingsNodeList.item(j);
+                    settings.put(settingElement.getNodeName(), propertyPlaceholderResolver.resolveString(settingElement.getTextContent()));
+                }
+                outputWriter = new OutputWriterCircuitBreakerDecorator(outputWriter);
+                outputWriter.postConstruct(settings);
+                outputWriters.add(outputWriter);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Exception instantiating " + outputWriterClass, e);
+            }
+        }
+        return unmodifiableCollection(outputWriters);
     }
 }

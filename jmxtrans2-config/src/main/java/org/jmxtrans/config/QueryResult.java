@@ -26,12 +26,16 @@ import org.jmxtrans.utils.Preconditions2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@Immutable
+@ThreadSafe
 public class QueryResult {
     @Nonnull
     private final String name;

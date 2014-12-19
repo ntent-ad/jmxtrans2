@@ -20,9 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
-
-import org.jmxtrans.config.OutputWriter;
+package org.jmxtrans.config;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +39,8 @@ import static org.jmxtrans.utils.ConfigurationUtils.getBoolean;
 public class OutputWriterCircuitBreakerDecorator implements OutputWriter {
     public final static String SETTING_ENABLED = "enabled";
     protected final Logger logger;
-    protected final OutputWriter delegate;
+    // visible for testing
+    public final OutputWriter delegate;
     private boolean enabled = true;
     private int maxFailures = 5;
     private long disableDurationInMillis = 60 * 1000;

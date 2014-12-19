@@ -20,10 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.config;
 
-import org.jmxtrans.config.OutputWriter;
-
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -35,11 +35,13 @@ import java.util.logging.Logger;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@Immutable
+@ThreadSafe
 public class Invocation {
 
-    protected final ObjectName objectName;
-    protected final String operationName;
-    protected final String resultAlias;
+    public final ObjectName objectName;
+    public final String operationName;
+    public final String resultAlias;
     protected final Object[] params;
     protected final String[] signature;
     private final Logger logger = Logger.getLogger(getClass().getName());
@@ -66,6 +68,34 @@ public class Invocation {
                 logger.log(Level.WARNING, "Exception invoking " + on + "#" + operationName + "(" + Arrays.toString(params) + ")", e);
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Invocation that = (Invocation) o;
+
+        if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
+        if (operationName != null ? !operationName.equals(that.operationName) : that.operationName != null)
+            return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(params, that.params)) return false;
+        if (resultAlias != null ? !resultAlias.equals(that.resultAlias) : that.resultAlias != null) return false;
+        if (!Arrays.equals(signature, that.signature)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = objectName != null ? objectName.hashCode() : 0;
+        result = 31 * result + (operationName != null ? operationName.hashCode() : 0);
+        result = 31 * result + (resultAlias != null ? resultAlias.hashCode() : 0);
+        result = 31 * result + (params != null ? Arrays.hashCode(params) : 0);
+        result = 31 * result + (signature != null ? Arrays.hashCode(signature) : 0);
+        return result;
     }
 
     @Override

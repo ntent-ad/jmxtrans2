@@ -23,51 +23,32 @@
 package org.jmxtrans.config;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
-import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.Map;
 
-import static org.jmxtrans.utils.Preconditions2.checkNotNull;
-
-@Immutable
-@ThreadSafe
-public class Interval {
-
-    private final int value;
-    private final TimeUnit timeUnit;
-
-    public Interval(int value, @Nonnull TimeUnit timeUnit) {
-        this.value = value;
-        this.timeUnit = checkNotNull(timeUnit, "timeUnit cannot be null");
-    }
-
-    @Nonnull
-    public int getValue() {
-        return value;
-    }
-
-    @Nonnull
-    public TimeUnit getTimeUnit() {
-        return timeUnit;
+public class DummyOutputWriter implements OutputWriter {
+    @Override
+    public void postConstruct(@Nonnull Map<String, String> settings) {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Interval interval = (Interval) o;
-
-        if (value != interval.value) return false;
-        if (timeUnit != interval.timeUnit) return false;
-
-        return true;
+    public void preDestroy() {
     }
 
     @Override
-    public int hashCode() {
-        int result = value;
-        result = 31 * result + (timeUnit != null ? timeUnit.hashCode() : 0);
-        return result;
+    public void preCollect() throws IOException {
+    }
+
+    @Override
+    public void writeQueryResult(@Nonnull String metricName, @Nullable String metricType, @Nullable Object value) throws IOException {
+    }
+
+    @Override
+    public void postCollect() throws IOException {
+    }
+
+    @Override
+    public void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException {
     }
 }

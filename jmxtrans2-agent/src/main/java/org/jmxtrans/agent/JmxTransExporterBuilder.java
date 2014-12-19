@@ -24,23 +24,22 @@ package org.jmxtrans.agent;
 
 import org.jmxtrans.config.ConfigParser;
 import org.jmxtrans.config.Interval;
-import org.jmxtrans.config.PropertyPlaceholderResolver;
 import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.config.PropertyPlaceholderResolver;
 import org.jmxtrans.config.ResultNameStrategy;
 import org.jmxtrans.config.XmlConfigParser;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
@@ -50,15 +49,43 @@ import java.util.logging.Logger;
  */
 public class JmxTransExporterBuilder {
 
-    private Logger logger = Logger.getLogger(getClass().getName());
-    private PropertyPlaceholderResolver placeholderResolver = new PropertyPlaceholderResolver();
+    private final Logger logger = Logger.getLogger(getClass().getName());
+    private final PropertyPlaceholderResolver placeholderResolver = new PropertyPlaceholderResolver();
 
-    public JmxTransExporter build(String configurationFilePath) throws Exception {
+    public JmxTransExporter build(String configurationFilePath) throws ParserConfigurationException, SAXException, IOException {
         if (configurationFilePath == null) {
             throw new NullPointerException("configurationFilePath cannot be null");
         }
-        DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
+        ConfigParser configParser = new XmlConfigParser(
+                placeholderResolver,
+                loadDocument(configurationFilePath).getDocumentElement());
+
+        // Collection interval
+        Interval collectionInterval = configParser.parseInterval();
+        if (collectionInterval == null) {
+            collectionInterval = new Interval(10, TimeUnit.SECONDS);
+        }
+        // Result name strategy
+        ResultNameStrategy resultNameStrategy = configParser.parseResultNameStrategy();
+        if (resultNameStrategy == null) {
+            resultNameStrategy = new ResultNameStrategyImpl();
+        }
+        Collection<OutputWriter> outputWriters = configParser.parseOutputWriters();
+        if (outputWriters.size() == 0) {
+            logger.warning("No outputwriter defined.");
+        }
+
+        return new JmxTransExporter()
+                .withResultNameStrategy(resultNameStrategy)
+                .withInvocations(configParser.parseInvocations())
+                .withQueries(configParser.parseQueries(resultNameStrategy))
+                .withOutputWriter(new OutputWritersChain(outputWriters))
+                .withCollectInterval(collectionInterval);
+    }
+
+    private Document loadDocument(String configurationFilePath) throws SAXException, IOException, ParserConfigurationException {
+        DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document;
         if (configurationFilePath.toLowerCase().startsWith("classpath:")) {
             String classpathResourcePath = configurationFilePath.substring("classpath:".length());
@@ -77,105 +104,7 @@ public class JmxTransExporterBuilder {
             }
             document = dBuilder.parse(xmlFile);
         }
-
-        Element rootElement = document.getDocumentElement();
-
-        ConfigParser configParser = new XmlConfigParser(placeholderResolver, rootElement);
-
-        JmxTransExporter jmxTransExporter = new JmxTransExporter();
-
-        // Collection interval
-        Interval collectionInterval = configParser.parseInterval();
-        if (collectionInterval != null) {
-            jmxTransExporter.withCollectInterval(collectionInterval.getValue(), collectionInterval.getTimeUnit());
-        }
-
-        // Result name strategy
-        ResultNameStrategy resultNameStrategy = configParser.parseResultNameStrategy();
-        if (resultNameStrategy == null) {
-            resultNameStrategy = new ResultNameStrategyImpl();
-        }
-        jmxTransExporter.resultNameStrategy = resultNameStrategy;
-
-        buildInvocations(rootElement, jmxTransExporter);
-        buildQueries(rootElement, jmxTransExporter);
-
-        buildOutputWriters(rootElement, jmxTransExporter);
-
-        return jmxTransExporter;
+        return document;
     }
 
-    private void buildQueries(Element rootElement, JmxTransExporter jmxTransExporter) {
-        NodeList queries = rootElement.getElementsByTagName("query");
-        for (int i = 0; i < queries.getLength(); i++) {
-            Element queryElement = (Element) queries.item(i);
-            String objectName = queryElement.getAttribute("objectName");
-            String attribute = queryElement.getAttribute("attribute");
-            String key = queryElement.hasAttribute("key") ? queryElement.getAttribute("key") : null;
-            String resultAlias = queryElement.getAttribute("resultAlias");
-            String type = queryElement.getAttribute("type");
-            Integer position;
-            try {
-                position = queryElement.hasAttribute("position") ? Integer.parseInt(queryElement.getAttribute("position")) : null;
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid 'position' attribute for query objectName=" + objectName +
-                        ", attribute=" + attribute + ", resultAlias=" + resultAlias);
-
-            }
-
-            jmxTransExporter.withQuery(objectName, attribute, key, position, type, resultAlias);
-        }
-    }
-
-    private void buildInvocations(Element rootElement, JmxTransExporter jmxTransExporter) {
-        NodeList invocations = rootElement.getElementsByTagName("invocation");
-        for (int i = 0; i < invocations.getLength(); i++) {
-            Element invocationElement = (Element) invocations.item(i);
-            String objectName = invocationElement.getAttribute("objectName");
-            String operation = invocationElement.getAttribute("operation");
-            String resultAlias = invocationElement.getAttribute("resultAlias");
-
-            jmxTransExporter.withInvocation(objectName, operation, resultAlias);
-        }
-    }
-
-    private void buildOutputWriters(Element rootElement, JmxTransExporter jmxTransExporter) {
-        NodeList outputWriterNodeList = rootElement.getElementsByTagName("outputWriter");
-        List<OutputWriter> outputWriters = new ArrayList<OutputWriter>();
-
-        for (int i = 0; i < outputWriterNodeList.getLength(); i++) {
-            Element outputWriterElement = (Element) outputWriterNodeList.item(i);
-            String outputWriterClass = outputWriterElement.getAttribute("class");
-            if (outputWriterClass.isEmpty()) {
-                throw new IllegalArgumentException("<outputWriter> element must contain a 'class' attribute");
-            }
-            OutputWriter outputWriter;
-            try {
-                outputWriter = (OutputWriter) Class.forName(outputWriterClass).newInstance();
-                Map<String, String> settings = new HashMap<String, String>();
-                NodeList settingsNodeList = outputWriterElement.getElementsByTagName("*");
-                for (int j = 0; j < settingsNodeList.getLength(); j++) {
-                    Element settingElement = (Element) settingsNodeList.item(j);
-                    settings.put(settingElement.getNodeName(), placeholderResolver.resolveString(settingElement.getTextContent()));
-                }
-                outputWriter = new OutputWriterCircuitBreakerDecorator(outputWriter);
-                outputWriter.postConstruct(settings);
-                outputWriters.add(outputWriter);
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Exception instantiating " + outputWriterClass, e);
-            }
-
-        }
-
-        switch (outputWriters.size()) {
-            case 0:
-                logger.warning("No outputwriter defined.");
-                break;
-            case 1:
-                jmxTransExporter.withOutputWriter(outputWriters.get(0));
-                break;
-            default:
-                jmxTransExporter.withOutputWriter(new OutputWritersChain(outputWriters));
-        }
-    }
 }

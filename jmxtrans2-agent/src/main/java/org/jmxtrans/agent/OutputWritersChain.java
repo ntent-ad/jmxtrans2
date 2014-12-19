@@ -27,6 +27,7 @@ import org.jmxtrans.output.AbstractOutputWriter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,13 +35,14 @@ import java.util.List;
  */
 public class OutputWritersChain extends AbstractOutputWriter implements OutputWriter {
 
-    protected final List<OutputWriter> outputWriters;
+    // visible for testing
+    final List<OutputWriter> outputWriters;
 
     public OutputWritersChain() {
         outputWriters = new ArrayList<OutputWriter>();
     }
 
-    public OutputWritersChain(List<OutputWriter> outputWriters) {
+    public OutputWritersChain(Collection<OutputWriter> outputWriters) {
         this.outputWriters = new ArrayList<OutputWriter>(outputWriters.size());
         this.outputWriters.addAll(outputWriters);
     }

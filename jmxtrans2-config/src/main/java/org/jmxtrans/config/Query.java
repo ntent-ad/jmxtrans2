@@ -27,6 +27,8 @@ import org.jmxtrans.utils.Iterables2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.management.*;
 import javax.management.openmbean.CompositeData;
 import java.io.IOException;
@@ -40,12 +42,14 @@ import java.util.logging.Logger;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@Immutable
+@ThreadSafe
 public class Query {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     @Nonnull
-    private ResultNameStrategy resultNameStrategy;
+    private final ResultNameStrategy resultNameStrategy;
 
     @Nonnull
     private final ObjectName objectName;
@@ -70,7 +74,7 @@ public class Query {
      * Attribute type like '{@code gauge}' or '{@code counter}'. Used by monitoring systems like Librato who require this information.
      */
     @Nullable
-    private String type;
+    private final String type;
 
     /**
      * @see #Query(String, String, String, Integer, String, String, ResultNameStrategy)
@@ -227,5 +231,35 @@ public class Query {
     @Nullable
     public String getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Query query = (Query) o;
+
+        if (!attribute.equals(query.attribute)) return false;
+        if (key != null ? !key.equals(query.key) : query.key != null) return false;
+        if (!objectName.equals(query.objectName)) return false;
+        if (position != null ? !position.equals(query.position) : query.position != null) return false;
+        if (!resultAlias.equals(query.resultAlias)) return false;
+        if (!resultNameStrategy.equals(query.resultNameStrategy)) return false;
+        if (type != null ? !type.equals(query.type) : query.type != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = resultNameStrategy.hashCode();
+        result = 31 * result + objectName.hashCode();
+        result = 31 * result + resultAlias.hashCode();
+        result = 31 * result + attribute.hashCode();
+        result = 31 * result + (key != null ? key.hashCode() : 0);
+        result = 31 * result + (position != null ? position.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
     }
 }

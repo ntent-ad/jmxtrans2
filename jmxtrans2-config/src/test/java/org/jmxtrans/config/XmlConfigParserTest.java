@@ -30,6 +30,8 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import java.util.Collection;
+
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -116,6 +118,92 @@ public class XmlConfigParserTest {
         config.appendChild(configDocument.createElement("resultNameStrategy"));
 
         new XmlConfigParser(new PropertyPlaceholderResolver(), config).parseResultNameStrategy();
+    }
+
+    @Test
+    public void emptyListReturnedWhenNoQueryInConfig() {
+        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
+        assertThat(configParser.parseQueries(new DummyResultNameStrategy())).isEmpty();
+    }
+
+    @Test
+    public void canParseSingleQuery() {
+        Element queriesElement = configDocument.createElement("queries");
+        config.appendChild(queriesElement);
+        Element queryElement = configDocument.createElement("query");
+        queriesElement.appendChild(queryElement);
+        queryElement.setAttribute("objectName", "java.lang:type=OperatingSystem");
+        queryElement.setAttribute("attribute", "attribute");
+        queryElement.setAttribute("key", "key");
+        queryElement.setAttribute("position", "1");
+        queryElement.setAttribute("type", "type");
+        queryElement.setAttribute("resultAlias", "resultAlias");
+
+        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
+        DummyResultNameStrategy resultNameStrategy = new DummyResultNameStrategy();
+        Collection<Query> queries = configParser.parseQueries(resultNameStrategy);
+
+        assertThat(queries).hasSize(1);
+        assertThat(queries).containsOnly(new Query(
+                "java.lang:type=OperatingSystem",
+                "attribute",
+                "key",
+                1,
+                "type",
+                "resultAlias",
+                resultNameStrategy));
+    }
+
+    @Test
+    public void emptyListReturnedWhenNoInvocationInConfig() {
+        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
+        assertThat(configParser.parseInvocations()).isEmpty();
+    }
+
+    @Test
+    public void canParseSingleInvocation() {
+        Element invocationsElement = configDocument.createElement("invocations");
+        config.appendChild(invocationsElement);
+        Element invocationElement = configDocument.createElement("invocation");
+        invocationsElement.appendChild(invocationElement);
+        invocationElement.setAttribute("objectName", "java.lang:type=OperatingSystem");
+        invocationElement.setAttribute("operation", "operation");
+        invocationElement.setAttribute("resultAlias", "resultAlias");
+
+        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
+        Collection<Invocation> invocations = configParser.parseInvocations();
+
+        assertThat(invocations).hasSize(1);
+        assertThat(invocations).containsOnly(new Invocation(
+                "java.lang:type=OperatingSystem",
+                "operation",
+                new Object[0],
+                new String[0],
+                "resultAlias"));
+    }
+
+    @Test
+    public void emptyListReturnedWhenNoOutputWriterInConfig() {
+        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
+        assertThat(configParser.parseOutputWriters()).isEmpty();
+    }
+
+    @Test
+    public void canParseSingleOutputWriter() {
+        Element outputWriterElement = configDocument.createElement("outputWriter");
+        config.appendChild(outputWriterElement);
+        outputWriterElement.setAttribute("class", DummyOutputWriter.class.getName());
+
+        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
+        Collection<OutputWriter> outputWriters = configParser.parseOutputWriters();
+
+        assertThat(outputWriters).hasSize(1);
+        OutputWriter outputWriter = outputWriters.iterator().next();
+
+        assertThat(outputWriter).isInstanceOf(OutputWriterCircuitBreakerDecorator.class);
+
+        OutputWriterCircuitBreakerDecorator circuitBreaker = (OutputWriterCircuitBreakerDecorator) outputWriter;
+        assertThat(circuitBreaker.delegate).isInstanceOf(DummyOutputWriter.class);
     }
 
 }
