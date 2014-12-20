@@ -1,7 +1,4 @@
 org.jmxtrans.agent
-org.jmxtrans.agent.output
-org.jmxtrans.agent.util.collect
-org.jmxtrans.agent.util.net
 org.jmxtrans.config
 org.jmxtrans.embedded
 org.jmxtrans.embedded.config
@@ -16,4 +13,5 @@ org.jmxtrans.embedded.util.json
 org.jmxtrans.embedded.util.net
 org.jmxtrans.embedded.util.pool
 org.jmxtrans.output
+org.jmxtrans.output.utils
 org.jmxtrans.utils

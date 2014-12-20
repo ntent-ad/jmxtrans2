@@ -10,4 +10,6 @@ org.jmxtrans.embedded.util
 org.jmxtrans.embedded.util.concurrent
 org.jmxtrans.embedded.util.json
 org.jmxtrans.embedded.util.pool
+org.jmxtrans.output
+org.jmxtrans.output.utils
 org.jmxtrans.utils
