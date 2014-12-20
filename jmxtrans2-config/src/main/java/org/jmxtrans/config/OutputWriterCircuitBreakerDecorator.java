@@ -37,14 +37,14 @@ import static org.jmxtrans.utils.ConfigurationUtils.getBoolean;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public class OutputWriterCircuitBreakerDecorator implements OutputWriter {
-    public final static String SETTING_ENABLED = "enabled";
-    protected final Logger logger;
+    private final static String SETTING_ENABLED = "enabled";
+    private static final int MAX_FAILURES = 5;
+    private final Logger logger;
     // visible for testing
     public final OutputWriter delegate;
     private boolean enabled = true;
-    private int maxFailures = 5;
-    private long disableDurationInMillis = 60 * 1000;
-    private AtomicInteger failuresCounter = new AtomicInteger();
+    private static final long DISABLE_DURATION_MILLIS = 60 * 1000;
+    private final AtomicInteger failuresCounter = new AtomicInteger();
     private long disabledUntil = 0;
 
     public OutputWriterCircuitBreakerDecorator(OutputWriter delegate) {
@@ -53,7 +53,7 @@ public class OutputWriterCircuitBreakerDecorator implements OutputWriter {
     }
 
     @Override
-    public void postConstruct(Map<String, String> settings) {
+    public void postConstruct(@Nonnull Map<String, String> settings) {
         enabled = getBoolean(settings, SETTING_ENABLED, true);
         delegate.postConstruct(settings);
     }
@@ -98,7 +98,7 @@ public class OutputWriterCircuitBreakerDecorator implements OutputWriter {
     }
 
     @Override
-    public void writeInvocationResult(String invocationName, Object value) throws IOException {
+    public void writeInvocationResult(@Nonnull String invocationName, @Nonnull Object value) throws IOException {
         if (isDisabled()) {
             return;
         }
@@ -152,8 +152,8 @@ public class OutputWriterCircuitBreakerDecorator implements OutputWriter {
 
     public void incrementOutputWriterFailures() {
         int failuresCount = failuresCounter.incrementAndGet();
-        if (failuresCount >= maxFailures) {
-            disabledUntil = System.currentTimeMillis() + disableDurationInMillis;
+        if (failuresCount >= MAX_FAILURES) {
+            disabledUntil = System.currentTimeMillis() + DISABLE_DURATION_MILLIS;
             failuresCounter.set(0);
             logger.warning("Too many exceptions, disable writer until " + new Timestamp(disabledUntil));
         }

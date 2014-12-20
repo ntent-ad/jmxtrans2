@@ -20,11 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent.output;
+package org.jmxtrans.output;
 
-import org.jmxtrans.agent.PerMinuteSummarizerOutputWriter;
 import org.jmxtrans.config.OutputWriter;
-import org.jmxtrans.output.ConsoleOutputWriter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,13 +30,19 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Waiting for a configuration extension to combine the {@link org.jmxtrans.agent.PerMinuteSummarizerOutputWriter} with the
- * {@link org.jmxtrans.output.ConsoleOutputWriter}, this class hard-codes the wiring.
+ * Waiting for a configuration extension to combine the {@link org.jmxtrans.output.PerMinuteSummarizerOutputWriter} with the
+ * {@link org.jmxtrans.output.FileOverwriterOutputWriter}, this class hard-codes the wiring.
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class SummarizingConsoleOutputWriter implements OutputWriter {
-    private final OutputWriter delegate = new PerMinuteSummarizerOutputWriter(new ConsoleOutputWriter());
+public class SummarizingFileOverwriterOutputWriter implements OutputWriter {
+
+    @Nonnull
+    private final OutputWriter delegate;
+
+    public SummarizingFileOverwriterOutputWriter() {
+        delegate = new PerMinuteSummarizerOutputWriter(new FileOverwriterOutputWriter());
+    }
 
     @Override
     public void postConstruct(@Nonnull Map<String, String> settings) {

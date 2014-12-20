@@ -41,7 +41,6 @@ public class Interval {
         this.timeUnit = checkNotNull(timeUnit, "timeUnit cannot be null");
     }
 
-    @Nonnull
     public int getValue() {
         return value;
     }

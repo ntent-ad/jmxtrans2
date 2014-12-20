@@ -56,7 +56,7 @@
         <query objectName="Catalina:type=Manager,context=/,host=localhost" attribute="activeSessions"
                resultAlias="application.activeSessions"/>
     </queries>
-    <outputWriter class="org.jmxtrans.agent.GraphitePlainTextTcpOutputWriter">
+    <outputWriter class="org.jmxtrans.output.GraphitePlainTextTcpOutputWriter">
         <host>localhost</host>
         <namePrefix>servers.localhost.</namePrefix>
         <enabled>false</enabled>

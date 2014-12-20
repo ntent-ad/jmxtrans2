@@ -20,8 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent.util.collect;
+package org.jmxtrans.output.utils;
 
+import org.jmxtrans.output.utils.EvictingQueue;
 import org.junit.Test;
 
 import java.util.Arrays;

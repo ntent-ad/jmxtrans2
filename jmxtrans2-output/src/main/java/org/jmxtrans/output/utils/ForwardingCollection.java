@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent.util.collect;
+package org.jmxtrans.output.utils;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

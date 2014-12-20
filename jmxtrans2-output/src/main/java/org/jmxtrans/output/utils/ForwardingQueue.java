@@ -20,58 +20,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent.util.net;
+package org.jmxtrans.output.utils;
+
+import javax.annotation.Nonnull;
+import java.util.Queue;
 
 /**
- * Holder for network host and port.
- *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class HostAndPort {
-    private final String host;
-    private final int port;
+public abstract class ForwardingQueue<E> extends ForwardingCollection<E> implements Queue<E> {
 
-    public HostAndPort(String host, int port) {
-        if(host == null || host.isEmpty()) {
-            throw new IllegalArgumentException("'host' can not be null or empty");
-        }
-        this.host = host;
-        this.port = port;
+    @Override
+    @Nonnull
+    protected abstract Queue<E> delegate();
+
+    public boolean add(E e) {
+        return delegate().add(e);
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
+    public boolean offer(E e) {
+        return delegate().offer(e);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HostAndPort)) return false;
-
-        HostAndPort that = (HostAndPort) o;
-
-        if (port != that.port) return false;
-        if (!host.equals(that.host)) return false;
-
-        return true;
+    public E remove() {
+        return delegate().remove();
     }
 
     @Override
-    public int hashCode() {
-        int result = host.hashCode();
-        result = 31 * result + port;
-        return result;
+    public E poll() {
+        return delegate().poll();
     }
 
     @Override
-    public String toString() {
-        return "HostAndPort{" +
-                "host='" + host + '\'' +
-                ", port=" + port +
-                '}';
+    public E element() {
+        return delegate().element();
+    }
+
+    @Override
+    public E peek() {
+        return delegate().peek();
     }
 }

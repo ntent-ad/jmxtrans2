@@ -22,152 +22,48 @@
  */
 package org.jmxtrans.agent;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-
+import org.jmxtrans.config.Interval;
 import org.jmxtrans.config.Invocation;
 import org.jmxtrans.config.OutputWriter;
-import org.jmxtrans.config.OutputWriterCircuitBreakerDecorator;
-import org.jmxtrans.config.Query;
-import org.jmxtrans.output.ConsoleOutputWriter;
+import org.jmxtrans.config.ResultNameStrategy;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
-import javax.management.ObjectName;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.Collection;
 
-/**
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
 public class JmxTransExporterBuilderTest {
 
     @Test
-    public void testParseConfiguration() throws Exception {
-        JmxTransExporterBuilder builder = new JmxTransExporterBuilder();
-        JmxTransExporter jmxTransExporter = builder.build("classpath:jmxtrans-agent.xml");
+    public void loadConfigurationFromClasspath() throws Exception {
+        JmxTransExporterBuilder jmxTransExporterBuilder = spy(new JmxTransExporterBuilder());
+        JmxTransExporter jmxTransExporter = jmxTransExporterBuilder.build("classpath:jmxtrans-agent.xml");
 
-        assertThat(jmxTransExporter.collectInterval, is(11));
-        assertThat(jmxTransExporter.collectIntervalTimeUnit, is(TimeUnit.SECONDS));
+        assertThat(jmxTransExporter).isNotNull();
 
-        OutputWriter decoratedOutputWriter = jmxTransExporter.outputWriter;
+        ArgumentCaptor<ResultNameStrategy> resultNameStrategy = ArgumentCaptor.forClass(ResultNameStrategy.class);
+        ArgumentCaptor<Collection> invocations = ArgumentCaptor.forClass(Collection.class);
+        ArgumentCaptor<Collection> queries = ArgumentCaptor.forClass(Collection.class);
+        ArgumentCaptor<OutputWriter> outputWriter = ArgumentCaptor.forClass(OutputWriter.class);
+        ArgumentCaptor<Interval> interval = ArgumentCaptor.forClass(Interval.class);
 
-        // OutputWritersChain
-        assertTrue(decoratedOutputWriter.getClass().equals(OutputWritersChain.class));
-        OutputWritersChain outputWritersChain = (OutputWritersChain) decoratedOutputWriter;
-        assertThat(outputWritersChain.outputWriters.size(), is(1));
+        verify(jmxTransExporterBuilder).createJmxTransExporter(
+                resultNameStrategy.capture(),
+                invocations.capture(),
+                queries.capture(),
+                outputWriter.capture(),
+                interval.capture()
+        );
 
-        // CircuitBreaker
-        assertTrue(outputWritersChain.outputWriters.get(0).getClass().equals(OutputWriterCircuitBreakerDecorator.class));
-        OutputWriterCircuitBreakerDecorator circuitBreakerDecorator = (OutputWriterCircuitBreakerDecorator) outputWritersChain.outputWriters.get(0);
-        assertThat(circuitBreakerDecorator.isDisabled(), is(false));
+        assertThat(resultNameStrategy.getValue()).isNotNull();
+        assertThat(resultNameStrategy.getValue()).isExactlyInstanceOf(ResultNameStrategyImpl.class);
 
-        // Graphite Writer
-        assertTrue(circuitBreakerDecorator.delegate.getClass().equals(GraphitePlainTextTcpOutputWriter.class));
-        GraphitePlainTextTcpOutputWriter graphiteWriter = (GraphitePlainTextTcpOutputWriter) circuitBreakerDecorator.delegate;
-        assertThat(graphiteWriter.graphiteServerHostAndPort.getPort(), is(2203));
-        assertThat(graphiteWriter.graphiteServerHostAndPort.getHost(), is("localhost"));
-        assertThat(graphiteWriter.metricPathPrefix, is("app_123456.server.i876543."));
-
-        assertThat(jmxTransExporter.queries.size(), is(13));
-
-        Map<String, Query> queriesByResultAlias = indexQueriesByResultAlias(jmxTransExporter.queries);
-
-        {
-            Query query = queriesByResultAlias.get("os.systemLoadAverage");
-            assertThat(query.getObjectName(), is(new ObjectName("java.lang:type=OperatingSystem")));
-            assertThat(query.getAttribute(), is("SystemLoadAverage"));
-            assertThat(query.getResultAlias(), is("os.systemLoadAverage"));
-            assertThat(query.getKey(), is((String) null));
-        }
-        {
-            Query query = queriesByResultAlias.get("jvm.heapMemoryUsage.used");
-            assertThat(query.getObjectName(), is(new ObjectName("java.lang:type=Memory")));
-            assertThat(query.getAttribute(), is("HeapMemoryUsage"));
-            assertThat(query.getResultAlias(), is("jvm.heapMemoryUsage.used"));
-            assertThat(query.getKey(), is("used"));
-        }
-        Map<String, Invocation> invocationsByResultAlias = indexInvocationsByResultAlias(jmxTransExporter.invocations);
-        {
-            Invocation invocation = invocationsByResultAlias.get("jvm.gc");
-            assertThat(invocation.objectName, is(new ObjectName("java.lang:type=Memory")));
-            assertThat(invocation.operationName, is("gc"));
-            assertThat(invocation.resultAlias, is("jvm.gc"));
-        }
+        assertThat(invocations.getValue()).hasSize(1);
+        Invocation invocation = (Invocation) invocations.getValue().iterator().next();
+        assertThat(invocation.resultAlias).isEqualTo("jvm.gc");
     }
 
-    @Test
-    public void testParseConfiguration2() throws Exception {
-        JmxTransExporterBuilder builder = new JmxTransExporterBuilder();
-        JmxTransExporter jmxTransExporter = builder.build("classpath:jmxtrans-agent-2.xml");
-
-        assertThat(jmxTransExporter.collectInterval, is(12));
-        assertThat(jmxTransExporter.collectIntervalTimeUnit, is(TimeUnit.SECONDS));
-        assertTrue(jmxTransExporter.outputWriter.getClass().equals(OutputWritersChain.class));
-
-        OutputWritersChain outputWritersChain = (OutputWritersChain) jmxTransExporter.outputWriter;
-
-        assertThat(outputWritersChain.outputWriters.size(), is(2));
-
-        {
-            OutputWriter decoratedOutputWriter = outputWritersChain.outputWriters.get(0);
-            // CircuitBreaker
-            assertTrue(decoratedOutputWriter.getClass().equals(OutputWriterCircuitBreakerDecorator.class));
-            OutputWriterCircuitBreakerDecorator circuitBreakerDecorator = (OutputWriterCircuitBreakerDecorator) decoratedOutputWriter;
-            assertThat(circuitBreakerDecorator.isDisabled(), is(true));
-
-            // Graphite Writer
-            assertTrue(circuitBreakerDecorator.delegate.getClass().equals(GraphitePlainTextTcpOutputWriter.class));
-            GraphitePlainTextTcpOutputWriter writer = (GraphitePlainTextTcpOutputWriter) circuitBreakerDecorator.delegate;
-            assertThat(writer.graphiteServerHostAndPort.getPort(), is(2003));
-            assertThat(writer.graphiteServerHostAndPort.getHost(), is("localhost"));
-            assertThat(writer.metricPathPrefix, is("servers.localhost."));
-        }
-        {
-            OutputWriter decoratedOutputWriter = outputWritersChain.outputWriters.get(1);
-            // Circuit Breaker
-            assertTrue(decoratedOutputWriter.getClass().equals(OutputWriterCircuitBreakerDecorator.class));
-            OutputWriterCircuitBreakerDecorator circuitBreakerDecorator = (OutputWriterCircuitBreakerDecorator) decoratedOutputWriter;
-            assertThat(circuitBreakerDecorator.isDisabled(), is(true));
-
-            // Console Writer
-            assertTrue(circuitBreakerDecorator.delegate.getClass().equals(ConsoleOutputWriter.class));
-
-        }
-
-        assertThat(jmxTransExporter.queries.size(), is(13));
-
-        Map<String, Query> queriesByResultAlias = indexQueriesByResultAlias(jmxTransExporter.queries);
-
-        {
-            Query query = queriesByResultAlias.get("os.systemLoadAverage");
-            assertThat(query.getObjectName(), is(new ObjectName("java.lang:type=OperatingSystem")));
-            assertThat(query.getAttribute(), is("SystemLoadAverage"));
-            assertThat(query.getResultAlias(), is("os.systemLoadAverage"));
-            assertThat(query.getKey(), is((String) null));
-        }
-        {
-            Query query = queriesByResultAlias.get("jvm.heapMemoryUsage.used");
-            assertThat(query.getObjectName(), is(new ObjectName("java.lang:type=Memory")));
-            assertThat(query.getAttribute(), is("HeapMemoryUsage"));
-            assertThat(query.getResultAlias(), is("jvm.heapMemoryUsage.used"));
-            assertThat(query.getKey(), is("used"));
-        }
-    }
-
-    Map<String, Query> indexQueriesByResultAlias(Iterable<Query> queries) {
-        Map<String, Query> result = new HashMap<String, Query>();
-        for (Query query : queries) {
-            result.put(query.getResultAlias(), query);
-        }
-        return result;
-    }
-
-    Map<String, Invocation> indexInvocationsByResultAlias(Iterable<Invocation> invocations) {
-        Map<String, Invocation> result = new HashMap<String, Invocation>();
-        for (Invocation invocation : invocations) {
-            result.put(invocation.resultAlias, invocation);
-        }
-        return result;
-    }
 }

@@ -20,13 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.output;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
+import org.hamcrest.Matchers;
 import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.output.PerMinuteSummarizerOutputWriter;
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,7 +56,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, previous);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        assertThat(actualPerMinuteValue, is(13));
+        Assert.assertThat(actualPerMinuteValue, Matchers.is(13));
     }
 
     @Test
@@ -68,7 +71,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, previous);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        assertThat(actualPerMinuteValue, is(39));
+        Assert.assertThat(actualPerMinuteValue, Matchers.is(39));
     }
 
     @Test
@@ -83,7 +86,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, previous);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        assertThat(actualPerMinuteValue, is(20));
+        Assert.assertThat(actualPerMinuteValue, Matchers.is(20));
     }
 
     @Test
@@ -98,7 +101,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, previous);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        assertThat(actualPerMinuteValue, is(13));
+        Assert.assertThat(actualPerMinuteValue, Matchers.is(13));
     }
 
     @Test
@@ -113,7 +116,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, previous);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        assertThat(actualPerMinuteValue, is(13));
+        Assert.assertThat(actualPerMinuteValue, Matchers.is(13));
     }
 
     @Test
@@ -127,7 +130,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, null);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        assertThat(actualPerMinuteValue, is(13));
+        Assert.assertThat(actualPerMinuteValue, Matchers.is(13));
     }
 
     @Test
@@ -143,7 +146,7 @@ public class PerMinuteSummarizerOutputWriterTest {
 
         QueryResult actual = writer.getPreviousQueryResult(currentResult);
 
-        assertThat(actual,is(expected));
+        Assert.assertThat(actual, Matchers.is(expected));
     }
 
     @Test
@@ -159,7 +162,7 @@ public class PerMinuteSummarizerOutputWriterTest {
 
         QueryResult actual = writer.getPreviousQueryResult(currentResult);
 
-        assertThat(actual,is(expected));
+        Assert.assertThat(actual, Matchers.is(expected));
     }
 
     @Test
@@ -176,6 +179,6 @@ public class PerMinuteSummarizerOutputWriterTest {
 
         QueryResult actual = writer.getPreviousQueryResult(currentResult);
 
-        assertThat(actual,is(expected));
+        Assert.assertThat(actual, Matchers.is(expected));
     }
 }

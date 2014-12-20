@@ -24,17 +24,23 @@ package org.jmxtrans.agent;
 
 import org.jmxtrans.config.ConfigParser;
 import org.jmxtrans.config.Interval;
+import org.jmxtrans.config.Invocation;
 import org.jmxtrans.config.OutputWriter;
 import org.jmxtrans.config.PropertyPlaceholderResolver;
+import org.jmxtrans.config.Query;
 import org.jmxtrans.config.ResultNameStrategy;
 import org.jmxtrans.config.XmlConfigParser;
+import org.jmxtrans.utils.IoUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -50,15 +56,11 @@ import java.util.logging.Logger;
 public class JmxTransExporterBuilder {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
-    private final PropertyPlaceholderResolver placeholderResolver = new PropertyPlaceholderResolver();
 
-    public JmxTransExporter build(String configurationFilePath) throws ParserConfigurationException, SAXException, IOException {
-        if (configurationFilePath == null) {
-            throw new NullPointerException("configurationFilePath cannot be null");
-        }
-
+    @Nonnull
+    public JmxTransExporter build(@Nonnull String configurationFilePath) throws ParserConfigurationException, SAXException, IOException {
         ConfigParser configParser = new XmlConfigParser(
-                placeholderResolver,
+                new PropertyPlaceholderResolver(),
                 loadDocument(configurationFilePath).getDocumentElement());
 
         // Collection interval
@@ -76,35 +78,75 @@ public class JmxTransExporterBuilder {
             logger.warning("No outputwriter defined.");
         }
 
+        return createJmxTransExporter(
+                resultNameStrategy,
+                configParser.parseInvocations(),
+                configParser.parseQueries(resultNameStrategy),
+                new OutputWritersChain(outputWriters),
+                collectionInterval
+        );
+    }
+
+    @Nonnull
+    protected JmxTransExporter createJmxTransExporter(
+            @Nonnull ResultNameStrategy resultNameStrategy,
+            @Nonnull Collection<Invocation> invocations,
+            @Nonnull Collection<Query> queries,
+            @Nonnull OutputWriter outputWriter,
+            @Nonnull Interval collectionInterval) {
         return new JmxTransExporter()
                 .withResultNameStrategy(resultNameStrategy)
-                .withInvocations(configParser.parseInvocations())
-                .withQueries(configParser.parseQueries(resultNameStrategy))
-                .withOutputWriter(new OutputWritersChain(outputWriters))
+                .withInvocations(invocations)
+                .withQueries(queries)
+                .withOutputWriter(outputWriter)
                 .withCollectInterval(collectionInterval);
     }
 
-    private Document loadDocument(String configurationFilePath) throws SAXException, IOException, ParserConfigurationException {
+    @Nonnull
+    private Document loadDocument(@Nonnull String configurationFilePath) throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document document;
+        InputStream in = null;
+        try {
+            in = getInputStream(configurationFilePath);
+            return dBuilder.parse(in);
+        } finally {
+            IoUtils.closeQuietly(in);
+        }
+    }
+
+    @Nonnull
+    private InputStream getInputStream(@Nonnull String configurationFilePath) throws IOException {
         if (configurationFilePath.toLowerCase().startsWith("classpath:")) {
-            String classpathResourcePath = configurationFilePath.substring("classpath:".length());
-            InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(classpathResourcePath);
-            document = dBuilder.parse(in);
+            return getClasspathInputStream(configurationFilePath);
         } else if (configurationFilePath.toLowerCase().startsWith("file://") ||
                 configurationFilePath.toLowerCase().startsWith("http://") ||
                 configurationFilePath.toLowerCase().startsWith("https://")
                 ) {
-            URL url = new URL(configurationFilePath);
-            document = dBuilder.parse(url.openStream());
+            return getURLInputStream(configurationFilePath);
         } else {
-            File xmlFile = new File(configurationFilePath);
-            if (!xmlFile.exists()) {
-                throw new IllegalArgumentException("Configuration file '" + xmlFile.getAbsolutePath() + "' not found");
-            }
-            document = dBuilder.parse(xmlFile);
+            return getFileInputStream(configurationFilePath);
         }
-        return document;
+    }
+
+    @Nonnull
+    private FileInputStream getFileInputStream(@Nonnull String configurationFilePath) throws FileNotFoundException {
+        File xmlFile = new File(configurationFilePath);
+        if (!xmlFile.exists()) {
+            throw new IllegalArgumentException("Configuration file '" + xmlFile.getAbsolutePath() + "' not found");
+        }
+        return new FileInputStream(xmlFile);
+    }
+
+    @Nonnull
+    private InputStream getURLInputStream(@Nonnull String configurationFilePath) throws IOException {
+        URL url = new URL(configurationFilePath);
+        return url.openStream();
+    }
+
+    @Nonnull
+    private InputStream getClasspathInputStream(@Nonnull String configurationFilePath) {
+        String classpathResourcePath = configurationFilePath.substring("classpath:".length());
+        return Thread.currentThread().getContextClassLoader().getResourceAsStream(classpathResourcePath);
     }
 
 }

@@ -54,7 +54,7 @@
         <query objectName="org.apache.activemq:type=Broker,brokerName=*,destinationType=Topic,destinationName=*"
                attribute="EnqueueCount" resultAlias="activemq.%brokerName%.topic.%destinationName%.EnqueueCount"/>
     </queries>
-    <outputWriter class="org.jmxtrans.agent.GraphitePlainTextTcpOutputWriter">
+    <outputWriter class="org.jmxtrans.output.GraphitePlainTextTcpOutputWriter">
         <host>localhost</host>
         <port>2203</port>
         <namePrefix>app_123456.server.i876543.</namePrefix>

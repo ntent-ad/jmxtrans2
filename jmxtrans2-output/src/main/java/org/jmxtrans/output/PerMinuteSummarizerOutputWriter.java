@@ -20,12 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.output;
 
-import org.jmxtrans.agent.util.collect.EvictingQueue;
+import org.jmxtrans.output.utils.EvictingQueue;
 import org.jmxtrans.config.OutputWriter;
 import org.jmxtrans.config.QueryResult;
-import org.jmxtrans.output.AbstractOutputWriter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

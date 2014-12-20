@@ -42,8 +42,8 @@ public class Invocation {
     public final ObjectName objectName;
     public final String operationName;
     public final String resultAlias;
-    protected final Object[] params;
-    protected final String[] signature;
+    private final Object[] params;
+    private final String[] signature;
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     public Invocation(String objectName, String operationName, Object[] params, String[] signature, String resultAlias) {
