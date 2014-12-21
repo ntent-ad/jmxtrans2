@@ -5,7 +5,6 @@ org.jmxtrans.embedded.config
 org.jmxtrans.embedded.output
 org.jmxtrans.embedded.servlet
 org.jmxtrans.embedded.spring
-org.jmxtrans.embedded.util
 org.jmxtrans.embedded.util.concurrent
 org.jmxtrans.embedded.util.io
 org.jmxtrans.embedded.util.jmx

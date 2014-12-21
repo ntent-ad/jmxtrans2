@@ -34,7 +34,7 @@
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.Interval;
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.Invocation;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.OutputWriter;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.PropertyPlaceholderResolver;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.PropertyPlaceholderResolver;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.Query;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.ResultNameStrategy;
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.XmlConfigParser;
@@ -68,7 +68,7 @@
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      @Nonnull
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">public</strong> <a href="../../../org/jmxtrans/agent/JmxTransExporter.html">JmxTransExporter</a> build(@Nonnull String configurationFilePath) <strong class="jxr_keyword">throws</strong> ParserConfigurationException, SAXException, IOException {
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>          <a href="../../../org/jmxtrans/config/ConfigParser.html">ConfigParser</a> configParser = <strong class="jxr_keyword">new</strong> <a href="../../../org/jmxtrans/config/XmlConfigParser.html">XmlConfigParser</a>(
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>                  <strong class="jxr_keyword">new</strong> <a href="../../../org/jmxtrans/config/PropertyPlaceholderResolver.html">PropertyPlaceholderResolver</a>(),
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>                  <strong class="jxr_keyword">new</strong> <a href="../../../org/jmxtrans/utils/PropertyPlaceholderResolver.html">PropertyPlaceholderResolver</a>(),
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>                  loadDocument(configurationFilePath).getDocumentElement());
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>  
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>          <em class="jxr_comment">// Collection interval</em>
