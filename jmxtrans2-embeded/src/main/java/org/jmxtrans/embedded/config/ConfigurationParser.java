@@ -38,8 +38,8 @@ import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.embedded.Query;
 import org.jmxtrans.embedded.QueryAttribute;
 import org.jmxtrans.embedded.output.OutputWriter;
-import org.jmxtrans.embedded.util.Preconditions;
 import org.jmxtrans.embedded.util.json.PlaceholderEnabledJsonNodeFactory;
+import org.jmxtrans.utils.Preconditions2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +106,7 @@ public class ConfigurationParser {
                 logger.debug("mergeEmbeddedJmxTransConfiguration({})", configurationUrl);
                 String path = configurationUrl.substring("classpath:".length());
                 InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-                Preconditions.checkNotNull(in, "No file found for '" + configurationUrl + "'");
+                Preconditions2.checkNotNull(in, "No file found for '" + configurationUrl + "'");
                 mergeEmbeddedJmxTransConfiguration(in, embeddedJmxTrans);
             } else {
                 mergeEmbeddedJmxTransConfiguration(new URL(configurationUrl), embeddedJmxTrans);

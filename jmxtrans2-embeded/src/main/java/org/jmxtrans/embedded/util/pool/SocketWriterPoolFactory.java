@@ -24,7 +24,7 @@ package org.jmxtrans.embedded.util.pool;
 
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
-import org.jmxtrans.embedded.util.net.HostAndPort;
+import org.jmxtrans.output.utils.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketWriter;
 
 import java.net.InetSocketAddress;
@@ -32,7 +32,7 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 
 /**
- * Factory for {@linkplain org.jmxtrans.embedded.util.net.SocketWriter} instances created from {@linkplain org.jmxtrans.embedded.util.net.HostAndPort}.
+ * Factory for {@linkplain org.jmxtrans.embedded.util.net.SocketWriter} instances created from {@linkplain org.jmxtrans.output.utils.HostAndPort}.
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */

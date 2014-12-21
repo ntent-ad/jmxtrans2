@@ -27,7 +27,7 @@ import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
-import org.jmxtrans.embedded.QueryResult;
+import org.jmxtrans.output.QueryResult;
 import org.jmxtrans.embedded.util.io.IoUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * POST {@code /v1/metrics}</a> HTTP API.
  * <p/>
  * {@link org.jmxtrans.embedded.output.LibratoWriter} uses the "{@code query.attribute.type}" configuration parameter (via
- * {@link org.jmxtrans.embedded.QueryResult#getType()}) to publish the metrics.<br/>
+ * {@link org.jmxtrans.output.QueryResult#getType()}) to publish the metrics.<br/>
  * Supported types are {@value #METRIC_TYPE_COUNTER} and {@value #METRIC_TYPE_GAUGE}.<br/>
  * If the type is <code>null</code> or unsupported, metric is exported
  * as {@value #METRIC_TYPE_COUNTER}.

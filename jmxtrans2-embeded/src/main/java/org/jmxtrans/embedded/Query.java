@@ -23,9 +23,10 @@
 package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.OutputWriter;
-import org.jmxtrans.embedded.util.Preconditions;
 import org.jmxtrans.embedded.util.concurrent.DiscardingBlockingQueue;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
+import org.jmxtrans.output.QueryResult;
+import org.jmxtrans.utils.Preconditions2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -120,6 +121,7 @@ public class Query implements QueryMBean {
      */
     @Nullable
     private ObjectName queryMbeanObjectName;
+    private MBeanServer mbeanServer;
 
     /**
      * Creates a {@linkplain org.jmxtrans.embedded.Query} on the given <code>objectName</code>.
@@ -155,13 +157,13 @@ public class Query implements QueryMBean {
          * (i.e. not '*' or '?' wildcard) because the mbeanserver internally performs the check.
          * Seen on com.sun.jmx.interceptor.DefaultMBeanServerInterceptor
          */
-        Set<ObjectName> matchingObjectNames = embeddedJmxTrans.getMbeanServer().queryNames(this.objectName, null);
+        Set<ObjectName> matchingObjectNames = mbeanServer.queryNames(this.objectName, null);
         logger.trace("Query {} returned {}", objectName, matchingObjectNames);
 
         for (ObjectName matchingObjectName : matchingObjectNames) {
             long epochInMillis = System.currentTimeMillis();
             try {
-                AttributeList jmxAttributes = embeddedJmxTrans.getMbeanServer().getAttributes(matchingObjectName, this.attributeNames);
+                AttributeList jmxAttributes = mbeanServer.getAttributes(matchingObjectName, this.attributeNames);
                 logger.trace("Query {} returned {}", matchingObjectName, jmxAttributes);
                 for (Attribute jmxAttribute : jmxAttributes.asList()) {
                     QueryAttribute queryAttribute = this.attributesByName.get(jmxAttribute.getName());
@@ -231,7 +233,7 @@ public class Query implements QueryMBean {
      */
     @PreDestroy
     public void stop() throws Exception {
-        JmxUtils2.unregisterObject(queryMbeanObjectName, embeddedJmxTrans.getMbeanServer());
+        JmxUtils2.unregisterObject(queryMbeanObjectName, mbeanServer);
 
         for (OutputWriter outputWriter : outputWriters) {
             outputWriter.stop();
@@ -286,7 +288,7 @@ public class Query implements QueryMBean {
      * WARNING: {@linkplain #queryResults} queue should not be changed at runtime as the operation is not thread safe.
      */
     public void setResultsQueue(@Nonnull BlockingQueue<QueryResult> queryResultQueue) {
-        this.queryResults = Preconditions.checkNotNull(queryResultQueue);
+        this.queryResults = Preconditions2.checkNotNull(queryResultQueue);
     }
 
     public void setResultAlias(@Nullable String resultAlias) {
@@ -299,6 +301,7 @@ public class Query implements QueryMBean {
 
     public void setEmbeddedJmxTrans(EmbeddedJmxTrans embeddedJmxTrans) {
         this.embeddedJmxTrans = embeddedJmxTrans;
+        this.mbeanServer = embeddedJmxTrans.getMbeanServer();
     }
 
     /**

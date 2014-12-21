@@ -25,7 +25,7 @@ package org.jmxtrans.embedded.servlet;
 import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.embedded.config.ConfigurationParser;
-import org.jmxtrans.embedded.util.StringUtils2;
+import org.jmxtrans.utils.StringUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

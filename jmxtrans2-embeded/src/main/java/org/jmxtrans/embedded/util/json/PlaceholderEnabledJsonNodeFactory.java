@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Property placeholder / substitution enabled {@link JsonNodeFactory}.
  * <p/>
- * Each JSON text value is processed by the {@link org.jmxtrans.embedded.util.json.PropertyPlaceholderResolver} before building a {@linkplain TextNode}.
+ * Each JSON text value is processed by the {@link org.jmxtrans.utils.PropertyPlaceholderResolver} before building a {@linkplain TextNode}.
  * <p/>
  * Inspired by <a href="http://static.springsource.org/spring/docs/3.1.x/spring-framework-reference/html/beans.html#beans-factory-placeholderconfigurer">
  * Spring Framework PropertyPlaceHolder</a> and by
@@ -44,7 +44,7 @@ public class PlaceholderEnabledJsonNodeFactory extends JsonNodeFactory {
 
     private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private PropertyPlaceholderResolver resolver = new PropertyPlaceholderResolver();
+    private org.jmxtrans.utils.PropertyPlaceholderResolver resolver = new org.jmxtrans.utils.PropertyPlaceholderResolver();
 
     /**
      * Main constructor

@@ -20,8 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.util.json;
+package org.jmxtrans.utils;
 
+import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;

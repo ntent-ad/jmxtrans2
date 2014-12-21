@@ -293,7 +293,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
     }
 
     /**
-     * Max number of {@linkplain org.jmxtrans.embedded.QueryResult} exported at each call of {@link org.jmxtrans.embedded.output.OutputWriter#write(Iterable)}
+     * Max number of {@linkplain org.jmxtrans.output.QueryResult} exported at each call of {@link org.jmxtrans.embedded.output.OutputWriter#write(Iterable)}
      */
     public int getExportBatchSize() {
         return exportBatchSize;

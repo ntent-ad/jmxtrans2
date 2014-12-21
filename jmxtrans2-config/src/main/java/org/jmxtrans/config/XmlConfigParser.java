@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.config;
 
+import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 

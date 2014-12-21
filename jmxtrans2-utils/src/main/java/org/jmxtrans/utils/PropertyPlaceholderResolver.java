@@ -20,12 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.util.json;
+package org.jmxtrans.utils;
 
-import org.jmxtrans.embedded.EmbeddedJmxTransException;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.Serializable;
 
 /**
@@ -55,11 +51,10 @@ public class PropertyPlaceholderResolver implements Serializable {
      * Parse the given <code>string</code> resolving property placeholders (<code>${my-property[:default-value]}</code>)
      *
      * @param string the string to parse.
-     * @return the parsed string.
-     * @throws org.jmxtrans.embedded.EmbeddedJmxTransException a property placeholder could not be resolved and no default value has been defined.
+     * @return the parsed string. Non <code>null</code>.
+     * @throws IllegalStateException a property placeholder could not be resolved and no default value has been defined.
      */
-    @Nonnull
-    public String resolveString(@Nonnull String string) throws EmbeddedJmxTransException {
+    public String resolveString(String string) throws IllegalStateException {
 
         StringBuilder result = new StringBuilder(string.length());
 
@@ -102,12 +97,11 @@ public class PropertyPlaceholderResolver implements Serializable {
      * @param property     property to resolve
      * @param defaultValue Default value if the placeholder is not found. <code>null</code> means not default value is
      *                     defined and the placeholder must exist
-     * @return the resolved property or the default value if the placeholder is not found and the default value is defined
-     * @throws org.jmxtrans.embedded.EmbeddedJmxTransException if the placeholder is not found and the given <code>defaultValue</code> is not
+     * @return the resolved property or the default value if the placeholder is not found and the default value is defined. Non null.
+     * @throws IllegalStateException if the placeholder is not found and the given <code>defaultValue</code> is not
      *                              defined (<code>null</code>)
      */
-    @Nonnull
-    protected String resolvePlaceholder(String property, @Nullable String defaultValue) throws EmbeddedJmxTransException {
+    protected String resolvePlaceholder(String property, String defaultValue) throws IllegalStateException {
 
 
         // "graphite.host" -> "GRAPHITE_HOST"
@@ -125,7 +119,7 @@ public class PropertyPlaceholderResolver implements Serializable {
         } else if (defaultValue != null) {
             result = defaultValue;
         } else {
-            throw new EmbeddedJmxTransException("Property '" + property + "' not found in System properties nor in Environment variables");
+            throw new IllegalStateException("Property '" + property + "' not found in System properties nor in Environment variables");
         }
         return result;
     }

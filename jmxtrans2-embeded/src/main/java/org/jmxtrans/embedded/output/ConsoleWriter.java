@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.embedded.output;
 
-import org.jmxtrans.embedded.QueryResult;
+import org.jmxtrans.output.QueryResult;
 
 import java.util.concurrent.TimeUnit;
 

@@ -26,7 +26,7 @@ import org.jmxtrans.config.ConfigParser;
 import org.jmxtrans.config.Interval;
 import org.jmxtrans.config.Invocation;
 import org.jmxtrans.config.OutputWriter;
-import org.jmxtrans.config.PropertyPlaceholderResolver;
+import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.jmxtrans.config.Query;
 import org.jmxtrans.config.ResultNameStrategy;
 import org.jmxtrans.config.XmlConfigParser;

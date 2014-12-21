@@ -22,7 +22,8 @@
  */
 package org.jmxtrans.embedded;
 
-import org.jmxtrans.embedded.util.Preconditions;
+import org.jmxtrans.output.QueryResult;
+import org.jmxtrans.utils.Preconditions2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,11 +56,11 @@ public class QueryAttribute {
     @Nonnull
     private String name;
     /**
-     * Used to build the name of the {@link org.jmxtrans.embedded.QueryResult} that will be exported.
+     * Used to build the name of the {@link org.jmxtrans.output.QueryResult} that will be exported.
      * <p/>
-     * <code>null</code> if not defined in the configuration. The {@link #name} is then used to build to {@linkplain org.jmxtrans.embedded.QueryResult}
+     * <code>null</code> if not defined in the configuration. The {@link #name} is then used to build to {@linkplain org.jmxtrans.output.QueryResult}
      *
-     * @see QueryResult#getName()
+     * @see org.jmxtrans.output.QueryResult#getName()
      */
     @Nullable
     private String resultAlias;
@@ -67,7 +68,7 @@ public class QueryAttribute {
     /**
      * Attribute type like '{@code gauge}' or '{@code counter}'. Used by monitoring systems like Librato who require this information.
      *
-     * @see QueryResult#getName()
+     * @see org.jmxtrans.output.QueryResult#getName()
      */
     @Nullable
     private String type;
@@ -87,7 +88,7 @@ public class QueryAttribute {
      * @param resultAlias name of the result that will be exported
      */
     public QueryAttribute(@Nonnull String name, @Nullable String type, @Nullable String resultAlias) {
-        this.name = Preconditions.checkNotEmpty(name);
+        this.name = Preconditions2.checkNotEmpty(name);
         this.type = type;
         this.resultAlias = resultAlias;
     }

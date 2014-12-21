@@ -23,7 +23,7 @@
 package org.jmxtrans.embedded.output;
 
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
-import org.jmxtrans.embedded.QueryResult;
+import org.jmxtrans.output.QueryResult;
 import org.jmxtrans.embedded.util.io.IoUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

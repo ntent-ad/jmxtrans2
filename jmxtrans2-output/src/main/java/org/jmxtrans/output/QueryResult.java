@@ -20,9 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded;
+package org.jmxtrans.output;
 
-import org.jmxtrans.embedded.util.Preconditions;
+import org.jmxtrans.utils.Preconditions2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -64,7 +64,7 @@ public class QueryResult {
      * @param epochInMillis collect time in millis (see {@link System#currentTimeMillis()})
      */
     public QueryResult(@Nonnull String name, @Nullable String type, @Nullable Object value, long epochInMillis) {
-        this.name = Preconditions.checkNotEmpty(name);
+        this.name = Preconditions2.checkNotEmpty(name);
         this.value = value;
         this.epochInMillis = epochInMillis;
         this.type = type;

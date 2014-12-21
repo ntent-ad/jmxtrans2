@@ -36,8 +36,10 @@
     <description>In process JMX metrics exporter</description>
 
     <properties>
-        <verify.cobertura.totalBranchRate>31</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>39</verify.cobertura.totalLineRate>
+        <verify.cobertura.totalBranchRate>29</verify.cobertura.totalBranchRate>
+        <verify.cobertura.totalLineRate>38</verify.cobertura.totalLineRate>
+        <verify.coverage.threshold>100</verify.coverage.threshold>
+        <verify.mutation.threshold>100</verify.mutation.threshold>
     </properties>
 
     <dependencies>
@@ -79,6 +81,14 @@
             <groupId>net.sf.supercsv</groupId>
             <artifactId>super-csv</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-output</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-utils</artifactId>
         </dependency>
         <dependency>
             <!-- used by GraphitePickleWriter -->

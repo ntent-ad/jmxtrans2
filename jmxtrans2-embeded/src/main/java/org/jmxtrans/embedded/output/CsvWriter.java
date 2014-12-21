@@ -23,7 +23,7 @@
 package org.jmxtrans.embedded.output;
 
 import org.apache.commons.io.FileUtils;
-import org.jmxtrans.embedded.QueryResult;
+import org.jmxtrans.output.QueryResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * This output writer can ONLY be used on a per query basis, not in a global
  * output writer configuration because this aggregates all of the different
  * attributes returned by the query into a single line in a csv file, using the
- * {@link org.jmxtrans.embedded.QueryResult#getName()} as the value of the
+ * {@link org.jmxtrans.output.QueryResult#getName()} as the value of the
  * header.<p/>
  *
  * The query can contain multiple MBeans by pattern matched ObjectName
