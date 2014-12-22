@@ -35,7 +35,7 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.core.JsonFactory;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> com.fasterxml.jackson.core.JsonGenerator;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.embedded.EmbeddedJmxTransException;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.output.QueryResult;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.QueryResult;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.embedded.util.io.IoUtils2;
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.slf4j.Logger;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.slf4j.LoggerFactory;
@@ -60,7 +60,7 @@
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  <em class="jxr_javadoccomment"> * POST {@code /v1/metrics}&lt;/a&gt; HTTP API.</em>
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  <em class="jxr_javadoccomment"> * &lt;p/&gt;</em>
 <a class="jxr_linenumber" name="L54" href="#L54">54</a>  <em class="jxr_javadoccomment"> * {@link org.jmxtrans.embedded.output.LibratoWriter} uses the "{@code query.attribute.type}" configuration parameter (via</em>
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> * {@link org.jmxtrans.output.QueryResult#getType()}) to publish the metrics.&lt;br/&gt;</em>
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <em class="jxr_javadoccomment"> * {@link org.jmxtrans.config.QueryResult#getType()}) to publish the metrics.&lt;br/&gt;</em>
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  <em class="jxr_javadoccomment"> * Supported types are {@value #METRIC_TYPE_COUNTER} and {@value #METRIC_TYPE_GAUGE}.&lt;br/&gt;</em>
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  <em class="jxr_javadoccomment"> * If the type is &lt;code&gt;null&lt;/code&gt; or unsupported, metric is exported</em>
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_javadoccomment"> * as {@value #METRIC_TYPE_COUNTER}.</em>
@@ -79,7 +79,7 @@
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment"> * @author &lt;a href="<a href="mailto:cleclerc@cloudbees.com" target="alexandria_uri">mailto:cleclerc@cloudbees.com</a>"&gt;Cyrille Le Clerc&lt;/a&gt;</em>
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/jmxtrans/embedded/output/LibratoWriter.html">LibratoWriter</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../org/jmxtrans/output/AbstractOutputWriter.html">AbstractOutputWriter</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../org/jmxtrans/embedded/output/OutputWriter.html">OutputWriter</a> {
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/jmxtrans/embedded/output/LibratoWriter.html">LibratoWriter</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../org/jmxtrans/embedded/output/AbstractOutputWriter.html">AbstractOutputWriter</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../org/jmxtrans/config/OutputWriter.html">OutputWriter</a> {
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String METRIC_TYPE_GAUGE = <span class="jxr_string">"gauge"</span>;
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String METRIC_TYPE_COUNTER = <span class="jxr_string">"counter"</span>;
