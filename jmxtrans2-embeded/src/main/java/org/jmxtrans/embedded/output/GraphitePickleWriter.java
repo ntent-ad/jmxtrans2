@@ -24,7 +24,7 @@ package org.jmxtrans.embedded.output;
 
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
-import org.jmxtrans.output.QueryResult;
+import org.jmxtrans.config.QueryResult;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
 import org.jmxtrans.output.utils.HostAndPort;
 import org.jmxtrans.embedded.util.net.SocketOutputStream;

@@ -22,8 +22,8 @@
  */
 package org.jmxtrans.output;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jmxtrans.config.QueryResult;
+
 import java.io.IOException;
 
 /**
@@ -31,10 +31,6 @@ import java.io.IOException;
  */
 public class DevNullOutputWriter extends AbstractOutputWriter {
     @Override
-    public void writeQueryResult(@Nonnull String name, @Nullable String type, @Nullable Object value) {
-    }
-
-    @Override
-    public void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException {
+    public void write(QueryResult result) throws IOException {
     }
 }

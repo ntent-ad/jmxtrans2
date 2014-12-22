@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.embedded.output;
 
-import org.jmxtrans.output.QueryResult;
+import org.jmxtrans.config.QueryResult;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

@@ -24,9 +24,8 @@ package org.jmxtrans.output;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.config.QueryResult;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -37,12 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class ConsoleOutputWriter extends AbstractOutputWriter implements OutputWriter {
 
     @Override
-    public void writeQueryResult(@Nonnull String name, @Nullable String type, @Nullable Object value) {
-        System.out.println(name + " " + value + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS));
-    }
-
-    @Override
-    public void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException {
-        System.out.println(invocationName + " " + value + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS));
+    public void write(QueryResult result) throws IOException {
+        System.out.println(result.getName() + " " + result.getValue() + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS));
     }
 }

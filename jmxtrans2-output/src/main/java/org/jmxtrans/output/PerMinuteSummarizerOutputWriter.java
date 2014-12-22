@@ -52,14 +52,8 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
     }
 
     @Override
-    public void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException {
-        delegate.writeInvocationResult(invocationName, value);
-    }
-
-    @Override
-    public void writeQueryResult(@Nonnull String metricName, @Nullable String metricType, @Nullable Object value) throws IOException {
-
-        QueryResult currentResult = new QueryResult(metricName, metricType, value, System.currentTimeMillis());
+    public void write(QueryResult result) throws IOException {
+        QueryResult currentResult = new QueryResult(result.getName(), result.getType(), result.getValue(), System.currentTimeMillis());
 
         if ("counter".equals(currentResult.getType())) {
 
@@ -73,12 +67,12 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
                         "previous=" + previousResult + ", " +
                         "newCurrent.value=" + newCurrentResult.getValue());
 
-            delegate.writeQueryResult(newCurrentResult.getName(), newCurrentResult.getType(), newCurrentResult.getValue());
+            delegate.write(newCurrentResult);
 
         } else {
             if (logger.isLoggable(getTraceLevel()))
                 logger.log(getTraceLevel(), "Metric " + currentResult.getName() + " is a NOT a counter");
-            delegate.writeQueryResult(metricName, metricType, value);
+            delegate.write(currentResult);
         }
     }
 

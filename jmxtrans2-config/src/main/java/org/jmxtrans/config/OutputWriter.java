@@ -41,12 +41,11 @@ public interface OutputWriter {
     void preCollect() throws IOException;
 
     /**
-     * @param metricName
-     * @param metricType see {@link Query#type}
-     * @param value
-     * @throws java.io.IOException
+     * Write all the given {@linkplain QueryResult} to the target system.
      */
-    void writeQueryResult(@Nonnull String metricName, @Nullable String metricType, @Nullable Object value) throws IOException;
+    void write(Iterable<QueryResult> results) throws IOException;
+
+    void write(QueryResult result) throws IOException;
 
     /**
      * <p>called after a serie of writes, typically at the end of a collection.</p>

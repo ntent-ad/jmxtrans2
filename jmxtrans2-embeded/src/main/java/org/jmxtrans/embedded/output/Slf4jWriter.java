@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.embedded.output;
 
-import org.jmxtrans.output.QueryResult;
+import org.jmxtrans.config.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

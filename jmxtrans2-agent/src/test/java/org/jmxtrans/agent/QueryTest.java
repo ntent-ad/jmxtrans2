@@ -23,12 +23,15 @@
 package org.jmxtrans.agent;
 
 import org.jmxtrans.config.Query;
+import org.jmxtrans.config.QueryResult;
 import org.jmxtrans.config.ResultNameStrategy;
 import org.jmxtrans.output.AbstractOutputWriter;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.io.IOException;
@@ -36,8 +39,10 @@ import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -156,16 +161,12 @@ public class QueryTest {
         }
 
         @Override
-        public void writeQueryResult(@Nonnull String name, @Nullable String type, @Nullable Object value) throws IOException {
+        public void write(QueryResult result) throws IOException {
+            String name = result.getName();
             if (failOnDuplicateResult && resultsByName.containsKey(name)) {
                 fail("Result '" + name + "' already written");
             }
-            resultsByName.put(name, value);
-        }
-
-        @Override
-        public void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException {
-            writeQueryResult(invocationName, null, value);
+            resultsByName.put(name, result.getValue());
         }
     }
 }

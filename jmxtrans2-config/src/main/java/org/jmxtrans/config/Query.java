@@ -166,14 +166,14 @@ public class Query {
                     if (position == null) {
                         int idx = 0;
                         for (Object entry : iterable) {
-                            outputWriter.writeQueryResult(resultName + "_" + idx++, type, entry);
+                            outputWriter.write(new QueryResult(resultName + "_" + idx++, type, entry, System.currentTimeMillis()));
                         }
                     } else {
                         value = Iterables2.get((Iterable) value, position);
-                        outputWriter.writeQueryResult(resultName, type, value);
+                        outputWriter.write(new QueryResult(resultName, type, value, System.currentTimeMillis()));
                     }
                 } else {
-                    outputWriter.writeQueryResult(resultName, type, value);
+                    outputWriter.write(new QueryResult(resultName, type, value, System.currentTimeMillis()));
                 }
             } catch (IOException e) {
                 logCollectingException(on, e);

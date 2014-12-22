@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
-import org.jmxtrans.output.QueryResult;
+import org.jmxtrans.config.QueryResult;
 import org.jmxtrans.embedded.util.io.IoUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

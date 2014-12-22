@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.output;
 
+import org.jmxtrans.config.QueryResult;
 import org.jmxtrans.utils.IoUtils;
 
 import javax.annotation.Nonnull;
@@ -79,11 +80,6 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
         return temporaryFileWriter;
     }
 
-    @Override
-    public void writeInvocationResult(String invocationName, Object value) throws IOException {
-        writeQueryResult(invocationName, null, value);
-    }
-
     public synchronized void writeQueryResult(@Nonnull String name, @Nullable String type, @Nullable Object value) throws IOException {
         try {
             if (showTimeStamp){
@@ -95,6 +91,25 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
         } catch (IOException e) {
             releaseTemporaryWriter();
             throw e;
+        }
+    }
+
+    @Override
+    public void write(QueryResult result) throws IOException {
+        String name = result.getName();
+        Object value = result.getValue();
+        synchronized (this) {
+            try {
+                if (showTimeStamp){
+                    getTemporaryFileWriter().write("["+dfISO8601.format(Calendar.getInstance().getTime()) +"] "+name + " " + value + "\n");
+                } else {
+                    getTemporaryFileWriter().write(name + " " + value + "\n");
+                }
+
+            } catch (IOException e) {
+                releaseTemporaryWriter();
+                throw e;
+            }
         }
     }
 

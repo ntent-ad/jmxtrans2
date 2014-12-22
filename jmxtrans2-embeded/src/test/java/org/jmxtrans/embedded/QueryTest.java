@@ -24,7 +24,7 @@ package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.AbstractOutputWriter;
 import org.jmxtrans.embedded.output.OutputWriter;
-import org.jmxtrans.output.QueryResult;
+import org.jmxtrans.config.QueryResult;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

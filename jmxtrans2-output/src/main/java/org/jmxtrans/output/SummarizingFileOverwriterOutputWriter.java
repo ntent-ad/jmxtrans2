@@ -23,6 +23,7 @@
 package org.jmxtrans.output;
 
 import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.config.QueryResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,8 +61,15 @@ public class SummarizingFileOverwriterOutputWriter implements OutputWriter {
     }
 
     @Override
-    public void writeQueryResult(@Nonnull String metricName, @Nullable String metricType, @Nullable Object value) throws IOException {
-        delegate.writeQueryResult(metricName, metricType, value);
+    public void write(Iterable<QueryResult> results) throws IOException {
+        for (QueryResult result : results) {
+            write(result);
+        }
+    }
+
+    @Override
+    public void write(QueryResult result) throws IOException {
+        delegate.write(new QueryResult(result.getName(), result.getType(), result.getValue(), System.currentTimeMillis()));
     }
 
     @Override

@@ -35,10 +35,10 @@
     <name>JMXTrans - output</name>
 
     <properties>
-        <verify.cobertura.totalBranchRate>21</verify.cobertura.totalBranchRate>
+        <verify.cobertura.totalBranchRate>20</verify.cobertura.totalBranchRate>
         <verify.cobertura.totalLineRate>19</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>59</verify.coverage.threshold>
-        <verify.mutation.threshold>22</verify.mutation.threshold>
+        <verify.coverage.threshold>58</verify.coverage.threshold>
+        <verify.mutation.threshold>20</verify.mutation.threshold>
     </properties>
 
     <dependencies>

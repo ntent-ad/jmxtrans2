@@ -41,7 +41,11 @@ public class DummyOutputWriter implements OutputWriter {
     }
 
     @Override
-    public void writeQueryResult(@Nonnull String metricName, @Nullable String metricType, @Nullable Object value) throws IOException {
+    public void write(Iterable<QueryResult> results) throws IOException {
+    }
+
+    @Override
+    public void write(QueryResult result) throws IOException {
     }
 
     @Override

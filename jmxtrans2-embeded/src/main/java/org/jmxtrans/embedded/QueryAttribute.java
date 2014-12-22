@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.embedded;
 
-import org.jmxtrans.output.QueryResult;
+import org.jmxtrans.config.QueryResult;
 import org.jmxtrans.utils.Preconditions2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,11 +56,11 @@ public class QueryAttribute {
     @Nonnull
     private String name;
     /**
-     * Used to build the name of the {@link org.jmxtrans.output.QueryResult} that will be exported.
+     * Used to build the name of the {@link org.jmxtrans.config.QueryResult} that will be exported.
      * <p/>
-     * <code>null</code> if not defined in the configuration. The {@link #name} is then used to build to {@linkplain org.jmxtrans.output.QueryResult}
+     * <code>null</code> if not defined in the configuration. The {@link #name} is then used to build to {@linkplain org.jmxtrans.config.QueryResult}
      *
-     * @see org.jmxtrans.output.QueryResult#getName()
+     * @see org.jmxtrans.config.QueryResult#getName()
      */
     @Nullable
     private String resultAlias;
@@ -68,7 +68,7 @@ public class QueryAttribute {
     /**
      * Attribute type like '{@code gauge}' or '{@code counter}'. Used by monitoring systems like Librato who require this information.
      *
-     * @see org.jmxtrans.output.QueryResult#getName()
+     * @see org.jmxtrans.config.QueryResult#getName()
      */
     @Nullable
     private String type;

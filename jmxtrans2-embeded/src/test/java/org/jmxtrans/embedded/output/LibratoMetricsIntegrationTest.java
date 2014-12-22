@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.embedded.output;
 
-import org.jmxtrans.output.QueryResult;
+import org.jmxtrans.config.QueryResult;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

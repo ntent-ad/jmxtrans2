@@ -22,15 +22,18 @@
  */
 package org.jmxtrans.output;
 
-import org.jmxtrans.output.utils.HostAndPort;
 import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.output.utils.HostAndPort;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.*;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -94,13 +97,8 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter imple
     }
 
     @Override
-    public void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException {
-        writeQueryResult(invocationName, null, value);
-    }
-
-    @Override
-    public void writeQueryResult(@Nonnull String metricName, @Nullable String type, @Nullable Object value) throws IOException {
-        String msg = buildMetricPathPrefix() + metricName + " " + value + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+    public void write(QueryResult result) throws IOException {
+        String msg = buildMetricPathPrefix() + result.getName() + " " + result.getValue() + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
         try {
             ensureGraphiteConnection();
             if (logger.isLoggable(getTraceLevel())) {

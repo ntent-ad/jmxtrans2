@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.output;
 
+import org.jmxtrans.config.QueryResult;
 import org.jmxtrans.utils.IoUtils;
 
 import javax.annotation.Nonnull;
@@ -84,14 +85,19 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
         return temporaryFileWriter;
     }
 
-    @Override
-    public void writeInvocationResult(String invocationName, Object value) throws IOException {
-        writeQueryResult(invocationName, null, value);
-    }
-
     public synchronized void writeQueryResult(@Nonnull String name, @Nullable String type, @Nullable Object value) throws IOException {
         try {
             getTemporaryFileWriter().write("["+dfISO8601.format(Calendar.getInstance().getTime()) +"] "+name + " " + value + "\n");
+        } catch (IOException e) {
+            releaseTemporaryWriter();
+            throw e;
+        }
+    }
+
+    @Override
+    public synchronized void write(QueryResult result) throws IOException {
+        try {
+            getTemporaryFileWriter().write("["+dfISO8601.format(Calendar.getInstance().getTime()) +"] "+ result.getName() + " " + result.getValue() + "\n");
         } catch (IOException e) {
             releaseTemporaryWriter();
             throw e;
