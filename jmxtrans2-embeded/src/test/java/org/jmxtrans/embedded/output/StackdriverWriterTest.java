@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.embedded.output;
 
-import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.results.QueryResult;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

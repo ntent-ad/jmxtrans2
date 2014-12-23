@@ -23,7 +23,7 @@
 package org.jmxtrans.output;
 
 import org.jmxtrans.config.OutputWriter;
-import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -81,11 +81,6 @@ public abstract class AbstractOutputWriter implements OutputWriter {
 
     @Override
     public void preCollect() throws IOException {
-    }
-
-    @Override
-    public final void writeInvocationResult(String invocationName, Object value) throws IOException {
-        write(new QueryResult(invocationName, null, value, System.currentTimeMillis()));
     }
 
     @Override

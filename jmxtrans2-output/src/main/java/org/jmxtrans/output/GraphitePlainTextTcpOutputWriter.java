@@ -23,7 +23,7 @@
 package org.jmxtrans.output;
 
 import org.jmxtrans.config.OutputWriter;
-import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.output.utils.HostAndPort;
 
 import java.io.IOException;

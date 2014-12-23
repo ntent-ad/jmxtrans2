@@ -22,8 +22,9 @@
  */
 package org.jmxtrans.config;
 
+import org.jmxtrans.results.QueryResult;
+
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Map;
 
@@ -50,9 +51,5 @@ public class DummyOutputWriter implements OutputWriter {
 
     @Override
     public void postCollect() throws IOException {
-    }
-
-    @Override
-    public void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException {
     }
 }

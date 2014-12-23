@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.config;
 
+import org.jmxtrans.results.QueryResult;
+
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -92,24 +94,7 @@ public class OutputWriterCircuitBreakerDecorator implements OutputWriter {
             return;
         }
         try {
-            delegate.write(new QueryResult(result.getName(), result.getType(), System.currentTimeMillis()));
-            incrementOutputWriterSuccess();
-        } catch (RuntimeException e) {
-            incrementOutputWriterFailures();
-            throw e;
-        } catch (IOException e) {
-            incrementOutputWriterFailures();
-            throw e;
-        }
-    }
-
-    @Override
-    public void writeInvocationResult(@Nonnull String invocationName, @Nonnull Object value) throws IOException {
-        if (isDisabled()) {
-            return;
-        }
-        try {
-            delegate.writeInvocationResult(invocationName, value);
+            delegate.write(result);
             incrementOutputWriterSuccess();
         } catch (RuntimeException e) {
             incrementOutputWriterFailures();

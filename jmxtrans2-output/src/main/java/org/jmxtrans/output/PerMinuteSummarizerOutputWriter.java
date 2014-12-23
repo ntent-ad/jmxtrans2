@@ -24,7 +24,7 @@ package org.jmxtrans.output;
 
 import org.jmxtrans.output.utils.EvictingQueue;
 import org.jmxtrans.config.OutputWriter;
-import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

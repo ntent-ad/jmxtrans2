@@ -23,7 +23,7 @@
 package org.jmxtrans.agent;
 
 import org.jmxtrans.config.OutputWriter;
-import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.output.AbstractOutputWriter;
 
 import java.io.IOException;

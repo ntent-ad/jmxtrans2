@@ -28,7 +28,7 @@ import javax.management.ObjectName;
 import java.util.Map;
 
 /**
- * Build a {@linkplain QueryResult#name} from a collected metric ({@linkplain Query}).
+ * Build a {@linkplain org.jmxtrans.results.QueryResult#name} from a collected metric ({@linkplain Query}).
  * <p/>
  * Build name must be escaped to be compatible with all {@linkplain OutputWriter}.
  * The approach is to escape non alpha-numeric chars.

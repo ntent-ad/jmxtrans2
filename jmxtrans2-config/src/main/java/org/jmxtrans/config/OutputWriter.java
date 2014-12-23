@@ -22,8 +22,9 @@
  */
 package org.jmxtrans.config;
 
+import org.jmxtrans.results.QueryResult;
+
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import java.util.Map;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public interface OutputWriter {
+
     void postConstruct(@Nonnull Map<String, String> settings);
 
     void preDestroy();
@@ -41,7 +43,7 @@ public interface OutputWriter {
     void preCollect() throws IOException;
 
     /**
-     * Write all the given {@linkplain QueryResult} to the target system.
+     * Write all the given {@linkplain org.jmxtrans.results.QueryResult} to the target system.
      */
     void write(Iterable<QueryResult> results) throws IOException;
 
@@ -53,5 +55,4 @@ public interface OutputWriter {
      */
     void postCollect() throws IOException;
 
-    void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException;
 }

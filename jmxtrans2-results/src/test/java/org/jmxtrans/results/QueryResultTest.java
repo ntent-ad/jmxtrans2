@@ -20,33 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.results;
 
-import javax.management.openmbean.CompositeData;
-import java.util.List;
+import org.junit.Test;
 
-/**
- * Mock {@link org.jmxtrans.agent.MockMBean}
- *
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
-public interface MockMBean {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    public long getCollectionUsageThreshold();
+public class QueryResultTest {
 
-    /**
-     * @see java.lang.management.MemoryPoolMXBean#getName()
-     */
-    public String getName();
+    @Test
+    public void twoIsGreaterThanOne() {
+        QueryResult resultOne = new QueryResult("one", 1, 0);
+        QueryResult resultTwo = new QueryResult("two", 2, 0);
+        assertThat(resultTwo.isValueGreaterThan(resultOne)).isTrue();
+    }
 
-    /**
-     * @see java.lang.management.MemoryPoolMXBean#getUsage()
-     */
-    public CompositeData getUsage();
 
-    public int[] getIntArray();
-
-    public Integer[] getIntegerArray();
-
-    public List<Integer> getIntegerList();
 }

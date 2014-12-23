@@ -23,10 +23,9 @@
 package org.jmxtrans.output;
 
 import org.jmxtrans.config.OutputWriter;
-import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Map;
 
@@ -77,8 +76,4 @@ public class SummarizingFileOverwriterOutputWriter implements OutputWriter {
         delegate.postCollect();
     }
 
-    @Override
-    public void writeInvocationResult(@Nonnull String invocationName, @Nullable Object value) throws IOException {
-        delegate.writeInvocationResult(invocationName, value);
-    }
 }

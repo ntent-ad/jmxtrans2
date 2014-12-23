@@ -141,7 +141,7 @@ public class XmlConfigParserTest {
         queryElement.setAttribute("resultAlias", "resultAlias");
 
         ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        DummyResultNameStrategy resultNameStrategy = new DummyResultNameStrategy();
+        ResultNameStrategy resultNameStrategy = new DummyResultNameStrategy();
         Collection<Query> queries = configParser.parseQueries(resultNameStrategy);
 
         assertThat(queries).hasSize(1);

@@ -22,17 +22,31 @@
  */
 package org.jmxtrans.config;
 
-import org.junit.Test;
-import static org.assertj.core.api.Assertions.*;
+import javax.management.openmbean.CompositeData;
+import java.util.List;
 
-public class QueryResultTest {
+/**
+ * Mock {@link MockMBean}
+ *
+ * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
+ */
+public interface MockMBean {
 
-    @Test
-    public void twoIsGreaterThanOne() {
-        QueryResult resultOne = new QueryResult("one", 1, 0);
-        QueryResult resultTwo = new QueryResult("two", 2, 0);
-        assertThat(resultTwo.isValueGreaterThan(resultOne)).isTrue();
-    }
+    public long getCollectionUsageThreshold();
 
+    /**
+     * @see java.lang.management.MemoryPoolMXBean#getName()
+     */
+    public String getName();
 
+    /**
+     * @see java.lang.management.MemoryPoolMXBean#getUsage()
+     */
+    public CompositeData getUsage();
+
+    public int[] getIntArray();
+
+    public Integer[] getIntegerArray();
+
+    public List<Integer> getIntegerList();
 }

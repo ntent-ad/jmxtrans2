@@ -164,7 +164,8 @@ public class JmxTransExporter {
             }
             for (Query query : queries) {
                 try {
-                    query.collectAndExport(mbeanServer, outputWriter);
+//                    FIXME: reenable metric collection
+//                    query.collectAndExport(mbeanServer, outputWriter);
                 } catch (Exception e) {
                     logger.log(Level.WARNING, "Ignore exception collecting metrics for " + query, e);
                 }

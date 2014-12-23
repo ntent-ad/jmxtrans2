@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.embedded.output;
 
-import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.results.QueryResult;
 
 import java.io.IOException;
 import java.io.Writer;

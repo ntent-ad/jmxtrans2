@@ -22,12 +22,8 @@
  */
 package org.jmxtrans.output;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
-
 import org.hamcrest.Matchers;
-import org.jmxtrans.config.QueryResult;
-import org.jmxtrans.output.PerMinuteSummarizerOutputWriter;
+import org.jmxtrans.results.QueryResult;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;

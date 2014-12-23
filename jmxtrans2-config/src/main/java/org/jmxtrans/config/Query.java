@@ -22,19 +22,26 @@
  */
 package org.jmxtrans.config;
 
-import org.jmxtrans.utils.Preconditions2;
+import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.Iterables2;
+import org.jmxtrans.utils.Preconditions2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
-import javax.management.*;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import javax.management.openmbean.CompositeData;
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,7 +114,7 @@ public class Query {
      * @param type               type of the metric ('counter', 'gauge', ...)
      * @param resultAlias
      * @param resultNameStrategy the {@link ResultNameStrategy} used during the
-     *                           {@link #collectAndExport(javax.management.MBeanServer, OutputWriter)} phase.
+     *                           {@link #collectAndExport(javax.management.MBeanServer, java.util.Queue)} phase.
      */
     public Query(@Nonnull String objectName, @Nonnull String attribute, @Nullable String key, @Nullable Integer position,
                  @Nullable String type, @Nonnull String resultAlias, @Nonnull ResultNameStrategy resultNameStrategy) {
@@ -124,7 +131,7 @@ public class Query {
         this.resultNameStrategy = Preconditions2.checkNotNull(resultNameStrategy, "resultNameStrategy");
     }
 
-    public void collectAndExport(@Nonnull MBeanServer mbeanServer, @Nonnull OutputWriter outputWriter) {
+    public void collectAndExport(@Nonnull MBeanServer mbeanServer, @Nonnull Queue<QueryResult> resultQueue) {
         if (resultNameStrategy == null)
             throw new IllegalStateException("resultNameStrategy is not defined, query object is not properly initialized");
 
@@ -166,17 +173,15 @@ public class Query {
                     if (position == null) {
                         int idx = 0;
                         for (Object entry : iterable) {
-                            outputWriter.write(new QueryResult(resultName + "_" + idx++, type, entry, System.currentTimeMillis()));
+                            offerResult(new QueryResult(resultName + "_" + idx++, type, entry, System.currentTimeMillis()), resultQueue);
                         }
                     } else {
                         value = Iterables2.get((Iterable) value, position);
-                        outputWriter.write(new QueryResult(resultName, type, value, System.currentTimeMillis()));
+                        offerResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
                     }
                 } else {
-                    outputWriter.write(new QueryResult(resultName, type, value, System.currentTimeMillis()));
+                    offerResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
                 }
-            } catch (IOException e) {
-                logCollectingException(on, e);
             } catch (AttributeNotFoundException e) {
                 logCollectingException(on, e);
             } catch (MBeanException e) {
@@ -186,6 +191,12 @@ public class Query {
             } catch (InstanceNotFoundException e) {
                 logCollectingException(on, e);
             }
+        }
+    }
+
+    private void offerResult(QueryResult queryResult, Queue<QueryResult> resultQueue) {
+        if (!resultQueue.offer(queryResult)) {
+            logger.warning("Could not process query result : " + queryResult);
         }
     }
 

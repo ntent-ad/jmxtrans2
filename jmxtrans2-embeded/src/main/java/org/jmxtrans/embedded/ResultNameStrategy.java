@@ -33,7 +33,7 @@ import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
- * Build a {@linkplain org.jmxtrans.config.QueryResult#name} from a collected metric ({@linkplain org.jmxtrans.embedded.QueryAttribute}, {@linkplain org.jmxtrans.embedded.Query}).
+ * Build a {@linkplain org.jmxtrans.results.QueryResult#name} from a collected metric ({@linkplain org.jmxtrans.embedded.QueryAttribute}, {@linkplain org.jmxtrans.embedded.Query}).
  * <p/>
  * Build name must be escaped to be compatible with all {@linkplain org.jmxtrans.embedded.output.OutputWriter}.
  * The approach is to escape non alpha-numeric chars.

@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.config;
 
 import javax.management.openmbean.*;
 import java.util.Arrays;

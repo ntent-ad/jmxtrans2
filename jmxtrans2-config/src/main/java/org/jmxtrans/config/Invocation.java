@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.config;
 
+import org.jmxtrans.results.QueryResult;
+
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.management.MBeanServer;
@@ -63,7 +65,7 @@ public class Invocation {
         for (ObjectName on : objectNames) {
             try {
                 Object result = mbeanServer.invoke(on, operationName, params, signature);
-                outputWriter.writeInvocationResult(resultAlias, result);
+                outputWriter.write(new QueryResult(resultAlias, result, System.currentTimeMillis()));
             } catch (Exception e) {
                 logger.log(Level.WARNING, "Exception invoking " + on + "#" + operationName + "(" + Arrays.toString(params) + ")", e);
             }

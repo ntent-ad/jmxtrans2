@@ -24,7 +24,7 @@ package org.jmxtrans.output;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.jmxtrans.config.OutputWriter;
-import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.results.QueryResult;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

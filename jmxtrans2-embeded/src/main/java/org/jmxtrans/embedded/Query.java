@@ -25,7 +25,7 @@ package org.jmxtrans.embedded;
 import org.jmxtrans.embedded.output.OutputWriter;
 import org.jmxtrans.embedded.util.concurrent.DiscardingBlockingQueue;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
-import org.jmxtrans.config.QueryResult;
+import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.Preconditions2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

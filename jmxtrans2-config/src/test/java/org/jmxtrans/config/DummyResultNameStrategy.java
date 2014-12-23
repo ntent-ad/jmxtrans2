@@ -27,22 +27,29 @@ import javax.annotation.Nullable;
 import javax.management.ObjectName;
 import java.util.Map;
 
-public class DummyResultNameStrategy implements ResultNameStrategy {
+public final class DummyResultNameStrategy implements ResultNameStrategy {
+
+    private boolean hasBeenCalled = false;
 
     @Nonnull
     @Override
     public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName) {
-        return null;
+        hasBeenCalled = true;
+        return query.getResultAlias();
     }
 
     @Nonnull
     @Override
     public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nullable String key) {
-        return null;
+        hasBeenCalled = true;
+        return query.getResultAlias();
     }
 
     @Override
     public void postConstruct(@Nonnull Map<String, String> settings) {
+    }
 
+    public boolean hasBeenCalled() {
+        return hasBeenCalled;
     }
 }
