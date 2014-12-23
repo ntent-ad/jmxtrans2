@@ -24,9 +24,9 @@ package org.jmxtrans.agent;
 
 import org.jmxtrans.config.Interval;
 import org.jmxtrans.config.Invocation;
-import org.jmxtrans.config.OutputWriter;
-import org.jmxtrans.config.Query;
-import org.jmxtrans.config.ResultNameStrategy;
+import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.query.Query;
+import org.jmxtrans.query.ResultNameStrategy;
 import org.jmxtrans.output.DevNullOutputWriter;
 
 import javax.annotation.Nonnull;

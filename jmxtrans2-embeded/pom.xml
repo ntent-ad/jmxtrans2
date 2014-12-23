@@ -87,6 +87,11 @@
             <artifactId>jmxtrans2-output</artifactId>
         </dependency>
         <dependency>
+            <!-- FIXME: remove this dependency when all out put writers have been moved to jmxtrans2-output-writers -->
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-output-writers</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-results</artifactId>
         </dependency>

@@ -22,6 +22,9 @@
  */
 package org.jmxtrans.config;
 
+import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.query.Query;
+import org.jmxtrans.query.ResultNameStrategy;
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

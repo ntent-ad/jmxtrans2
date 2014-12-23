@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.config;
 
+import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;

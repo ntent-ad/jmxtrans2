@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.agent;
 
-import org.jmxtrans.config.OutputWriter;
+import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.output.AbstractOutputWriter;
 

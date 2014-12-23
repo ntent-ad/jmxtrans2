@@ -82,6 +82,7 @@
         <module>jmxtrans2-config</module>
         <module>jmxtrans2-embeded</module>
         <module>jmxtrans2-output</module>
+        <module>jmxtrans2-output-writers</module>
         <module>jmxtrans2-query</module>
         <module>jmxtrans2-results</module>
         <module>jmxtrans2-scheduler</module>
@@ -302,6 +303,11 @@
             <dependency>
                 <groupId>org.jmxtrans.jmxtrans2</groupId>
                 <artifactId>jmxtrans2-output</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-output-writers</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
