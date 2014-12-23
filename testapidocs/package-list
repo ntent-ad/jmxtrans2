@@ -11,4 +11,5 @@ org.jmxtrans.embedded.util.json
 org.jmxtrans.embedded.util.pool
 org.jmxtrans.output
 org.jmxtrans.output.utils
+org.jmxtrans.results
 org.jmxtrans.utils

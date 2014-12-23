@@ -149,7 +149,7 @@
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>         queryElement.setAttribute(<span class="jxr_string">"resultAlias"</span>, <span class="jxr_string">"resultAlias"</span>);
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> 
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>         ConfigParser configParser = <strong class="jxr_keyword">new</strong> XmlConfigParser(<strong class="jxr_keyword">new</strong> PropertyPlaceholderResolver(), config);
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>         <a href="../../../org/jmxtrans/config/DummyResultNameStrategy.html">DummyResultNameStrategy</a> resultNameStrategy = <strong class="jxr_keyword">new</strong> <a href="../../../org/jmxtrans/config/DummyResultNameStrategy.html">DummyResultNameStrategy</a>();
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         ResultNameStrategy resultNameStrategy = <strong class="jxr_keyword">new</strong> <a href="../../../org/jmxtrans/config/DummyResultNameStrategy.html">DummyResultNameStrategy</a>();
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>         Collection&lt;Query&gt; queries = configParser.parseQueries(resultNameStrategy);
 <a class="jxr_linenumber" name="L146" href="#L146">146</a> 
 <a class="jxr_linenumber" name="L147" href="#L147">147</a>         assertThat(queries).hasSize(1);
