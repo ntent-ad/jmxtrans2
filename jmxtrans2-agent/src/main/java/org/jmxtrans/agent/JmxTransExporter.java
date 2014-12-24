@@ -28,13 +28,16 @@ import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Query;
 import org.jmxtrans.query.ResultNameStrategy;
 import org.jmxtrans.output.DevNullOutputWriter;
+import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;
 import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -164,8 +167,9 @@ public class JmxTransExporter {
             }
             for (Query query : queries) {
                 try {
-//                    FIXME: reenable metric collection
-//                    query.collectAndExport(mbeanServer, outputWriter);
+                    Queue<QueryResult> results = new LinkedList<QueryResult>();
+                    query.collectAndExport(mbeanServer, results);
+                    outputWriter.write(results);
                 } catch (Exception e) {
                     logger.log(Level.WARNING, "Ignore exception collecting metrics for " + query, e);
                 }
