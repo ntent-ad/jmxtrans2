@@ -26,8 +26,8 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import org.jmxtrans.results.QueryResult;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.annotation.Nullable;
@@ -43,20 +43,22 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public class QueryTest {
-    static MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
-    static ObjectName mockObjectName;
-    static Mock mock = new Mock("PS Eden Space", 87359488L);
-    private DummyResultNameStrategy resultNameStrategy = new DummyResultNameStrategy();
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        mockObjectName = new ObjectName("test:type=Mock,name=mock");
-        mbeanServer.registerMBean(mock, mockObjectName);
+    private DummyResultNameStrategy resultNameStrategy;
+    private MBeanServer mbeanServer;
+    private Mock mock;
+
+    @Before
+    public void before() throws Exception {
+        resultNameStrategy = new DummyResultNameStrategy();
+        mock = new Mock("PS Eden Space", 87359488L);
+        MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
+        mbeanServer.registerMBean(mock, new ObjectName("test:type=Mock,name=mock"));
     }
 
-    @AfterClass
-    public static void afterClass() throws Exception {
-        mbeanServer.unregisterMBean(mockObjectName);
+    @After
+    public void after() throws Exception {
+        mbeanServer.unregisterMBean(new ObjectName("test:type=Mock,name=mock"));
     }
 
     @Test
