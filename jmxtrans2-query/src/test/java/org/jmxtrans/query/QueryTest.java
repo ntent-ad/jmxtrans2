@@ -52,7 +52,7 @@ public class QueryTest {
     public void before() throws Exception {
         resultNameStrategy = new DummyResultNameStrategy();
         mock = new Mock("PS Eden Space", 87359488L);
-        MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
+        mbeanServer = ManagementFactory.getPlatformMBeanServer();
         mbeanServer.registerMBean(mock, new ObjectName("test:type=Mock,name=mock"));
     }
 
