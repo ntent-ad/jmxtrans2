@@ -22,7 +22,8 @@
  */
 package org.jmxtrans.utils;
 
-import org.jmxtrans.utils.PropertyPlaceholderResolver;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -33,34 +34,32 @@ import static org.junit.Assert.*;
  */
 public class PropertyPlaceholderResolverTest {
 
-    private PropertyPlaceholderResolver resolver = new PropertyPlaceholderResolver();
+    @Before
+    public void configureProperties() {
+        System.setProperty("graphite.host", "graphite-server.private.mycompany.com");
+    }
+
+    @After
+    public void resetProperties() {
+        System.getProperties().remove("graphite.host");
+    }
 
     @Test
     public void testResolveStringWithSystemProperty() {
-        System.setProperty("graphite.host", "graphite-server.private.mycompany.com");
-        try {
-            String actual = resolver.resolveString("${graphite.host:localhost}");
-            assertThat(actual, is("graphite-server.private.mycompany.com"));
-        } finally {
-            System.getProperties().remove("graphite.host");
-        }
+        String actual = new PropertyPlaceholderResolver().resolveString("${graphite.host:localhost}");
+        assertThat(actual, is("graphite-server.private.mycompany.com"));
     }
 
     @Test
     public void testResolveComplexStringWithSystemProperty() {
-        System.setProperty("graphite.host", "graphite-server.private.mycompany.com");
-        try {
-            String actual = resolver.resolveString("${graphite.host:localhost}:${graphite.port:2003}");
-            assertThat(actual, is("graphite-server.private.mycompany.com:2003"));
-        } finally {
-            System.getProperties().remove("graphite.host");
-        }
+        String actual = new PropertyPlaceholderResolver().resolveString("${graphite.host:localhost}:${graphite.port:2003}");
+        assertThat(actual, is("graphite-server.private.mycompany.com:2003"));
     }
 
     @Test
     public void testResolveStringWithDefaultValue() {
-        String actual = resolver.resolveString("${graphite.host:localhost}");
-        assertThat(actual, is("localhost"));
+        String actual = new PropertyPlaceholderResolver().resolveString("${propertyName:defaultValue}");
+        assertThat(actual, is("defaultValue"));
     }
 
 }
