@@ -44,6 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class QueryTest {
 
+    private static final String MOCK_MBEAN_NAME = "test:type=Mock,name=mock";
     private DummyResultNameStrategy resultNameStrategy;
     private MBeanServer mbeanServer;
     private Mock mock;
@@ -53,17 +54,17 @@ public class QueryTest {
         resultNameStrategy = new DummyResultNameStrategy();
         mock = new Mock("PS Eden Space", 87359488L);
         mbeanServer = ManagementFactory.getPlatformMBeanServer();
-        mbeanServer.registerMBean(mock, new ObjectName("test:type=Mock,name=mock"));
+        mbeanServer.registerMBean(mock, new ObjectName(MOCK_MBEAN_NAME));
     }
 
     @After
     public void after() throws Exception {
-        mbeanServer.unregisterMBean(new ObjectName("test:type=Mock,name=mock"));
+        mbeanServer.unregisterMBean(new ObjectName(MOCK_MBEAN_NAME));
     }
 
     @Test
     public void basic_attribute_return_simple_result() throws Exception {
-        Query query = new Query("test:type=Mock,name=mock", "CollectionUsageThreshold", resultNameStrategy);
+        Query query = new Query(MOCK_MBEAN_NAME, "CollectionUsageThreshold", resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(1);
 
         query.collectAndExport(mbeanServer, results);
@@ -77,7 +78,7 @@ public class QueryTest {
 
     @Test
     public void result_name_are_processed() {
-        Query query = new Query("test:type=Mock,name=mock", "CollectionUsageThreshold", resultNameStrategy);
+        Query query = new Query(MOCK_MBEAN_NAME, "CollectionUsageThreshold", resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(1);
 
         query.collectAndExport(mbeanServer, results);
@@ -87,7 +88,7 @@ public class QueryTest {
 
     @Test
     public void indexed_list_attribute_return_simple_result() throws Exception {
-        Query query = new Query("test:type=Mock,name=mock", "IntegerList", 1, resultNameStrategy);
+        Query query = new Query(MOCK_MBEAN_NAME, "IntegerList", 1, resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(1);
 
         query.collectAndExport(mbeanServer, results);
@@ -101,7 +102,7 @@ public class QueryTest {
 
     @Test
     public void non_indexed_list_attribute_return_simple_result() throws Exception {
-        Query query = new Query("test:type=Mock,name=mock", "IntegerList", resultNameStrategy);
+        Query query = new Query(MOCK_MBEAN_NAME, "IntegerList", resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(mock.getIntegerList().size());
 
         query.collectAndExport(mbeanServer, results);
@@ -122,7 +123,7 @@ public class QueryTest {
 
     @Test
     public void indexed_int_array_attribute_return_simple_result() throws Exception {
-        Query query = new Query("test:type=Mock,name=mock", "IntArray", 1, resultNameStrategy);
+        Query query = new Query(MOCK_MBEAN_NAME, "IntArray", 1, resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(1);
 
         query.collectAndExport(mbeanServer, results);
@@ -136,7 +137,7 @@ public class QueryTest {
 
     @Test
     public void indexed_integer_array_attribute_return_simple_result() throws Exception {
-        Query query = new Query("test:type=Mock,name=mock", "IntegerArray", 1, resultNameStrategy);
+        Query query = new Query(MOCK_MBEAN_NAME, "IntegerArray", 1, resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(1);
 
         query.collectAndExport(mbeanServer, results);

@@ -23,6 +23,7 @@
 package org.jmxtrans.query;
 
 import org.jmxtrans.results.QueryResult;
+import org.jmxtrans.utils.ArrayUtils;
 import org.jmxtrans.utils.Iterables2;
 import org.jmxtrans.utils.Preconditions2;
 
@@ -38,9 +39,6 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.openmbean.CompositeData;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
@@ -142,46 +140,7 @@ public class Query {
             try {
                 Object attributeValue = mbeanServer.getAttribute(on, attribute);
 
-                Object value;
-                if (attributeValue instanceof CompositeData) {
-                    CompositeData compositeData = (CompositeData) attributeValue;
-                    if (key == null) {
-                        logger.warning("Ignore compositeData without key specified for '" + on + "'#" + attribute + ": " + attributeValue);
-                        continue;
-                    } else {
-                        value = compositeData.get(key);
-                    }
-                } else {
-                    if (key == null) {
-                        value = attributeValue;
-                    } else {
-                        logger.warning("Ignore NON compositeData for specified key for '" + on + "'#" + attribute + "#" + key + ": " + attributeValue);
-                        continue;
-                    }
-                }
-                if (value != null && value.getClass().isArray()) {
-                    List valueAsList = new ArrayList();
-                    for (int i = 0; i < Array.getLength(value); i++) {
-                        valueAsList.add(Array.get(value, i));
-                    }
-                    value = valueAsList;
-                }
-
-                String resultName = resultNameStrategy.getResultName(this, on, key);
-                if (value instanceof Iterable) {
-                    Iterable iterable = (Iterable) value;
-                    if (position == null) {
-                        int idx = 0;
-                        for (Object entry : iterable) {
-                            offerResult(new QueryResult(resultName + "_" + idx++, type, entry, System.currentTimeMillis()), resultQueue);
-                        }
-                    } else {
-                        value = Iterables2.get((Iterable) value, position);
-                        offerResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
-                    }
-                } else {
-                    offerResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
-                }
+                processAttributeValues(resultQueue, on, attributeValue);
             } catch (AttributeNotFoundException e) {
                 logCollectingException(on, e);
             } catch (MBeanException e) {
@@ -191,6 +150,48 @@ public class Query {
             } catch (InstanceNotFoundException e) {
                 logCollectingException(on, e);
             }
+        }
+    }
+
+    private void processAttributeValues(@Nonnull Queue<QueryResult> resultQueue, @Nonnull ObjectName on, @Nullable Object attributeValue) {
+        if (attributeValue == null) {
+            // skip null values
+            return;
+        }
+
+        if (attributeValue instanceof CompositeData && key == null) {
+            logger.warning("Ignore compositeData without key specified for '" + on + "'#" + attribute + ": " + attributeValue);
+            return;
+        }
+
+        if (!(attributeValue instanceof CompositeData) && key != null) {
+            logger.warning("Ignore NON compositeData for specified key for '" + on + "'#" + attribute + "#" + key + ": " + attributeValue);
+            return;
+        }
+
+        Object value;
+        if (attributeValue instanceof CompositeData) {
+            value = ((CompositeData) attributeValue).get(key);
+        } else {
+            value = attributeValue;
+        }
+
+        value = ArrayUtils.transformToListIfIsArray(value);
+
+        String resultName = resultNameStrategy.getResultName(this, on, key);
+        if (value instanceof Iterable) {
+            Iterable iterable = (Iterable) value;
+            if (position == null) {
+                int idx = 0;
+                for (Object entry : iterable) {
+                    offerResult(new QueryResult(resultName + "_" + idx++, type, entry, System.currentTimeMillis()), resultQueue);
+                }
+            } else {
+                value = Iterables2.get(iterable, position);
+                offerResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
+            }
+        } else {
+            offerResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
         }
     }
 
