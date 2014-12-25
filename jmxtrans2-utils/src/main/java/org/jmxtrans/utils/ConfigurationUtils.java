@@ -27,9 +27,8 @@ import java.util.Map;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class ConfigurationUtils {
+public final class ConfigurationUtils {
     private ConfigurationUtils() {
-
     }
 
     /**

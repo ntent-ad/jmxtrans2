@@ -30,7 +30,7 @@ import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.jmxtrans.query.Query;
 import org.jmxtrans.query.ResultNameStrategy;
 import org.jmxtrans.config.XmlConfigParser;
-import org.jmxtrans.utils.IoUtils;
+import org.jmxtrans.utils.io.IoUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 

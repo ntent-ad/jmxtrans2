@@ -20,23 +20,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils;
+package org.jmxtrans.utils.collections;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+import org.junit.Test;
+
 import java.util.List;
 
-public class ArrayUtils {
-    public static Object transformToListIfIsArray(Object value) {
-        if (value == null || !value.getClass().isArray()) {
-            return value;
-        }
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.jmxtrans.utils.collections.ArrayUtils.transformToListIfIsArray;
 
-        List valueAsList = new ArrayList();
-        for (int i = 0; i < Array.getLength(value); i++) {
-            valueAsList.add(Array.get(value, i));
-        }
+public class ArrayUtilsTest {
 
-        return valueAsList;
+    @Test
+    public void transformToListIfIsArrayReturnsNullForNullParameter() {
+        assertThat(transformToListIfIsArray(null)).isNull();
     }
+
+    @Test
+    public void transformToListIfIsArrayReturnsGivenNonArrayParameter() {
+        assertThat(transformToListIfIsArray("test")).isEqualTo("test");
+    }
+
+    @Test
+    public void transformToListIfIsArrayReturnsListWhenGivenArray() {
+        List<String> values = Lists.newArrayList("one", "two");
+        assertThat(transformToListIfIsArray(values.toArray())).isEqualTo(values);
+    }
+
 }

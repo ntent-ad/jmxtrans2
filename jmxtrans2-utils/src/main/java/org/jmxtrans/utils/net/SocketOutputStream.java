@@ -20,48 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.util.io;
+package org.jmxtrans.utils.net;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.Closeable;
+import java.io.FilterOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.Socket;
 
 /**
- * IO utils.
+ * Convenience class for writing bytes to a {@linkplain java.net.Socket}.
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public class IoUtils2 {
-    private static final Logger logger = LoggerFactory.getLogger(IoUtils2.class);
+public class SocketOutputStream extends FilterOutputStream {
 
-    private IoUtils2() {
+    private final Socket socket;
+
+    public SocketOutputStream(Socket socket) throws IOException {
+        super(socket.getOutputStream());
+        this.socket = socket;
     }
 
-    public static OutputStream nullOutputStream() {
-        return new OutputStream() {
-            @Override
-            public void write(int b) throws IOException {
-            }
-        };
+    /**
+     * Return the underlying {@linkplain java.net.Socket}
+     */
+    public Socket getSocket() {
+        return socket;
     }
 
-    public static void copy(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[512];
-        int len;
-        while ((len = in.read(buffer)) != -1) {
-            out.write(buffer, 0, len);
-        }
+    @Override
+    public String toString() {
+        return "SocketWriter{" +
+                "socket=" + socket +
+                '}';
     }
 
-    public static void closeQuietly(Closeable closeable) {
-        try {
-            closeable.close();
-        } catch (IOException e) {
-            logger.debug("Exception closing quietly", e);
-        }
-    }
 }

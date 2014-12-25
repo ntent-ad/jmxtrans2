@@ -23,7 +23,7 @@
 package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.OutputWriter;
-import org.jmxtrans.embedded.util.concurrent.DiscardingBlockingQueue;
+import org.jmxtrans.utils.concurrent.DiscardingBlockingQueue;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.Preconditions2;
@@ -390,7 +390,7 @@ public class Query implements QueryMBean {
 
     /**
      * Returns the number of discarded elements in the {@link #queryResults} queue
-     * or <code>-1</code> if the queue is not a {@link org.jmxtrans.embedded.util.concurrent.DiscardingBlockingQueue}.
+     * or <code>-1</code> if the queue is not a {@link org.jmxtrans.utils.concurrent.DiscardingBlockingQueue}.
      */
     @Override
     public int getDiscardedResultsCount() {

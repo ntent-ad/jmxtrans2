@@ -20,9 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent.util.collect;
+package org.jmxtrans.utils.collections;
 
-import org.jmxtrans.utils.Iterables2;
+import org.jmxtrans.utils.collections.Iterables2;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

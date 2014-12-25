@@ -24,7 +24,7 @@ package org.jmxtrans.embedded.output;
 
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.embedded.util.io.IoUtils2;
+import org.jmxtrans.utils.io.IoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,13 +115,13 @@ public class GraphiteHttpWriter extends AbstractOutputWriter implements OutputWr
                 urlWriter = new OutputStreamWriter(urlConnection.getOutputStream(), Charset.forName("UTF-8"));
                 urlWriter.write(sbUrlWriter.toString());
                 urlWriter.flush();
-                IoUtils2.closeQuietly(urlWriter);
+                IoUtils.closeQuietly(urlWriter);
                 int responseCode = urlConnection.getResponseCode();
                 if (responseCode != 200) {
                     logger.warn("Failure {}:'{}' to send result to Graphite HTTP proxy'{}' ", responseCode, urlConnection.getResponseMessage(), graphiteHttpUrl);
                 }
                 if (logger.isTraceEnabled()) {
-                    IoUtils2.copy(urlConnection.getInputStream(), System.out);
+                    IoUtils.copy(urlConnection.getInputStream(), System.out);
                 }
             }
         } catch (Exception e) {
@@ -131,12 +131,12 @@ public class GraphiteHttpWriter extends AbstractOutputWriter implements OutputWr
             if (urlConnection != null) {
                 try {
                     InputStream in = urlConnection.getInputStream();
-                    IoUtils2.copy(in, IoUtils2.nullOutputStream());
-                    IoUtils2.closeQuietly(in);
+                    IoUtils.copy(in, IoUtils.nullOutputStream());
+                    IoUtils.closeQuietly(in);
                     InputStream err = urlConnection.getErrorStream();
                     if (err != null) {
-                        IoUtils2.copy(err, IoUtils2.nullOutputStream());
-                        IoUtils2.closeQuietly(err);
+                        IoUtils.copy(err, IoUtils.nullOutputStream());
+                        IoUtils.closeQuietly(err);
                     }
                 } catch (IOException e) {
                     logger.warn("Exception flushing http connection", e);

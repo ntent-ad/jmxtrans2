@@ -35,7 +35,7 @@ import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.embedded.util.io.IoUtils2;
+import org.jmxtrans.utils.io.IoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -540,12 +540,12 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
                 }       
                 try {
                         InputStream in = urlCxn.getInputStream();
-                        IoUtils2.copy(in, IoUtils2.nullOutputStream());
-                        IoUtils2.closeQuietly(in);
+                        IoUtils.copy(in, IoUtils.nullOutputStream());
+                        IoUtils.closeQuietly(in);
                         InputStream err = urlCxn.getErrorStream();
                         if (err != null) {
-                            IoUtils2.copy(err, IoUtils2.nullOutputStream());
-                            IoUtils2.closeQuietly(err);
+                            IoUtils.copy(err, IoUtils.nullOutputStream());
+                            IoUtils.closeQuietly(err);
                         }
                 } catch (IOException e) {
                         exceptionCounter.incrementAndGet();
@@ -987,12 +987,12 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
                         InputStream err = urlConnection.getErrorStream();
                         String errString = convertStreamToString(err);
                         logger.warn("Reported error : " + errString); 
-                        IoUtils2.closeQuietly(err);
+                        IoUtils.closeQuietly(err);
                     } else {
                         InputStream in = urlConnection.getInputStream();
                         String theString = convertStreamToString(in);
                         id = jparse(theString, ExpectInt);
-                        IoUtils2.closeQuietly(in);
+                        IoUtils.closeQuietly(in);
                     }
                 } catch (IOException e) {
                     exceptionCounter.incrementAndGet();

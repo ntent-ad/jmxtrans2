@@ -20,42 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.util.concurrent;
-
-import javax.annotation.Nonnull;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicLong;
+package org.jmxtrans.utils.concurrent;
 
 /**
- * Basic {@linkplain java.util.concurrent.ThreadFactory} to redefine the name of the created thread.
- * <p/>
- * Inspired by Google Guava's {@link com.google.common.util.concurrent.ThreadFactoryBuilder}
- *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public class NamedThreadFactory implements ThreadFactory {
-
-    private final ThreadFactory backingThreadFactory = Executors.defaultThreadFactory();
-
-    private boolean daemon;
-
-    private String threadNamePrefix;
-
-    private AtomicLong increment = new AtomicLong();
-
-    public NamedThreadFactory(String threadNamePrefix, boolean daemon) {
-        this.threadNamePrefix = threadNamePrefix;
-        this.daemon = daemon;
-    }
-
-
-    @Override
-    @Nonnull
-    public Thread newThread(Runnable r) {
-        Thread thread = backingThreadFactory.newThread(r);
-        thread.setName(threadNamePrefix + increment.incrementAndGet());
-        thread.setDaemon(daemon);
-        return thread;
-    }
+public interface DiscardingBlockingQueueMBean {
+    int getDiscardedElementCount();
 }

@@ -20,28 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.util.net;
+package org.jmxtrans.utils.net;
 
-import java.io.FilterOutputStream;
+import java.io.BufferedWriter;
+import java.io.FilterWriter;
 import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.nio.charset.Charset;
 
 /**
- * Convenience class for writing bytes to a {@linkplain java.net.Socket}.
+ * Convenience class for writing characters to a {@linkplain java.net.Socket}.
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public class SocketOutputStream extends FilterOutputStream {
+public class SocketWriter extends FilterWriter {
 
     private final Socket socket;
 
-    public SocketOutputStream(InetSocketAddress inetSocketAddress) throws IOException {
-        this(new Socket(inetSocketAddress.getAddress(), inetSocketAddress.getPort()));
-    }
-
-    public SocketOutputStream(Socket socket) throws IOException {
-        super(socket.getOutputStream());
+    public SocketWriter(Socket socket, Charset charset) throws IOException {
+        super(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset)));
         this.socket = socket;
     }
 
@@ -58,5 +56,4 @@ public class SocketOutputStream extends FilterOutputStream {
                 "socket=" + socket +
                 '}';
     }
-
 }

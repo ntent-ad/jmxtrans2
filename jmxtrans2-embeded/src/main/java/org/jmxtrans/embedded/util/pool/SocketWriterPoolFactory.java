@@ -25,14 +25,14 @@ package org.jmxtrans.embedded.util.pool;
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.jmxtrans.output.writers.utils.HostAndPort;
-import org.jmxtrans.embedded.util.net.SocketWriter;
+import org.jmxtrans.utils.net.SocketWriter;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
 
 /**
- * Factory for {@linkplain org.jmxtrans.embedded.util.net.SocketWriter} instances created from {@linkplain org.jmxtrans.output.writers.utils.HostAndPort}.
+ * Factory for {@linkplain org.jmxtrans.utils.net.SocketWriter} instances created from {@linkplain org.jmxtrans.output.writers.utils.HostAndPort}.
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */

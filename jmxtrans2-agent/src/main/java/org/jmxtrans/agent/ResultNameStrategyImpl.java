@@ -115,6 +115,7 @@ public class ResultNameStrategyImpl implements ResultNameStrategy {
      * <p/>
      * '_' is the escape char for not compliant chars.
      */
+    @Nonnull
     protected String escapeObjectName(@Nonnull ObjectName objectName) {
         StringBuilder result = new StringBuilder();
         StringUtils2.appendEscapedNonAlphaNumericChars(objectName.getDomain(), result);

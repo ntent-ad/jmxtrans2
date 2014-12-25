@@ -20,11 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.util.concurrent;
+package org.jmxtrans.utils.collections;
 
-/**
- * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
- */
-public interface DiscardingBlockingQueueMBean {
-    int getDiscardedElementCount();
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ArrayUtils {
+    public static Object transformToListIfIsArray(Object value) {
+        if (value == null || !value.getClass().isArray()) {
+            return value;
+        }
+
+        List valueAsList = new ArrayList();
+        for (int i = 0; i < Array.getLength(value); i++) {
+            valueAsList.add(Array.get(value, i));
+        }
+
+        return valueAsList;
+    }
 }

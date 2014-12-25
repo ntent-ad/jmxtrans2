@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.util.concurrent;
+package org.jmxtrans.utils.concurrent;
 
 import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;

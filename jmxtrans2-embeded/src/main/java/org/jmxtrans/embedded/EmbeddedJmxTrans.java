@@ -23,7 +23,7 @@
 package org.jmxtrans.embedded;
 
 import org.jmxtrans.embedded.output.OutputWriter;
-import org.jmxtrans.embedded.util.concurrent.NamedThreadFactory;
+import org.jmxtrans.utils.concurrent.NamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -20,32 +20,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils;
+package org.jmxtrans.utils.concurrent;
 
-import com.google.common.collect.Lists;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jmxtrans.utils.ArrayUtils.transformToListIfIsArray;
 
-public class ArrayUtilsTest {
+public class NamedThreadFactoryTest {
+
+    public static final String PREFIX = "prefix";
 
     @Test
-    public void transformToListIfIsArrayReturnsNullForNullParameter() {
-        assertThat(transformToListIfIsArray(null)).isNull();
+    public void newThreadIsNamedAccordingToPrefix() {
+        NamedThreadFactory namedThreadFactory = new NamedThreadFactory(PREFIX, true);
+
+        Thread t1 = namedThreadFactory.newThread(new Thread());
+
+        assertThat(t1.getName()).isEqualTo(PREFIX + 1);
+
+        Thread t2 = namedThreadFactory.newThread(new Thread());
+
+        assertThat(t2.getName()).isEqualTo(PREFIX + 2);
     }
 
     @Test
-    public void transformToListIfIsArrayReturnsGivenNonArrayParameter() {
-        assertThat(transformToListIfIsArray("test")).isEqualTo("test");
+    public void createDaemonThread() {
+        NamedThreadFactory namedThreadFactory = new NamedThreadFactory(PREFIX, true);
+
+        Thread thread = namedThreadFactory.newThread(new Thread());
+
+        assertThat(thread.isDaemon()).isTrue();
     }
 
     @Test
-    public void transformToListIfIsArrayReturnsListWhenGivenArray() {
-        List<String> values = Lists.newArrayList("one", "two");
-        assertThat(transformToListIfIsArray(values.toArray())).isEqualTo(values);
+    public void createNonDaemonThread() {
+        NamedThreadFactory namedThreadFactory = new NamedThreadFactory(PREFIX, false);
+
+        Thread thread = namedThreadFactory.newThread(new Thread());
+
+        assertThat(thread.isDaemon()).isFalse();
     }
 
 }

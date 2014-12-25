@@ -27,7 +27,7 @@ import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.embedded.util.jmx.JmxUtils2;
 import org.jmxtrans.output.writers.utils.HostAndPort;
-import org.jmxtrans.embedded.util.net.SocketOutputStream;
+import org.jmxtrans.utils.net.SocketOutputStream;
 import org.jmxtrans.embedded.util.pool.ManagedGenericKeyedObjectPool;
 import org.jmxtrans.embedded.util.pool.SocketOutputStreamPoolFactory;
 import org.python.core.*;
@@ -76,7 +76,7 @@ public class GraphitePickleWriter extends AbstractOutputWriter implements Output
     private ObjectName socketPoolObjectName;
 
     /**
-     * Load settings, initialize the {@link org.jmxtrans.embedded.util.net.SocketWriter} pool and test the connection to the graphite server.
+     * Load settings, initialize the {@link org.jmxtrans.utils.net.SocketWriter} pool and test the connection to the graphite server.
      * <p/>
      * a {@link Logger#warn(String)} message is emitted if the connection to the graphite server fails.
      */
@@ -182,7 +182,7 @@ public class GraphitePickleWriter extends AbstractOutputWriter implements Output
     }
 
     /**
-     * Close the {@link org.jmxtrans.embedded.util.net.SocketWriter} pool.
+     * Close the {@link org.jmxtrans.utils.net.SocketWriter} pool.
      */
     @Override
     public void stop() throws Exception {

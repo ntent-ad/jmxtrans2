@@ -24,7 +24,7 @@ package org.jmxtrans.output.writers;
 
 import org.jmxtrans.output.AbstractOutputWriter;
 import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.utils.IoUtils;
+import org.jmxtrans.utils.io.IoUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

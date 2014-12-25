@@ -22,6 +22,17 @@
  */
 package org.jmxtrans.embedded.output;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import org.jmxtrans.embedded.EmbeddedJmxTransException;
+import org.jmxtrans.results.QueryResult;
+import org.jmxtrans.utils.io.IoUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,19 +46,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.jmxtrans.embedded.EmbeddedJmxTransException;
-import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.embedded.util.io.IoUtils2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
 
 /**
  * <a href="https://www.stackdriver.com//">Stackdriver</a> implementation of the
@@ -180,7 +178,7 @@ public class StackdriverWriter extends AbstractOutputWriter implements OutputWri
 						urlConnection.getResponseMessage(), url, proxy);
 			}
 			if (logger.isTraceEnabled()) {
-				IoUtils2.copy(urlConnection.getInputStream(), System.out);
+				IoUtils.copy(urlConnection.getInputStream(), System.out);
 			}
 		} catch (Exception e) {
 			exceptionCounter.incrementAndGet();
@@ -189,12 +187,12 @@ public class StackdriverWriter extends AbstractOutputWriter implements OutputWri
 			if (urlConnection != null) {
 				try {
 					InputStream in = urlConnection.getInputStream();
-					IoUtils2.copy(in, IoUtils2.nullOutputStream());
-					IoUtils2.closeQuietly(in);
+					IoUtils.copy(in, IoUtils.nullOutputStream());
+					IoUtils.closeQuietly(in);
 					InputStream err = urlConnection.getErrorStream();
 					if (err != null) {
-						IoUtils2.copy(err, IoUtils2.nullOutputStream());
-						IoUtils2.closeQuietly(err);
+						IoUtils.copy(err, IoUtils.nullOutputStream());
+						IoUtils.closeQuietly(err);
 					}
 					urlConnection.disconnect();
 				} catch (IOException e) {

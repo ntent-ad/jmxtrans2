@@ -20,8 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils;
+package org.jmxtrans.utils.io;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -32,7 +33,7 @@ import java.util.logging.Logger;
 /**
 * Created by gehel on 12/17/14.
 */
-public class IoUtils {
+public final class IoUtils {
     private static final Logger LOGGER = Logger.getLogger(IoUtils.class.getName());
 
     /**
@@ -42,7 +43,7 @@ public class IoUtils {
      * @param destination
      * @throws java.io.IOException
      */
-    public static void doCopySmallFile(File source, File destination, boolean append) throws IOException {
+    public static void doCopySmallFile(@Nonnull File source, @Nonnull File destination, boolean append) throws IOException {
         if (destination.exists() && destination.isDirectory()) {
             throw new IOException("Can not copy file, destination is a directory: " + destination.getAbsolutePath());
         } else if (!destination.exists()) {
@@ -211,4 +212,17 @@ public class IoUtils {
             }
         }
     }
+
+    public static OutputStream nullOutputStream() {
+        return new NullOutputStream();
+    }
+
+    public static void copy(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[512];
+        int len;
+        while ((len = in.read(buffer)) != -1) {
+            out.write(buffer, 0, len);
+        }
+    }
+
 }

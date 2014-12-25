@@ -23,8 +23,8 @@
 package org.jmxtrans.query;
 
 import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.utils.ArrayUtils;
-import org.jmxtrans.utils.Iterables2;
+import org.jmxtrans.utils.collections.ArrayUtils;
+import org.jmxtrans.utils.collections.Iterables2;
 import org.jmxtrans.utils.Preconditions2;
 
 import javax.annotation.Nonnull;
@@ -115,8 +115,14 @@ public class Query {
      * @param resultNameStrategy the {@link ResultNameStrategy} used during the
      *                           {@link #collectAndExport(javax.management.MBeanServer, java.util.Queue)} phase.
      */
-    public Query(@Nonnull String objectName, @Nonnull String attribute, @Nullable String key, @Nullable Integer position,
-                 @Nullable String type, @Nonnull String resultAlias, @Nonnull ResultNameStrategy resultNameStrategy) {
+    public Query(
+            @Nonnull String objectName,
+            @Nonnull String attribute,
+            @Nullable String key,
+            @Nullable Integer position,
+            @Nullable String type,
+            @Nonnull String resultAlias,
+            @Nonnull ResultNameStrategy resultNameStrategy) {
         try {
             this.objectName = new ObjectName(Preconditions2.checkNotNull(objectName));
         } catch (MalformedObjectNameException e) {
@@ -154,7 +160,10 @@ public class Query {
         }
     }
 
-    private void processAttributeValues(@Nonnull ObjectName on, @Nullable Object attributeValue, @Nonnull Collection<QueryResult> resultQueue) {
+    private void processAttributeValues(
+            @Nonnull ObjectName on,
+            @Nullable Object attributeValue,
+            @Nonnull Collection<QueryResult> resultQueue) {
         if (attributeValue == null) {
             // skip null values
             return;
@@ -185,18 +194,18 @@ public class Query {
             if (position == null) {
                 int idx = 0;
                 for (Object entry : iterable) {
-                    offerResult(new QueryResult(resultName + "_" + idx++, type, entry, System.currentTimeMillis()), resultQueue);
+                    addResult(new QueryResult(resultName + "_" + idx++, type, entry, System.currentTimeMillis()), resultQueue);
                 }
             } else {
                 value = Iterables2.get(iterable, position);
-                offerResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
+                addResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
             }
         } else {
-            offerResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
+            addResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
         }
     }
 
-    private void offerResult(QueryResult queryResult, Collection<QueryResult> resultQueue) {
+    private void addResult(QueryResult queryResult, Collection<QueryResult> resultQueue) {
         try {
             resultQueue.add(queryResult);
         } catch (IllegalStateException e) {

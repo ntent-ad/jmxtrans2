@@ -24,7 +24,7 @@ package org.jmxtrans.output.writers;
 
 import org.jmxtrans.output.AbstractOutputWriter;
 import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.utils.IoUtils;
+import org.jmxtrans.utils.io.IoUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -108,8 +108,7 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
     protected void releaseTemporaryWriter() {
         try {
             IoUtils.closeQuietly(getTemporaryFileWriter());
-        } catch (IOException e) {
-            // silently skip
+        } catch (IOException ignore) {
         }
         if (temporaryFile != null) {
             if (!temporaryFile.delete()) {

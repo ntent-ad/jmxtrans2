@@ -28,7 +28,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.embedded.util.io.IoUtils2;
+import org.jmxtrans.utils.io.IoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,11 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.Proxy;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -180,7 +184,7 @@ public class LibratoWriter extends AbstractOutputWriter implements OutputWriter 
                 logger.warn("Failure {}:'{}' to send result to Librato server '{}' with proxy {}, user {}", responseCode, urlConnection.getResponseMessage(), url, proxy, user);
             }
             if (logger.isTraceEnabled()) {
-                IoUtils2.copy(urlConnection.getInputStream(), System.out);
+                IoUtils.copy(urlConnection.getInputStream(), System.out);
             }
         } catch (Exception e) {
             exceptionCounter.incrementAndGet();
@@ -189,12 +193,12 @@ public class LibratoWriter extends AbstractOutputWriter implements OutputWriter 
             if (urlConnection != null) {
                 try {
                     InputStream in = urlConnection.getInputStream();
-                    IoUtils2.copy(in, IoUtils2.nullOutputStream());
-                    IoUtils2.closeQuietly(in);
+                    IoUtils.copy(in, IoUtils.nullOutputStream());
+                    IoUtils.closeQuietly(in);
                     InputStream err = urlConnection.getErrorStream();
                     if (err != null) {
-                        IoUtils2.copy(err, IoUtils2.nullOutputStream());
-                        IoUtils2.closeQuietly(err);
+                        IoUtils.copy(err, IoUtils.nullOutputStream());
+                        IoUtils.closeQuietly(err);
                     }
                 } catch (IOException e) {
                     logger.warn("Exception flushing http connection", e);
