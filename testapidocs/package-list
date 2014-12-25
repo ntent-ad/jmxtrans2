@@ -9,7 +9,8 @@ org.jmxtrans.embedded.spring
 org.jmxtrans.embedded.util.concurrent
 org.jmxtrans.embedded.util.json
 org.jmxtrans.embedded.util.pool
-org.jmxtrans.output
-org.jmxtrans.output.utils
+org.jmxtrans.output.writers
+org.jmxtrans.output.writers.utils
+org.jmxtrans.query
 org.jmxtrans.results
 org.jmxtrans.utils

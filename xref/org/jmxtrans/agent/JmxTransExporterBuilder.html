@@ -33,10 +33,10 @@
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.ConfigParser;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.Interval;
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.Invocation;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.OutputWriter;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.output.OutputWriter;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.PropertyPlaceholderResolver;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.Query;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.ResultNameStrategy;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.query.Query;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.query.ResultNameStrategy;
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.config.XmlConfigParser;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.IoUtils;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.w3c.dom.Document;
@@ -77,7 +77,7 @@
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>              collectionInterval = <strong class="jxr_keyword">new</strong> <a href="../../../org/jmxtrans/config/Interval.html">Interval</a>(10, TimeUnit.SECONDS);
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          }
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>          <em class="jxr_comment">// Result name strategy</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>          <a href="../../../org/jmxtrans/config/ResultNameStrategy.html">ResultNameStrategy</a> resultNameStrategy = configParser.parseResultNameStrategy();
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>          <a href="../../../org/jmxtrans/query/ResultNameStrategy.html">ResultNameStrategy</a> resultNameStrategy = configParser.parseResultNameStrategy();
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>          <strong class="jxr_keyword">if</strong> (resultNameStrategy == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>              resultNameStrategy = <strong class="jxr_keyword">new</strong> <a href="../../../org/jmxtrans/agent/ResultNameStrategyImpl.html">ResultNameStrategyImpl</a>();
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>          }
@@ -97,10 +97,10 @@
 <a class="jxr_linenumber" name="L89" href="#L89">89</a>  
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>      @Nonnull
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>      <strong class="jxr_keyword">protected</strong> <a href="../../../org/jmxtrans/agent/JmxTransExporter.html">JmxTransExporter</a> createJmxTransExporter(
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>              @Nonnull <a href="../../../org/jmxtrans/config/ResultNameStrategy.html">ResultNameStrategy</a> resultNameStrategy,
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>              @Nonnull <a href="../../../org/jmxtrans/query/ResultNameStrategy.html">ResultNameStrategy</a> resultNameStrategy,
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>              @Nonnull Collection&lt;Invocation&gt; invocations,
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>              @Nonnull Collection&lt;Query&gt; queries,
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>              @Nonnull <a href="../../../org/jmxtrans/config/OutputWriter.html">OutputWriter</a> outputWriter,
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>              @Nonnull <a href="../../../org/jmxtrans/output/OutputWriter.html">OutputWriter</a> outputWriter,
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>              @Nonnull <a href="../../../org/jmxtrans/config/Interval.html">Interval</a> collectionInterval) {
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../org/jmxtrans/agent/JmxTransExporter.html">JmxTransExporter</a>()
 <a class="jxr_linenumber" name="L98" href="#L98">98</a>                  .withResultNameStrategy(resultNameStrategy)
