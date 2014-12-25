@@ -39,6 +39,7 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.openmbean.CompositeData;
+import java.util.Collection;
 import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
@@ -140,7 +141,7 @@ public class Query {
             try {
                 Object attributeValue = mbeanServer.getAttribute(on, attribute);
 
-                processAttributeValues(resultQueue, on, attributeValue);
+                processAttributeValues(on, attributeValue, resultQueue);
             } catch (AttributeNotFoundException e) {
                 logCollectingException(on, e);
             } catch (MBeanException e) {
@@ -153,7 +154,7 @@ public class Query {
         }
     }
 
-    private void processAttributeValues(@Nonnull Queue<QueryResult> resultQueue, @Nonnull ObjectName on, @Nullable Object attributeValue) {
+    private void processAttributeValues(@Nonnull ObjectName on, @Nullable Object attributeValue, @Nonnull Collection<QueryResult> resultQueue) {
         if (attributeValue == null) {
             // skip null values
             return;
@@ -195,9 +196,12 @@ public class Query {
         }
     }
 
-    private void offerResult(QueryResult queryResult, Queue<QueryResult> resultQueue) {
-        if (!resultQueue.offer(queryResult)) {
-            logger.warning("Could not process query result : " + queryResult);
+    private void offerResult(QueryResult queryResult, Collection<QueryResult> resultQueue) {
+        try {
+            resultQueue.add(queryResult);
+        } catch (IllegalStateException e) {
+            throw new IllegalStateException("Result queue is full, could not add query " + queryResult
+                    + " further results for this query will be ignored.");
         }
     }
 

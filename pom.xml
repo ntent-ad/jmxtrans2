@@ -696,7 +696,6 @@
                     <artifactId>pitest-maven</artifactId>
                     <version>1.1.2</version>
                     <configuration>
-                        <verbose>true</verbose>
                         <mutators>
                             <mutator>DEFAULTS</mutator>
                             <mutator>REMOVE_CONDITIONALS</mutator>
