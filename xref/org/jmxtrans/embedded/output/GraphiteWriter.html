@@ -34,7 +34,7 @@
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.results.QueryResult;
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.embedded.util.jmx.JmxUtils2;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.output.writers.utils.HostAndPort;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.embedded.util.net.SocketWriter;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.net.SocketWriter;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.embedded.util.pool.ManagedGenericKeyedObjectPool;
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.embedded.util.pool.SocketWriterPoolFactory;
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.slf4j.Logger;
@@ -85,7 +85,7 @@
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      <strong class="jxr_keyword">private</strong> ObjectName socketPoolObjectName;
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">     * Load settings, initialize the {@link org.jmxtrans.embedded.util.net.SocketWriter} pool and test the connection to the graphite server.</em>
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  <em class="jxr_javadoccomment">     * Load settings, initialize the {@link org.jmxtrans.utils.net.SocketWriter} pool and test the connection to the graphite server.</em>
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  <em class="jxr_javadoccomment">     * &lt;p/&gt;</em>
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">     * a {@link Logger#warn(String)} message is emitted if the connection to the graphite server fails.</em>
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>  <em class="jxr_javadoccomment">     */</em>
@@ -122,7 +122,7 @@
 <a class="jxr_linenumber" name="L114" href="#L114">114</a> 
 <a class="jxr_linenumber" name="L115" href="#L115">115</a>         <strong class="jxr_keyword">if</strong> (isEnabled()) {
 <a class="jxr_linenumber" name="L116" href="#L116">116</a>             <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>                 <a href="../../../../org/jmxtrans/embedded/util/net/SocketWriter.html">SocketWriter</a> socketWriter = socketWriterPool.borrowObject(graphiteServerHostAndPort);
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>                 <a href="../../../../org/jmxtrans/utils/net/SocketWriter.html">SocketWriter</a> socketWriter = socketWriterPool.borrowObject(graphiteServerHostAndPort);
 <a class="jxr_linenumber" name="L118" href="#L118">118</a>                 socketWriterPool.returnObject(graphiteServerHostAndPort, socketWriter);
 <a class="jxr_linenumber" name="L119" href="#L119">119</a>             } <strong class="jxr_keyword">catch</strong> (Exception e) {
 <a class="jxr_linenumber" name="L120" href="#L120">120</a>                 logger.warn(<span class="jxr_string">"Test Connection: FAILURE to connect to Graphite server '{}'"</span>, graphiteServerHostAndPort, e);
@@ -136,7 +136,7 @@
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>     @Override
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> write(Iterable&lt;QueryResult&gt; results) {
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>         logger.debug(<span class="jxr_string">"Export to '{}' results {}"</span>, graphiteServerHostAndPort, results);
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>         <a href="../../../../org/jmxtrans/embedded/util/net/SocketWriter.html">SocketWriter</a> socketWriter = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         <a href="../../../../org/jmxtrans/utils/net/SocketWriter.html">SocketWriter</a> socketWriter = <strong class="jxr_keyword">null</strong>;
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L133" href="#L133">133</a>             socketWriter = socketWriterPool.borrowObject(graphiteServerHostAndPort);
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>             <strong class="jxr_keyword">for</strong> (QueryResult result : results) {
@@ -159,7 +159,7 @@
 <a class="jxr_linenumber" name="L151" href="#L151">151</a>     }
 <a class="jxr_linenumber" name="L152" href="#L152">152</a> 
 <a class="jxr_linenumber" name="L153" href="#L153">153</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     * Close the {@link org.jmxtrans.embedded.util.net.SocketWriter} pool.</em>
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> <em class="jxr_javadoccomment">     * Close the {@link org.jmxtrans.utils.net.SocketWriter} pool.</em>
 <a class="jxr_linenumber" name="L155" href="#L155">155</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L156" href="#L156">156</a>     @Override
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> stop() <strong class="jxr_keyword">throws</strong> Exception {

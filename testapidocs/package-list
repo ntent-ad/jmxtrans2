@@ -1,12 +1,10 @@
 org.jmxtrans.agent
 org.jmxtrans.agent.util
-org.jmxtrans.agent.util.collect
 org.jmxtrans.config
 org.jmxtrans.embedded
 org.jmxtrans.embedded.config
 org.jmxtrans.embedded.output
 org.jmxtrans.embedded.spring
-org.jmxtrans.embedded.util.concurrent
 org.jmxtrans.embedded.util.json
 org.jmxtrans.embedded.util.pool
 org.jmxtrans.output.writers
@@ -14,3 +12,6 @@ org.jmxtrans.output.writers.utils
 org.jmxtrans.query
 org.jmxtrans.results
 org.jmxtrans.utils
+org.jmxtrans.utils.collections
+org.jmxtrans.utils.concurrent
+org.jmxtrans.utils.io
