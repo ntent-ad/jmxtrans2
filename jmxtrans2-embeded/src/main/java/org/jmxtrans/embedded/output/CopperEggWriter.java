@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.io.IoUtils;
+import org.jmxtrans.utils.io.NullOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -540,11 +541,11 @@ public class CopperEggWriter extends AbstractOutputWriter implements OutputWrite
                 }       
                 try {
                         InputStream in = urlCxn.getInputStream();
-                        IoUtils.copy(in, IoUtils.nullOutputStream());
+                    IoUtils.copy(in, new NullOutputStream());
                         IoUtils.closeQuietly(in);
                         InputStream err = urlCxn.getErrorStream();
                         if (err != null) {
-                            IoUtils.copy(err, IoUtils.nullOutputStream());
+                            IoUtils.copy(err, new NullOutputStream());
                             IoUtils.closeQuietly(err);
                         }
                 } catch (IOException e) {

@@ -35,10 +35,10 @@
     <name>JMXTrans - utils</name>
 
     <properties>
-        <verify.cobertura.totalBranchRate>42</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>46</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>70</verify.coverage.threshold>
-        <verify.mutation.threshold>37</verify.mutation.threshold>
+        <verify.cobertura.totalBranchRate>57</verify.cobertura.totalBranchRate>
+        <verify.cobertura.totalLineRate>63</verify.cobertura.totalLineRate>
+        <verify.coverage.threshold>85</verify.coverage.threshold>
+        <verify.mutation.threshold>53</verify.mutation.threshold>
     </properties>
 
     <dependencies>
@@ -65,6 +65,11 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

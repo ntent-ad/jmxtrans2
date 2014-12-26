@@ -25,6 +25,7 @@ package org.jmxtrans.embedded.output;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.io.IoUtils;
+import org.jmxtrans.utils.io.NullOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -131,11 +132,11 @@ public class GraphiteHttpWriter extends AbstractOutputWriter implements OutputWr
             if (urlConnection != null) {
                 try {
                     InputStream in = urlConnection.getInputStream();
-                    IoUtils.copy(in, IoUtils.nullOutputStream());
+                    IoUtils.copy(in, new NullOutputStream());
                     IoUtils.closeQuietly(in);
                     InputStream err = urlConnection.getErrorStream();
                     if (err != null) {
-                        IoUtils.copy(err, IoUtils.nullOutputStream());
+                        IoUtils.copy(err, new NullOutputStream());
                         IoUtils.closeQuietly(err);
                     }
                 } catch (IOException e) {

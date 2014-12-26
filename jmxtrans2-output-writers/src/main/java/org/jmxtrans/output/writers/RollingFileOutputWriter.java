@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -102,6 +103,52 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
         if (!destination.delete()) {
             LOGGER.log(Level.WARNING, "Could not delete file [" + destination.getAbsolutePath() + "].");
         }
+    }
+
+    /**
+     * Simple implementation without chunking if the source file is big.
+     *
+     * @param source
+     * @param destination
+     * @throws java.io.IOException
+     */
+    // visible for testing
+    public static void doCopySmallFile(@Nonnull File source, @Nonnull File destination) throws IOException {
+        if (destination.exists() && destination.isDirectory()) {
+            throw new IOException("Can not copy file, destination is a directory: " + destination.getAbsolutePath());
+        }
+
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        FileChannel input = null;
+        FileChannel output = null;
+        try {
+            fis = new FileInputStream(source);
+            fos = new FileOutputStream(destination, false);
+            input = fis.getChannel();
+            output = fos.getChannel();
+            output.transferFrom(input, 0, input.size());
+        } finally {
+            IoUtils.closeQuietly(output);
+            IoUtils.closeQuietly(input);
+            IoUtils.closeQuietly(fis);
+            IoUtils.closeQuietly(fos);
+        }
+
+        if (destination.length() != source.length()) {
+            throw new IOException("Failed to copy content from '" +
+                    source + "' (" + source.length() + "bytes) to '" + destination + "' (" + destination.length() + ")");
+        }
+    }
+
+    public static void replaceFile(File source, File destination) throws IOException {
+        if (destination.exists()) {
+            // try to delete destination, it might fail, but doCopySmallFile() can deal with it
+            if (!destination.delete()) {
+                LOGGER.info("Could not delete " + destination.getAbsolutePath() + ", replacing only the content");
+            }
+        }
+        doCopySmallFile(source, destination);
     }
 
     @Override

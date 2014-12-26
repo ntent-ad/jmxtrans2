@@ -23,7 +23,6 @@
 package org.jmxtrans.output.writers;
 
 import org.jmxtrans.utils.DummyFiles;
-import org.jmxtrans.utils.io.IoUtils;
 import org.junit.Test;
 
 import java.io.File;
@@ -41,7 +40,7 @@ public class RollingFileOutputWriterTest {
     public void cannotCopySmallFilesToDirectory2() throws IOException {
         File destination = dummyFiles.testDirectory();
         try {
-            IoUtils.doCopySmallFile(dummyFiles.testFile(TEST_CONTENT), destination);
+            RollingFileOutputWriter.doCopySmallFile(dummyFiles.testFile(TEST_CONTENT), destination);
         } catch (IOException ioe) {
             assertThat(ioe).hasMessage("Can not copy file, destination is a directory: " + destination.getAbsolutePath());
             throw ioe;
@@ -52,7 +51,7 @@ public class RollingFileOutputWriterTest {
     public void copyFileToNonExistingDestination2() throws IOException {
         File source = dummyFiles.testFile(TEST_CONTENT);
         File destination = dummyFiles.nonExistingFile();
-        IoUtils.doCopySmallFile(source, destination);
+        RollingFileOutputWriter.doCopySmallFile(source, destination);
 
         assertThat(destination).exists();
         assertThat(destination).hasContent(TEST_CONTENT);
@@ -65,7 +64,7 @@ public class RollingFileOutputWriterTest {
     public void copyToEmptyFile2() throws IOException {
         File source = dummyFiles.testFile(TEST_CONTENT);
         File destination = dummyFiles.testFile("");
-        IoUtils.doCopySmallFile(source, destination);
+        RollingFileOutputWriter.doCopySmallFile(source, destination);
 
         assertThat(destination).exists();
         assertThat(destination).hasContent(TEST_CONTENT);
@@ -78,7 +77,7 @@ public class RollingFileOutputWriterTest {
     public void copyToNonEmptyFile2() throws IOException {
         File source = dummyFiles.testFile(TEST_CONTENT);
         File destination = dummyFiles.testFile("1234");
-        IoUtils.doCopySmallFile(source, destination);
+        RollingFileOutputWriter.doCopySmallFile(source, destination);
 
         assertThat(destination).exists();
         assertThat(destination).hasContent(TEST_CONTENT);

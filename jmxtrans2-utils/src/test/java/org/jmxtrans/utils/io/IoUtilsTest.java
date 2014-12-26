@@ -30,11 +30,15 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class IoUtilsTest {
 
@@ -119,6 +123,48 @@ public class IoUtilsTest {
         IoUtils.copy(in, out);
 
         assertThat(out.toByteArray()).isEqualTo(testContentBytes);
+    }
+
+    @Test
+    public void closingNullCloseableDoesNothing() {
+        IoUtils.closeQuietly((Closeable)null);
+    }
+
+    @Test
+    public void closeableIsClosed() throws IOException {
+        Closeable closeable = mock(Closeable.class);
+        IoUtils.closeQuietly(closeable);
+
+        verify(closeable).close();
+    }
+
+    @Test
+    public void exceptionThrownByCloseableIsSwallowed() throws IOException {
+        Closeable closeable = mock(Closeable.class);
+        doThrow(IOException.class).when(closeable).close();
+
+        IoUtils.closeQuietly(closeable);
+    }
+
+    @Test
+    public void closingNullInputStreamDoesNothing() {
+        IoUtils.closeQuietly((InputStream)null);
+    }
+
+    @Test
+    public void inputStreamIsClosed() throws IOException {
+        Closeable closeable = mock(InputStream.class);
+        IoUtils.closeQuietly(closeable);
+
+        verify(closeable).close();
+    }
+
+    @Test
+    public void exceptionThrownByInputStreamIsSwallowed() throws IOException {
+        Closeable closeable = mock(InputStream.class);
+        doThrow(IOException.class).when(closeable).close();
+
+        IoUtils.closeQuietly(closeable);
     }
 
     @After

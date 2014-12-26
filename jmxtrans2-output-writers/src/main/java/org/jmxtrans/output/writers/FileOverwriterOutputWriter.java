@@ -135,7 +135,7 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
             getTemporaryFileWriter().close();
             if (logger.isLoggable(getDebugLevel()))
                 logger.log(getDebugLevel(), "Overwrite " + file.getAbsolutePath() + " by " + temporaryFile.getAbsolutePath());
-            IoUtils.replaceFile(temporaryFile, file);
+            RollingFileOutputWriter.replaceFile(temporaryFile, file);
         } finally {
             temporaryFileWriter = null;
         }
