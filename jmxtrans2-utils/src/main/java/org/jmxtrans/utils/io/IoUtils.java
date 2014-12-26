@@ -74,7 +74,8 @@ public final class IoUtils {
      * @param destination
      * @throws java.io.IOException
      */
-    private static void doCopySmallFile(@Nonnull File source, @Nonnull File destination) throws IOException {
+    // visible for testing
+    public static void doCopySmallFile(@Nonnull File source, @Nonnull File destination) throws IOException {
         if (destination.exists() && destination.isDirectory()) {
             throw new IOException("Can not copy file, destination is a directory: " + destination.getAbsolutePath());
         }
@@ -99,49 +100,6 @@ public final class IoUtils {
         if (destination.length() != source.length()) {
             throw new IOException("Failed to copy content from '" +
                     source + "' (" + source.length() + "bytes) to '" + destination + "' (" + destination.length() + ")");
-        }
-    }
-
-    public static void appendToFile(File source, File destination, long maxFileSize, int maxBackupIndex) throws IOException {
-        boolean destinationExists = validateDestinationFile(source, destination, maxFileSize, maxBackupIndex);
-        if (destinationExists) {
-            doCopySmallFile(source, destination, true);
-        } else {
-            boolean renamed = source.renameTo(destination);
-            if (!renamed) {
-                doCopySmallFile(source, destination, false);
-            }
-        }
-    }
-
-    private static boolean validateDestinationFile(File source, File destination, long maxFileSize, int maxBackupIndex) throws IOException {
-        if (!destination.exists() || destination.isDirectory()) return false;
-        long totalLengthAfterAppending = destination.length() + source.length();
-        if (totalLengthAfterAppending > maxFileSize) {
-            rollFiles(destination, maxBackupIndex);
-            return false; // File no longer exists because it was move to filename.1
-        }
-
-        return true;
-    }
-
-    private static void rollFiles(File destination, int maxBackupIndex) throws IOException {
-
-        // if maxBackup index == 10 then we will have file
-        // outputFile, outpuFile.1 outputFile.2 ... outputFile.10
-        // we only care if 9 and lower exists to move them up a number
-        for (int i = maxBackupIndex - 1; i >= 0; i--) {
-            String path = destination.getAbsolutePath();
-            path=(i==0)?path:path + "." + i;
-            File f = new File(path);
-            if (!f.exists()) continue;
-
-            File fNext = new File(destination + "." + (i + 1));
-            doCopySmallFile(f, fNext, false);
-        }
-
-        if (!destination.delete()) {
-            LOGGER.log(Level.WARNING, "Could not delete file [" + destination.getAbsolutePath() + "].");
         }
     }
 

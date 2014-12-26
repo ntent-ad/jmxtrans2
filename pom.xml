@@ -109,7 +109,7 @@
         <verify.cobertura.packageLineRate>0</verify.cobertura.packageLineRate>
         <verify.cobertura.totalBranchRate>100</verify.cobertura.totalBranchRate>
         <verify.cobertura.totalLineRate>100</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>100</verify.coverage.threshold>
+        <verify.coverage.threshold>60</verify.coverage.threshold>
         <verify.mutation.threshold>100</verify.mutation.threshold>
     </properties>
 
@@ -334,6 +334,12 @@
                 <groupId>org.jmxtrans.jmxtrans2</groupId>
                 <artifactId>jmxtrans2-utils</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-utils</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
             </dependency>
             <dependency>
                 <groupId>org.jrobin</groupId>
@@ -604,6 +610,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.5</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>test-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -711,11 +724,21 @@
                             <value>-XX:MaxPermSize=256M</value>
                         </jvmArgs>
                         <reportsDirectory>${project.build.directory}/site/pit-reports</reportsDirectory>
+                        <skip>${skipTests}</skip>
                         <targetClasses>
                             <param>org.jmxtrans.*</param>
                         </targetClasses>
                         <timestampedReports>false</timestampedReports>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>pitest</id>
+                            <goals>
+                                <goal>mutationCoverage</goal>
+                            </goals>
+                            <phase>verify</phase>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -759,6 +782,10 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -883,26 +910,4 @@
         </plugins>
     </reporting>
 
-    <profiles>
-        <profile>
-            <id>withMutationTests</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.pitest</groupId>
-                        <artifactId>pitest-maven</artifactId>
-                        <executions>
-                            <execution>
-                                <id>pitest</id>
-                                <goals>
-                                    <goal>mutationCoverage</goal>
-                                </goals>
-                                <phase>verify</phase>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

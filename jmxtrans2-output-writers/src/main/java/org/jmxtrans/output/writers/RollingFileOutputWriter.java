@@ -37,10 +37,13 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.jmxtrans.utils.ConfigurationUtils.*;
 
 public class RollingFileOutputWriter extends AbstractOutputWriter {
+
+    private static final Logger LOGGER = Logger.getLogger(IoUtils.class.getName());
 
     public final static String SETTING_FILE_NAME = "fileName";
     public final static String SETTING_FILE_NAME_DEFAULT_VALUE = "jmxtrans-agent.data";
@@ -55,6 +58,51 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
     protected File file = new File(SETTING_FILE_NAME_DEFAULT_VALUE);
     protected long maxFileSize;
     protected int maxBackupIndex;
+
+    public static void appendToFile(File source, File destination, long maxFileSize, int maxBackupIndex) throws IOException {
+        boolean destinationExists = validateDestinationFile(source, destination, maxFileSize, maxBackupIndex);
+        if (destinationExists) {
+            IoUtils.doCopySmallFile(source, destination, true);
+        } else {
+            boolean renamed = source.renameTo(destination);
+            if (!renamed) {
+                IoUtils.doCopySmallFile(source, destination, false);
+            }
+        }
+    }
+
+    // visible for testing
+    static boolean validateDestinationFile(File source, File destination, long maxFileSize, int maxBackupIndex) throws IOException {
+        if (!destination.exists() || destination.isDirectory()) return false;
+        long totalLengthAfterAppending = destination.length() + source.length();
+        if (totalLengthAfterAppending > maxFileSize) {
+            rollFiles(destination, maxBackupIndex);
+            return false; // File no longer exists because it was move to filename.1
+        }
+
+        return true;
+    }
+
+    // visible for testing
+    static void rollFiles(File destination, int maxBackupIndex) throws IOException {
+
+        // if maxBackup index == 10 then we will have file
+        // outputFile, outpuFile.1 outputFile.2 ... outputFile.10
+        // we only care if 9 and lower exists to move them up a number
+        for (int i = maxBackupIndex - 1; i >= 0; i--) {
+            String path = destination.getAbsolutePath();
+            path=(i==0)?path:path + "." + i;
+            File f = new File(path);
+            if (!f.exists()) continue;
+
+            File fNext = new File(destination + "." + (i + 1));
+            IoUtils.doCopySmallFile(f, fNext, false);
+        }
+
+        if (!destination.delete()) {
+            LOGGER.log(Level.WARNING, "Could not delete file [" + destination.getAbsolutePath() + "].");
+        }
+    }
 
     @Override
     public synchronized void postConstruct(Map<String, String> settings) {
@@ -125,7 +173,7 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
             getTemporaryFileWriter().close();
             if (logger.isLoggable(getDebugLevel()))
                 logger.log(getDebugLevel(), "Overwrite " + file.getAbsolutePath() + " by " + temporaryFile.getAbsolutePath());
-            IoUtils.appendToFile(temporaryFile, file, maxFileSize, maxBackupIndex);
+            appendToFile(temporaryFile, file, maxFileSize, maxBackupIndex);
         } finally {
             temporaryFileWriter = null;
         }

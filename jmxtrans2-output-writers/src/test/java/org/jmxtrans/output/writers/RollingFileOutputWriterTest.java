@@ -20,38 +20,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.output.writers;
 
 import org.jmxtrans.utils.DummyFiles;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.jmxtrans.utils.io.IoUtils;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class IoUtilsTest {
+public class RollingFileOutputWriterTest {
 
     public static final String TEST_CONTENT = "Hello World";
-    private byte[] testContentBytes;
+
     private final DummyFiles dummyFiles = new DummyFiles();
 
-    @Before
-    public void setUp() throws Exception {
-        testContentBytes = TEST_CONTENT.getBytes("UTF-8");
-    }
-
     @Test(expected = IOException.class)
-    public void cannotCopySmallFilesToDirectory() throws IOException {
+    public void cannotCopySmallFilesToDirectory2() throws IOException {
         File destination = dummyFiles.testDirectory();
         try {
-            IoUtils.doCopySmallFile(dummyFiles.testFile(TEST_CONTENT), destination, false);
+            IoUtils.doCopySmallFile(dummyFiles.testFile(TEST_CONTENT), destination);
         } catch (IOException ioe) {
             assertThat(ioe).hasMessage("Can not copy file, destination is a directory: " + destination.getAbsolutePath());
             throw ioe;
@@ -59,11 +49,10 @@ public class IoUtilsTest {
     }
 
     @Test
-    @Ignore("Current implementation does not copy files, but move them when destination does not exist")
-    public void copyFileToNonExistingDestination() throws IOException {
+    public void copyFileToNonExistingDestination2() throws IOException {
         File source = dummyFiles.testFile(TEST_CONTENT);
         File destination = dummyFiles.nonExistingFile();
-        IoUtils.doCopySmallFile(source, destination, false);
+        IoUtils.doCopySmallFile(source, destination);
 
         assertThat(destination).exists();
         assertThat(destination).hasContent(TEST_CONTENT);
@@ -73,10 +62,10 @@ public class IoUtilsTest {
     }
 
     @Test
-    public void copyToEmptyFile() throws IOException {
+    public void copyToEmptyFile2() throws IOException {
         File source = dummyFiles.testFile(TEST_CONTENT);
         File destination = dummyFiles.testFile("");
-        IoUtils.doCopySmallFile(source, destination, false);
+        IoUtils.doCopySmallFile(source, destination);
 
         assertThat(destination).exists();
         assertThat(destination).hasContent(TEST_CONTENT);
@@ -86,44 +75,16 @@ public class IoUtilsTest {
     }
 
     @Test
-    public void copyToNonEmptyFile() throws IOException {
+    public void copyToNonEmptyFile2() throws IOException {
         File source = dummyFiles.testFile(TEST_CONTENT);
         File destination = dummyFiles.testFile("1234");
-        IoUtils.doCopySmallFile(source, destination, false);
+        IoUtils.doCopySmallFile(source, destination);
 
         assertThat(destination).exists();
         assertThat(destination).hasContent(TEST_CONTENT);
         // source should still exist
         assertThat(source).exists();
         assertThat(source).hasContent(TEST_CONTENT);
-    }
-
-    @Test
-    public void appendToExistingFile() throws IOException {
-        File source = dummyFiles.testFile(TEST_CONTENT);
-        File destination = dummyFiles.testFile(TEST_CONTENT);
-        IoUtils.doCopySmallFile(source, destination, true);
-
-        assertThat(destination).exists();
-        assertThat(destination).hasContent(TEST_CONTENT + "\n" + TEST_CONTENT);
-        // source should still exist
-        assertThat(source).exists();
-        assertThat(source).hasContent(TEST_CONTENT);
-    }
-
-    @Test
-    public void canCopyStreamToEmptyDestination() throws IOException {
-        testContentBytes = TEST_CONTENT.getBytes("UTF-8");
-        InputStream in = new ByteArrayInputStream(testContentBytes);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        IoUtils.copy(in, out);
-
-        assertThat(out.toByteArray()).isEqualTo(testContentBytes);
-    }
-
-    @After
-    public void cleanUpDummyFiles() {
-        dummyFiles.cleanUpTestFiles();
     }
 
 }
