@@ -28,14 +28,19 @@
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd">
     <body>
 
+        <menu ref="parent" inherit="top"/>
+
         <menu ref="modules" inherit="top"/>
 
-        <menu name="Project" inherit="top">
+        <menu name="Documentation" inherit="top">
             <item name="Architecture" href="architecture.html"/>
         </menu>
 
         <!-- Make sure we still add regular reports -->
         <menu ref="reports" inherit="top"/>
+        <menu name="Pitest" inherit="top">
+            <item name="Pitest reports" href="pit-reports/index.html"/>
+        </menu>
 
     </body>
 </project>

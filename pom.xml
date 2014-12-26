@@ -710,6 +710,7 @@
                         <jvmArgs>
                             <value>-XX:MaxPermSize=256M</value>
                         </jvmArgs>
+                        <reportsDirectory>${project.build.directory}/site/pit-reports</reportsDirectory>
                         <targetClasses>
                             <param>org.jmxtrans.*</param>
                         </targetClasses>
