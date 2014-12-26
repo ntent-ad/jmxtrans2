@@ -52,7 +52,6 @@ public final class IoUtils {
         }
 
         FileOutputStream fos = null;
-        long initialSize = destination.length();
         try {
             fos = new FileOutputStream(destination, append);
             if (append) {
@@ -60,17 +59,10 @@ public final class IoUtils {
             }
             fos.write(Files.readAllBytes(Paths.get(source.getAbsolutePath())));
         } finally {
-            closeQuietly(fos);
+            if (fos != null) {
+                fos.close();
+            }
         }
-        if (!append && destination.length() != source.length()) {
-            throw new IOException("Failed to copy content from '" +
-                    source + "' (" + source.length() + "bytes) to '" + destination + "' (" + destination.length() + "). isAppend? " + append );
-        }
-        else if (append && destination.length() <= initialSize ) {
-            throw new IOException("Failed to append content from '" +
-                    source + "' (" + source.length() + "bytes) to '" + destination + "' (" + destination.length() + "). isAppend? " + append );
-        }
-
     }
 
 
