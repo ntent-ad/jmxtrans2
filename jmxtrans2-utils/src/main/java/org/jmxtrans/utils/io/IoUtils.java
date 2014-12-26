@@ -36,6 +36,8 @@ import java.util.logging.Logger;
 public final class IoUtils {
     private static final Logger LOGGER = Logger.getLogger(IoUtils.class.getName());
 
+    private static final int COPY_BUFFER_SIZE = 512;
+
     /**
      * Simple implementation without chunking if the source file is big.
      *
@@ -65,43 +67,38 @@ public final class IoUtils {
         }
     }
 
-
-    public static void closeQuietly(Closeable closeable) {
-        if (closeable == null)
-            return;
-        try {
-            closeable.close();
-        } catch (IOException e) {
-            // Not being able to close something is still a problem : potential data loss, not releasing
-            // resources, ... So we should still log it.
-            LOGGER.log(Level.WARNING, "Could not close object");
-        }
-    }
-
-    public static void closeQuietly(Writer writer) {
-        if (writer == null)
-            return;
-        try {
-            writer.close();
-        } catch (IOException e) {
-            // Not being able to close something is still a problem : potential data loss, not releasing
-            // resources, ... So we should still log it.
-            LOGGER.log(Level.WARNING, "Could not close writer");
-        }
-    }
-
     /**
-     * Needed for old JVMs where {@link java.io.InputStream} does not implement {@link java.io.Closeable}.
+     * Simple implementation without chunking if the source file is big.
+     *
+     * @param source
+     * @param destination
+     * @throws java.io.IOException
      */
-    public static void closeQuietly(InputStream inputStream) {
-        if (inputStream == null)
-            return;
+    private static void doCopySmallFile(@Nonnull File source, @Nonnull File destination) throws IOException {
+        if (destination.exists() && destination.isDirectory()) {
+            throw new IOException("Can not copy file, destination is a directory: " + destination.getAbsolutePath());
+        }
+
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        FileChannel input = null;
+        FileChannel output = null;
         try {
-            inputStream.close();
-        } catch (IOException e) {
-            // Not being able to close something is still a problem : potential data loss, not releasing
-            // resources, ... So we should still log it.
-            LOGGER.log(Level.WARNING, "Could not close input stream");
+            fis = new FileInputStream(source);
+            fos = new FileOutputStream(destination, false);
+            input = fis.getChannel();
+            output = fos.getChannel();
+            output.transferFrom(input, 0, input.size());
+        } finally {
+            closeQuietly(output);
+            closeQuietly(input);
+            closeQuietly(fis);
+            closeQuietly(fos);
+        }
+
+        if (destination.length() != source.length()) {
+            throw new IOException("Failed to copy content from '" +
+                    source + "' (" + source.length() + "bytes) to '" + destination + "' (" + destination.length() + ")");
         }
     }
 
@@ -148,60 +145,21 @@ public final class IoUtils {
         }
     }
 
-    /**
-     * Simple implementation without chunking if the source file is big.
-     *
-     * @param source
-     * @param destination
-     * @throws java.io.IOException
-     */
-    private static void doCopySmallFile(File source, File destination) throws IOException {
-        if (destination.exists() && destination.isDirectory()) {
-            throw new IOException("Can not copy file, destination is a directory: " + destination.getAbsolutePath());
+    public static void replaceFile(File source, File destination) throws IOException {
+        if (destination.exists()) {
+            // try to delete destination, it might fail, but doCopySmallFile() can deal with it
+            if (!destination.delete()) {
+                LOGGER.info("Could not delete " + destination.getAbsolutePath() + ", replacing only the content");
+            }
         }
-
-        FileInputStream fis = null;
-        FileOutputStream fos = null;
-        FileChannel input = null;
-        FileChannel output = null;
-        try {
-            fis = new FileInputStream(source);
-            fos = new FileOutputStream(destination, false);
-            input = fis.getChannel();
-            output = fos.getChannel();
-            output.transferFrom(input, 0, input.size());
-        } finally {
-            closeQuietly(output);
-            closeQuietly(input);
-            closeQuietly(fis);
-            closeQuietly(fos);
-        }
-        if (destination.length() != source.length()) {
-            throw new IOException("Failed to copy content from '" +
-                    source + "' (" + source.length() + "bytes) to '" + destination + "' (" + destination.length() + ")");
-        }
-
+        doCopySmallFile(source, destination);
     }
 
-    public static void replaceFile(File source, File destination) throws IOException {
-        boolean destinationExists;
-        if (destination.exists()) {
-            boolean deleted = destination.delete();
-            if (deleted) {
-                destinationExists = false;
-            } else {
-                destinationExists = true;
-            }
-        } else {
-            destinationExists = false;
-        }
-        if (destinationExists) {
-            doCopySmallFile(source, destination);
-        } else {
-            boolean renamed = source.renameTo(destination);
-            if (!renamed) {
-                doCopySmallFile(source, destination);
-            }
+    public static void copy(InputStream in, OutputStream out) throws IOException {
+        byte[] buffer = new byte[COPY_BUFFER_SIZE];
+        int len;
+        while ((len = in.read(buffer)) != -1) {
+            out.write(buffer, 0, len);
         }
     }
 
@@ -209,11 +167,42 @@ public final class IoUtils {
         return new NullOutputStream();
     }
 
-    public static void copy(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[512];
-        int len;
-        while ((len = in.read(buffer)) != -1) {
-            out.write(buffer, 0, len);
+    public static void closeQuietly(Closeable closeable) {
+        if (closeable == null)
+            return;
+        try {
+            closeable.close();
+        } catch (IOException e) {
+            // Not being able to close something is still a problem : potential data loss, not releasing
+            // resources, ... So we should still log it.
+            LOGGER.log(Level.WARNING, "Could not close object");
+        }
+    }
+
+    public static void closeQuietly(Writer writer) {
+        if (writer == null)
+            return;
+        try {
+            writer.close();
+        } catch (IOException e) {
+            // Not being able to close something is still a problem : potential data loss, not releasing
+            // resources, ... So we should still log it.
+            LOGGER.log(Level.WARNING, "Could not close writer");
+        }
+    }
+
+    /**
+     * Needed for old JVMs where {@link java.io.InputStream} does not implement {@link java.io.Closeable}.
+     */
+    public static void closeQuietly(InputStream inputStream) {
+        if (inputStream == null)
+            return;
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            // Not being able to close something is still a problem : potential data loss, not releasing
+            // resources, ... So we should still log it.
+            LOGGER.log(Level.WARNING, "Could not close input stream");
         }
     }
 

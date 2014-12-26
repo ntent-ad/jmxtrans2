@@ -28,6 +28,7 @@ import org.jmxtrans.utils.io.IoUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -44,6 +45,7 @@ import static org.jmxtrans.utils.ConfigurationUtils.getBoolean;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@NotThreadSafe
 public class FileOverwriterOutputWriter extends AbstractOutputWriter {
 
     public final static String SETTING_FILE_NAME = "fileName";

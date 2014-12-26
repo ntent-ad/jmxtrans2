@@ -35,7 +35,7 @@
     <name>JMXTrans - utils</name>
 
     <properties>
-        <verify.cobertura.totalBranchRate>43</verify.cobertura.totalBranchRate>
+        <verify.cobertura.totalBranchRate>42</verify.cobertura.totalBranchRate>
         <verify.cobertura.totalLineRate>46</verify.cobertura.totalLineRate>
         <verify.coverage.threshold>70</verify.coverage.threshold>
         <verify.mutation.threshold>37</verify.mutation.threshold>

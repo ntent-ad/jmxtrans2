@@ -23,14 +23,18 @@
 package org.jmxtrans.utils.io;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -40,6 +44,12 @@ public class IoUtilsTest {
 
     public static final String TEST_CONTENT = "Hello World";
     private Collection<File> testFiles = new ArrayList<File>();
+    private byte[] testContentBytes;
+
+    @Before
+    public void setUp() throws Exception {
+        testContentBytes = TEST_CONTENT.getBytes("UTF-8");
+    }
 
     @Test(expected = IOException.class)
     public void cannotCopySmallFilesToDirectory() throws IOException {
@@ -103,6 +113,16 @@ public class IoUtilsTest {
         // source should still exist
         assertThat(source).exists();
         assertThat(source).hasContent(TEST_CONTENT);
+    }
+
+    @Test
+    public void canCopyStreamToEmptyDestination() throws IOException {
+        testContentBytes = TEST_CONTENT.getBytes("UTF-8");
+        InputStream in = new ByteArrayInputStream(testContentBytes);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        IoUtils.copy(in, out);
+
+        assertThat(out.toByteArray()).isEqualTo(testContentBytes);
     }
 
     @Nonnull
