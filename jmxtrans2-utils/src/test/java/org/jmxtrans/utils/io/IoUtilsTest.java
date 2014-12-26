@@ -153,7 +153,7 @@ public class IoUtilsTest {
 
     @Test
     public void inputStreamIsClosed() throws IOException {
-        Closeable closeable = mock(InputStream.class);
+        InputStream closeable = mock(InputStream.class);
         IoUtils.closeQuietly(closeable);
 
         verify(closeable).close();
@@ -161,7 +161,7 @@ public class IoUtilsTest {
 
     @Test
     public void exceptionThrownByInputStreamIsSwallowed() throws IOException {
-        Closeable closeable = mock(InputStream.class);
+        InputStream closeable = mock(InputStream.class);
         doThrow(IOException.class).when(closeable).close();
 
         IoUtils.closeQuietly(closeable);
