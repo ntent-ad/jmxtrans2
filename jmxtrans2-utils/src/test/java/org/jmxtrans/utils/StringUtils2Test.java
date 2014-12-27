@@ -22,15 +22,12 @@
  */
 package org.jmxtrans.utils;
 
-import org.hamcrest.collection.IsIterableContainingInOrder;
-import org.jmxtrans.utils.StringUtils2;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -39,22 +36,81 @@ public class StringUtils2Test {
 
     @Test
     public void testDelimitedStringToList() {
-        List<String> actual = StringUtils2.delimitedStringToList("a,b;c\nd,,e,;f");
-        System.out.println(actual);
-        assertThat(actual, IsIterableContainingInOrder.contains("a", "b", "c", "d", "e", "f"));
+        assertThat(StringUtils2.delimitedStringToList("a,b;c\nd,,e,;f"))
+                .contains("a", "b", "c", "d", "e", "f");
+    }
+
+    @Test
+    public void delimitedStringToListReturnsNullWhenArgumentIsNull() {
+        assertThat(StringUtils2.delimitedStringToList(null)).isNull();
     }
 
     @Test
     public void testJoin() {
         List<String> tokens = Arrays.asList("com", "mycompany", "ecommerce", "server1");
-        String actual = StringUtils2.join(tokens, ".");
-        assertThat(actual, is("com.mycompany.ecommerce.server1"));
+        assertThat(StringUtils2.join(tokens, ".")).isEqualTo("com.mycompany.ecommerce.server1");
+    }
+
+    @Test
+    public void joiningNullIsNull() {
+        assertThat(StringUtils2.join(null, ".")).isEqualTo(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void joiningWithNullDelimiterIsNotAllowed() {
+        StringUtils2.join(Arrays.asList("com", "mycompany"), null);
     }
 
     @Test
     public void testReverseTokens() {
-        String in = "server1.ecommerce.mycompany.com";
-        String actual = StringUtils2.reverseTokens(in, ".");
-        assertThat(actual, is("com.mycompany.ecommerce.server1"));
+        assertThat(StringUtils2.reverseTokens("server1.ecommerce.mycompany.com", "."))
+                .isEqualTo("com.mycompany.ecommerce.server1");
+    }
+
+    @Test
+    public void reversingNullTokensReturnsNull() {
+        assertThat(StringUtils2.reverseTokens(null, ".")).isNull();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void reversingWithNullDelimiterIsNotAllowed() {
+        try {
+            StringUtils2.reverseTokens("com.mycompany", null);
+        } catch (NullPointerException npe) {
+            assertThat(npe).hasMessageContaining("given delimiter can not be null");
+            throw npe;
+        }
+    }
+
+    @Test
+    public void nonAlphaNumericCharacters() {
+        StringBuilder escaped = new StringBuilder();
+        StringUtils2.appendEscapedNonAlphaNumericChars("abc._!", true, escaped);
+
+        assertThat(escaped.toString()).isEqualTo("abc___");
+    }
+
+    @Test
+    public void dotIsNotEscaped() {
+        StringBuilder escaped = new StringBuilder();
+        StringUtils2.appendEscapedNonAlphaNumericChars(".", false, escaped);
+
+        assertThat(escaped.toString()).isEqualTo(".");
+    }
+
+    @Test
+    public void dotIsEscaped() {
+        StringBuilder escaped = new StringBuilder();
+        StringUtils2.appendEscapedNonAlphaNumericChars(".", true, escaped);
+
+        assertThat(escaped.toString()).isEqualTo("_");
+    }
+
+    @Test
+    public void leadingAndTrailingQuotesAreIgnored() {
+        StringBuilder escaped = new StringBuilder();
+        StringUtils2.appendEscapedNonAlphaNumericChars("\"abc\"", true, escaped);
+
+        assertThat(escaped.toString()).isEqualTo("abc");
     }
 }

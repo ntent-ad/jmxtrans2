@@ -34,7 +34,6 @@ import java.util.*;
 public class StringUtils2 {
 
     private StringUtils2() {
-
     }
 
     /**

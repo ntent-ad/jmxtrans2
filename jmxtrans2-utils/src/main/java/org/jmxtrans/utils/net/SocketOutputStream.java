@@ -49,7 +49,7 @@ public class SocketOutputStream extends FilterOutputStream {
 
     @Override
     public String toString() {
-        return "SocketWriter{" +
+        return "SocketOutputStream{" +
                 "socket=" + socket +
                 '}';
     }
