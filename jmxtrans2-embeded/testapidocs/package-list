@@ -1,0 +1,6 @@
+org.jmxtrans.embedded
+org.jmxtrans.embedded.config
+org.jmxtrans.embedded.output
+org.jmxtrans.embedded.spring
+org.jmxtrans.embedded.util.json
+org.jmxtrans.embedded.util.pool
