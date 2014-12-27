@@ -161,7 +161,7 @@
 <a class="jxr_linenumber" name="L153" href="#L153">153</a> 
 <a class="jxr_linenumber" name="L154" href="#L154">154</a>     @Test
 <a class="jxr_linenumber" name="L155" href="#L155">155</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> inputStreamIsClosed() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>         Closeable closeable = mock(InputStream.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>         InputStream closeable = mock(InputStream.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L157" href="#L157">157</a>         IoUtils.closeQuietly(closeable);
 <a class="jxr_linenumber" name="L158" href="#L158">158</a> 
 <a class="jxr_linenumber" name="L159" href="#L159">159</a>         verify(closeable).close();
@@ -169,7 +169,7 @@
 <a class="jxr_linenumber" name="L161" href="#L161">161</a> 
 <a class="jxr_linenumber" name="L162" href="#L162">162</a>     @Test
 <a class="jxr_linenumber" name="L163" href="#L163">163</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> exceptionThrownByInputStreamIsSwallowed() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L164" href="#L164">164</a>         Closeable closeable = mock(InputStream.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>         InputStream closeable = mock(InputStream.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L165" href="#L165">165</a>         doThrow(IOException.<strong class="jxr_keyword">class</strong>).when(closeable).close();
 <a class="jxr_linenumber" name="L166" href="#L166">166</a> 
 <a class="jxr_linenumber" name="L167" href="#L167">167</a>         IoUtils.closeQuietly(closeable);
