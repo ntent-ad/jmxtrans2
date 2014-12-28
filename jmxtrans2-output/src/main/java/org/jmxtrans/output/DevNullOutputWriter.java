@@ -24,13 +24,32 @@ package org.jmxtrans.output;
 
 import org.jmxtrans.results.QueryResult;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@Immutable
+@ThreadSafe
 public class DevNullOutputWriter extends AbstractOutputWriter {
+
+    protected DevNullOutputWriter(String logLevel) {
+        super(logLevel);
+    }
+
     @Override
     public void write(QueryResult result) throws IOException {
+    }
+
+    public static final class Factory implements OutputWriterFactory<DevNullOutputWriter> {
+        @Nonnull
+        @Override
+        public DevNullOutputWriter create(Map<String, String> settings) {
+            return new DevNullOutputWriter(AbstractOutputWriter.getLogLevel(settings));
+        }
     }
 }

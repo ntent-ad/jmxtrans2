@@ -23,6 +23,7 @@
 package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.output.OutputWriterFactory;
 import org.jmxtrans.query.Query;
 import org.jmxtrans.query.ResultNameStrategy;
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
@@ -167,20 +168,25 @@ public class XmlConfigParser implements ConfigParser {
                 throw new IllegalArgumentException("<outputWriter> element must contain a 'class' attribute");
             }
             try {
-                OutputWriter outputWriter = (OutputWriter) Class.forName(outputWriterClass).newInstance();
                 Map<String, String> settings = new HashMap<String, String>();
                 NodeList settingsNodeList = outputWriterElement.getElementsByTagName("*");
                 for (int j = 0; j < settingsNodeList.getLength(); j++) {
                     Element settingElement = (Element) settingsNodeList.item(j);
                     settings.put(settingElement.getNodeName(), propertyPlaceholderResolver.resolveString(settingElement.getTextContent()));
                 }
+                OutputWriter outputWriter = instantiateOutputWriter(outputWriterClass, settings);
                 outputWriter = new OutputWriterCircuitBreakerDecorator(outputWriter);
-                outputWriter.postConstruct(settings);
                 outputWriters.add(outputWriter);
             } catch (Exception e) {
                 throw new IllegalArgumentException("Exception instantiating " + outputWriterClass, e);
             }
         }
         return unmodifiableCollection(outputWriters);
+    }
+
+    private OutputWriter instantiateOutputWriter(String outputWriterClass, Map<String, String> settings) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        Class<OutputWriterFactory<?>> builderClass = (Class<OutputWriterFactory<?>>) Class.forName(outputWriterClass + "$Factory");
+        OutputWriterFactory<?> builder = builderClass.newInstance();
+        return builder.create(settings);
     }
 }

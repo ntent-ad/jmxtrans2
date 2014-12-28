@@ -23,6 +23,7 @@
 package org.jmxtrans.output.writers;
 
 import org.jmxtrans.output.AbstractOutputWriter;
+import org.jmxtrans.output.OutputWriterFactory;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.io.IoUtils;
 
@@ -48,25 +49,25 @@ import static org.jmxtrans.utils.ConfigurationUtils.getBoolean;
 @NotThreadSafe
 public class FileOverwriterOutputWriter extends AbstractOutputWriter {
 
-    public final static String SETTING_FILE_NAME = "fileName";
-    public final static String SETTING_FILE_NAME_DEFAULT_VALUE = "jmxtrans-agent.data";
-    public final static String SETTING_SHOW_TIMESTAMP = "showTimeStamp";
-    public final static Boolean SETTING_SHOW_TIMESTAMP_DEFAULT = false;
     protected Writer temporaryFileWriter;
     protected File temporaryFile;
-    protected File file = new File(SETTING_FILE_NAME_DEFAULT_VALUE);
-    protected Boolean showTimeStamp;
-    private static DateFormat dfISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-    
-    @Override
-    public synchronized void postConstruct(Map<String, String> settings) {
-        super.postConstruct(settings);
-        dfISO8601.setTimeZone(TimeZone.getTimeZone("GMT"));
-        file = new File(getString(settings, SETTING_FILE_NAME, SETTING_FILE_NAME_DEFAULT_VALUE));
-        showTimeStamp = getBoolean(settings, SETTING_SHOW_TIMESTAMP, SETTING_SHOW_TIMESTAMP_DEFAULT);
+    protected final File file;
+    protected final Boolean showTimeStamp;
+    private final DateFormat dateFormat;
+
+    protected FileOverwriterOutputWriter(
+            @Nonnull String logLevel,
+            @Nonnull File file,
+            boolean showTimeStamp,
+            @Nonnull DateFormat dateFormat) {
+        super(logLevel);
+        this.dateFormat = dateFormat;
+        this.file = file;
+        this.showTimeStamp = showTimeStamp;
         logger.log(getInfoLevel(), "FileOverwriterOutputWriter configured with file " + file.getAbsolutePath());
     }
 
+    @Nonnull
     protected Writer getTemporaryFileWriter() throws IOException {
         if (temporaryFile == null) {
             temporaryFile = File.createTempFile("jmxtrans-agent-", ".data");
@@ -86,7 +87,7 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
     public synchronized void writeQueryResult(@Nonnull String name, @Nullable String type, @Nullable Object value) throws IOException {
         try {
             if (showTimeStamp){
-                getTemporaryFileWriter().write("["+dfISO8601.format(Calendar.getInstance().getTime()) +"] "+name + " " + value + "\n");
+                getTemporaryFileWriter().write("["+ dateFormat.format(Calendar.getInstance().getTime()) +"] "+name + " " + value + "\n");
             } else {
                 getTemporaryFileWriter().write(name + " " + value + "\n");
             }
@@ -98,13 +99,13 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
     }
 
     @Override
-    public void write(QueryResult result) throws IOException {
+    public void write(@Nonnull QueryResult result) throws IOException {
         String name = result.getName();
         Object value = result.getValue();
         synchronized (this) {
             try {
                 if (showTimeStamp){
-                    getTemporaryFileWriter().write("["+dfISO8601.format(Calendar.getInstance().getTime()) +"] "+name + " " + value + "\n");
+                    getTemporaryFileWriter().write("["+ dateFormat.format(Calendar.getInstance().getTime()) +"] "+name + " " + value + "\n");
                 } else {
                     getTemporaryFileWriter().write(name + " " + value + "\n");
                 }
@@ -141,4 +142,23 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
         }
     }
 
+    public static final class Factory implements OutputWriterFactory<FileOverwriterOutputWriter> {
+        public final static String SETTING_FILE_NAME = "fileName";
+        public final static String SETTING_FILE_NAME_DEFAULT_VALUE = "jmxtrans-agent.data";
+        public final static String SETTING_SHOW_TIMESTAMP = "showTimeStamp";
+        public final static Boolean SETTING_SHOW_TIMESTAMP_DEFAULT = false;
+
+        @Override
+        public FileOverwriterOutputWriter create(@Nonnull Map<String, String> settings) {
+            String logLevel = AbstractOutputWriter.getLogLevel(settings);
+            File file = new File(getString(settings, SETTING_FILE_NAME, SETTING_FILE_NAME_DEFAULT_VALUE));
+            boolean showTimeStamp = getBoolean(settings, SETTING_SHOW_TIMESTAMP, SETTING_SHOW_TIMESTAMP_DEFAULT);
+
+            // FIXME: not thread safe !
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+            return new FileOverwriterOutputWriter(logLevel, file, showTimeStamp, dateFormat);
+        }
+    }
 }

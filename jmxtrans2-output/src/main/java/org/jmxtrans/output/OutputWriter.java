@@ -25,17 +25,17 @@ package org.jmxtrans.output;
 import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
-import java.util.Map;
 
 /**
+ * By convention an {@link org.jmxtrans.output.OutputWriter} must have a static inner class of type
+ * {@link OutputWriterFactory} called {@code Factory}.
+ *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@ThreadSafe
 public interface OutputWriter {
-
-    void postConstruct(@Nonnull Map<String, String> settings);
-
-    void preDestroy();
 
     /**
      * Called before metrics collection starts
@@ -45,9 +45,9 @@ public interface OutputWriter {
     /**
      * Write all the given {@linkplain org.jmxtrans.results.QueryResult} to the target system.
      */
-    void write(Iterable<QueryResult> results) throws IOException;
+    void write(@Nonnull Iterable<QueryResult> results) throws IOException;
 
-    void write(QueryResult result) throws IOException;
+    void write(@Nonnull QueryResult result) throws IOException;
 
     /**
      * <p>called after a serie of writes, typically at the end of a collection.</p>

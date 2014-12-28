@@ -22,6 +22,12 @@
  */
 package org.jmxtrans.output.writers;
 
+import org.jmxtrans.output.AbstractOutputWriter;
+import org.jmxtrans.output.OutputWriterFactory;
+
+import javax.annotation.Nonnull;
+import java.util.Map;
+
 /**
  * Waiting for a configuration extension to combine the {@link PerMinuteSummarizerOutputWriter} with the
  * {@link org.jmxtrans.output.writers.ConsoleOutputWriter}, this class hard-codes the wiring.
@@ -29,7 +35,16 @@ package org.jmxtrans.output.writers;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public class SummarizingConsoleOutputWriter extends PerMinuteSummarizerOutputWriter {
-    public SummarizingConsoleOutputWriter() {
-        super(new ConsoleOutputWriter());
+    public SummarizingConsoleOutputWriter(String logLevel) {
+        super(logLevel, new ConsoleOutputWriter(logLevel));
     }
+
+    public static final class Factory implements OutputWriterFactory<SummarizingConsoleOutputWriter> {
+        @Override
+        @Nonnull
+        public SummarizingConsoleOutputWriter create(@Nonnull Map<String, String> settings) {
+            return new SummarizingConsoleOutputWriter(AbstractOutputWriter.getLogLevel(settings));
+        }
+    }
+
 }

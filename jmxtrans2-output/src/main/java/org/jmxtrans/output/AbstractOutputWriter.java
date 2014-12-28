@@ -25,6 +25,8 @@ package org.jmxtrans.output;
 import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
@@ -35,6 +37,8 @@ import static org.jmxtrans.utils.ConfigurationUtils.getString;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@Immutable
+@ThreadSafe
 public abstract class AbstractOutputWriter implements OutputWriter {
 
     /**
@@ -44,13 +48,11 @@ public abstract class AbstractOutputWriter implements OutputWriter {
     public static final String SETTING_LOG_LEVEL = "logLevel";
     public static final String SETTING_LOG_LEVEL_DEFAULT_VALUE = "INFO";
     protected final Logger logger = Logger.getLogger(getClass().getName());
-    private Level debugLevel = Level.FINE;
-    private Level traceLevel = Level.FINER;
-    private Level infoLevel = Level.INFO;
+    private final Level debugLevel;
+    private final Level traceLevel;
+    private final Level infoLevel;
 
-    @Override
-    public void postConstruct(@Nonnull Map<String, String> settings) {
-        String logLevel = getString(settings, SETTING_LOG_LEVEL, SETTING_LOG_LEVEL_DEFAULT_VALUE);
+    protected AbstractOutputWriter(@Nonnull String logLevel) {
         if ("TRACE".equalsIgnoreCase(logLevel) || "FINEST".equalsIgnoreCase(logLevel)) {
             infoLevel = Level.INFO;
             debugLevel = Level.INFO;
@@ -71,10 +73,6 @@ public abstract class AbstractOutputWriter implements OutputWriter {
     }
 
     @Override
-    public void preDestroy() {
-    }
-
-    @Override
     public void postCollect() throws IOException {
     }
 
@@ -83,7 +81,7 @@ public abstract class AbstractOutputWriter implements OutputWriter {
     }
 
     @Override
-    public void write(Iterable<QueryResult> results) throws IOException {
+    public void write(@Nonnull Iterable<QueryResult> results) throws IOException {
         for (QueryResult result : results) {
             write(result);
         }
@@ -115,5 +113,10 @@ public abstract class AbstractOutputWriter implements OutputWriter {
     @Nonnull
     protected Level getInfoLevel() {
         return infoLevel;
+    }
+
+    @Nonnull
+    public static String getLogLevel(@Nonnull Map<String, String> settings) {
+        return getString(settings, SETTING_LOG_LEVEL, SETTING_LOG_LEVEL_DEFAULT_VALUE);
     }
 }

@@ -22,6 +22,12 @@
  */
 package org.jmxtrans.output.writers;
 
+import org.jmxtrans.output.AbstractOutputWriter;
+import org.jmxtrans.output.OutputWriterFactory;
+
+import javax.annotation.Nonnull;
+import java.util.Map;
+
 /**
  * Waiting for a configuration extension to combine the {@link PerMinuteSummarizerOutputWriter} with the
  * {@link org.jmxtrans.output.writers.FileOverwriterOutputWriter}, this class hard-codes the wiring.
@@ -29,7 +35,19 @@ package org.jmxtrans.output.writers;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public class SummarizingFileOverwriterOutputWriter extends PerMinuteSummarizerOutputWriter {
-    public SummarizingFileOverwriterOutputWriter() {
-        super(new FileOverwriterOutputWriter());
+    public SummarizingFileOverwriterOutputWriter(String logLevel, FileOverwriterOutputWriter fileOverwriterOutputWriter) {
+        super(logLevel, fileOverwriterOutputWriter);
     }
+
+    public static final class Factory implements OutputWriterFactory<SummarizingFileOverwriterOutputWriter> {
+        @Override
+        @Nonnull
+        public SummarizingFileOverwriterOutputWriter create(@Nonnull Map<String, String> settings) {
+            FileOverwriterOutputWriter.Factory builder = new FileOverwriterOutputWriter.Factory();
+            return new SummarizingFileOverwriterOutputWriter(
+                    AbstractOutputWriter.getLogLevel(settings),
+                    builder.create(settings));
+        }
+    }
+
 }

@@ -23,11 +23,15 @@
 package org.jmxtrans.output.writers;
 
 import org.hamcrest.Matchers;
+import org.jmxtrans.output.DevNullOutputWriter;
+import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.results.QueryResult;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collections;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -38,7 +42,8 @@ public class PerMinuteSummarizerOutputWriterTest {
 
     @Before
     public void before(){
-        writer = new PerMinuteSummarizerOutputWriter();
+        OutputWriter devNullOutputWriter = new DevNullOutputWriter.Factory().create(Collections.<String, String>emptyMap());
+        writer = new PerMinuteSummarizerOutputWriter("INFO", devNullOutputWriter);
     }
     @Test
     public void testPerMinute_60s_elapse() throws Exception {

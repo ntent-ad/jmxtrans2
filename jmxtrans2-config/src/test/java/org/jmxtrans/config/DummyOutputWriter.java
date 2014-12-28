@@ -23,6 +23,7 @@
 package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.output.OutputWriterFactory;
 import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;
@@ -30,14 +31,6 @@ import java.io.IOException;
 import java.util.Map;
 
 public class DummyOutputWriter implements OutputWriter {
-    @Override
-    public void postConstruct(@Nonnull Map<String, String> settings) {
-    }
-
-    @Override
-    public void preDestroy() {
-    }
-
     @Override
     public void preCollect() throws IOException {
     }
@@ -52,5 +45,14 @@ public class DummyOutputWriter implements OutputWriter {
 
     @Override
     public void postCollect() throws IOException {
+    }
+
+    public static final class Factory implements OutputWriterFactory<DummyOutputWriter> {
+
+        @Nonnull
+        @Override
+        public DummyOutputWriter create(@Nonnull Map<String, String> settings) {
+            return new DummyOutputWriter();
+        }
     }
 }

@@ -24,8 +24,8 @@ package org.jmxtrans.agent;
 
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.output.AbstractOutputWriter;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,14 +34,10 @@ import java.util.List;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class OutputWritersChain extends AbstractOutputWriter implements OutputWriter {
+public class OutputWritersChain implements OutputWriter {
 
     // visible for testing
     final List<OutputWriter> outputWriters;
-
-    public OutputWritersChain() {
-        outputWriters = new ArrayList<OutputWriter>();
-    }
 
     public OutputWritersChain(Collection<OutputWriter> outputWriters) {
         this.outputWriters = new ArrayList<OutputWriter>(outputWriters.size());
@@ -49,16 +45,16 @@ public class OutputWritersChain extends AbstractOutputWriter implements OutputWr
     }
 
     @Override
-    public void write(QueryResult result) throws IOException {
+    public void write(@Nonnull Iterable<QueryResult> results) throws IOException {
         for (OutputWriter outputWriter : outputWriters) {
-            outputWriter.write(result);
+            outputWriter.write(results);
         }
     }
 
     @Override
-    public void preDestroy() {
+    public void write(QueryResult result) throws IOException {
         for (OutputWriter outputWriter : outputWriters) {
-            outputWriter.preDestroy();
+            outputWriter.write(result);
         }
     }
 

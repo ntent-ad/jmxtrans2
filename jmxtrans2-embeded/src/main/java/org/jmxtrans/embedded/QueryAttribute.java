@@ -56,9 +56,9 @@ public class QueryAttribute {
     @Nonnull
     private String name;
     /**
-     * Used to build the name of the {@link org.jmxtrans.results.QueryResult} that will be exported.
+     * Used to create the name of the {@link org.jmxtrans.results.QueryResult} that will be exported.
      * <p/>
-     * <code>null</code> if not defined in the configuration. The {@link #name} is then used to build to {@linkplain org.jmxtrans.results.QueryResult}
+     * <code>null</code> if not defined in the configuration. The {@link #name} is then used to create to {@linkplain org.jmxtrans.results.QueryResult}
      *
      * @see org.jmxtrans.results.QueryResult#getName()
      */

@@ -23,13 +23,19 @@
 package org.jmxtrans.output.writers;
 
 import org.jmxtrans.output.AbstractOutputWriter;
+import org.jmxtrans.output.OutputWriterFactory;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.io.IoUtils;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import java.io.*;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
@@ -40,27 +46,39 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jmxtrans.utils.ConfigurationUtils.*;
+import static org.jmxtrans.utils.ConfigurationUtils.getInt;
+import static org.jmxtrans.utils.ConfigurationUtils.getLong;
+import static org.jmxtrans.utils.ConfigurationUtils.getString;
 
+@NotThreadSafe
 public class RollingFileOutputWriter extends AbstractOutputWriter {
 
     private static final Logger LOGGER = Logger.getLogger(IoUtils.class.getName());
 
-    public final static String SETTING_FILE_NAME = "fileName";
-    public final static String SETTING_FILE_NAME_DEFAULT_VALUE = "jmxtrans-agent.data";
-    public final static String SETTING_MAX_FILE_SIZE = "maxFileSize";
-    public final static long SETTING_MAX_FILE_SIZE_DEFAULT_VALUE=10;
-    public final static String SETTING_MAX_BACKUP_INDEX = "maxBackupIndex";
-    public final static int SETTING_MAX_BACKUP_INDEX_DEFAULT_VALUE = 5; 
-    private static DateFormat dfISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+    private final DateFormat dateFormat;
     
     protected Writer temporaryFileWriter;
     protected File temporaryFile;
-    protected File file = new File(SETTING_FILE_NAME_DEFAULT_VALUE);
-    protected long maxFileSize;
-    protected int maxBackupIndex;
+    protected final File file;
+    protected final long maxFileSize;
+    protected final int maxBackupIndex;
 
-    public static void appendToFile(File source, File destination, long maxFileSize, int maxBackupIndex) throws IOException {
+    protected RollingFileOutputWriter(
+            @Nonnull String logLevel,
+            @Nonnull File file,
+            @Nonnull long maxFileSize,
+            @Nonnull int maxBackupIndex,
+            @Nonnull DateFormat dateFormat) {
+        super(logLevel);
+
+        this.dateFormat = dateFormat;
+        this.file = file;
+        this.maxFileSize = maxFileSize;
+        this.maxBackupIndex = maxBackupIndex;
+        logger.log(getInfoLevel(), "RollingFileOutputWriter configured with file " + file.getAbsolutePath());
+    }
+
+    public static void appendToFile(@Nonnull File source, @Nonnull File destination, long maxFileSize, int maxBackupIndex) throws IOException {
         boolean destinationExists = validateDestinationFile(source, destination, maxFileSize, maxBackupIndex);
         if (destinationExists) {
             IoUtils.doCopySmallFile(source, destination, true);
@@ -73,7 +91,7 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
     }
 
     // visible for testing
-    static boolean validateDestinationFile(File source, File destination, long maxFileSize, int maxBackupIndex) throws IOException {
+    static boolean validateDestinationFile(@Nonnull File source, @Nonnull File destination, long maxFileSize, int maxBackupIndex) throws IOException {
         if (!destination.exists() || destination.isDirectory()) return false;
         long totalLengthAfterAppending = destination.length() + source.length();
         if (totalLengthAfterAppending > maxFileSize) {
@@ -85,7 +103,7 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
     }
 
     // visible for testing
-    static void rollFiles(File destination, int maxBackupIndex) throws IOException {
+    static void rollFiles(@Nonnull File destination, int maxBackupIndex) throws IOException {
 
         // if maxBackup index == 10 then we will have file
         // outputFile, outpuFile.1 outputFile.2 ... outputFile.10
@@ -141,7 +159,7 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
         }
     }
 
-    public static void replaceFile(File source, File destination) throws IOException {
+    public static void replaceFile(@Nonnull File source, @Nonnull File destination) throws IOException {
         if (destination.exists()) {
             // try to delete destination, it might fail, but doCopySmallFile() can deal with it
             if (!destination.delete()) {
@@ -151,20 +169,7 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
         doCopySmallFile(source, destination);
     }
 
-    @Override
-    public synchronized void postConstruct(Map<String, String> settings) {
-        super.postConstruct(settings);
-        TimeZone tz = TimeZone.getTimeZone("UTC");
-        dfISO8601.setTimeZone(tz);
-        file = new File(getString(settings, SETTING_FILE_NAME, SETTING_FILE_NAME_DEFAULT_VALUE));
-        maxFileSize = getLong(settings, SETTING_MAX_FILE_SIZE, SETTING_MAX_FILE_SIZE_DEFAULT_VALUE);
-        maxBackupIndex = getInt(settings, SETTING_MAX_BACKUP_INDEX, SETTING_MAX_BACKUP_INDEX_DEFAULT_VALUE);
-        // Performance related after 10mb the Filechanel output.transferTo() performs badly
-        if (maxFileSize > 10 || maxFileSize < 0) maxFileSize = 10;
-        maxFileSize = maxFileSize * 1000000; //converts to bytes.
-        logger.log(getInfoLevel(), "RollingFileOutputWriter configured with file " + file.getAbsolutePath());
-    }
-
+    @Nonnull
     protected Writer getTemporaryFileWriter() throws IOException {
         if (temporaryFile == null) {
             temporaryFile = File.createTempFile("jmxtrans-agent-", ".data");
@@ -181,19 +186,10 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
         return temporaryFileWriter;
     }
 
-    public synchronized void writeQueryResult(@Nonnull String name, @Nullable String type, @Nullable Object value) throws IOException {
-        try {
-            getTemporaryFileWriter().write("["+dfISO8601.format(Calendar.getInstance().getTime()) +"] "+name + " " + value + "\n");
-        } catch (IOException e) {
-            releaseTemporaryWriter();
-            throw e;
-        }
-    }
-
     @Override
-    public synchronized void write(QueryResult result) throws IOException {
+    public synchronized void write(@Nonnull QueryResult result) throws IOException {
         try {
-            getTemporaryFileWriter().write("["+dfISO8601.format(Calendar.getInstance().getTime()) +"] "+ result.getName() + " " + result.getValue() + "\n");
+            getTemporaryFileWriter().write("["+ dateFormat.format(Calendar.getInstance().getTime()) +"] "+ result.getName() + " " + result.getValue() + "\n");
         } catch (IOException e) {
             releaseTemporaryWriter();
             throw e;
@@ -226,5 +222,30 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
         }
     }
 
+    public static final class Factory implements OutputWriterFactory<RollingFileOutputWriter> {
+        public final static String SETTING_FILE_NAME = "fileName";
+        public final static String SETTING_FILE_NAME_DEFAULT_VALUE = "jmxtrans-agent.data";
+        public final static String SETTING_MAX_FILE_SIZE = "maxFileSize";
+        public final static long SETTING_MAX_FILE_SIZE_DEFAULT_VALUE=10;
+        public final static String SETTING_MAX_BACKUP_INDEX = "maxBackupIndex";
+        public final static int SETTING_MAX_BACKUP_INDEX_DEFAULT_VALUE = 5;
+
+        @Nonnull
+        @Override
+        public RollingFileOutputWriter create(@Nonnull Map<String, String> settings) {
+            File file = new File(getString(settings, SETTING_FILE_NAME, SETTING_FILE_NAME_DEFAULT_VALUE));
+            long maxFileSize = getLong(settings, SETTING_MAX_FILE_SIZE, SETTING_MAX_FILE_SIZE_DEFAULT_VALUE);
+            int maxBackupIndex = getInt(settings, SETTING_MAX_BACKUP_INDEX, SETTING_MAX_BACKUP_INDEX_DEFAULT_VALUE);
+            // Performance related after 10mb the Filechanel output.transferTo() performs badly
+            if (maxFileSize > 10 || maxFileSize < 0) maxFileSize = 10;
+            maxFileSize = maxFileSize * 1000000; //converts to bytes.
+
+            // FIXME: not thread safe !
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            return new RollingFileOutputWriter(AbstractOutputWriter.getLogLevel(settings), file, maxFileSize, maxBackupIndex, dateFormat);
+        }
+    }
 }
 

@@ -24,10 +24,10 @@ package org.jmxtrans.agent;
 
 import org.jmxtrans.config.Interval;
 import org.jmxtrans.config.Invocation;
+import org.jmxtrans.output.DevNullOutputWriter;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Query;
 import org.jmxtrans.query.ResultNameStrategy;
-import org.jmxtrans.output.DevNullOutputWriter;
 import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;
@@ -35,10 +35,15 @@ import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,7 +63,7 @@ public class JmxTransExporter {
     /**
      * visible for test
      */
-    protected OutputWriter outputWriter = new DevNullOutputWriter();
+    protected OutputWriter outputWriter;
 
     private ResultNameStrategy resultNameStrategy;
     protected int collectInterval = 10;
@@ -78,6 +83,10 @@ public class JmxTransExporter {
     private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1, threadFactory);
     private MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
     private ScheduledFuture scheduledFuture;
+
+    public JmxTransExporter() {
+        this.outputWriter = new DevNullOutputWriter.Factory().create(Collections.<String, String>emptyMap());
+    }
 
     @Nonnull
     public JmxTransExporter withQueries(@Nonnull Collection<Query> queries) {
@@ -157,7 +166,6 @@ public class JmxTransExporter {
 
     protected void collectAndExport() {
         try {
-            outputWriter.preCollect();
             for (Invocation invocation : invocations) {
                 try {
                     invocation.invoke(mbeanServer, outputWriter);
@@ -174,7 +182,6 @@ public class JmxTransExporter {
                     logger.log(Level.WARNING, "Ignore exception collecting metrics for " + query, e);
                 }
             }
-            outputWriter.postCollect();
         } catch (Exception e) {
             logger.log(Level.WARNING, "Ignore exception flushing metrics ", e);
         }

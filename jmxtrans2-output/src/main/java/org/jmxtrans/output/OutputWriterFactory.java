@@ -20,40 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.output.writers;
-
-import org.jmxtrans.output.AbstractOutputWriter;
-import org.jmxtrans.output.OutputWriterFactory;
-import org.jmxtrans.results.QueryResult;
+package org.jmxtrans.output;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
-import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-/**
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
-@Immutable
-@ThreadSafe
-public class ConsoleOutputWriter extends AbstractOutputWriter {
+public interface OutputWriterFactory<T extends OutputWriter> {
 
-    protected ConsoleOutputWriter(String logLevel) {
-        super(logLevel);
-    }
+    @Nonnull
+    T create(@Nonnull Map<String, String> settings);
 
-    @Override
-    public void write(@Nonnull QueryResult result) throws IOException {
-        System.out.println(result.getName() + " " + result.getValue() + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS));
-    }
-
-    public static final class Factory implements OutputWriterFactory<ConsoleOutputWriter> {
-        @Override
-        @Nonnull
-        public ConsoleOutputWriter create(@Nonnull Map<String, String> settings) {
-            return new ConsoleOutputWriter(AbstractOutputWriter.getLogLevel(settings));
-        }
-    }
 }

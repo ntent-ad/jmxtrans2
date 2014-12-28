@@ -48,7 +48,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * JSON Configuration parser to build {@link org.jmxtrans.embedded.EmbeddedJmxTrans}.
+ * JSON Configuration parser to create {@link org.jmxtrans.embedded.EmbeddedJmxTrans}.
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */

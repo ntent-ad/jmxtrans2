@@ -23,12 +23,13 @@
 package org.jmxtrans.output.writers;
 
 import org.jmxtrans.output.AbstractOutputWriter;
-import org.jmxtrans.output.writers.utils.EvictingQueue;
 import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.output.writers.utils.EvictingQueue;
 import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -40,20 +41,19 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
+@NotThreadSafe
 public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implements OutputWriter {
 
-    protected OutputWriter delegate;
-    protected Map<String, Queue<QueryResult>> previousQueryResultsByMetricName = new HashMap<String, Queue<QueryResult>>();
+    protected final OutputWriter delegate;
+    protected final Map<String, Queue<QueryResult>> previousQueryResultsByMetricName = new HashMap<String, Queue<QueryResult>>();
 
-    public PerMinuteSummarizerOutputWriter() {
-    }
-
-    public PerMinuteSummarizerOutputWriter(OutputWriter delegate) {
+    public PerMinuteSummarizerOutputWriter(@Nonnull String logLevel, @Nonnull OutputWriter delegate) {
+        super(logLevel);
         this.delegate = delegate;
     }
 
     @Override
-    public void write(QueryResult result) throws IOException {
+    public void write(@Nonnull QueryResult result) throws IOException {
         QueryResult currentResult = new QueryResult(result.getName(), result.getType(), result.getValue(), System.currentTimeMillis());
 
         if ("counter".equals(currentResult.getType())) {
@@ -89,8 +89,6 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
         queue.add(currentResult);
     }
 
-    /**
-     */
     @Nullable
     protected QueryResult getPreviousQueryResult(@Nonnull QueryResult currentResult) {
         Queue<QueryResult> queue = previousQueryResultsByMetricName.get(currentResult.getName());
@@ -191,31 +189,4 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
         return new QueryResult(currentResult.getName(), "gauge", newCurrentValue, currentResult.getEpochInMillis());
     }
 
-    @Override
-    public void postConstruct(@Nonnull Map<String, String> settings) {
-        super.postConstruct(settings);
-        delegate.postConstruct(settings);
-    }
-
-    @Override
-    public void preDestroy() {
-        super.preDestroy();
-        delegate.preDestroy();
-    }
-
-    @Override
-    public void postCollect() throws IOException {
-        super.postCollect();
-        delegate.postCollect();
-    }
-
-    @Override
-    public void preCollect() throws IOException {
-        super.preCollect();
-        delegate.preCollect();
-    }
-
-    public void setDelegate(OutputWriter delegate) {
-        this.delegate = delegate;
-    }
 }

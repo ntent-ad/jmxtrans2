@@ -22,11 +22,13 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.output.AbstractOutputWriter;
-import org.jmxtrans.results.QueryResult;
+import org.jmxtrans.output.OutputWriterFactory;
 import org.jmxtrans.output.writers.utils.HostAndPort;
+import org.jmxtrans.results.QueryResult;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -46,33 +48,25 @@ import static org.jmxtrans.utils.ConfigurationUtils.getString;
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter implements OutputWriter {
-
-    public final static String SETTING_HOST = "host";
-    public final static String SETTING_PORT = "port";
-    public static final int SETTING_PORT_DEFAULT_VALUE = 2003;
-    public final static String SETTING_NAME_PREFIX = "namePrefix";
-    public final static String SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS = "socket.connectTimeoutInMillis";
-    public final static int SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS_DEFAULT_VALUE = 500;
+@NotThreadSafe
+public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
 
     private final static Charset UTF_8 = Charset.forName("UTF-8");
     protected String metricPathPrefix;
-    protected HostAndPort graphiteServerHostAndPort;
+    protected final HostAndPort graphiteServerHostAndPort;
     private Socket socket;
     private Writer writer;
-    private int socketConnectTimeoutInMillis = SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS_DEFAULT_VALUE;
+    private final int socketConnectTimeoutInMillis;
 
-    @Override
-    public void postConstruct(Map<String, String> settings) {
-        super.postConstruct(settings);
-
-        graphiteServerHostAndPort = new HostAndPort(
-                getString(settings, SETTING_HOST),
-                getInt(settings, SETTING_PORT, SETTING_PORT_DEFAULT_VALUE));
-        metricPathPrefix = getString(settings, SETTING_NAME_PREFIX, null);
-        socketConnectTimeoutInMillis = getInt(settings,
-                SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS,
-                SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS_DEFAULT_VALUE);
+    protected GraphitePlainTextTcpOutputWriter(
+            String logLevel,
+            HostAndPort graphiteServerHostAndPort,
+            String metricPathPrefix,
+            int socketConnectTimeoutInMillis) {
+        super(logLevel);
+        this.graphiteServerHostAndPort = graphiteServerHostAndPort;
+        this.metricPathPrefix = metricPathPrefix;
+        this.socketConnectTimeoutInMillis = socketConnectTimeoutInMillis;
 
         logger.log(getInfoLevel(), "GraphitePlainTextTcpOutputWriter is configured with " + graphiteServerHostAndPort + ", metricPathPrefix=" + metricPathPrefix +
                 ", socketConnectTimeoutInMillis=" + socketConnectTimeoutInMillis);
@@ -83,6 +77,7 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter imple
      *
      * @return
      */
+    @Nonnull
     protected String buildMetricPathPrefix() {
         if (metricPathPrefix != null) {
             return metricPathPrefix;
@@ -98,7 +93,7 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter imple
     }
 
     @Override
-    public void write(QueryResult result) throws IOException {
+    public void write(@Nonnull QueryResult result) throws IOException {
         String msg = buildMetricPathPrefix() + result.getName() + " " + result.getValue() + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
         try {
             ensureGraphiteConnection();
@@ -173,10 +168,38 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter imple
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return "GraphitePlainTextTcpOutputWriter{" +
                 ", " + graphiteServerHostAndPort +
                 ", metricPathPrefix='" + metricPathPrefix + '\'' +
                 '}';
     }
+
+    public static final class Factory implements OutputWriterFactory<GraphitePlainTextTcpOutputWriter> {
+        public final static String SETTING_HOST = "host";
+        public final static String SETTING_PORT = "port";
+        public static final int SETTING_PORT_DEFAULT_VALUE = 2003;
+        public final static String SETTING_NAME_PREFIX = "namePrefix";
+        public final static String SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS = "socket.connectTimeoutInMillis";
+        public final static int SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS_DEFAULT_VALUE = 500;
+
+        @Override
+        public GraphitePlainTextTcpOutputWriter create(Map<String, String> settings) {
+            HostAndPort graphiteServerHostAndPort = new HostAndPort(
+                    getString(settings, SETTING_HOST),
+                    getInt(settings, SETTING_PORT, SETTING_PORT_DEFAULT_VALUE));
+            String metricPathPrefix = getString(settings, SETTING_NAME_PREFIX, null);
+            int socketConnectTimeoutInMillis = getInt(settings,
+                    SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS,
+                    SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS_DEFAULT_VALUE);
+
+            return new GraphitePlainTextTcpOutputWriter(
+                    AbstractOutputWriter.getLogLevel(settings),
+                    graphiteServerHostAndPort,
+                    metricPathPrefix,
+                    socketConnectTimeoutInMillis);
+        }
+    }
+
 }

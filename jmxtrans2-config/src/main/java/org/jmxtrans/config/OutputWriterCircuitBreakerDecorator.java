@@ -25,26 +25,20 @@ package org.jmxtrans.config;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.results.QueryResult;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static org.jmxtrans.utils.ConfigurationUtils.getBoolean;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public class OutputWriterCircuitBreakerDecorator implements OutputWriter {
-    private final static String SETTING_ENABLED = "enabled";
     private static final int MAX_FAILURES = 5;
     private final Logger logger;
     // visible for testing
     public final OutputWriter delegate;
-    private boolean enabled = true;
     private static final long DISABLE_DURATION_MILLIS = 60 * 1000;
     private final AtomicInteger failuresCounter = new AtomicInteger();
     private long disabledUntil = 0;
@@ -52,17 +46,6 @@ public class OutputWriterCircuitBreakerDecorator implements OutputWriter {
     public OutputWriterCircuitBreakerDecorator(OutputWriter delegate) {
         this.delegate = delegate;
         logger = Logger.getLogger(delegate.getClass().getName() + "CircuitBreaker");
-    }
-
-    @Override
-    public void postConstruct(@Nonnull Map<String, String> settings) {
-        enabled = getBoolean(settings, SETTING_ENABLED, true);
-        delegate.postConstruct(settings);
-    }
-
-    @Override
-    public void preDestroy() {
-        delegate.preDestroy();
     }
 
     @Override
@@ -124,10 +107,7 @@ public class OutputWriterCircuitBreakerDecorator implements OutputWriter {
     }
 
     public boolean isDisabled() {
-        if (!enabled) {
-            logger.finer("OutputWriter is globally disabled");
-            return true;
-        } else if (disabledUntil == 0) {
+        if (disabledUntil == 0) {
             logger.finer("OutputWriter is not temporarily disabled");
             return false;
         } else if (disabledUntil < System.currentTimeMillis()) {
