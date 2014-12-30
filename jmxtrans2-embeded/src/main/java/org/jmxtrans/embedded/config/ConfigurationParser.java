@@ -22,30 +22,29 @@
  */
 package org.jmxtrans.embedded.config;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.management.MBeanServer;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
-import org.jmxtrans.embedded.Query;
-import org.jmxtrans.embedded.QueryAttribute;
-import org.jmxtrans.embedded.output.OutputWriter;
+import org.jmxtrans.embedded.query.Query;
+import org.jmxtrans.embedded.query.QueryAttribute;
 import org.jmxtrans.embedded.util.json.PlaceholderEnabledJsonNodeFactory;
+import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.output.OutputWriterFactory;
 import org.jmxtrans.utils.Preconditions2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * JSON Configuration parser to create {@link org.jmxtrans.embedded.EmbeddedJmxTrans}.
@@ -73,21 +72,7 @@ public class ConfigurationParser {
     }
 
     public EmbeddedJmxTrans newEmbeddedJmxTrans(@Nonnull List<String> configurationUrls) throws EmbeddedJmxTransException {
-        EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
-
-        for (String configurationUrl : configurationUrls) {
-            mergeEmbeddedJmxTransConfiguration(configurationUrl, embeddedJmxTrans);
-        }
-        return embeddedJmxTrans;
-    }
-    
-    public EmbeddedJmxTrans newEmbeddedJmxTransWithCustomMBeanServer(@Nonnull List<String> configurationUrls, MBeanServer mbeanServer) throws EmbeddedJmxTransException {
-        EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans(mbeanServer);
-
-        for (String configurationUrl : configurationUrls) {
-            mergeEmbeddedJmxTransConfiguration(configurationUrl, embeddedJmxTrans);
-        }
-        return embeddedJmxTrans;
+        return newEmbeddedJmxTrans(configurationUrls.toArray(new String[configurationUrls.size()]));
     }
 
     /**
@@ -118,28 +103,9 @@ public class ConfigurationParser {
         }
     }
 
-    @Nonnull
-    public EmbeddedJmxTrans newEmbeddedJmxTrans(@Nonnull InputStream configuration) throws IOException {
-        EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
-        mergeEmbeddedJmxTransConfiguration(configuration, embeddedJmxTrans);
-        return embeddedJmxTrans;
-    }
-
     public void mergeEmbeddedJmxTransConfiguration(@Nonnull InputStream configuration, EmbeddedJmxTrans embeddedJmxTrans) throws IOException {
         JsonNode configurationRootNode = mapper.readValue(configuration, JsonNode.class);
         mergeEmbeddedJmxTransConfiguration(configurationRootNode, embeddedJmxTrans);
-    }
-
-    public EmbeddedJmxTrans newEmbeddedJmxTrans(@Nonnull URL configurationUrl) throws IOException {
-        EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
-        mergeEmbeddedJmxTransConfiguration(configurationUrl, embeddedJmxTrans);
-        return embeddedJmxTrans;
-    }
-
-    public EmbeddedJmxTrans newEmbeddedJmxTrans(@Nonnull JsonNode configurationRootNode) {
-        EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
-        mergeEmbeddedJmxTransConfiguration(configurationRootNode, embeddedJmxTrans);
-        return embeddedJmxTrans;
     }
 
     protected void mergeEmbeddedJmxTransConfiguration(@Nonnull URL configurationUrl, EmbeddedJmxTrans embeddedJmxTrans) throws IOException {
@@ -176,8 +142,6 @@ public class ConfigurationParser {
 
             JsonNode attributeNode = queryNode.path("attribute");
             parseQueryAttributeNode(query, attributeNode);
-            List<OutputWriter> outputWriters = parseOutputWritersNode(queryNode);
-            query.getOutputWriters().addAll(outputWriters);
             logger.trace("Add {}", query);
         }
 
@@ -221,25 +185,7 @@ public class ConfigurationParser {
             for (JsonNode outputWriterNode : outputWritersNode) {
                 try {
                     String className = outputWriterNode.path("@class").asText();
-                    OutputWriter outputWriter = (OutputWriter) Class.forName(className).newInstance();
-                    JsonNode deprecatedEnabledNode = outputWriterNode.path("enabled");
-                    if (!deprecatedEnabledNode.isMissingNode()) {
-                        logger.warn("OutputWriter {}, deprecated usage of attribute 'enabled', settings{ \"enabled\":... } should be used instead");
-                        outputWriter.setEnabled(deprecatedEnabledNode.asBoolean());
-                    }
-                    JsonNode settingsNode = outputWriterNode.path("settings");
-                    if (settingsNode.isMissingNode()) {
-                    } else if (settingsNode.isObject()) {
-                        ObjectMapper mapper = new ObjectMapper();
-                        @SuppressWarnings("unchecked")
-                        Map<String, Object> settings = mapper.treeToValue(settingsNode, Map.class);
-                        outputWriter.setSettings(settings);
-                        if (settings.containsKey("enabled")) {
-                            outputWriter.setEnabled(Boolean.valueOf(String.valueOf(settings.get("enabled"))));
-                        }
-                    } else {
-                        logger.warn("Ignore invalid node {}", outputWriterNode);
-                    }
+                    OutputWriter outputWriter = instantiateOutputWriter(outputWriterNode, className);
                     logger.trace("Add {}", outputWriter);
                     outputWriters.add(outputWriter);
                 } catch (Exception e) {
@@ -250,6 +196,21 @@ public class ConfigurationParser {
             logger.warn("Ignore invalid node {}", outputWritersNode);
         }
         return outputWriters;
+    }
+
+    private OutputWriter instantiateOutputWriter(JsonNode outputWriterNode, String className) throws InstantiationException, IllegalAccessException, ClassNotFoundException, JsonProcessingException {
+        OutputWriterFactory<OutputWriter> factory = (OutputWriterFactory<OutputWriter>) Class.forName(className + "$Factory").newInstance();
+
+        JsonNode settingsNode = outputWriterNode.path("settings");
+        Map<String, String> settings = Collections.emptyMap();
+        if (settingsNode.isMissingNode()) {
+        } else if (settingsNode.isObject()) {
+            ObjectMapper mapper = new ObjectMapper();
+            settings = mapper.treeToValue(settingsNode, Map.class);
+        } else {
+            logger.warn("Ignore invalid node {}", outputWriterNode);
+        }
+        return factory.create(settings);
     }
 
     protected void parseQueryAttributeNode(@Nonnull Query query, @Nonnull JsonNode attributeNode) {
@@ -295,9 +256,16 @@ public class ConfigurationParser {
             JsonNode typeNode = attributeNode.path("type");
             String type = typeNode.isMissingNode() ? null : typeNode.asText();
             if (keys == null) {
-                query.addAttribute(new QueryAttribute(name, type, resultAlias));
+                query.addAttribute(QueryAttribute.builder(name)
+                        .withType(type)
+                        .withResultAlias(resultAlias)
+                        .build());
             } else {
-                query.addAttribute(new QueryAttribute(name, type, resultAlias, keys));
+                query.addAttribute(QueryAttribute.builder(name)
+                        .withType(type)
+                        .withResultAlias(resultAlias)
+                        .withKeys(keys)
+                        .build());
             }
         } else {
             logger.warn("Ignore invalid node {}", attributeNode);

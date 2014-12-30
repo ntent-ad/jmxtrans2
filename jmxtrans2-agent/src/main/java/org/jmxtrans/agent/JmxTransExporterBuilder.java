@@ -25,6 +25,7 @@ package org.jmxtrans.agent;
 import org.jmxtrans.config.ConfigParser;
 import org.jmxtrans.config.Interval;
 import org.jmxtrans.config.Invocation;
+import org.jmxtrans.naming.ResultNameStrategyImpl;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.jmxtrans.query.Query;

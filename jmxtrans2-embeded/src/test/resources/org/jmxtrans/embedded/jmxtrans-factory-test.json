@@ -60,14 +60,14 @@
             "attribute": "CollectionUsageThresholdCount",
             "outputWriters": [
                 {
-                    "@class": "org.jmxtrans.embedded.output.NoOpWriter"
+                    "@class": "org.jmxtrans.output.DevNullOutputWriter"
                 }
             ]
         }
     ],
     "outputWriters": [
         {
-            "@class": "org.jmxtrans.embedded.output.NoOpWriter"
+            "@class": "org.jmxtrans.output.DevNullOutputWriter"
         }
     ],
     "queryIntervalInSeconds": 5,

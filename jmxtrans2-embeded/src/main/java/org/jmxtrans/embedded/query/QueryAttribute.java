@@ -20,8 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded;
+package org.jmxtrans.embedded.query;
 
+import org.jmxtrans.embedded.ResultNameStrategy;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.Preconditions2;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ import java.util.*;
  * <p/>
  * Collected values are sent to a {@linkplain java.util.concurrent.BlockingQueue}
  * for later export to the target monitoring systems
- * (see {@link #collectMetrics(javax.management.ObjectName, Object, long, java.util.Queue)}).
+ * (see {@link #collectMetrics(javax.management.ObjectName, Object, long, java.util.Queue, Query, org.jmxtrans.embedded.ResultNameStrategy)}).
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  * @author Jon Stevens
@@ -47,14 +48,11 @@ public class QueryAttribute {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected ResultNameStrategy resultNameStrategy = new ResultNameStrategy();
-
-    private Query query;
     /**
      * Name of the JMX Attribute to collect
      */
     @Nonnull
-    private String name;
+    private final String name;
     /**
      * Used to create the name of the {@link org.jmxtrans.results.QueryResult} that will be exported.
      * <p/>
@@ -63,7 +61,7 @@ public class QueryAttribute {
      * @see org.jmxtrans.results.QueryResult#getName()
      */
     @Nullable
-    private String resultAlias;
+    private final String resultAlias;
 
     /**
      * Attribute type like '{@code gauge}' or '{@code counter}'. Used by monitoring systems like Librato who require this information.
@@ -71,7 +69,7 @@ public class QueryAttribute {
      * @see org.jmxtrans.results.QueryResult#getName()
      */
     @Nullable
-    private String type;
+    private final String type;
 
     /**
      * <code>null</code> if no 'key' as been defined in the config.
@@ -80,18 +78,7 @@ public class QueryAttribute {
      * @see javax.management.openmbean.CompositeType#keySet()
      */
     @Nullable
-    private String[] keys;
-
-    /**
-     * @param name        name of the JMX attribute
-     * @param type        type of the metric (e.g. "{@code counter}", "{@code gauge}", ...)
-     * @param resultAlias name of the result that will be exported
-     */
-    public QueryAttribute(@Nonnull String name, @Nullable String type, @Nullable String resultAlias) {
-        this.name = Preconditions2.checkNotEmpty(name);
-        this.type = type;
-        this.resultAlias = resultAlias;
-    }
+    private final Set<String> keys;
 
     /**
      * @param name        name of the JMX attribute
@@ -99,23 +86,11 @@ public class QueryAttribute {
      * @param resultAlias name of the result that will be exported
      * @param keys        of the {@link javax.management.openmbean.CompositeData} to collect
      */
-    public QueryAttribute(@Nonnull String name, @Nullable String type, @Nullable String resultAlias, @Nullable Collection<String> keys) {
-        this(name, type, resultAlias);
-        addKeys(keys);
-    }
-
-    /**
-     * Not <code>null</code> once this {@link org.jmxtrans.embedded.QueryAttribute} has been added to its parent {@link org.jmxtrans.embedded.Query}.
-     *
-     * @return parent query
-     * @see org.jmxtrans.embedded.Query#addAttribute(org.jmxtrans.embedded.QueryAttribute)
-     */
-    public Query getQuery() {
-        return query;
-    }
-
-    public void setQuery(Query query) {
-        this.query = query;
+    private QueryAttribute(@Nonnull String name, @Nullable String type, @Nullable String resultAlias, @Nullable Set<String> keys) {
+        this.name = Preconditions2.checkNotEmpty(name);
+        this.type = type;
+        this.resultAlias = resultAlias;
+        this.keys = keys;
     }
 
     @Nonnull
@@ -139,64 +114,55 @@ public class QueryAttribute {
      *                      or a {@link javax.management.openmbean.CompositeData}
      * @param epochInMillis time at which the metric was collected
      * @param results       queue to which the the computed result(s) must be added
+     * @param query
+     * @param resultNameStrategy
      * @return collected metrics count
      */
     public int collectMetrics(@Nonnull ObjectName objectName, @Nonnull Object value, long epochInMillis,
-                              @Nonnull Queue<QueryResult> results) {
-
-        int metricsCounter = 0;
-
+                              @Nonnull Queue<QueryResult> results, Query query, ResultNameStrategy resultNameStrategy) {
         if (value instanceof CompositeData) {
             CompositeData compositeData = (CompositeData) value;
-            String[] keysToCollect;
-            if (keys == null) {
-                keysToCollect = compositeData.getCompositeType().keySet().toArray(new String[0]);
-                logger.info("No 'key' has been configured to collect data on this Composite attribute, collect all keys. {}:{}:{}", getQuery(), objectName, this);
-            } else {
-                keysToCollect = keys;
-            }
-            for (String key : keysToCollect) {
-                String resultName = resultNameStrategy.getResultName(getQuery(), objectName, this, key);
-                Object compositeValue = compositeData.get(key);
-                if (compositeValue instanceof Number || compositeValue instanceof String || compositeValue instanceof Date) {
-                    QueryResult result = new QueryResult(resultName, getType(), compositeValue, epochInMillis);
-                    logger.debug("Collect {}", result);
-                    results.add(result);
-                    metricsCounter++;
-                } else {
-                    logger.debug("Skip non supported value {}:{}:{}:{}={}", getQuery(), objectName, this, key, compositeValue);
-                }
-            }
+            return collectCompositeData(objectName, epochInMillis, results, query, resultNameStrategy, compositeData);
         } else if (value instanceof Number || value instanceof String || value instanceof Date) {
-            if (keys != null && logger.isInfoEnabled()) {
-                logger.info("Ignore keys configured for 'simple' jmx attribute. {}:{}:{}", getQuery(), objectName, this);
-            }
-            String resultName = resultNameStrategy.getResultName(getQuery(), objectName, this);
-            QueryResult result = new QueryResult(resultName, getType(), value, epochInMillis);
-            logger.debug("Collect {}", result);
-            results.add(result);
-            metricsCounter++;
-        } else {
-            logger.info("Ignore non CompositeData attribute value {}:{}:{}={}", getQuery(), objectName, this, value);
+            return collectScalar(objectName, value, epochInMillis, results, query, resultNameStrategy);
         }
-        return metricsCounter;
+        logger.info("Ignore non CompositeData attribute value {}:{}:{}={}", query, objectName, this, value);
+        return 0;
     }
 
-    /**
-     * @return <code>this</code>
-     */
-    @Nonnull
-    public QueryAttribute addKeys(@Nullable Collection<String> newKeys) {
-        if (newKeys == null) {
-            return this;
+    private int collectScalar(ObjectName objectName, Object value, long epochInMillis, Queue<QueryResult> results, Query query, ResultNameStrategy resultNameStrategy) {
+        if (keys != null && logger.isInfoEnabled()) {
+            logger.info("Ignore keys configured for 'simple' jmx attribute. {}:{}:{}", query, objectName, this);
         }
+        String resultName = resultNameStrategy.getResultName(query, objectName, this);
+        QueryResult result = new QueryResult(resultName, getType(), value, epochInMillis);
+        logger.debug("Collect {}", result);
+        results.add(result);
+        return 1;
+    }
 
-        Set<String> newKeysSet = new HashSet<String>(newKeys);
-        if (this.keys != null) {
-            Collections.addAll(newKeysSet, this.keys);
+    private int collectCompositeData(ObjectName objectName, long epochInMillis, Queue<QueryResult> results, Query query, ResultNameStrategy resultNameStrategy, CompositeData compositeData) {
+        int metricsCounter = 0;
+        String[] keysToCollect;
+        if (keys == null) {
+            keysToCollect = compositeData.getCompositeType().keySet().toArray(new String[0]);
+            logger.info("No 'key' has been configured to collect data on this Composite attribute, collect all keys. {}:{}:{}", query, objectName, this);
+        } else {
+            keysToCollect = keys.toArray(new String[keys.size()]);
         }
-        this.keys = newKeysSet.toArray(new String[0]);
-        return this;
+        for (String key : keysToCollect) {
+            String resultName = resultNameStrategy.getResultName(query, objectName, this, key);
+            Object compositeValue = compositeData.get(key);
+            if (compositeValue instanceof Number || compositeValue instanceof String || compositeValue instanceof Date) {
+                QueryResult result = new QueryResult(resultName, getType(), compositeValue, epochInMillis);
+                logger.debug("Collect {}", result);
+                results.add(result);
+                metricsCounter++;
+            } else {
+                logger.debug("Skip non supported value {}:{}:{}:{}={}", query, objectName, this, key, compositeValue);
+            }
+        }
+        return metricsCounter;
     }
 
     @Override
@@ -206,5 +172,46 @@ public class QueryAttribute {
                 ", resultAlias='" + getResultAlias() + '\'' +
                 ", keys=" + (keys == null ? null : Arrays.asList(keys)) +
                 '}';
+    }
+
+    public static Builder builder(@Nonnull String name) {
+        return new Builder(name);
+    }
+
+    public static final class Builder {
+        @Nonnull
+        private String name;
+        @Nullable
+        private String type;
+        @Nullable
+        private String resultAlias;
+        @Nullable
+        private Set<String> keys;
+
+        private Builder(@Nonnull String name) {
+            this.name = name;
+        }
+
+        public Builder withResultAlias(@Nullable String resultAlias) {
+            this.resultAlias = resultAlias;
+            return this;
+        }
+
+        public Builder withType(@Nullable String type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder withKeys(@Nullable Collection<String> keys) {
+            if (keys != null) {
+                this.keys = new HashSet<String>();
+                this.keys.addAll(keys);
+            }
+            return this;
+        }
+
+        public QueryAttribute build() {
+            return new QueryAttribute(name, type, resultAlias, keys);
+        }
     }
 }

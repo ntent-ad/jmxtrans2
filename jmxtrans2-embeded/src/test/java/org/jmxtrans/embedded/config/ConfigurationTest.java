@@ -24,19 +24,18 @@ package org.jmxtrans.embedded.config;
 
 
 import org.jmxtrans.embedded.EmbeddedJmxTrans;
-import org.jmxtrans.embedded.Query;
-import org.jmxtrans.embedded.QueryAttribute;
 import org.jmxtrans.embedded.TestUtils;
-import org.jmxtrans.embedded.output.*;
+import org.jmxtrans.embedded.query.Query;
+import org.jmxtrans.embedded.query.QueryAttribute;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import java.util.*;
+import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -75,27 +74,6 @@ public class ConfigurationTest {
         assertThat(query.getQueryAttributes().size(), is(1));
         QueryAttribute queryAttribute = query.getQueryAttributes().iterator().next();
         assertThat(queryAttribute.getName(), is("CollectionUsageThresholdCount"));
-    }
-
-    @Test
-    public void validateDisabledOutputWriters() throws MalformedObjectNameException {
-        Query query = queriesByResultName.get("test-aliased-query");
-        assertThat(query.getOutputWriters().size(), is(0));
-        assertThat(query.getEffectiveOutputWriters().size(), is(4));
-
-    }
-
-    @Test
-    public void validateDisabledRootOutputWriters() throws MalformedObjectNameException {
-        Map<Class<? extends OutputWriter>, OutputWriter> outputWritersByClass = TestUtils.indexOutputWritersByClass(embeddedJmxTrans.getOutputWriters());
-
-        assertThat(embeddedJmxTrans.getOutputWriters().size(), is(6));
-
-        assertThat(outputWritersByClass.get(ConsoleWriter.class).isEnabled(), is(true));
-        assertThat(outputWritersByClass.get(TestWriter1.class).isEnabled(), is(false));
-        assertThat(outputWritersByClass.get(TestWriter2.class).isEnabled(), is(true));
-        assertThat(outputWritersByClass.get(TestWriter3.class).isEnabled(), is(false));
-        assertThat(outputWritersByClass.get(TestWriter4.class).isEnabled(), is(true));
     }
 
     @Test
@@ -200,10 +178,6 @@ public class ConfigurationTest {
         assertThat(query.getQueryAttributes().size(), is(1));
         QueryAttribute queryAttribute = query.getQueryAttributes().iterator().next();
         assertThat(queryAttribute.getName(), is("CollectionUsageThresholdCount"));
-        assertThat(query.getOutputWriters().size(), is(1));
-        assertThat(query.getEffectiveOutputWriters().size(), is(5));
-        OutputWriter outputWriter = query.getOutputWriters().get(0);
-        assertThat(outputWriter, instanceOf(NoOpWriter.class));
     }
 
     @Test

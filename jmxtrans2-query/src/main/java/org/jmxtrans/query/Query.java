@@ -92,7 +92,7 @@ public class Query {
     /**
      * @see #Query(String, String, String, Integer, String, String, ResultNameStrategy)
      */
-    public Query(@Nonnull String objectName, @Nonnull String attribute, int position, @Nonnull ResultNameStrategy resultNameStrategy) {
+    public Query(@Nonnull String objectName, @Nonnull String attribute, @Nullable Integer position, @Nonnull ResultNameStrategy resultNameStrategy) {
         this(objectName, attribute, null, position, null, attribute, resultNameStrategy);
     }
 
@@ -113,7 +113,7 @@ public class Query {
      * @param type               type of the metric ('counter', 'gauge', ...)
      * @param resultAlias
      * @param resultNameStrategy the {@link ResultNameStrategy} used during the
-     *                           {@link #collectAndExport(javax.management.MBeanServer, java.util.Queue)} phase.
+     *                           {@link #collectMetrics(javax.management.MBeanServer, java.util.Queue)} phase.
      */
     public Query(
             @Nonnull String objectName,
@@ -136,10 +136,7 @@ public class Query {
         this.resultNameStrategy = Preconditions2.checkNotNull(resultNameStrategy, "resultNameStrategy");
     }
 
-    public void collectAndExport(@Nonnull MBeanServer mbeanServer, @Nonnull Queue<QueryResult> resultQueue) {
-        if (resultNameStrategy == null)
-            throw new IllegalStateException("resultNameStrategy is not defined, query object is not properly initialized");
-
+    public void collectMetrics(@Nonnull MBeanServer mbeanServer, @Nonnull Queue<QueryResult> resultQueue) {
         Set<ObjectName> objectNames = mbeanServer.queryNames(objectName, null);
 
         for (ObjectName on : objectNames) {

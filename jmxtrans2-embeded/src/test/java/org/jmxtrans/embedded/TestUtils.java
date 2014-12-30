@@ -22,7 +22,9 @@
  */
 package org.jmxtrans.embedded;
 
-import org.jmxtrans.embedded.output.OutputWriter;
+import org.jmxtrans.embedded.query.Query;
+import org.jmxtrans.embedded.query.QueryAttribute;
+import org.jmxtrans.output.OutputWriter;
 
 import java.util.HashMap;
 import java.util.Map;

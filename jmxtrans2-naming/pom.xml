@@ -31,14 +31,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jmxtrans2-query</artifactId>
-    <name>JMXTrans - query</name>
+    <artifactId>jmxtrans2-naming</artifactId>
+    <name>JMXTrans - naming</name>
 
     <properties>
-        <verify.cobertura.totalBranchRate>21</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>48</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>54</verify.coverage.threshold>
-        <verify.mutation.threshold>23</verify.mutation.threshold>
+        <verify.cobertura.totalLineRate>76</verify.cobertura.totalLineRate>
+        <verify.coverage.threshold>71</verify.coverage.threshold>
     </properties>
 
     <dependencies>
@@ -49,20 +47,11 @@
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-results</artifactId>
+            <artifactId>jmxtrans2-query</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -72,11 +61,6 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-guava</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

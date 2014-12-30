@@ -67,7 +67,7 @@ public class QueryTest {
         Query query = new Query(MOCK_MBEAN_NAME, "CollectionUsageThreshold", resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(1);
 
-        query.collectAndExport(mbeanServer, results);
+        query.collectMetrics(mbeanServer, results);
 
         assertThat(results).hasSize(1);
         QueryResult queryResult = results.poll();
@@ -81,7 +81,7 @@ public class QueryTest {
         Query query = new Query(MOCK_MBEAN_NAME, "CollectionUsageThreshold", resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(1);
 
-        query.collectAndExport(mbeanServer, results);
+        query.collectMetrics(mbeanServer, results);
 
         assertThat(resultNameStrategy.hasBeenCalled()).isTrue();
     }
@@ -91,7 +91,7 @@ public class QueryTest {
         Query query = new Query(MOCK_MBEAN_NAME, "IntegerList", 1, resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(1);
 
-        query.collectAndExport(mbeanServer, results);
+        query.collectMetrics(mbeanServer, results);
 
         assertThat(results).hasSize(1);
         QueryResult queryResult = results.poll();
@@ -105,7 +105,7 @@ public class QueryTest {
         Query query = new Query(MOCK_MBEAN_NAME, "IntegerList", resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(mock.getIntegerList().size());
 
-        query.collectAndExport(mbeanServer, results);
+        query.collectMetrics(mbeanServer, results);
 
         for (int i = 0; i < mock.getIntegerList().size(); i++) {
             final String name = "IntegerList_" + i;
@@ -126,7 +126,7 @@ public class QueryTest {
         Query query = new Query(MOCK_MBEAN_NAME, "IntArray", 1, resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(1);
 
-        query.collectAndExport(mbeanServer, results);
+        query.collectMetrics(mbeanServer, results);
 
         assertThat(results).hasSize(1);
         QueryResult queryResult = results.poll();
@@ -140,7 +140,7 @@ public class QueryTest {
         Query query = new Query(MOCK_MBEAN_NAME, "IntegerArray", 1, resultNameStrategy);
         Queue<QueryResult> results = new ArrayBlockingQueue<QueryResult>(1);
 
-        query.collectAndExport(mbeanServer, results);
+        query.collectMetrics(mbeanServer, results);
 
         assertThat(results).hasSize(1);
         QueryResult queryResult = results.poll();

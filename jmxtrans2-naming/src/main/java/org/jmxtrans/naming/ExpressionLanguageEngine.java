@@ -20,35 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded;
+package org.jmxtrans.naming;
 
+import javax.annotation.Nonnull;
 import javax.management.ObjectName;
 
 /**
- * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public interface QueryMBean {
-    void collectMetrics();
+public interface ExpressionLanguageEngine {
+    /**
+     * Replace all the '#' based keywords (e.g. <code>#hostname#</code>) by their value.
+     *
+     * @param expression the expression to resolve (e.g. <code>"servers.#hostname#."</code>)
+     * @return the resolved expression (e.g. <code>"servers.tomcat5"</code>)
+     */
+    @Nonnull
+    String resolveExpression(@Nonnull String expression);
 
-    int exportCollectedMetrics();
-
-    int getCollectedMetricsCount();
-
-    long getCollectionDurationInNanos();
-
-    int getCollectionCount();
-
-    int getExportedMetricsCount();
-
-    long getExportDurationInNanos();
-
-    int getExportCount();
-
-    String getResultAlias();
-
-    ObjectName getObjectName();
-
-    String getId();
-
-    int getDiscardedResultsCount();
+    String resolveExpression(@Nonnull String expression, @Nonnull ObjectName exactObjectName);
 }

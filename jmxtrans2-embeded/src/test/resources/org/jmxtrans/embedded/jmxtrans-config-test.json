@@ -74,14 +74,14 @@
             "attribute": "CollectionUsageThresholdCount",
             "outputWriters": [
                 {
-                    "@class": "org.jmxtrans.embedded.output.NoOpWriter"
+                    "@class": "org.jmxtrans.output.DevNullOutputWriter"
                 }
             ]
         }
     ],
     "outputWriters": [
         {
-            "@class": "org.jmxtrans.embedded.output.ConsoleWriter"
+            "@class": "org.jmxtrans.output.writers.ConsoleOutputWriter"
         },
         {
             "@class": "org.jmxtrans.embedded.output.TestWriter1",
@@ -108,7 +108,7 @@
             }
         },
         {
-            "@class": "org.jmxtrans.embedded.output.GraphiteWriter",
+            "@class": "org.jmxtrans.output.writers.GraphitePlainTextTcpOutputWriter",
             "settings": {
                 "host": "${graphite.host:localhost}",
                 "port": "${graphite.port:2003}",

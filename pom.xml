@@ -88,6 +88,7 @@
         <module>jmxtrans2-scheduler</module>
         <module>jmxtrans2-standalone</module>
         <module>jmxtrans2-utils</module>
+        <module>jmxtrans2-naming</module>
     </modules>
 
     <scm>
@@ -302,6 +303,11 @@
             <dependency>
                 <groupId>org.jmxtrans.jmxtrans2</groupId>
                 <artifactId>jmxtrans2-embeded</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-naming</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

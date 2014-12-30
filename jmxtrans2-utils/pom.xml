@@ -56,11 +56,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
@@ -77,6 +72,23 @@
                     <message>Creating site for ${project.name} ${project.version}</message>
                     <path>${project.artifactId}</path>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>de.andrena.tools.macker</groupId>
+                <artifactId>macker-maven-plugin</artifactId>
+                <version>1.0.2</version>
+                <configuration>
+                    <rulesDirectory>${project.basedir}/src/etc</rulesDirectory>
+                    <rule>macker-rules.xml</rule>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>macker</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

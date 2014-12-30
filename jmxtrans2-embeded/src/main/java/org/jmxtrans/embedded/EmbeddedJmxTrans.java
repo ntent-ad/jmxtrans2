@@ -22,7 +22,10 @@
  */
 package org.jmxtrans.embedded;
 
-import org.jmxtrans.embedded.output.OutputWriter;
+import org.jmxtrans.embedded.query.Query;
+import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.results.QueryResult;
+import org.jmxtrans.utils.concurrent.DiscardingBlockingQueue;
 import org.jmxtrans.utils.concurrent.NamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +34,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.management.MBeanServer;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -47,24 +52,11 @@ import java.util.concurrent.TimeUnit;
  * If the JMX query returns several mbeans (thanks to '*' or '?' wildcards),
  * then the configured attributes are collected on all the returned mbeans.
  * <p/>
- * <p/>
- * <strong>Output Writers</strong>
- * <p/>
- * {@linkplain org.jmxtrans.embedded.output.OutputWriter}s can be defined at the query level or globally at the {@link org.jmxtrans.embedded.EmbeddedJmxTrans} level.
- * The {@linkplain org.jmxtrans.embedded.output.OutputWriter}s that are effective for a {@linkplain org.jmxtrans.embedded.Query} are accessible
- * via {@link org.jmxtrans.embedded.Query#getEffectiveOutputWriters()}
- * <p/>
- * <p/>
- * <strong>Collected Metrics / Query Results</strong>
- * <p/>
- * Default behavior is to store the query results at the query level (see {@linkplain org.jmxtrans.embedded.Query#queryResults}) to resolve the
- * effective {@linkplain org.jmxtrans.embedded.output.OutputWriter}s at result export time ({@linkplain Query#getEffectiveOutputWriters()}).
- * <br/>
  * The drawback is to limit the benefits of batching result
- * to a backend (see {@link Query#exportCollectedMetrics()}) and the size limit of the results list to prevent
+ * to a backend and the size limit of the results list to prevent
  * {@linkplain OutOfMemoryError} in case of export slowness.
  * <p/>
- * An optimization would be, if only one {@linkplain org.jmxtrans.embedded.output.OutputWriter} is defined in the whole {@linkplain org.jmxtrans.embedded.EmbeddedJmxTrans}, to
+ * An optimization would be, if only one {@linkplain org.jmxtrans.output.OutputWriter} is defined in the whole {@linkplain org.jmxtrans.embedded.EmbeddedJmxTrans}, to
  * replace all the query-local result queues by one global result-queue.
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
@@ -80,20 +72,6 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 		super();
 		this.mbeanServer = mbeanServer;
 	}
-
-	/**
-     * Shutdown hook to collect and export metrics a last time if {@link org.jmxtrans.embedded.EmbeddedJmxTrans#stop()} was not called.
-     */
-    private class EmbeddedJmxTransShutdownHook extends Thread {
-
-        @Override
-        public void run() {
-            super.run();
-            collectMetrics();
-            exportCollectedMetrics();
-            logger.info("EmbeddedJmxTransShutdownHook collected and exported metrics");
-        }
-    }
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -124,8 +102,6 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
     private int exportBatchSize = 50;
 
-    private EmbeddedJmxTransShutdownHook shutdownHook = new EmbeddedJmxTransShutdownHook();
-
     /**
      * Start the exporter: initialize underlying queries, start scheduled executors, register shutdown hook
      */
@@ -139,34 +115,54 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
         for (Query query : queries) {
             query.start();
         }
-        for (OutputWriter outputWriter : outputWriters) {
-            outputWriter.start();
-        }
 
         collectScheduledExecutor = Executors.newScheduledThreadPool(getNumQueryThreads(), new NamedThreadFactory("org.jmxtrans-collect-", true));
         exportScheduledExecutor = Executors.newScheduledThreadPool(getNumExportThreads(), new NamedThreadFactory("org.jmxtrans-export-", true));
 
         for (final Query query : getQueries()) {
+            final BlockingQueue<QueryResult> results = new DiscardingBlockingQueue<QueryResult>(200);
             collectScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
                 @Override
                 public void run() {
-                    query.collectMetrics();
+                    query.collectMetrics(mbeanServer, results);
                 }
             }, 0, getQueryIntervalInSeconds(), TimeUnit.SECONDS);
             // start export just after first collect
             exportScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
                 @Override
                 public void run() {
-                    query.exportCollectedMetrics();
+                    exportMetrics(results);
                 }
             }, getQueryIntervalInSeconds() + 1, getExportIntervalInSeconds(), TimeUnit.SECONDS);
         }
 
-        Runtime.getRuntime().addShutdownHook(shutdownHook);
         running = true;
         logger.info("EmbeddedJmxTrans started");
     }
 
+    private int exportMetrics(BlockingQueue<QueryResult> queryResults) {
+        if(queryResults.isEmpty()) {
+            return 0;
+        }
+
+        int totalExportedMetricsCount = 0;
+
+        List<QueryResult> availableQueryResults = new ArrayList<QueryResult>(exportBatchSize);
+
+        int size;
+        while ((size = queryResults.drainTo(availableQueryResults, exportBatchSize)) > 0) {
+            totalExportedMetricsCount += size;
+            for (OutputWriter outputWriter : outputWriters) {
+                try {
+                    outputWriter.write(availableQueryResults);
+                } catch (IOException ioe) {
+                    logger.error("Could not send metrics to output writer {} for query {}.", outputWriter, this, ioe);
+                }
+            }
+            availableQueryResults.clear();
+        }
+        return totalExportedMetricsCount;
+    }
 
     /**
      * Stop scheduled executors and collect-and-export metrics one last time.
@@ -190,43 +186,11 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             logger.warn("Ignore InterruptedException stopping", e);
         }
 
-        collectMetrics();
-        exportCollectedMetrics();
         for (Query query : queries) {
             query.stop();
         }
-        for (OutputWriter outputWriter : outputWriters) {
-            outputWriter.stop();
-        }
         logger.info("EmbeddedJmxTrans stopped. Metrics have been collected and exported one last time.");
-        boolean shutdownHookRemoved = Runtime.getRuntime().removeShutdownHook(shutdownHook);
-        if (shutdownHookRemoved) {
-            logger.debug("ShutdownHook successfully removed");
-        } else {
-            logger.warn("Failure to remove ShutdownHook");
-        }
         running = false;
-    }
-
-
-    /**
-     * Exposed for manual / JMX invocation
-     */
-    @Override
-    public void collectMetrics() {
-        for (Query query : getQueries()) {
-            query.collectMetrics();
-        }
-    }
-
-    /**
-     * Exposed for manual / JMX invocation
-     */
-    @Override
-    public void exportCollectedMetrics() {
-        for (Query query : getQueries()) {
-            query.exportCollectedMetrics();
-        }
     }
 
     @Nonnull
@@ -235,7 +199,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
     }
 
     public void addQuery(@Nonnull Query query) {
-        query.setEmbeddedJmxTrans(this);
+        query.setMbeanServer(this.mbeanServer);
         this.queries.add(query);
     }
 
@@ -290,13 +254,6 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
     @Nonnull
     public Set<OutputWriter> getOutputWriters() {
         return outputWriters;
-    }
-
-    /**
-     * Max number of {@linkplain org.jmxtrans.results.QueryResult} exported at each call of {@link org.jmxtrans.embedded.output.OutputWriter#write(Iterable)}
-     */
-    public int getExportBatchSize() {
-        return exportBatchSize;
     }
 
     public void setExportBatchSize(int exportBatchSize) {
@@ -373,14 +330,14 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
         return result;
     }
 
-    public int getDiscardedResultsCount() {
-        int result = 0;
-        for (Query query : queries) {
-            int discardedResultsCount = query.getDiscardedResultsCount();
-            if (discardedResultsCount != -1) {
-                result += discardedResultsCount;
-            }
-        }
-        return result;
-    }
+//    public int getDiscardedResultsCount() {
+//        int result = 0;
+//        for (Query query : queries) {
+//            int discardedResultsCount = query.getDiscardedResultsCount();
+//            if (discardedResultsCount != -1) {
+//                result += discardedResultsCount;
+//            }
+//        }
+//        return result;
+//    }
 }

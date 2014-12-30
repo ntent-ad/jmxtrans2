@@ -176,7 +176,7 @@ public class JmxTransExporter {
             for (Query query : queries) {
                 try {
                     Queue<QueryResult> results = new LinkedList<QueryResult>();
-                    query.collectAndExport(mbeanServer, results);
+                    query.collectMetrics(mbeanServer, results);
                     outputWriter.write(results);
                 } catch (Exception e) {
                     logger.log(Level.WARNING, "Ignore exception collecting metrics for " + query, e);

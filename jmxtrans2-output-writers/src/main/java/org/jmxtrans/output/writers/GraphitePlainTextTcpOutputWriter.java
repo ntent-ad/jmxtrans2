@@ -24,7 +24,6 @@ package org.jmxtrans.output.writers;
 
 import org.jmxtrans.output.AbstractOutputWriter;
 import org.jmxtrans.output.OutputWriterFactory;
-import org.jmxtrans.output.writers.utils.HostAndPort;
 import org.jmxtrans.results.QueryResult;
 
 import javax.annotation.Nonnull;
@@ -53,22 +52,22 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
 
     private final static Charset UTF_8 = Charset.forName("UTF-8");
     protected String metricPathPrefix;
-    protected final HostAndPort graphiteServerHostAndPort;
     private Socket socket;
     private Writer writer;
     private final int socketConnectTimeoutInMillis;
+    private final InetSocketAddress serverAddress;
 
     protected GraphitePlainTextTcpOutputWriter(
             String logLevel,
-            HostAndPort graphiteServerHostAndPort,
             String metricPathPrefix,
-            int socketConnectTimeoutInMillis) {
+            int socketConnectTimeoutInMillis,
+            @Nonnull InetSocketAddress serverAddress) {
         super(logLevel);
-        this.graphiteServerHostAndPort = graphiteServerHostAndPort;
         this.metricPathPrefix = metricPathPrefix;
         this.socketConnectTimeoutInMillis = socketConnectTimeoutInMillis;
+        this.serverAddress = serverAddress;
 
-        logger.log(getInfoLevel(), "GraphitePlainTextTcpOutputWriter is configured with " + graphiteServerHostAndPort + ", metricPathPrefix=" + metricPathPrefix +
+        logger.log(getInfoLevel(), "GraphitePlainTextTcpOutputWriter is configured with " + serverAddress + ", metricPathPrefix=" + metricPathPrefix +
                 ", socketConnectTimeoutInMillis=" + socketConnectTimeoutInMillis);
     }
 
@@ -98,11 +97,11 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
         try {
             ensureGraphiteConnection();
             if (logger.isLoggable(getTraceLevel())) {
-                logger.log(getTraceLevel(), "Send '" + msg + "' to " + graphiteServerHostAndPort);
+                logger.log(getTraceLevel(), "Send '" + msg + "' to " + serverAddress);
             }
             writer.write(msg + "\n");
         } catch (IOException e) {
-            logger.log(Level.WARNING, "Exception sending '" + msg + "' to " + graphiteServerHostAndPort, e);
+            logger.log(Level.WARNING, "Exception sending '" + msg + "' to " + serverAddress, e);
             releaseGraphiteConnection();
             throw e;
         }
@@ -145,10 +144,10 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
                 socket = new Socket();
                 socket.setKeepAlive(true);
                 socket.connect(
-                        new InetSocketAddress(graphiteServerHostAndPort.getHost(), graphiteServerHostAndPort.getPort()),
+                        serverAddress,
                         socketConnectTimeoutInMillis);
             } catch (IOException e) {
-                ConnectException ce = new ConnectException("Exception connecting to " + graphiteServerHostAndPort);
+                ConnectException ce = new ConnectException("Exception connecting to " + serverAddress);
                 ce.initCause(e);
                 throw ce;
             }
@@ -171,7 +170,7 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
     @Nonnull
     public String toString() {
         return "GraphitePlainTextTcpOutputWriter{" +
-                ", " + graphiteServerHostAndPort +
+                ", " + serverAddress +
                 ", metricPathPrefix='" + metricPathPrefix + '\'' +
                 '}';
     }
@@ -186,19 +185,19 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
 
         @Override
         public GraphitePlainTextTcpOutputWriter create(Map<String, String> settings) {
-            HostAndPort graphiteServerHostAndPort = new HostAndPort(
-                    getString(settings, SETTING_HOST),
-                    getInt(settings, SETTING_PORT, SETTING_PORT_DEFAULT_VALUE));
             String metricPathPrefix = getString(settings, SETTING_NAME_PREFIX, null);
             int socketConnectTimeoutInMillis = getInt(settings,
                     SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS,
                     SETTING_SOCKET_CONNECT_TIMEOUT_IN_MILLIS_DEFAULT_VALUE);
+            InetSocketAddress graphiteAddress = new InetSocketAddress(
+                    getString(settings, SETTING_HOST),
+                    getInt(settings, SETTING_PORT, SETTING_PORT_DEFAULT_VALUE));
 
             return new GraphitePlainTextTcpOutputWriter(
                     AbstractOutputWriter.getLogLevel(settings),
-                    graphiteServerHostAndPort,
                     metricPathPrefix,
-                    socketConnectTimeoutInMillis);
+                    socketConnectTimeoutInMillis,
+                    graphiteAddress);
         }
     }
 

@@ -37,10 +37,6 @@ public interface EmbeddedJmxTransMBean {
 
     int getNumExportThreads();
 
-    void collectMetrics();
-
-    void exportCollectedMetrics();
-
     int getCollectedMetricsCount();
 
     long getCollectionDurationInNanos();
@@ -57,5 +53,5 @@ public interface EmbeddedJmxTransMBean {
 
     int getExportCount();
 
-    int getDiscardedResultsCount();
+//    int getDiscardedResultsCount();
 }

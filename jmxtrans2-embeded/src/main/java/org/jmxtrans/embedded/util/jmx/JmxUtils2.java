@@ -38,7 +38,6 @@ public class JmxUtils2 {
     private final static Logger logger = LoggerFactory.getLogger(JmxUtils2.class);
 
     private JmxUtils2() {
-
     }
 
     /**

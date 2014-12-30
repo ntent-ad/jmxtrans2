@@ -24,18 +24,17 @@ package org.jmxtrans.embedded.util.pool;
 
 import org.apache.commons.pool.BaseKeyedPoolableObjectFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
-import org.jmxtrans.output.writers.utils.HostAndPort;
 import org.jmxtrans.utils.net.SocketOutputStream;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
- * Factory for {@linkplain org.jmxtrans.utils.net.SocketOutputStream} instances created from {@linkplain org.jmxtrans.output.writers.utils.HostAndPort}.
+ * Factory for {@linkplain org.jmxtrans.utils.net.SocketOutputStream} instances created from {@linkplain java.net.InetSocketAddress}.
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class SocketOutputStreamPoolFactory extends BaseKeyedPoolableObjectFactory<HostAndPort, SocketOutputStream> implements KeyedPoolableObjectFactory<HostAndPort, SocketOutputStream> {
+public class SocketOutputStreamPoolFactory extends BaseKeyedPoolableObjectFactory<InetSocketAddress, SocketOutputStream> implements KeyedPoolableObjectFactory<InetSocketAddress, SocketOutputStream> {
 
     public static final int DEFAULT_SOCKET_CONNECT_TIMEOUT_IN_MILLIS = 500;
     private final int socketConnectTimeoutInMillis;
@@ -45,17 +44,17 @@ public class SocketOutputStreamPoolFactory extends BaseKeyedPoolableObjectFactor
     }
 
     @Override
-    public SocketOutputStream makeObject(HostAndPort HostAndPort) throws Exception {
+    public SocketOutputStream makeObject(InetSocketAddress address) throws Exception {
         Socket socket = new Socket();
         socket.setKeepAlive(true);
-        socket.connect(new InetSocketAddress(HostAndPort.getHost(), HostAndPort.getPort()), socketConnectTimeoutInMillis);
+        socket.connect(address, socketConnectTimeoutInMillis);
 
         return new SocketOutputStream(socket);
     }
 
     @Override
-    public void destroyObject(HostAndPort HostAndPort, SocketOutputStream socketOutputStream) throws Exception {
-        super.destroyObject(HostAndPort, socketOutputStream);
+    public void destroyObject(InetSocketAddress address, SocketOutputStream socketOutputStream) throws Exception {
+        super.destroyObject(address, socketOutputStream);
         socketOutputStream.close();
         socketOutputStream.getSocket().close();
     }
@@ -64,7 +63,7 @@ public class SocketOutputStreamPoolFactory extends BaseKeyedPoolableObjectFactor
      * Defensive approach: we test all the "<code>Socket.isXXX()</code>" flags.
      */
     @Override
-    public boolean validateObject(HostAndPort HostAndPort, SocketOutputStream socketOutputStream) {
+    public boolean validateObject(InetSocketAddress address, SocketOutputStream socketOutputStream) {
         Socket socket = socketOutputStream.getSocket();
         return socket.isConnected()
                 && socket.isBound()

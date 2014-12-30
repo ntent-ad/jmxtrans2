@@ -22,13 +22,12 @@
  */
 package org.jmxtrans.utils.collections;
 
-import org.jmxtrans.utils.collections.Iterables2;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
 
 import java.util.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -39,14 +38,14 @@ public class Iterables2Test {
     public void get_on_list_return_value() {
         List<String> in = Arrays.asList("val0", "val1", "val2", "val3");
         String actual = Iterables2.get(in, 2);
-        assertThat(actual, is("val2"));
+        assertThat(actual).isEqualTo("val2");
     }
 
     @Test
     public void get_on_iterator_return_value() {
         Set<String> in = new TreeSet<String>(Arrays.asList("val0", "val1", "val2", "val3"));
         String actual = Iterables2.get(in, 2);
-        assertThat(actual, is("val2"));
+        assertThat(actual).isEqualTo("val2");
     }
 
     @Test(expected = IndexOutOfBoundsException.class)

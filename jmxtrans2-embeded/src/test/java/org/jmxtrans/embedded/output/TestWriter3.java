@@ -22,8 +22,25 @@
  */
 package org.jmxtrans.embedded.output;
 
+import org.jmxtrans.output.DevNullOutputWriter;
+import org.jmxtrans.output.OutputWriterFactory;
+
+import javax.annotation.Nonnull;
+import java.util.Map;
+
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public class TestWriter3 extends NoOpWriter {
+public class TestWriter3 extends DevNullOutputWriter {
+    protected TestWriter3(@Nonnull String logLevel) {
+        super(logLevel);
+    }
+
+    public static final class Factory implements OutputWriterFactory<TestWriter3> {
+        @Nonnull
+        @Override
+        public TestWriter3 create(@Nonnull Map<String, String> settings) {
+            return new TestWriter3("INFO");
+        }
+    }
 }

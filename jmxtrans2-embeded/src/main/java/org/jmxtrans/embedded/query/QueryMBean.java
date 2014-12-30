@@ -20,39 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.output;
+package org.jmxtrans.embedded.query;
 
 import org.jmxtrans.results.QueryResult;
 
-import java.util.concurrent.TimeUnit;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import java.util.concurrent.BlockingQueue;
 
 /**
- * Output results to <code>stdout</code>.
- * <p/>
- * Settings:
- * <ul>
- * <li>"enabled": flag to enable/disable the writer. Optional, default value: <code>true</code>.</li>
- * </ul>
- * <p/>
- * Output: Graphite's <a href="http://graphite.readthedocs.org/en/0.9.10/feeding-carbon.html#the-plaintext-protocol">
- * Carbon Plan Text protocol</a>
- * <pre>
- *     <code>&lt;metric path&gt; &lt;metric value&gt; &lt;metric timestamp&gt;.</code>
- * </pre>
- * With timestamp in seconds.
- *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public class ConsoleWriter extends AbstractOutputWriter implements OutputWriter {
+public interface QueryMBean {
+    void collectMetrics(MBeanServer mBeanServer, BlockingQueue<QueryResult> results);
 
-    /**
-     * Write metrics to <code>stdout</code>.
-     */
-    @Override
-    public void write(Iterable<QueryResult> results) {
-        for (QueryResult result : results) {
-            String msg = result.getName() + " " + result.getValue() + " " + result.getEpoch(TimeUnit.SECONDS);
-            System.out.println(msg);
-        }
-    }
+    int getCollectedMetricsCount();
+
+    long getCollectionDurationInNanos();
+
+    int getCollectionCount();
+
+    int getExportedMetricsCount();
+
+    long getExportDurationInNanos();
+
+    int getExportCount();
+
+    String getResultAlias();
+
+    ObjectName getObjectName();
+
+    String getId();
 }

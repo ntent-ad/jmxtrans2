@@ -24,11 +24,9 @@ package org.jmxtrans.embedded.config;
 
 
 import org.jmxtrans.embedded.EmbeddedJmxTrans;
-import org.jmxtrans.embedded.Query;
-import org.jmxtrans.embedded.QueryAttribute;
 import org.jmxtrans.embedded.TestUtils;
-import org.jmxtrans.embedded.output.NoOpWriter;
-import org.jmxtrans.embedded.output.OutputWriter;
+import org.jmxtrans.embedded.query.Query;
+import org.jmxtrans.embedded.query.QueryAttribute;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,8 +34,9 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
@@ -156,9 +155,6 @@ public class ConfigurationMergeTest {
         assertThat(query.getQueryAttributes().size(), is(1));
         QueryAttribute queryAttribute = query.getQueryAttributes().iterator().next();
         assertThat(queryAttribute.getName(), is("CollectionUsageThresholdCount"));
-        assertThat(query.getOutputWriters().size(), is(1));
-        OutputWriter outputWriter = query.getOutputWriters().get(0);
-        assertThat(outputWriter, instanceOf(NoOpWriter.class));
     }
 
     @Test

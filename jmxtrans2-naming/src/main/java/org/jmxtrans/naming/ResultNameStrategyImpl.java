@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.naming;
 
 import org.jmxtrans.query.Query;
 import org.jmxtrans.query.ResultNameStrategy;
@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 /**
  * Build a {@linkplain org.jmxtrans.results.QueryResult#name} from a collected metric ({@linkplain org.jmxtrans.query.Query}).
  * <p/>
- * Build name must be escaped to be compatible with all {@linkplain org.jmxtrans.output.OutputWriter}.
+ * Build name must be escaped to be compatible with all OutputWriters.
  * The approach is to escape non alpha-numeric chars.
  * <p/>
  * Expressions support '#' based keywords (e.g. <code>#hostname#</code>) and with '%' based variables mapped to objectname properties.

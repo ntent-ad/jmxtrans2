@@ -54,17 +54,16 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
 
     @Override
     public void write(@Nonnull QueryResult result) throws IOException {
-        QueryResult currentResult = new QueryResult(result.getName(), result.getType(), result.getValue(), System.currentTimeMillis());
 
-        if ("counter".equals(currentResult.getType())) {
+        if ("counter".equals(result.getType())) {
 
-            QueryResult previousResult = getPreviousQueryResult(currentResult);
+            QueryResult previousResult = getPreviousQueryResult(result);
 
-            storeQueryResult(currentResult);
-            QueryResult newCurrentResult = perMinute(currentResult, previousResult);
+            storeQueryResult(result);
+            QueryResult newCurrentResult = perMinute(result, previousResult);
             if (logger.isLoggable(getDebugLevel()))
-                logger.log(getDebugLevel(), "Metric " + currentResult.getName() + " is a counter " +
-                        "current=" + currentResult + ", " +
+                logger.log(getDebugLevel(), "Metric " + result.getName() + " is a counter " +
+                        "current=" + result + ", " +
                         "previous=" + previousResult + ", " +
                         "newCurrent.value=" + newCurrentResult.getValue());
 
@@ -72,8 +71,8 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
 
         } else {
             if (logger.isLoggable(getTraceLevel()))
-                logger.log(getTraceLevel(), "Metric " + currentResult.getName() + " is a NOT a counter");
-            delegate.write(currentResult);
+                logger.log(getTraceLevel(), "Metric " + result.getName() + " is a NOT a counter");
+            delegate.write(result);
         }
     }
 

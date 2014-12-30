@@ -38,8 +38,8 @@
     <properties>
         <verify.cobertura.totalBranchRate>29</verify.cobertura.totalBranchRate>
         <verify.cobertura.totalLineRate>37</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>100</verify.coverage.threshold>
-        <verify.mutation.threshold>100</verify.mutation.threshold>
+        <verify.coverage.threshold>67</verify.coverage.threshold>
+        <verify.mutation.threshold>39</verify.mutation.threshold>
     </properties>
 
     <dependencies>
@@ -83,6 +83,10 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-output</artifactId>
         </dependency>
@@ -90,6 +94,10 @@
             <!-- FIXME: remove this dependency when all out put writers have been moved to jmxtrans2-output-writers -->
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-output-writers</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-query</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
@@ -188,14 +196,6 @@
                         <phase>none</phase>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <configuration>
-                    <!-- FIXME: some classes seems to need to be excluded, need time to dig into documentation -->
-                    <skip>true</skip>
-                </configuration>
             </plugin>
         </plugins>
     </build>
