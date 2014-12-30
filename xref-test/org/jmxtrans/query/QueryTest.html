@@ -75,7 +75,7 @@
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>          Query query = <strong class="jxr_keyword">new</strong> Query(MOCK_MBEAN_NAME, <span class="jxr_string">"CollectionUsageThreshold"</span>, resultNameStrategy);
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>          Queue&lt;QueryResult&gt; results = <strong class="jxr_keyword">new</strong> ArrayBlockingQueue&lt;QueryResult&gt;(1);
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>  
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>          query.collectAndExport(mbeanServer, results);
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>          query.collectMetrics(mbeanServer, results);
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>  
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>          assertThat(results).hasSize(1);
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>          QueryResult queryResult = results.poll();
@@ -89,7 +89,7 @@
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>          Query query = <strong class="jxr_keyword">new</strong> Query(MOCK_MBEAN_NAME, <span class="jxr_string">"CollectionUsageThreshold"</span>, resultNameStrategy);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>          Queue&lt;QueryResult&gt; results = <strong class="jxr_keyword">new</strong> ArrayBlockingQueue&lt;QueryResult&gt;(1);
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>  
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>          query.collectAndExport(mbeanServer, results);
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          query.collectMetrics(mbeanServer, results);
 <a class="jxr_linenumber" name="L85" href="#L85">85</a>  
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>          assertThat(resultNameStrategy.hasBeenCalled()).isTrue();
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>      }
@@ -99,7 +99,7 @@
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>          Query query = <strong class="jxr_keyword">new</strong> Query(MOCK_MBEAN_NAME, <span class="jxr_string">"IntegerList"</span>, 1, resultNameStrategy);
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>          Queue&lt;QueryResult&gt; results = <strong class="jxr_keyword">new</strong> ArrayBlockingQueue&lt;QueryResult&gt;(1);
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>  
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>          query.collectAndExport(mbeanServer, results);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          query.collectMetrics(mbeanServer, results);
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>  
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>          assertThat(results).hasSize(1);
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>          QueryResult queryResult = results.poll();
@@ -113,7 +113,7 @@
 <a class="jxr_linenumber" name="L105" href="#L105">105</a>         Query query = <strong class="jxr_keyword">new</strong> Query(MOCK_MBEAN_NAME, <span class="jxr_string">"IntegerList"</span>, resultNameStrategy);
 <a class="jxr_linenumber" name="L106" href="#L106">106</a>         Queue&lt;QueryResult&gt; results = <strong class="jxr_keyword">new</strong> ArrayBlockingQueue&lt;QueryResult&gt;(mock.getIntegerList().size());
 <a class="jxr_linenumber" name="L107" href="#L107">107</a> 
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>         query.collectAndExport(mbeanServer, results);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>         query.collectMetrics(mbeanServer, results);
 <a class="jxr_linenumber" name="L109" href="#L109">109</a> 
 <a class="jxr_linenumber" name="L110" href="#L110">110</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; mock.getIntegerList().size(); i++) {
 <a class="jxr_linenumber" name="L111" href="#L111">111</a>             <strong class="jxr_keyword">final</strong> String name = <span class="jxr_string">"IntegerList_"</span> + i;
@@ -134,7 +134,7 @@
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>         Query query = <strong class="jxr_keyword">new</strong> Query(MOCK_MBEAN_NAME, <span class="jxr_string">"IntArray"</span>, 1, resultNameStrategy);
 <a class="jxr_linenumber" name="L127" href="#L127">127</a>         Queue&lt;QueryResult&gt; results = <strong class="jxr_keyword">new</strong> ArrayBlockingQueue&lt;QueryResult&gt;(1);
 <a class="jxr_linenumber" name="L128" href="#L128">128</a> 
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>         query.collectAndExport(mbeanServer, results);
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>         query.collectMetrics(mbeanServer, results);
 <a class="jxr_linenumber" name="L130" href="#L130">130</a> 
 <a class="jxr_linenumber" name="L131" href="#L131">131</a>         assertThat(results).hasSize(1);
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>         QueryResult queryResult = results.poll();
@@ -148,7 +148,7 @@
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>         Query query = <strong class="jxr_keyword">new</strong> Query(MOCK_MBEAN_NAME, <span class="jxr_string">"IntegerArray"</span>, 1, resultNameStrategy);
 <a class="jxr_linenumber" name="L141" href="#L141">141</a>         Queue&lt;QueryResult&gt; results = <strong class="jxr_keyword">new</strong> ArrayBlockingQueue&lt;QueryResult&gt;(1);
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> 
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>         query.collectAndExport(mbeanServer, results);
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         query.collectMetrics(mbeanServer, results);
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> 
 <a class="jxr_linenumber" name="L145" href="#L145">145</a>         assertThat(results).hasSize(1);
 <a class="jxr_linenumber" name="L146" href="#L146">146</a>         QueryResult queryResult = results.poll();

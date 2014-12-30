@@ -184,7 +184,7 @@
 <a class="jxr_linenumber" name="L176" href="#L176">176</a>             <strong class="jxr_keyword">for</strong> (Query query : queries) {
 <a class="jxr_linenumber" name="L177" href="#L177">177</a>                 <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L178" href="#L178">178</a>                     Queue&lt;QueryResult&gt; results = <strong class="jxr_keyword">new</strong> LinkedList&lt;QueryResult&gt;();
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>                     query.collectAndExport(mbeanServer, results);
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>                     query.collectMetrics(mbeanServer, results);
 <a class="jxr_linenumber" name="L180" href="#L180">180</a>                     outputWriter.write(results);
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>                 } <strong class="jxr_keyword">catch</strong> (Exception e) {
 <a class="jxr_linenumber" name="L182" href="#L182">182</a>                     logger.log(Level.WARNING, <span class="jxr_string">"Ignore exception collecting metrics for "</span> + query, e);
