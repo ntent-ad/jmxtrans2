@@ -20,10 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.query;
+package org.jmxtrans.query.embedded;
 
-import org.jmxtrans.embedded.ResultNameStrategy;
-import org.jmxtrans.embedded.util.jmx.JmxUtils2;
+import org.jmxtrans.utils.jmx.JmxUtils2;
 import org.jmxtrans.results.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

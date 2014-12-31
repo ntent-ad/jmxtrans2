@@ -25,13 +25,12 @@ package org.jmxtrans.embedded.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
-import org.jmxtrans.embedded.query.Query;
-import org.jmxtrans.embedded.query.QueryAttribute;
 import org.jmxtrans.embedded.util.json.PlaceholderEnabledJsonNodeFactory;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.output.OutputWriterFactory;
+import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.QueryAttribute;
 import org.jmxtrans.utils.Preconditions2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,64 +61,39 @@ public class ConfigurationParser {
         mapper.setNodeFactory(new PlaceholderEnabledJsonNodeFactory());
     }
 
-    public EmbeddedJmxTrans newEmbeddedJmxTrans(String... configurationUrls) throws EmbeddedJmxTransException {
-        EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
-
+    public Config loadConfigurations(List<String> configurationUrls) {
+        Config config = new Config();
         for (String configurationUrl : configurationUrls) {
-            mergeEmbeddedJmxTransConfiguration(configurationUrl, embeddedJmxTrans);
-        }
-        return embeddedJmxTrans;
-    }
-
-    public EmbeddedJmxTrans newEmbeddedJmxTrans(@Nonnull List<String> configurationUrls) throws EmbeddedJmxTransException {
-        return newEmbeddedJmxTrans(configurationUrls.toArray(new String[configurationUrls.size()]));
-    }
-
-    /**
-     * @param configurationUrl JSON configuration file URL ("http://...", "classpath:com/mycompany...", ...)
-     */
-    @Nonnull
-    public EmbeddedJmxTrans newEmbeddedJmxTrans(@Nonnull String configurationUrl) throws EmbeddedJmxTransException {
-        EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
-        mergeEmbeddedJmxTransConfiguration(configurationUrl, embeddedJmxTrans);
-        return embeddedJmxTrans;
-    }
-
-    protected void mergeEmbeddedJmxTransConfiguration(@Nonnull String configurationUrl, @Nonnull EmbeddedJmxTrans embeddedJmxTrans) throws EmbeddedJmxTransException {
-        try {
-            if (configurationUrl.startsWith("classpath:")) {
-                logger.debug("mergeEmbeddedJmxTransConfiguration({})", configurationUrl);
-                String path = configurationUrl.substring("classpath:".length());
-                InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-                Preconditions2.checkNotNull(in, "No file found for '" + configurationUrl + "'");
-                mergeEmbeddedJmxTransConfiguration(in, embeddedJmxTrans);
-            } else {
-                mergeEmbeddedJmxTransConfiguration(new URL(configurationUrl), embeddedJmxTrans);
+            try (InputStream in = openResource(configurationUrl)) {
+                loadConfiguration(in, config);
+            } catch (Exception e) {
+                throw new EmbeddedJmxTransException("Exception loading configuration'" + configurationUrl + "'", e);
             }
-        } catch (JsonProcessingException e) {
-            throw new EmbeddedJmxTransException("Exception loading configuration'" + configurationUrl + "': " + e.getMessage(), e);
-        } catch (Exception e) {
-            throw new EmbeddedJmxTransException("Exception loading configuration'" + configurationUrl + "'", e);
+        }
+        return config;
+    }
+
+    private InputStream openResource(String configurationUrl) throws IOException {
+        if (configurationUrl.startsWith("classpath:")) {
+            logger.debug("mergeEmbeddedJmxTransConfiguration({})", configurationUrl);
+            String path = configurationUrl.substring("classpath:".length());
+
+            return Preconditions2.checkNotNull(
+                    Thread.currentThread().getContextClassLoader().getResourceAsStream(path),
+                    "No file found for '" + configurationUrl + "'");
+        } else {
+            return new URL(configurationUrl).openStream();
         }
     }
 
-    public void mergeEmbeddedJmxTransConfiguration(@Nonnull InputStream configuration, EmbeddedJmxTrans embeddedJmxTrans) throws IOException {
+    public void loadConfiguration(InputStream configuration, Config config) throws IOException {
+
         JsonNode configurationRootNode = mapper.readValue(configuration, JsonNode.class);
-        mergeEmbeddedJmxTransConfiguration(configurationRootNode, embeddedJmxTrans);
-    }
-
-    protected void mergeEmbeddedJmxTransConfiguration(@Nonnull URL configurationUrl, EmbeddedJmxTrans embeddedJmxTrans) throws IOException {
-        logger.debug("mergeEmbeddedJmxTransConfiguration({})", configurationUrl);
-        JsonNode configurationRootNode = mapper.readValue(configurationUrl, JsonNode.class);
-        mergeEmbeddedJmxTransConfiguration(configurationRootNode, embeddedJmxTrans);
-    }
-
-    private void mergeEmbeddedJmxTransConfiguration(@Nonnull JsonNode configurationRootNode, @Nonnull EmbeddedJmxTrans embeddedJmxTrans) {
         for (JsonNode queryNode : configurationRootNode.path("queries")) {
 
             String objectName = queryNode.path("objectName").asText();
             Query query = new Query(objectName);
-            embeddedJmxTrans.addQuery(query);
+            config.addQuery(query);
             JsonNode resultAliasNode = queryNode.path("resultAlias");
             if (resultAliasNode.isMissingNode()) {
             } else if (resultAliasNode.isValueNode()) {
@@ -146,35 +120,32 @@ public class ConfigurationParser {
         }
 
         List<OutputWriter> outputWriters = parseOutputWritersNode(configurationRootNode);
-        embeddedJmxTrans.getOutputWriters().addAll(outputWriters);
-        logger.trace("Add global output writers: {}", outputWriters);
+        config.addOutputWriters(outputWriters);
 
         JsonNode queryIntervalInSecondsNode = configurationRootNode.path("queryIntervalInSeconds");
         if (!queryIntervalInSecondsNode.isMissingNode()) {
-            embeddedJmxTrans.setQueryIntervalInSeconds(queryIntervalInSecondsNode.asInt());
+            config.setQueryIntervalInSeconds(queryIntervalInSecondsNode.asInt());
         }
 
         JsonNode exportBatchSizeNode = configurationRootNode.path("exportBatchSize");
         if (!exportBatchSizeNode.isMissingNode()) {
-            embeddedJmxTrans.setExportBatchSize(exportBatchSizeNode.asInt());
+            config.setExportedBatchSize(exportBatchSizeNode.asInt());
         }
 
         JsonNode numQueryThreadsNode = configurationRootNode.path("numQueryThreads");
         if (!numQueryThreadsNode.isMissingNode()) {
-            embeddedJmxTrans.setNumQueryThreads(numQueryThreadsNode.asInt());
+            config.setNumQueryThreads(numQueryThreadsNode.asInt());
         }
 
         JsonNode exportIntervalInSecondsNode = configurationRootNode.path("exportIntervalInSeconds");
         if (!exportIntervalInSecondsNode.isMissingNode()) {
-            embeddedJmxTrans.setExportIntervalInSeconds(exportIntervalInSecondsNode.asInt());
+            config.setExportIntervalInSeconds(exportIntervalInSecondsNode.asInt());
         }
 
         JsonNode numExportThreadsNode = configurationRootNode.path("numExportThreads");
         if (!numExportThreadsNode.isMissingNode()) {
-            embeddedJmxTrans.setNumExportThreads(numExportThreadsNode.asInt());
+            config.setNumExportThreads(numExportThreadsNode.asInt());
         }
-
-        logger.info("Loaded {}", embeddedJmxTrans);
     }
 
     private List<OutputWriter> parseOutputWritersNode(@Nonnull JsonNode outputWritersParentNode) {
@@ -224,7 +195,7 @@ public class ConfigurationParser {
             if (keysNode.isMissingNode()) {
             } else if (keysNode.isArray()) {
                 if (keys == null) {
-                    keys = new ArrayList<String>();
+                    keys = new ArrayList<>();
                 }
                 Iterator<JsonNode> itAttributeNode = keysNode.elements();
                 while (itAttributeNode.hasNext()) {
@@ -243,7 +214,7 @@ public class ConfigurationParser {
             if (keyNode.isMissingNode()) {
             } else if (keyNode.isValueNode()) {
                 if (keys == null) {
-                    keys = new ArrayList<String>();
+                    keys = new ArrayList<>();
                 }
                 keys.add(keyNode.asText());
             } else {
@@ -271,4 +242,5 @@ public class ConfigurationParser {
             logger.warn("Ignore invalid node {}", attributeNode);
         }
     }
+
 }

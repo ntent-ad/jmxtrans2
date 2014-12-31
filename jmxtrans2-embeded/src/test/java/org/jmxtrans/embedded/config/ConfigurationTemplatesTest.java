@@ -39,6 +39,6 @@ public class ConfigurationTemplatesTest {
                 "classpath:org/jmxtrans/embedded/config/jvm-sun-hotspot.json",
                 "classpath:org/jmxtrans/embedded/config/tomcat-6.json"
         );
-        new ConfigurationParser().newEmbeddedJmxTrans(configurationUrls);
+        new ConfigurationParser().loadConfigurations(configurationUrls);
     }
 }

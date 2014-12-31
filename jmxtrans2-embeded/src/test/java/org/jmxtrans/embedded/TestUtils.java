@@ -22,8 +22,8 @@
  */
 package org.jmxtrans.embedded;
 
-import org.jmxtrans.embedded.query.Query;
-import org.jmxtrans.embedded.query.QueryAttribute;
+import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.QueryAttribute;
 import org.jmxtrans.output.OutputWriter;
 
 import java.util.HashMap;

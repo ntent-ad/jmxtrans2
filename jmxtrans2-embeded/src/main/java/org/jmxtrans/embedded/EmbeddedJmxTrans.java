@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.embedded;
 
-import org.jmxtrans.embedded.query.Query;
+import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.concurrent.DiscardingBlockingQueue;

@@ -20,26 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded;
+package org.jmxtrans.query.embedded;
 
-import javax.management.openmbean.CompositeData;
+import org.jmxtrans.results.QueryResult;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import java.util.concurrent.BlockingQueue;
 
 /**
- * Mock {@link org.jmxtrans.embedded.MockMemoryPoolMBean}
- *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
-public interface MockMemoryPoolMBean {
+public interface QueryMBean {
+    void collectMetrics(MBeanServer mBeanServer, BlockingQueue<QueryResult> results);
 
-    public long getCollectionUsageThreshold();
+    int getCollectedMetricsCount();
 
-    /**
-     * @see java.lang.management.MemoryPoolMXBean#getName()
-     */
-    public String getName();
+    long getCollectionDurationInNanos();
 
-    /**
-     * @see java.lang.management.MemoryPoolMXBean#getUsage()
-     */
-    public CompositeData getUsage();
+    int getCollectionCount();
+
+    int getExportedMetricsCount();
+
+    long getExportDurationInNanos();
+
+    int getExportCount();
+
+    String getResultAlias();
+
+    ObjectName getObjectName();
+
+    String getId();
 }

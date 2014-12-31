@@ -20,9 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.query;
+package org.jmxtrans.query.embedded;
 
-import org.jmxtrans.embedded.ResultNameStrategy;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.Preconditions2;
 import org.slf4j.Logger;
@@ -39,7 +38,7 @@ import java.util.*;
  * <p/>
  * Collected values are sent to a {@linkplain java.util.concurrent.BlockingQueue}
  * for later export to the target monitoring systems
- * (see {@link #collectMetrics(javax.management.ObjectName, Object, long, java.util.Queue, Query, org.jmxtrans.embedded.ResultNameStrategy)}).
+ * (see {@link #collectMetrics(javax.management.ObjectName, Object, long, java.util.Queue, Query, ResultNameStrategy)}).
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  * @author Jon Stevens

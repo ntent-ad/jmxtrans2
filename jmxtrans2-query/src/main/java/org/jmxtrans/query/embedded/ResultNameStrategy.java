@@ -20,10 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded;
+package org.jmxtrans.query.embedded;
 
-import org.jmxtrans.embedded.query.Query;
-import org.jmxtrans.embedded.query.QueryAttribute;
 import org.jmxtrans.utils.StringUtils2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +33,9 @@ import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
- * Build a {@linkplain org.jmxtrans.results.QueryResult#name} from a collected metric ({@linkplain org.jmxtrans.embedded.query.QueryAttribute}, {@linkplain org.jmxtrans.embedded.query.Query}).
+ * Build a {@linkplain org.jmxtrans.results.QueryResult#name} from a collected metric ({@linkplain QueryAttribute}, {@linkplain Query}).
  * <p/>
- * Build name must be escaped to be compatible with all {@linkplain org.jmxtrans.output.OutputWriter}.
+ * Build name must be escaped to be compatible with all OutputWriters.
  * The approach is to escape non alpha-numeric chars.
  * <p/>
  * Expressions support '#' based keywords (e.g. <code>#hostname#</code>) and with '%' based variables mapped to objectname properties.

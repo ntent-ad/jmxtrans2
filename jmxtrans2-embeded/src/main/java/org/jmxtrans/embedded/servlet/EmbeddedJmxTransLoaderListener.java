@@ -24,6 +24,7 @@ package org.jmxtrans.embedded.servlet;
 
 import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
+import org.jmxtrans.embedded.config.Config;
 import org.jmxtrans.embedded.config.ConfigurationParser;
 import org.jmxtrans.utils.StringUtils2;
 import org.slf4j.Logger;
@@ -82,7 +83,6 @@ public class EmbeddedJmxTransLoaderListener implements ServletContextListener {
 
         mbeanServer = ManagementFactory.getPlatformMBeanServer();
 
-        ConfigurationParser configurationParser = new ConfigurationParser();
 
         String configuration = configureFromSystemProperty(sce);
         if (configuration == null || configuration.isEmpty()){
@@ -93,7 +93,9 @@ public class EmbeddedJmxTransLoaderListener implements ServletContextListener {
         }
 
         List<String> configurationUrls = StringUtils2.delimitedStringToList(configuration);
-        embeddedJmxTrans = configurationParser.newEmbeddedJmxTrans(configurationUrls);
+        Config config = new ConfigurationParser().loadConfigurations(configurationUrls);
+        embeddedJmxTrans = new EmbeddedJmxTrans();
+        config.configure(embeddedJmxTrans);
         String on = "org.jmxtrans.embedded:type=EmbeddedJmxTrans,name=jmxtrans,path=" + sce.getServletContext().getContextPath();
         try {
             objectName = mbeanServer.registerMBean(embeddedJmxTrans, new ObjectName(on)).getObjectName();

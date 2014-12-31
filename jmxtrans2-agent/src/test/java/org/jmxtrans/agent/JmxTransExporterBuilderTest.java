@@ -24,9 +24,7 @@ package org.jmxtrans.agent;
 
 import org.jmxtrans.config.Interval;
 import org.jmxtrans.config.Invocation;
-import org.jmxtrans.naming.ResultNameStrategyImpl;
 import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.query.ResultNameStrategy;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -45,22 +43,17 @@ public class JmxTransExporterBuilderTest {
 
         assertThat(jmxTransExporter).isNotNull();
 
-        ArgumentCaptor<ResultNameStrategy> resultNameStrategy = ArgumentCaptor.forClass(ResultNameStrategy.class);
         ArgumentCaptor<Collection> invocations = ArgumentCaptor.forClass(Collection.class);
         ArgumentCaptor<Collection> queries = ArgumentCaptor.forClass(Collection.class);
         ArgumentCaptor<OutputWriter> outputWriter = ArgumentCaptor.forClass(OutputWriter.class);
         ArgumentCaptor<Interval> interval = ArgumentCaptor.forClass(Interval.class);
 
         verify(jmxTransExporterBuilder).createJmxTransExporter(
-                resultNameStrategy.capture(),
                 invocations.capture(),
                 queries.capture(),
                 outputWriter.capture(),
                 interval.capture()
         );
-
-        assertThat(resultNameStrategy.getValue()).isNotNull();
-        assertThat(resultNameStrategy.getValue()).isExactlyInstanceOf(ResultNameStrategyImpl.class);
 
         assertThat(invocations.getValue()).hasSize(1);
         Invocation invocation = (Invocation) invocations.getValue().iterator().next();

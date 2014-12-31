@@ -24,6 +24,7 @@ package org.jmxtrans.embedded.spring;
 
 import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
+import org.jmxtrans.embedded.config.Config;
 import org.jmxtrans.embedded.config.ConfigurationParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,6 +78,7 @@ public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTra
                 configurationUrls = Collections.singletonList(DEFAULT_CONFIGURATION_URL);
             }
             ConfigurationParser parser = new ConfigurationParser();
+            Config config = new Config();
             SpringEmbeddedJmxTrans newJmxTrans = new SpringEmbeddedJmxTrans();
             newJmxTrans.setObjectName("org.jmxtrans.embedded:type=EmbeddedJmxTrans,name=" + beanName);
 
@@ -89,7 +91,7 @@ public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTra
                     Resource configuration = resourceLoader.getResource(configurationUrl);
                     if (configuration.exists()) {
                         try {
-                            parser.mergeEmbeddedJmxTransConfiguration(configuration.getInputStream(), newJmxTrans);
+                            parser.loadConfiguration(configuration.getInputStream(), config);
                         } catch (Exception e) {
                             throw new EmbeddedJmxTransException("Exception loading configuration " + configuration, e);
                         }
@@ -100,6 +102,7 @@ public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTra
                     }
                 }
             }
+            config.configure(newJmxTrans);
             embeddedJmxTrans = newJmxTrans;
             logger.info("Created EmbeddedJmxTrans with configuration {})", configurationUrls);
             embeddedJmxTrans.start();

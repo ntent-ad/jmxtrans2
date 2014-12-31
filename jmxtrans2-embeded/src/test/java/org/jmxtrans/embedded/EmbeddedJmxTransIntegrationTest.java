@@ -22,8 +22,10 @@
  */
 package org.jmxtrans.embedded;
 
+import org.jmxtrans.embedded.config.Config;
 import org.jmxtrans.embedded.config.ConfigurationParser;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +39,9 @@ public class EmbeddedJmxTransIntegrationTest {
     }
 
     public void integrationTest() throws Exception {
-        EmbeddedJmxTrans embeddedJmxTrans = new ConfigurationParser().newEmbeddedJmxTrans("classpath:org/jmxtrans/embedded/embedded-integ-test.json");
+        Config config = new ConfigurationParser().loadConfigurations(Arrays.asList("classpath:org/jmxtrans/embedded/embedded-integ-test.json"));
+        EmbeddedJmxTrans embeddedJmxTrans = new EmbeddedJmxTrans();
+        config.configure(embeddedJmxTrans);
         embeddedJmxTrans.start();
 
         generateJvmActivity();

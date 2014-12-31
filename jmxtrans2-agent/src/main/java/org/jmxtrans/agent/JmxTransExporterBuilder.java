@@ -80,7 +80,6 @@ public class JmxTransExporterBuilder {
         }
 
         return createJmxTransExporter(
-                resultNameStrategy,
                 configParser.parseInvocations(),
                 configParser.parseQueries(resultNameStrategy),
                 new OutputWritersChain(outputWriters),
@@ -90,13 +89,11 @@ public class JmxTransExporterBuilder {
 
     @Nonnull
     protected JmxTransExporter createJmxTransExporter(
-            @Nonnull ResultNameStrategy resultNameStrategy,
             @Nonnull Collection<Invocation> invocations,
             @Nonnull Collection<Query> queries,
             @Nonnull OutputWriter outputWriter,
             @Nonnull Interval collectionInterval) {
         return new JmxTransExporter()
-                .withResultNameStrategy(resultNameStrategy)
                 .withInvocations(invocations)
                 .withQueries(queries)
                 .withOutputWriter(outputWriter)

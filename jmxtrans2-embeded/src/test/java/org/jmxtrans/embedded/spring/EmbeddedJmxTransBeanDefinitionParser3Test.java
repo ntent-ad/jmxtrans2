@@ -23,7 +23,7 @@
 package org.jmxtrans.embedded.spring;
 
 import org.jmxtrans.embedded.EmbeddedJmxTrans;
-import org.jmxtrans.embedded.query.Query;
+import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.embedded.TestUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;

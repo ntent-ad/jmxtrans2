@@ -25,13 +25,14 @@ package org.jmxtrans.embedded.config;
 
 import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.jmxtrans.embedded.TestUtils;
-import org.jmxtrans.embedded.query.Query;
-import org.jmxtrans.embedded.query.QueryAttribute;
+import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.QueryAttribute;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
+import java.util.Arrays;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -50,10 +51,11 @@ public class ConfigurationMergeTest {
     @BeforeClass
     public static void beforeClass() throws Exception {
         ConfigurationParser configurationParser = new ConfigurationParser();
-        embeddedJmxTrans = configurationParser.newEmbeddedJmxTrans(
+        Config config = configurationParser.loadConfigurations(Arrays.asList(
                 "classpath:org/jmxtrans/embedded/jmxtrans-config-merge-1-test.json",
-                "classpath:org/jmxtrans/embedded/jmxtrans-config-merge-2-test.json"
-        );
+                "classpath:org/jmxtrans/embedded/jmxtrans-config-merge-2-test.json"));
+        embeddedJmxTrans = new EmbeddedJmxTrans();
+        config.configure(embeddedJmxTrans);
         queriesByResultName = TestUtils.indexQueriesByAliasOrName(embeddedJmxTrans.getQueries());
     }
 

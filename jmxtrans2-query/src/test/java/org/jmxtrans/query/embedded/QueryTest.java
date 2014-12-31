@@ -20,9 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.query;
+package org.jmxtrans.query.embedded;
 
-import org.jmxtrans.embedded.MockMemoryPool;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.concurrent.DiscardingBlockingQueue;
 import org.junit.AfterClass;

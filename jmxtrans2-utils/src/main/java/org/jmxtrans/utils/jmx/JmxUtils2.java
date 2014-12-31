@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.embedded.util.jmx;
+package org.jmxtrans.utils.jmx;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
