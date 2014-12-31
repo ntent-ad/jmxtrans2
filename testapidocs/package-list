@@ -1,5 +1,4 @@
 org.jmxtrans.agent
-org.jmxtrans.agent.util
 org.jmxtrans.config
 org.jmxtrans.embedded
 org.jmxtrans.embedded.config

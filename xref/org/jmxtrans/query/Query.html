@@ -33,21 +33,21 @@
 <a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.results.QueryResult;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.collections.ArrayUtils;
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.collections.Iterables2;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.Preconditions2;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> javax.annotation.Nonnull;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> javax.annotation.Nullable;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> javax.annotation.concurrent.Immutable;
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> javax.annotation.concurrent.ThreadSafe;
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> javax.management.AttributeNotFoundException;
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> javax.management.InstanceNotFoundException;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> javax.management.MBeanException;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> javax.management.MBeanServer;
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> javax.management.MalformedObjectNameException;
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> javax.management.ObjectName;
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> javax.management.ReflectionException;
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> javax.management.openmbean.CompositeData;
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> javax.annotation.Nonnull;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> javax.annotation.Nullable;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> javax.annotation.concurrent.Immutable;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> javax.annotation.concurrent.ThreadSafe;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> javax.management.AttributeNotFoundException;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> javax.management.InstanceNotFoundException;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> javax.management.MBeanException;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> javax.management.MBeanServer;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> javax.management.MalformedObjectNameException;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> javax.management.ObjectName;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> javax.management.ReflectionException;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> javax.management.openmbean.CompositeData;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> java.util.Collection;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> java.util.Objects;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> java.util.Queue;
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> java.util.logging.Level;
@@ -132,16 +132,16 @@
 <a class="jxr_linenumber" name="L124" href="#L124">124</a>             @Nonnull String resultAlias,
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>             @Nonnull <a href="../../../org/jmxtrans/query/ResultNameStrategy.html">ResultNameStrategy</a> resultNameStrategy) {
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>             <strong class="jxr_keyword">this</strong>.objectName = <strong class="jxr_keyword">new</strong> ObjectName(Preconditions2.checkNotNull(objectName));
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>             <strong class="jxr_keyword">this</strong>.objectName = <strong class="jxr_keyword">new</strong> ObjectName(Objects.requireNonNull(objectName));
 <a class="jxr_linenumber" name="L128" href="#L128">128</a>         } <strong class="jxr_keyword">catch</strong> (MalformedObjectNameException e) {
 <a class="jxr_linenumber" name="L129" href="#L129">129</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Invalid objectName '"</span> + objectName + <span class="jxr_string">"'"</span>, e);
 <a class="jxr_linenumber" name="L130" href="#L130">130</a>         }
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>         <strong class="jxr_keyword">this</strong>.attribute = Preconditions2.checkNotNull(attribute);
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>         <strong class="jxr_keyword">this</strong>.attribute = Objects.requireNonNull(attribute);
 <a class="jxr_linenumber" name="L132" href="#L132">132</a>         <strong class="jxr_keyword">this</strong>.key = key;
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>         <strong class="jxr_keyword">this</strong>.resultAlias = Preconditions2.checkNotNull(resultAlias);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>         <strong class="jxr_keyword">this</strong>.resultAlias = Objects.requireNonNull(resultAlias);
 <a class="jxr_linenumber" name="L134" href="#L134">134</a>         <strong class="jxr_keyword">this</strong>.position = position;
 <a class="jxr_linenumber" name="L135" href="#L135">135</a>         <strong class="jxr_keyword">this</strong>.type = type;
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>         <strong class="jxr_keyword">this</strong>.resultNameStrategy = Preconditions2.checkNotNull(resultNameStrategy, <span class="jxr_string">"resultNameStrategy"</span>);
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         <strong class="jxr_keyword">this</strong>.resultNameStrategy = Objects.requireNonNull(resultNameStrategy, <span class="jxr_string">"resultNameStrategy"</span>);
 <a class="jxr_linenumber" name="L137" href="#L137">137</a>     }
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> 
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> collectMetrics(@Nonnull MBeanServer mbeanServer, @Nonnull Queue&lt;QueryResult&gt; resultQueue) {
