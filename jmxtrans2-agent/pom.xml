@@ -36,8 +36,8 @@
 
     <properties>
         <verify.cobertura.totalBranchRate>10</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>35</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>35</verify.coverage.threshold>
+        <verify.cobertura.totalLineRate>34</verify.cobertura.totalLineRate>
+        <verify.coverage.threshold>32</verify.coverage.threshold>
         <verify.mutation.threshold>21</verify.mutation.threshold>
     </properties>
 
