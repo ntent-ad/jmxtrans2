@@ -25,13 +25,12 @@ package org.jmxtrans.agent;
 import org.jmxtrans.config.ConfigParser;
 import org.jmxtrans.config.Interval;
 import org.jmxtrans.config.Invocation;
+import org.jmxtrans.config.XmlConfigParser;
 import org.jmxtrans.naming.ResultNameStrategyImpl;
 import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.jmxtrans.query.Query;
 import org.jmxtrans.query.ResultNameStrategy;
-import org.jmxtrans.config.XmlConfigParser;
-import org.jmxtrans.utils.io.IoUtils;
+import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -103,12 +102,8 @@ public class JmxTransExporterBuilder {
     @Nonnull
     private Document loadDocument(@Nonnull String configurationFilePath) throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        InputStream in = null;
-        try {
-            in = getInputStream(configurationFilePath);
+        try (InputStream in = getInputStream(configurationFilePath)) {
             return dBuilder.parse(in);
-        } finally {
-            IoUtils.closeQuietly(in);
         }
     }
 

@@ -136,21 +136,13 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
             throw new IOException("Can not copy file, destination is a directory: " + destination.getAbsolutePath());
         }
 
-        FileInputStream fis = null;
-        FileOutputStream fos = null;
-        FileChannel input = null;
-        FileChannel output = null;
-        try {
-            fis = new FileInputStream(source);
-            fos = new FileOutputStream(destination, false);
-            input = fis.getChannel();
-            output = fos.getChannel();
+        try (
+                FileInputStream fis = new FileInputStream(source);
+                FileOutputStream fos = new FileOutputStream(destination, false);
+                FileChannel input = fis.getChannel();
+                FileChannel output = fos.getChannel();
+        ) {
             output.transferFrom(input, 0, input.size());
-        } finally {
-            IoUtils.closeQuietly(output);
-            IoUtils.closeQuietly(input);
-            IoUtils.closeQuietly(fis);
-            IoUtils.closeQuietly(fos);
         }
 
         if (destination.length() != source.length()) {

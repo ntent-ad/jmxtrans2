@@ -26,19 +26,13 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.jmxtrans.utils.io.IoUtils.closeQuietly;
-
 public class NullOutputStreamTest {
 
     @Test
     public void writingToNullOutputStreamDoesNothing() throws IOException {
         // yes, I know, stupid test ...
-        NullOutputStream nullOutputStream = null;
-        try {
-            nullOutputStream = new NullOutputStream();
+        try (NullOutputStream nullOutputStream = new NullOutputStream()) {
             nullOutputStream.write(0);
-        } finally {
-            closeQuietly(nullOutputStream);
         }
     }
 

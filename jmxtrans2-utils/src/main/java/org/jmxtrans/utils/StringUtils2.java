@@ -73,7 +73,7 @@ public class StringUtils2 {
         if (tokens == null) {
             return null;
         }
-        Preconditions2.checkNotNull(delimiter, "given delimiter can not be null");
+        Objects.requireNonNull(delimiter, "given delimiter can not be null");
 
         Iterator<String> it = tokens.iterator();
         StringBuilder sb = new StringBuilder();
@@ -99,7 +99,7 @@ public class StringUtils2 {
         if (str == null) {
             return null;
         }
-        Preconditions2.checkNotNull(delimiter, "given delimiter can not be null");
+        Objects.requireNonNull(delimiter, "given delimiter can not be null");
 
         StringTokenizer st = new StringTokenizer(str, delimiter);
         List<String> tokens = new ArrayList<String>();

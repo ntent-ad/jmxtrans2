@@ -146,27 +146,6 @@ public class IoUtilsTest {
         IoUtils.closeQuietly(closeable);
     }
 
-    @Test
-    public void closingNullInputStreamDoesNothing() {
-        IoUtils.closeQuietly((InputStream)null);
-    }
-
-    @Test
-    public void inputStreamIsClosed() throws IOException {
-        InputStream closeable = mock(InputStream.class);
-        IoUtils.closeQuietly(closeable);
-
-        verify(closeable).close();
-    }
-
-    @Test
-    public void exceptionThrownByInputStreamIsSwallowed() throws IOException {
-        InputStream closeable = mock(InputStream.class);
-        doThrow(IOException.class).when(closeable).close();
-
-        IoUtils.closeQuietly(closeable);
-    }
-
     @After
     public void cleanUpDummyFiles() {
         dummyFiles.cleanUpTestFiles();

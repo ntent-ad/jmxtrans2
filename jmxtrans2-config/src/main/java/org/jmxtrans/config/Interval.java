@@ -25,9 +25,8 @@ package org.jmxtrans.config;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import static org.jmxtrans.utils.Preconditions2.checkNotNull;
 
 @Immutable
 @ThreadSafe
@@ -38,7 +37,7 @@ public class Interval {
 
     public Interval(int value, @Nonnull TimeUnit timeUnit) {
         this.value = value;
-        this.timeUnit = checkNotNull(timeUnit, "timeUnit cannot be null");
+        this.timeUnit = Objects.requireNonNull(timeUnit, "timeUnit cannot be null");
     }
 
     public int getValue() {

@@ -25,7 +25,6 @@ package org.jmxtrans.query;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.collections.ArrayUtils;
 import org.jmxtrans.utils.collections.Iterables2;
-import org.jmxtrans.utils.Preconditions2;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,6 +39,7 @@ import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.openmbean.CompositeData;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
@@ -124,16 +124,16 @@ public class Query {
             @Nonnull String resultAlias,
             @Nonnull ResultNameStrategy resultNameStrategy) {
         try {
-            this.objectName = new ObjectName(Preconditions2.checkNotNull(objectName));
+            this.objectName = new ObjectName(Objects.requireNonNull(objectName));
         } catch (MalformedObjectNameException e) {
             throw new IllegalArgumentException("Invalid objectName '" + objectName + "'", e);
         }
-        this.attribute = Preconditions2.checkNotNull(attribute);
+        this.attribute = Objects.requireNonNull(attribute);
         this.key = key;
-        this.resultAlias = Preconditions2.checkNotNull(resultAlias);
+        this.resultAlias = Objects.requireNonNull(resultAlias);
         this.position = position;
         this.type = type;
-        this.resultNameStrategy = Preconditions2.checkNotNull(resultNameStrategy, "resultNameStrategy");
+        this.resultNameStrategy = Objects.requireNonNull(resultNameStrategy, "resultNameStrategy");
     }
 
     public void collectMetrics(@Nonnull MBeanServer mbeanServer, @Nonnull Queue<QueryResult> resultQueue) {

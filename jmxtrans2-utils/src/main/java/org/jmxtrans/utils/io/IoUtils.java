@@ -42,6 +42,9 @@ public final class IoUtils {
 
     private static final int COPY_BUFFER_SIZE = 512;
 
+    private IoUtils() {
+    }
+
     /**
      * Simple implementation without chunking if the source file is big.
      *
@@ -88,21 +91,6 @@ public final class IoUtils {
             // Not being able to close something is still a problem : potential data loss, not releasing
             // resources, ... So we should still log it.
             LOGGER.log(Level.WARNING, "Could not close closeable");
-        }
-    }
-
-    /*
-     * Needed for old JVMs where {@link java.io.InputStream} does not implement {@link java.io.Closeable}.
-     */
-    public static void closeQuietly(InputStream inputStream) {
-        if (inputStream == null)
-            return;
-        try {
-            inputStream.close();
-        } catch (IOException e) {
-            // Not being able to close something is still a problem : potential data loss, not releasing
-            // resources, ... So we should still log it.
-            LOGGER.log(Level.WARNING, "Could not close input stream");
         }
     }
 

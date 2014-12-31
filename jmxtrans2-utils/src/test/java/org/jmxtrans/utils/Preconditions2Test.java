@@ -24,28 +24,29 @@ package org.jmxtrans.utils;
 
 import org.junit.Test;
 
+import java.util.Objects;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jmxtrans.utils.Preconditions2.checkArgument;
 import static org.jmxtrans.utils.Preconditions2.checkNotEmpty;
-import static org.jmxtrans.utils.Preconditions2.checkNotNull;
 
 public class Preconditions2Test {
 
     @Test(expected = NullPointerException.class)
     public void checkNotNullThrowsExceptionOnNull() {
-        checkNotNull(null);
+        Objects.requireNonNull(null);
     }
 
     @Test
     public void checkNotNullReturnsGivenObject() {
         Object argument = new Object();
-        assertThat(checkNotNull(argument)).isEqualTo(argument);
+        assertThat(Objects.requireNonNull(argument)).isEqualTo(argument);
     }
 
     @Test(expected = NullPointerException.class)
     public void checkNotNullThrowsExceptionWithMessage() {
         try {
-            checkNotNull(null, "message");
+            Objects.requireNonNull(null, "message");
         } catch (NullPointerException npe) {
             assertThat(npe).hasMessage("message");
             throw  npe;
