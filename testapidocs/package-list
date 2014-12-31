@@ -4,7 +4,6 @@ org.jmxtrans.config
 org.jmxtrans.embedded
 org.jmxtrans.embedded.config
 org.jmxtrans.embedded.output
-org.jmxtrans.embedded.query
 org.jmxtrans.embedded.spring
 org.jmxtrans.embedded.util.json
 org.jmxtrans.embedded.util.pool
@@ -12,6 +11,7 @@ org.jmxtrans.naming
 org.jmxtrans.output.writers
 org.jmxtrans.output.writers.utils
 org.jmxtrans.query
+org.jmxtrans.query.embedded
 org.jmxtrans.results
 org.jmxtrans.utils
 org.jmxtrans.utils.collections

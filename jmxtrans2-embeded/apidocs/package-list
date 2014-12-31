@@ -1,8 +1,0 @@
-org.jmxtrans.embedded
-org.jmxtrans.embedded.config
-org.jmxtrans.embedded.query
-org.jmxtrans.embedded.servlet
-org.jmxtrans.embedded.spring
-org.jmxtrans.embedded.util.jmx
-org.jmxtrans.embedded.util.json
-org.jmxtrans.embedded.util.pool
