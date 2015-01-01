@@ -300,20 +300,14 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
     @Override
     public int getExportedMetricsCount() {
-        int result = 0;
-        for (Query query : queries) {
-            result += query.getExportedMetricsCount();
-        }
-        return result;
+        // FIXME: move metrics
+        return 0;
     }
 
     @Override
     public long getExportDurationInNanos() {
-        long result = 0;
-        for (Query query : queries) {
-            result += query.getExportDurationInNanos();
-        }
-        return result;
+        // FIXME: move metrics
+        return 0;
     }
 
     @Override
@@ -323,11 +317,8 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 
     @Override
     public int getExportCount() {
-        int result = 0;
-        for (Query query : queries) {
-            result += query.getExportCount();
-        }
-        return result;
+        // FIXME: move metrics
+        return 0;
     }
 
 //    public int getDiscardedResultsCount() {
