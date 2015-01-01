@@ -31,9 +31,9 @@ import org.junit.Test;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
-import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -62,9 +62,11 @@ public class QueryTest {
 
     @Test
     public void basic_jmx_attribute_return_simple_result() throws Exception {
-        Query query = new Query("test:type=MemoryPool,name=PS Eden Space").addAttribute("CollectionUsageThreshold");
         BlockingQueue<QueryResult> results = new DiscardingBlockingQueue<QueryResult>(10);
-        query.collectMetrics(mbeanServer, results);
+        Query.builder().withObjectName("test:type=MemoryPool,name=PS Eden Space")
+                .addAttribute("CollectionUsageThreshold")
+                .build()
+                .collectMetrics(mbeanServer, results);
         assertThat(results).hasSize(1);
 
         QueryResult result = results.poll();
@@ -73,10 +75,12 @@ public class QueryTest {
 
     @Test
     public void test_composite_jmx_attribute() throws Exception {
-        Query query = new Query("test:type=MemoryPool,name=PS Perm Gen");
-        query.addAttribute(QueryAttribute.builder("Usage")
-                .withKeys(Arrays.asList("committed", "init", "max", "used"))
-                .build());
+        Query query = Query.builder()
+                .withObjectName("test:type=MemoryPool,name=PS Perm Gen")
+                .addAttribute(QueryAttribute.builder("Usage")
+                    .withKeys(asList("committed", "init", "max", "used"))
+                    .build())
+                .build();
         BlockingQueue<QueryResult> results = new DiscardingBlockingQueue<QueryResult>(10);
         query.collectMetrics(mbeanServer, results);
         assertThat(results).hasSize(4);

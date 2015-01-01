@@ -89,13 +89,13 @@ public class ConfigurationParser {
         JsonNode configurationRootNode = mapper.readValue(configuration, JsonNode.class);
         for (JsonNode queryNode : configurationRootNode.path("queries")) {
 
-            String objectName = queryNode.path("objectName").asText();
-            Query query = new Query(objectName);
-            config.addQuery(query);
+            Query.Builder queryBuilder = Query.builder()
+                    .withObjectName(queryNode.path("objectName").asText());
+
             JsonNode resultAliasNode = queryNode.path("resultAlias");
             if (resultAliasNode.isMissingNode()) {
             } else if (resultAliasNode.isValueNode()) {
-                query.setResultAlias(resultAliasNode.asText());
+                queryBuilder.withResultAlias(resultAliasNode.asText());
             } else {
                 logger.warn("Ignore invalid node {}", resultAliasNode);
             }
@@ -106,15 +106,18 @@ public class ConfigurationParser {
                 Iterator<JsonNode> itAttributeNode = attributesNode.elements();
                 while (itAttributeNode.hasNext()) {
                     JsonNode attributeNode = itAttributeNode.next();
-                    parseQueryAttributeNode(query, attributeNode);
+                    queryBuilder.addAttributes(parseQueryAttributeNode(attributeNode));
                 }
             } else {
                 logger.warn("Ignore invalid node {}", resultAliasNode);
             }
 
             JsonNode attributeNode = queryNode.path("attribute");
-            parseQueryAttributeNode(query, attributeNode);
+            queryBuilder.addAttributes(parseQueryAttributeNode(attributeNode));
+
+            Query query = queryBuilder.build();
             logger.trace("Add {}", query);
+            config.addQuery(query);
         }
 
         List<OutputWriter> outputWriters = parseOutputWritersNode(configurationRootNode);
@@ -182,10 +185,11 @@ public class ConfigurationParser {
         return factory.create(settings);
     }
 
-    protected void parseQueryAttributeNode(@Nonnull Query query, @Nonnull JsonNode attributeNode) {
+    protected List<QueryAttribute> parseQueryAttributeNode(@Nonnull JsonNode attributeNode) {
+        List<QueryAttribute> attributes = new ArrayList<>();
         if (attributeNode.isMissingNode()) {
         } else if (attributeNode.isValueNode()) {
-            query.addAttribute(attributeNode.asText());
+            attributes.add(QueryAttribute.builder(attributeNode.asText()).build());
         } else if (attributeNode.isObject()) {
             List<String> keys = null;
 
@@ -225,12 +229,12 @@ public class ConfigurationParser {
             JsonNode typeNode = attributeNode.path("type");
             String type = typeNode.isMissingNode() ? null : typeNode.asText();
             if (keys == null) {
-                query.addAttribute(QueryAttribute.builder(name)
+                attributes.add(QueryAttribute.builder(name)
                         .withType(type)
                         .withResultAlias(resultAlias)
                         .build());
             } else {
-                query.addAttribute(QueryAttribute.builder(name)
+                attributes.add(QueryAttribute.builder(name)
                         .withType(type)
                         .withResultAlias(resultAlias)
                         .withKeys(keys)
@@ -239,6 +243,7 @@ public class ConfigurationParser {
         } else {
             logger.warn("Ignore invalid node {}", attributeNode);
         }
+        return attributes;
     }
 
 }

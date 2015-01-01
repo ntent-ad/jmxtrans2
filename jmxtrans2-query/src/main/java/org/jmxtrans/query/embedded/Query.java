@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.query.embedded;
 
+import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.NanoChronometer;
 import org.jmxtrans.utils.jmx.JmxUtils2;
-import org.jmxtrans.results.QueryResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +37,10 @@ import javax.management.AttributeList;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -52,33 +54,26 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Query implements QueryMBean {
 
-    private static final AtomicInteger queryIdSequence = new AtomicInteger();
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    /**
-     * Mainly used for monitoring.
-     */
-    private final String id = "query-" + queryIdSequence.getAndIncrement();
 
     /**
      * ObjectName of the Query MBean(s) to monitor, can contain
      */
     @Nonnull
-    private ObjectName objectName;
+    private final ObjectName objectName;
 
     @Nullable
-    private String resultAlias;
+    private final String resultAlias;
     /**
      * JMX attributes to collect. As an array for {@link javax.management.MBeanServer#getAttributes(javax.management.ObjectName, String[])}
      */
     @Nonnull
-    private Map<String, QueryAttribute> attributesByName = new HashMap<String, QueryAttribute>();
+    private final Map<String, QueryAttribute> attributesByName;
     /**
      * Copy of {@link #attributesByName}'s {@link java.util.Map#entrySet()} for performance optimization
      */
     @Nonnull
-    private String[] attributeNames = new String[0];
+    private final String[] attributeNames;
 
     @Nonnull
     private final QueryMetrics metrics = new QueryMetrics();
@@ -86,32 +81,25 @@ public class Query implements QueryMBean {
     /**
      * {@link javax.management.ObjectName} of this {@link QueryMBean}
      */
+    @Nonnull
+    private final ObjectName queryMbeanObjectName;
+
     @Nullable
-    private ObjectName queryMbeanObjectName;
     private MBeanServer mbeanServer;
 
-    /**
-     * Creates a {@linkplain Query} on the given <code>objectName</code>.
-     *
-     * @param objectName {@link javax.management.ObjectName} to query, can contain wildcards ('*' or '?')
-     */
-    public Query(@Nonnull String objectName) {
-        try {
-            this.objectName = new ObjectName(objectName);
-        } catch (MalformedObjectNameException e) {
-            throw new RuntimeException("Exception parsing '" + objectName + "'", e);
-        }
-    }
-
-    /**
-     * Creates a {@linkplain Query} on the given <code>objectName</code>.
-     *
-     * @param objectName {@link javax.management.ObjectName} to query, can contain wildcards ('*' or '?')
-     */
-    public Query(@Nonnull ObjectName objectName) {
+    private Query(@Nonnull ObjectName objectName,
+                  @Nullable String resultAlias,
+                  @Nonnull List<QueryAttribute> attributes,
+                  @Nonnull ObjectName queryMbeanObjectName) {
         this.objectName = objectName;
+        this.resultAlias = resultAlias;
+        this.attributesByName = new HashMap<>();
+        for (QueryAttribute attribute : attributes) {
+            attributesByName.put(attribute.getName(), attribute);
+        }
+        this.attributeNames = attributesByName.keySet().toArray(new String[0]);
+        this.queryMbeanObjectName = queryMbeanObjectName;
     }
-
 
     @Override
     public void collectMetrics(@Nonnull MBeanServer mbeanServer, @Nonnull BlockingQueue<QueryResult> results) {
@@ -145,12 +133,16 @@ public class Query implements QueryMBean {
 
     @PostConstruct
     public void start() throws Exception {
-        queryMbeanObjectName = JmxUtils2.registerObject(this, "org.jmxtrans.embedded:Type=Query,id=" + id, mbeanServer);
+        if (mbeanServer != null) {
+            mbeanServer.registerMBean(this, queryMbeanObjectName);
+        }
     }
 
     @PreDestroy
     public void stop() throws Exception {
-        JmxUtils2.unregisterObject(queryMbeanObjectName, mbeanServer);
+        if (mbeanServer != null) {
+            JmxUtils2.unregisterObject(queryMbeanObjectName, mbeanServer);
+        }
     }
 
     @Override
@@ -164,42 +156,15 @@ public class Query implements QueryMBean {
         return attributesByName.values();
     }
 
-    /**
-     * Add the given attribute to the list attributes of this query
-     *
-     * @param attribute attribute to add
-     * @return this
-     */
-    @Nonnull
-    public Query addAttribute(@Nonnull QueryAttribute attribute) {
-        attributesByName.put(attribute.getName(), attribute);
-        attributeNames = attributesByName.keySet().toArray(new String[0]);
-        return this;
-    }
-
-    /**
-     * Create a basic {@link QueryAttribute}, add it to the list attributes of this query
-     *
-     * @param attributeName attribute to add
-     * @return this
-     */
-    @Nonnull
-    public Query addAttribute(@Nonnull String attributeName) {
-        return addAttribute(QueryAttribute.builder(attributeName).build());
-    }
-
-    public void setResultAlias(@Nullable String resultAlias) {
-        this.resultAlias = resultAlias;
-    }
-
-    public void setMbeanServer(MBeanServer mbeanServer) {
-        this.mbeanServer = mbeanServer;
-    }
-
     @Override
     @Nullable
     public String getResultAlias() {
         return resultAlias;
+    }
+
+    @Nonnull
+    public ObjectName getQueryMbeanObjectName() {
+        return queryMbeanObjectName;
     }
 
     @Override
@@ -227,8 +192,82 @@ public class Query implements QueryMBean {
     }
 
     @Override
+    @Nonnull
     public String getId() {
-        return id;
+        return queryMbeanObjectName.getCanonicalName();
     }
 
+    @Nonnull
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public void setMbeanServer(@Nonnull MBeanServer mbeanServer) {
+        this.mbeanServer = mbeanServer;
+    }
+
+    public static final class Builder {
+        private static final AtomicInteger queryIdSequence = new AtomicInteger();
+
+        @Nullable
+        private ObjectName objectName;
+        @Nullable
+        private String resultAlias;
+        @Nonnull
+        private List<QueryAttribute> attributes = new ArrayList<>();
+
+        private Builder() {
+        }
+
+        @Nonnull
+        public Builder withObjectName(String objectName) {
+            try {
+                withObjectName(new ObjectName(objectName));
+                return this;
+            } catch (MalformedObjectNameException e) {
+                throw new RuntimeException("Object name [" + objectName + "] is not valid, cannot build query.");
+            }
+        }
+
+        public Builder withObjectName(ObjectName objectName) {
+            this.objectName = objectName;
+            return this;
+        }
+
+        public Builder withResultAlias(String resultAlias) {
+            this.resultAlias = resultAlias;
+            return this;
+        }
+
+        public Builder addAttribute(String attributeName) {
+            addAttribute(QueryAttribute.builder(attributeName).build());
+            return this;
+        }
+
+        public Builder addAttribute(QueryAttribute attribute) {
+            attributes.add(attribute);
+            return this;
+        }
+
+        public Builder addAttributes(Collection<QueryAttribute> attributes) {
+            this.attributes.addAll(attributes);
+            return this;
+        }
+
+        public Query build() {
+            try {
+                if (objectName == null) {
+                    throw new RuntimeException("Cannot create query without an object name, please check your code");
+                }
+                return new Query(
+                        objectName,
+                        resultAlias,
+                        attributes,
+                        new ObjectName("org.jmxtrans.embedded:Type=Query,id=" + queryIdSequence.incrementAndGet())
+                );
+            } catch (MalformedObjectNameException e) {
+                throw new RuntimeException("Object name [" + objectName + "] is not valid, cannot expose MBean for this query.");
+            }
+        }
+    }
 }
