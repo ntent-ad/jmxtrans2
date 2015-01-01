@@ -26,7 +26,6 @@ import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import static java.util.concurrent.TimeUnit.MICROSECONDS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,9 +44,9 @@ public class NanoChronometerTest {
     @Test
     public void chronometerMeasuresMoreOrLessTheCorrectTime() throws InterruptedException {
         AtomicLong counter = new AtomicLong(0);
-        long sleepTimeInMillis = 1;
+        long sleepTimeInMillis = 10;
         long sleepTimeInNanos = NANOSECONDS.convert(sleepTimeInMillis, MILLISECONDS);
-        long precision = NANOSECONDS.convert(100, MICROSECONDS); // yes, nano time is not very precise and overhead is significant
+        long precision = NANOSECONDS.convert(1, MILLISECONDS); // yes, nano time is not very precise and overhead is significant
         try(NanoChronometer chronometer = new NanoChronometer(counter)) {
             Thread.sleep(sleepTimeInMillis);
         }
