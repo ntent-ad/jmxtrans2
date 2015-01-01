@@ -203,7 +203,7 @@ public class QueryAttribute {
 
         public Builder withKeys(@Nullable Collection<String> keys) {
             if (keys != null) {
-                this.keys = new HashSet<String>();
+                this.keys = new HashSet<>();
                 this.keys.addAll(keys);
             }
             return this;

@@ -20,29 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.query.embedded;
+package org.jmxtrans.utils;
 
-import org.jmxtrans.results.QueryResult;
+import java.util.concurrent.atomic.AtomicLong;
 
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import java.util.concurrent.BlockingQueue;
+public class NanoChronometer implements AutoCloseable {
 
-/**
- * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
- */
-public interface QueryMBean {
-    void collectMetrics(MBeanServer mBeanServer, BlockingQueue<QueryResult> results);
+    private final AtomicLong counter;
+    private final long startTime;
 
-    int getCollectedMetricsCount();
+    public NanoChronometer(AtomicLong counter) {
+        this.counter = counter;
+        this.startTime = System.nanoTime();
+    }
 
-    long getCollectionDurationInNanos();
-
-    int getCollectionCount();
-
-    String getResultAlias();
-
-    ObjectName getObjectName();
-
-    String getId();
+    @Override
+    public void close() {
+        counter.addAndGet(System.nanoTime() - startTime);
+    }
 }

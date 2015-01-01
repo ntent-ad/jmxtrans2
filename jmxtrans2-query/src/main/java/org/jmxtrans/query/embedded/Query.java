@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.query.embedded;
 
+import org.jmxtrans.utils.NanoChronometer;
 import org.jmxtrans.utils.jmx.JmxUtils2;
 import org.jmxtrans.results.QueryResult;
 import org.slf4j.Logger;
@@ -42,7 +43,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Describe a JMX query on which metrics are collected.
@@ -81,22 +81,7 @@ public class Query implements QueryMBean {
     private String[] attributeNames = new String[0];
 
     @Nonnull
-    private final AtomicInteger collectedMetricsCount = new AtomicInteger();
-
-    @Nonnull
-    private final AtomicLong collectionDurationInNanos = new AtomicLong();
-
-    @Nonnull
-    private final AtomicInteger collectionCount = new AtomicInteger();
-
-    @Nonnull
-    private final AtomicInteger exportedMetricsCount = new AtomicInteger();
-
-    @Nonnull
-    private final AtomicLong exportDurationInNanos = new AtomicLong();
-
-    @Nonnull
-    private final AtomicInteger exportCount = new AtomicInteger();
+    private final QueryMetrics metrics = new QueryMetrics();
 
     /**
      * {@link javax.management.ObjectName} of this {@link QueryMBean}
@@ -130,33 +115,32 @@ public class Query implements QueryMBean {
 
     @Override
     public void collectMetrics(@Nonnull MBeanServer mbeanServer, @Nonnull BlockingQueue<QueryResult> results) {
-        long nanosBefore = System.nanoTime();
-        /*
-         * Optimisation tip: no need to skip 'mbeanServer.queryNames()' if the ObjectName is not a pattern
-         * (i.e. not '*' or '?' wildcard) because the mbeanserver internally performs the check.
-         * Seen on com.sun.jmx.interceptor.DefaultMBeanServerInterceptor
-         */
-        Set<ObjectName> matchingObjectNames = mbeanServer.queryNames(this.objectName, null);
-        logger.trace("Query {} returned {}", objectName, matchingObjectNames);
+        try (NanoChronometer chrono = metrics.collectionDurationChronometer()) {
+            /*
+             * Optimisation tip: no need to skip 'mbeanServer.queryNames()' if the ObjectName is not a pattern
+             * (i.e. not '*' or '?' wildcard) because the mbeanserver internally performs the check.
+             * Seen on com.sun.jmx.interceptor.DefaultMBeanServerInterceptor
+             */
+            Set<ObjectName> matchingObjectNames = mbeanServer.queryNames(this.objectName, null);
+            logger.trace("Query {} returned {}", objectName, matchingObjectNames);
 
-        for (ObjectName matchingObjectName : matchingObjectNames) {
-            long epochInMillis = System.currentTimeMillis();
-            try {
-                AttributeList jmxAttributes = mbeanServer.getAttributes(matchingObjectName, this.attributeNames);
-                logger.trace("Query {} returned {}", matchingObjectName, jmxAttributes);
-                for (Attribute jmxAttribute : jmxAttributes.asList()) {
-                    QueryAttribute queryAttribute = this.attributesByName.get(jmxAttribute.getName());
-                    Object value = jmxAttribute.getValue();
-                    int count = queryAttribute.collectMetrics(matchingObjectName, value, epochInMillis, results, this, new ResultNameStrategy());
-                    collectedMetricsCount.addAndGet(count);
+            for (ObjectName matchingObjectName : matchingObjectNames) {
+                long epochInMillis = System.currentTimeMillis();
+                try {
+                    AttributeList jmxAttributes = mbeanServer.getAttributes(matchingObjectName, this.attributeNames);
+                    logger.trace("Query {} returned {}", matchingObjectName, jmxAttributes);
+                    for (Attribute jmxAttribute : jmxAttributes.asList()) {
+                        QueryAttribute queryAttribute = this.attributesByName.get(jmxAttribute.getName());
+                        Object value = jmxAttribute.getValue();
+                        int count = queryAttribute.collectMetrics(matchingObjectName, value, epochInMillis, results, this, new ResultNameStrategy());
+                        metrics.incrementCollected(count);
+                    }
+                } catch (Exception e) {
+                    logger.warn("Exception processing query {}", this, e);
                 }
-            } catch (Exception e) {
-                logger.warn("Exception processing query {}", this, e);
             }
+            metrics.incrementCollectionsCount();
         }
-        collectionCount.incrementAndGet();
-        long nanosAfter = System.nanoTime();
-        collectionDurationInNanos.addAndGet(nanosAfter - nanosBefore);
     }
 
     @PostConstruct
@@ -229,32 +213,17 @@ public class Query implements QueryMBean {
 
     @Override
     public int getCollectedMetricsCount() {
-        return collectedMetricsCount.get();
+        return metrics.getCollectedCount();
     }
 
     @Override
     public long getCollectionDurationInNanos() {
-        return collectionDurationInNanos.get();
+        return metrics.getCollectionDurationNano();
     }
 
     @Override
     public int getCollectionCount() {
-        return collectionCount.get();
-    }
-
-    @Override
-    public int getExportedMetricsCount() {
-        return exportedMetricsCount.get();
-    }
-
-    @Override
-    public long getExportDurationInNanos() {
-        return exportDurationInNanos.get();
-    }
-
-    @Override
-    public int getExportCount() {
-        return exportCount.get();
+        return metrics.getCollectionsCount();
     }
 
     @Override
