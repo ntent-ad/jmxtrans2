@@ -211,7 +211,7 @@
 <a class="jxr_linenumber" name="L203" href="#L203">203</a> 
 <a class="jxr_linenumber" name="L204" href="#L204">204</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../org/jmxtrans/query/embedded/QueryAttribute.html">Builder</a> withKeys(@Nullable Collection&lt;String&gt; keys) {
 <a class="jxr_linenumber" name="L205" href="#L205">205</a>             <strong class="jxr_keyword">if</strong> (keys != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>                 <strong class="jxr_keyword">this</strong>.keys = <strong class="jxr_keyword">new</strong> HashSet&lt;String&gt;();
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>                 <strong class="jxr_keyword">this</strong>.keys = <strong class="jxr_keyword">new</strong> HashSet&lt;&gt;();
 <a class="jxr_linenumber" name="L207" href="#L207">207</a>                 <strong class="jxr_keyword">this</strong>.keys.addAll(keys);
 <a class="jxr_linenumber" name="L208" href="#L208">208</a>             }
 <a class="jxr_linenumber" name="L209" href="#L209">209</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
@@ -224,6 +224,6 @@
 <a class="jxr_linenumber" name="L216" href="#L216">216</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2014 <a href="http://jmxtrans.org">JMXTrans Team</a>. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2014&#x2013;2015 <a href="http://jmxtrans.org">JMXTrans Team</a>. All rights reserved.</div>
 </body>
 </html>
