@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.utils.net;
 
+import javax.annotation.Nonnull;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -33,9 +34,10 @@ import java.net.Socket;
  */
 public class SocketOutputStream extends FilterOutputStream {
 
+    @Nonnull
     private final Socket socket;
 
-    public SocketOutputStream(Socket socket) throws IOException {
+    public SocketOutputStream(@Nonnull Socket socket) throws IOException {
         super(socket.getOutputStream());
         this.socket = socket;
     }
@@ -43,11 +45,13 @@ public class SocketOutputStream extends FilterOutputStream {
     /**
      * Return the underlying {@linkplain java.net.Socket}
      */
+    @Nonnull
     public Socket getSocket() {
         return socket;
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return "SocketOutputStream{" +
                 "socket=" + socket +

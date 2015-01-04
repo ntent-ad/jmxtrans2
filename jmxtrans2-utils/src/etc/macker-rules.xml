@@ -31,8 +31,26 @@
                 <from class="org.jmxtrans.**"/>
                 <to class="java.util.logging.**"/>
                 <allow>
-                    <!-- we need to clean this one at some point -->
-                    <from class="org.jmxtrans.utils.io.IoUtils"/>
+                    <!-- we need to clean those loggers at some point -->
+                    <from>
+                        <include class="org.jmxtrans.utils.circuitbreaker.CircuitBreakerProxy"/>
+                        <include class="org.jmxtrans.utils.io.IoUtils"/>
+                    </from>
+                </allow>
+            </deny>
+        </access-rule>
+    </ruleset>
+    <ruleset name="No direct access to java.lang.System">
+        <access-rule>
+            <deny>
+                <from class="org.jmxtrans.**"/>
+                <to class="java.lang.System"/>
+                <allow>
+                    <from>
+                        <include class="org.jmxtrans.utils.time.SystemClock"/>
+                        <include class="org.jmxtrans.utils.time.NanoChronometer"/>
+                        <include class="org.jmxtrans.utils.PropertyPlaceholderResolver"/>
+                    </from>
                 </allow>
             </deny>
         </access-rule>

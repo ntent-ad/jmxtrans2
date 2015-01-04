@@ -24,6 +24,8 @@ package org.jmxtrans.query.embedded;
 
 import org.jmxtrans.results.QueryResult;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.util.concurrent.BlockingQueue;
@@ -40,9 +42,12 @@ public interface QueryMBean {
 
     int getCollectionCount();
 
+    @Nullable
     String getResultAlias();
 
+    @Nonnull
     ObjectName getObjectName();
 
+    @Nonnull
     String getId();
 }

@@ -91,4 +91,16 @@ public class QueryTest {
         QueryResult result2 = results.poll();
         assertThat(result2.getValue()).isInstanceOf(Number.class);
     }
+
+    @Test
+    public void queryWithSameNameAreEquals() {
+        Query query1 = Query.builder()
+                .withObjectName("test:type=MemoryPool,name=PS Perm Gen")
+                .build();
+        Query query2 = Query.builder()
+                .withObjectName("test:type=MemoryPool,name=PS Perm Gen")
+                .build();
+
+        assertThat(query1).isEqualTo(query2);
+    }
 }

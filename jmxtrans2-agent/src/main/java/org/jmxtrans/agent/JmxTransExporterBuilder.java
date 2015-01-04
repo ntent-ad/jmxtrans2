@@ -22,15 +22,10 @@
  */
 package org.jmxtrans.agent;
 
-import org.jmxtrans.config.ConfigParser;
-import org.jmxtrans.config.Interval;
-import org.jmxtrans.config.Invocation;
+import org.jmxtrans.config.Configuration;
 import org.jmxtrans.config.XmlConfigParser;
-import org.jmxtrans.naming.ResultNameStrategyImpl;
-import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.query.Query;
-import org.jmxtrans.query.ResultNameStrategy;
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
+import org.jmxtrans.utils.time.SystemClock;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -44,9 +39,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Collection;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * XML configuration parser.
@@ -55,48 +47,18 @@ import java.util.logging.Logger;
  */
 public class JmxTransExporterBuilder {
 
-    private final Logger logger = Logger.getLogger(getClass().getName());
-
     @Nonnull
     public JmxTransExporter build(@Nonnull String configurationFilePath) throws ParserConfigurationException, SAXException, IOException {
-        ConfigParser configParser = new XmlConfigParser(
+        XmlConfigParser configParser = new XmlConfigParser(
                 new PropertyPlaceholderResolver(),
-                loadDocument(configurationFilePath).getDocumentElement());
+                new SystemClock());
+        configParser.setConfiguration(loadDocument(configurationFilePath));
 
-        // Collection interval
-        Interval collectionInterval = configParser.parseInterval();
-        if (collectionInterval == null) {
-            collectionInterval = new Interval(10, TimeUnit.SECONDS);
-        }
-        // Result name strategy
-        ResultNameStrategy resultNameStrategy = configParser.parseResultNameStrategy();
-        if (resultNameStrategy == null) {
-            resultNameStrategy = new ResultNameStrategyImpl();
-        }
-        Collection<OutputWriter> outputWriters = configParser.parseOutputWriters();
-        if (outputWriters.size() == 0) {
-            logger.warning("No outputwriter defined.");
-        }
-
-        return createJmxTransExporter(
-                configParser.parseInvocations(),
-                configParser.parseQueries(resultNameStrategy),
-                new OutputWritersChain(outputWriters),
-                collectionInterval
-        );
+        return createJmxTransExporter(configParser.parseConfiguration());
     }
 
-    @Nonnull
-    protected JmxTransExporter createJmxTransExporter(
-            @Nonnull Collection<Invocation> invocations,
-            @Nonnull Collection<Query> queries,
-            @Nonnull OutputWriter outputWriter,
-            @Nonnull Interval collectionInterval) {
-        return new JmxTransExporter()
-                .withInvocations(invocations)
-                .withQueries(queries)
-                .withOutputWriter(outputWriter)
-                .withCollectInterval(collectionInterval);
+    protected JmxTransExporter createJmxTransExporter(Configuration configuration) {
+        return new JmxTransExporter(configuration);
     }
 
     @Nonnull

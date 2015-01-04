@@ -22,9 +22,11 @@
  */
 package org.jmxtrans.utils.io;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.io.OutputStream;
 
+@ThreadSafe
 public final class NullOutputStream extends OutputStream {
     @Override
     public void write(int b) throws IOException {

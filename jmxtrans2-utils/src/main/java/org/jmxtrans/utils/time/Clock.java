@@ -20,22 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils;
+package org.jmxtrans.utils.time;
 
-import java.util.concurrent.atomic.AtomicLong;
+public interface Clock {
 
-public class NanoChronometer implements AutoCloseable {
+    long currentTimeMillis();
 
-    private final AtomicLong counter;
-    private final long startTime;
-
-    public NanoChronometer(AtomicLong counter) {
-        this.counter = counter;
-        this.startTime = System.nanoTime();
-    }
-
-    @Override
-    public void close() {
-        counter.addAndGet(System.nanoTime() - startTime);
-    }
+    long nanoTime();
 }

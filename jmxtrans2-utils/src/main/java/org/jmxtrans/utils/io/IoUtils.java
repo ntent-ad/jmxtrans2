@@ -74,7 +74,7 @@ public final class IoUtils {
         }
     }
 
-    public static void copy(InputStream in, OutputStream out) throws IOException {
+    public static void copy(@Nonnull InputStream in, @Nonnull OutputStream out) throws IOException {
         byte[] buffer = new byte[COPY_BUFFER_SIZE];
         int len;
         while ((len = in.read(buffer)) != -1) {

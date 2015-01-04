@@ -96,6 +96,7 @@ public class ResultNameStrategyImpl implements ResultNameStrategy {
 
     protected final Logger logger = Logger.getLogger(getClass().getName());
 
+    @Nonnull
     private ExpressionLanguageEngine expressionLanguageEngine = new ExpressionLanguageEngineImpl();
 
     @Nonnull
@@ -136,15 +137,13 @@ public class ResultNameStrategyImpl implements ResultNameStrategy {
         return result.toString();
     }
 
+    @Nonnull
     public ExpressionLanguageEngine getExpressionLanguageEngine() {
         return expressionLanguageEngine;
     }
 
-    public void setExpressionLanguageEngine(ExpressionLanguageEngine expressionLanguageEngine) {
+    public void setExpressionLanguageEngine(@Nonnull ExpressionLanguageEngine expressionLanguageEngine) {
         this.expressionLanguageEngine = expressionLanguageEngine;
     }
 
-    public void postConstruct(@Nonnull Map<String, String> settings) {
-
-    }
 }

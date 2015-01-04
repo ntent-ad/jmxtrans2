@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.utils.concurrent;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -32,8 +34,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
+@ThreadSafe
 public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements DiscardingBlockingQueueMBean {
 
+    @Nonnull
     private final AtomicInteger discardedElementCount = new AtomicInteger();
 
     /**
@@ -76,7 +80,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      *         {@code c.size()}, or less than 1.
      * @throws NullPointerException if the specified collection or any
      */
-    public DiscardingBlockingQueue(int capacity, boolean fair, Collection<? extends E> c) {
+    public DiscardingBlockingQueue(int capacity, boolean fair, @Nonnull Collection<? extends E> c) {
         super(capacity, fair, c);
     }
 
@@ -86,7 +90,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      *
      * @param e the element to add to the queue
      */
-    protected void discardingOffer(E e) {
+    protected void discardingOffer(@Nonnull E e) {
         while (!super.offer(e)) {
             // remove elements as long as offer() fails.
             poll();
@@ -102,7 +106,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      * @return <code>true</code>
      */
     @Override
-    public boolean add(E e) {
+    public boolean add(@Nonnull E e) {
         discardingOffer(e);
         return true;
     }
@@ -115,7 +119,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      * @return <code>true</code>
      */
     @Override
-    public boolean offer(E e) {
+    public boolean offer(@Nonnull E e) {
         discardingOffer(e);
         return true;
     }
@@ -127,7 +131,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      * @param e the element to add to the queue
      */
     @Override
-    public void put(E e) throws InterruptedException {
+    public void put(@Nonnull E e) throws InterruptedException {
         discardingOffer(e);
     }
 
@@ -139,7 +143,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      * @return <code>true</code>
      */
     @Override
-    public boolean offer(E e, long timeout, TimeUnit unit) throws InterruptedException {
+    public boolean offer(@Nonnull E e, long timeout, TimeUnit unit) throws InterruptedException {
         discardingOffer(e);
         return true;
     }
@@ -152,7 +156,7 @@ public class DiscardingBlockingQueue<E> extends ArrayBlockingQueue<E> implements
      * @return <code>true</code> if the given elements collection is not empty
      */
     @Override
-    public boolean addAll(Collection<? extends E> c) {
+    public boolean addAll(@Nonnull Collection<? extends E> c) {
         for (E e : c) {
             discardingOffer(e);
         }

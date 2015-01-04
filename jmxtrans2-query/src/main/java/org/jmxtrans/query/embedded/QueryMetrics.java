@@ -22,7 +22,8 @@
  */
 package org.jmxtrans.query.embedded;
 
-import org.jmxtrans.utils.NanoChronometer;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.NanoChronometer;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -39,12 +40,20 @@ public class QueryMetrics {
     @Nonnull
     private final AtomicInteger collectionCount = new AtomicInteger();
 
+    @Nonnull
+    private final Clock clock;
+
+    public QueryMetrics(@Nonnull Clock clock) {
+        this.clock = clock;
+    }
+
     public int incrementCollected(int count) {
         return collectedMetricsCount.addAndGet(count);
     }
 
+    @Nonnull
     public NanoChronometer collectionDurationChronometer() {
-        return new NanoChronometer(collectionDurationInNanos);
+        return new NanoChronometer(collectionDurationInNanos, clock);
     }
 
     public int incrementCollectionsCount() {

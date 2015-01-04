@@ -20,20 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.config;
+package org.jmxtrans.query;
 
-import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.results.QueryResult;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.util.Objects.hash;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -42,14 +46,20 @@ import java.util.logging.Logger;
 @ThreadSafe
 public class Invocation {
 
-    public final ObjectName objectName;
-    public final String operationName;
-    public final String resultAlias;
-    private final Object[] params;
-    private final String[] signature;
+    @Nonnull
     private final Logger logger = Logger.getLogger(getClass().getName());
+    @Nonnull
+    public final ObjectName objectName;
+    @Nonnull
+    public final String operationName;
+    @Nonnull
+    public final String resultAlias;
+    @Nonnull
+    private final Object[] params;
+    @Nonnull
+    private final String[] signature;
 
-    public Invocation(String objectName, String operationName, Object[] params, String[] signature, String resultAlias) {
+    public Invocation(@Nonnull String objectName, @Nonnull String operationName, @Nonnull Object[] params, @Nonnull String[] signature, @Nonnull String resultAlias) {
         try {
             this.objectName = new ObjectName(objectName);
         } catch (MalformedObjectNameException e) {
@@ -61,12 +71,12 @@ public class Invocation {
         this.resultAlias = resultAlias;
     }
 
-    public void invoke(MBeanServer mbeanServer, OutputWriter outputWriter) {
+    public void invoke(@Nonnull MBeanServer mbeanServer, @Nonnull BlockingQueue<QueryResult> resultQueue) {
         Set<ObjectName> objectNames = mbeanServer.queryNames(objectName, null);
         for (ObjectName on : objectNames) {
             try {
                 Object result = mbeanServer.invoke(on, operationName, params, signature);
-                outputWriter.write(new QueryResult(resultAlias, result, System.currentTimeMillis()));
+                resultQueue.add(new QueryResult(resultAlias, result, System.currentTimeMillis()));
             } catch (Exception e) {
                 logger.log(Level.WARNING, "Exception invoking " + on + "#" + operationName + "(" + Arrays.toString(params) + ")", e);
             }
@@ -79,26 +89,17 @@ public class Invocation {
         if (o == null || getClass() != o.getClass()) return false;
 
         Invocation that = (Invocation) o;
+        return Objects.equals(objectName, that.objectName)
+                && Objects.equals(operationName, that.operationName)
+                && Objects.deepEquals(params, that.params)
+                && Objects.deepEquals(signature, that.signature)
+                && Objects.equals(resultAlias, that.resultAlias);
 
-        if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
-        if (operationName != null ? !operationName.equals(that.operationName) : that.operationName != null)
-            return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(params, that.params)) return false;
-        if (resultAlias != null ? !resultAlias.equals(that.resultAlias) : that.resultAlias != null) return false;
-        if (!Arrays.equals(signature, that.signature)) return false;
-
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = objectName != null ? objectName.hashCode() : 0;
-        result = 31 * result + (operationName != null ? operationName.hashCode() : 0);
-        result = 31 * result + (resultAlias != null ? resultAlias.hashCode() : 0);
-        result = 31 * result + (params != null ? Arrays.hashCode(params) : 0);
-        result = 31 * result + (signature != null ? Arrays.hashCode(signature) : 0);
-        return result;
+        return hash(objectName, operationName, params, signature, resultAlias);
     }
 
     @Override

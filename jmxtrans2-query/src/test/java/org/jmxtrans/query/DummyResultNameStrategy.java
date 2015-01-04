@@ -22,13 +22,9 @@
  */
 package org.jmxtrans.query;
 
-import org.jmxtrans.query.Query;
-import org.jmxtrans.query.ResultNameStrategy;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.management.ObjectName;
-import java.util.Map;
 
 public final class DummyResultNameStrategy implements ResultNameStrategy {
 
@@ -46,10 +42,6 @@ public final class DummyResultNameStrategy implements ResultNameStrategy {
     public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nullable String key) {
         hasBeenCalled = true;
         return query.getResultAlias();
-    }
-
-    @Override
-    public void postConstruct(@Nonnull Map<String, String> settings) {
     }
 
     public boolean hasBeenCalled() {

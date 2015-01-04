@@ -33,6 +33,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.hash;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -70,29 +71,6 @@ public class QueryResult {
         this.type = type;
     }
 
-    public boolean isValueGreaterThan(QueryResult o) {
-
-        if (this.value == null && o.value == null) {
-            return false;
-        } else if (this.value == null && o.value != null) {
-            return false;
-        } else if (this.value != null && o.value == null) {
-            return true;
-        } else if (!(this.value instanceof Number)) {
-            throw new IllegalArgumentException("This value is not a number: " + this);
-        } else if (!(o.value instanceof Number)) {
-            throw new IllegalArgumentException("Other value is not a number: " + this);
-        } else if (!this.value.getClass().equals(o.value.getClass())) {
-            throw new IllegalArgumentException("Value type mismatch: this.value " + this.value.getClass() + ", o.value " + o.value.getClass());
-        }
-
-        if (this.value instanceof Comparable) {
-            return ((Comparable) this.value).compareTo(o.value) > 0;
-        } else {
-            throw new IllegalStateException("this value is not comparable " + this.value.getClass() + " - " + this.toString());
-        }
-    }
-
     @Nonnull
     public String getName() {
         return name;
@@ -103,12 +81,8 @@ public class QueryResult {
         return type;
     }
 
-    public long getEpochInMillis() {
-        return epochInMillis;
-    }
-
     public long getEpoch(TimeUnit timeUnit) {
-        return timeUnit.convert(epochInMillis, TimeUnit.MILLISECONDS);
+        return timeUnit.convert(epochInMillis, MILLISECONDS);
     }
 
     @Nullable
@@ -132,10 +106,10 @@ public class QueryResult {
         if (getClass() != o.getClass()) return false;
 
         QueryResult that = (QueryResult) o;
-        return Objects.equals(epochInMillis, that.epochInMillis)
-                && Objects.equals(name, that.name)
-                && Objects.equals(type, that.type)
-                && Objects.equals(value, that.value);
+        return Objects.equals(name, that.name)
+                && Objects.equals(epochInMillis, that.epochInMillis)
+                && Objects.equals(value, that.value)
+                && Objects.equals(type, that.type);
     }
 
     @Override

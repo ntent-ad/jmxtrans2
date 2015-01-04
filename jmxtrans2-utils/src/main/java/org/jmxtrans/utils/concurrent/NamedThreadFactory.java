@@ -23,6 +23,7 @@
 package org.jmxtrans.utils.concurrent;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
@@ -34,17 +35,21 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
+@ThreadSafe
 public class NamedThreadFactory implements ThreadFactory {
 
+    @Nonnull
     private final ThreadFactory backingThreadFactory = Executors.defaultThreadFactory();
 
     private boolean daemon;
 
+    @Nonnull
     private String threadNamePrefix;
 
-    private AtomicLong increment = new AtomicLong();
+    @Nonnull
+    private final AtomicLong increment = new AtomicLong();
 
-    public NamedThreadFactory(String threadNamePrefix, boolean daemon) {
+    public NamedThreadFactory(@Nonnull String threadNamePrefix, boolean daemon) {
         this.threadNamePrefix = threadNamePrefix;
         this.daemon = daemon;
     }
@@ -52,7 +57,7 @@ public class NamedThreadFactory implements ThreadFactory {
 
     @Override
     @Nonnull
-    public Thread newThread(Runnable r) {
+    public Thread newThread(@Nonnull Runnable r) {
         Thread thread = backingThreadFactory.newThread(r);
         thread.setName(threadNamePrefix + increment.incrementAndGet());
         thread.setDaemon(daemon);

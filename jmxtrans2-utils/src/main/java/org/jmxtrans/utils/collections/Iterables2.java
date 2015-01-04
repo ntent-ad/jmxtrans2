@@ -26,6 +26,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -33,7 +34,10 @@ import java.util.List;
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class Iterables2 {
+public final class Iterables2 {
+
+    private Iterables2() {
+    }
 
     /**
      * Returns the element at the specified position in an iterable.
@@ -47,8 +51,7 @@ public class Iterables2 {
      */
     @Nullable
     public static <T> T get(@Nonnull Iterable<T> iterable, @Nonnegative int position) throws NullPointerException, IndexOutOfBoundsException {
-        if (iterable == null)
-            throw new NullPointerException("iterable");
+        Objects.requireNonNull(iterable);
 
         if (iterable instanceof List) {
             return ((List<T>) iterable).get(position);

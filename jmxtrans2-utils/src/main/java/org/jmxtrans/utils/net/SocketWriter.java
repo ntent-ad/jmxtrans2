@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.utils.net;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedWriter;
 import java.io.FilterWriter;
 import java.io.IOException;
@@ -36,9 +37,10 @@ import java.nio.charset.Charset;
  */
 public class SocketWriter extends FilterWriter {
 
+    @Nonnull
     private final Socket socket;
 
-    public SocketWriter(Socket socket, Charset charset) throws IOException {
+    public SocketWriter(@Nonnull Socket socket, @Nonnull Charset charset) throws IOException {
         super(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset)));
         this.socket = socket;
     }
@@ -46,11 +48,13 @@ public class SocketWriter extends FilterWriter {
     /**
      * Return the underlying {@linkplain java.net.Socket}
      */
+    @Nonnull
     public Socket getSocket() {
         return socket;
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return "SocketWriter{" +
                 "socket=" + socket +

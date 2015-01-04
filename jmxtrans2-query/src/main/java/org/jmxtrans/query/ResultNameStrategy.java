@@ -25,7 +25,6 @@ package org.jmxtrans.query;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.management.ObjectName;
-import java.util.Map;
 
 /**
  * Build a {@linkplain org.jmxtrans.results.QueryResult#name} from a collected metric ({@linkplain Query}).
@@ -92,6 +91,4 @@ public interface ResultNameStrategy {
     String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName);
     @Nonnull
     String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nullable String key);
-
-    void postConstruct(@Nonnull Map<String, String> settings);
 }

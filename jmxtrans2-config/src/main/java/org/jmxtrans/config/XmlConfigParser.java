@@ -24,9 +24,13 @@ package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.output.OutputWriterFactory;
-import org.jmxtrans.query.Query;
-import org.jmxtrans.query.ResultNameStrategy;
+import org.jmxtrans.query.Invocation;
+import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
+import org.jmxtrans.utils.circuitbreaker.CircuitBreakerProxy;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.Interval;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -44,17 +48,24 @@ import static java.util.Collections.unmodifiableCollection;
 
 public class XmlConfigParser implements ConfigParser {
 
+    public static final Interval DEFAULT_QUERY_PERIOD = new Interval(10, TimeUnit.SECONDS);
+    public static final int MAX_FAILURES = 5;
+    public static final int DISABLE_DURATION_MILLIS = 60 * 1000;
     private final PropertyPlaceholderResolver propertyPlaceholderResolver;
 
-    private final Element configurationRoot;
+    private Document configurationRoot;
+    private final Clock clock;
 
-    public XmlConfigParser(PropertyPlaceholderResolver propertyPlaceholderResolver, Element configurationRoot) {
+    public XmlConfigParser(PropertyPlaceholderResolver propertyPlaceholderResolver, Clock clock) {
         this.propertyPlaceholderResolver = propertyPlaceholderResolver;
-        this.configurationRoot = configurationRoot;
+        this.clock = clock;
+    }
+
+    public void setConfiguration(Document configuration) {
+        this.configurationRoot = configuration;
     }
 
     @Nullable
-    @Override
     public Interval parseInterval() {
         Interval result;
         NodeList collectIntervalNodeList = configurationRoot.getElementsByTagName("collectIntervalInSeconds");
@@ -77,69 +88,25 @@ public class XmlConfigParser implements ConfigParser {
         return result;
     }
 
-    @Nullable
-    @Override
-    public ResultNameStrategy parseResultNameStrategy() {
-        NodeList resultNameStrategyNodeList = configurationRoot.getElementsByTagName("resultNameStrategy");
-
-        ResultNameStrategy resultNameStrategy;
-        switch (resultNameStrategyNodeList.getLength()) {
-            case 0:
-                resultNameStrategy = null;
-                break;
-            case 1:
-                Element resultNameStrategyElement = (Element) resultNameStrategyNodeList.item(0);
-                String resultNameStrategyClass = resultNameStrategyElement.getAttribute("class");
-                if (resultNameStrategyClass.isEmpty())
-                    throw new IllegalArgumentException("<resultNameStrategy> element must contain a 'class' attribute");
-
-                try {
-                    resultNameStrategy = (ResultNameStrategy) Class.forName(resultNameStrategyClass).newInstance();
-                    Map<String, String> settings = new HashMap<String, String>();
-                    NodeList settingsNodeList = resultNameStrategyElement.getElementsByTagName("*");
-                    for (int j = 0; j < settingsNodeList.getLength(); j++) {
-                        Element settingElement = (Element) settingsNodeList.item(j);
-                        settings.put(settingElement.getNodeName(), propertyPlaceholderResolver.resolveString(settingElement.getTextContent()));
-                    }
-                    resultNameStrategy.postConstruct(settings);
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("Exception instantiating " + resultNameStrategyClass, e);
-                }
-                break;
-            default:
-                throw new IllegalStateException("More than 1 <resultNameStrategy> element found (" + resultNameStrategyNodeList.getLength() + ")");
-        }
-        return resultNameStrategy;
-    }
-
     @Nonnull
-    @Override
-    public Collection<Query> parseQueries(@Nonnull ResultNameStrategy resultNameStrategy) {
+    public Collection<Query> parseQueries() {
         List<Query> result = new ArrayList<Query>();
         NodeList queries = configurationRoot.getElementsByTagName("query");
         for (int i = 0; i < queries.getLength(); i++) {
             Element queryElement = (Element) queries.item(i);
             String objectName = queryElement.getAttribute("objectName");
             String attribute = queryElement.getAttribute("attribute");
-            String key = queryElement.hasAttribute("key") ? queryElement.getAttribute("key") : null;
             String resultAlias = queryElement.getAttribute("resultAlias");
-            String type = queryElement.getAttribute("type");
-            Integer position;
-            try {
-                position = queryElement.hasAttribute("position") ? Integer.parseInt(queryElement.getAttribute("position")) : null;
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid 'position' attribute for query objectName=" + objectName +
-                        ", attribute=" + attribute + ", resultAlias=" + resultAlias);
-
-            }
-            Query query = new Query(objectName, attribute, key, position, type, resultAlias, resultNameStrategy);
-            result.add(query);
+            result.add(Query.builder()
+                    .withObjectName(objectName)
+                    .addAttribute(attribute)
+                    .withResultAlias(resultAlias)
+                    .build());
         }
         return unmodifiableCollection(result);
     }
 
     @Nonnull
-    @Override
     public Collection<Invocation> parseInvocations() {
         List<Invocation> result = new ArrayList<Invocation>();
         NodeList invocations = configurationRoot.getElementsByTagName("invocation");
@@ -155,7 +122,6 @@ public class XmlConfigParser implements ConfigParser {
     }
 
     @Nonnull
-    @Override
     public Collection<OutputWriter> parseOutputWriters() {
         List<OutputWriter> outputWriters = new ArrayList<OutputWriter>();
 
@@ -174,9 +140,7 @@ public class XmlConfigParser implements ConfigParser {
                     Element settingElement = (Element) settingsNodeList.item(j);
                     settings.put(settingElement.getNodeName(), propertyPlaceholderResolver.resolveString(settingElement.getTextContent()));
                 }
-                OutputWriter outputWriter = instantiateOutputWriter(outputWriterClass, settings);
-                outputWriter = new OutputWriterCircuitBreakerDecorator(outputWriter);
-                outputWriters.add(outputWriter);
+                outputWriters.add(instantiateOutputWriter(outputWriterClass, settings));
             } catch (Exception e) {
                 throw new IllegalArgumentException("Exception instantiating " + outputWriterClass, e);
             }
@@ -184,9 +148,31 @@ public class XmlConfigParser implements ConfigParser {
         return unmodifiableCollection(outputWriters);
     }
 
-    private OutputWriter instantiateOutputWriter(String outputWriterClass, Map<String, String> settings) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    private OutputWriter instantiateOutputWriter(String outputWriterClass, Map<String, String> settings)
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         Class<OutputWriterFactory<?>> builderClass = (Class<OutputWriterFactory<?>>) Class.forName(outputWriterClass + "$Factory");
         OutputWriterFactory<?> builder = builderClass.newInstance();
-        return builder.create(settings);
+        return CircuitBreakerProxy.create(
+                clock,
+                OutputWriter.class,
+                builder.create(settings),
+                MAX_FAILURES,
+                DISABLE_DURATION_MILLIS);
+    }
+
+    @Override
+    public Configuration parseConfiguration() {
+        // Collection interval
+        Interval collectionInterval = parseInterval();
+        if (collectionInterval == null) {
+            collectionInterval = DEFAULT_QUERY_PERIOD;
+        }
+
+        StandardConfiguration configuration = new StandardConfiguration();
+        configuration.addInvocations(parseInvocations());
+        configuration.addQueries(parseQueries());
+        configuration.addOutputWriters(parseOutputWriters());
+        configuration.setQueryPeriod(collectionInterval);
+        return configuration;
     }
 }

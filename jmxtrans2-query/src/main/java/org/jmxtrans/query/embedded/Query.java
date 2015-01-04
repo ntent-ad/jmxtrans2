@@ -23,8 +23,10 @@
 package org.jmxtrans.query.embedded;
 
 import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.utils.NanoChronometer;
 import org.jmxtrans.utils.jmx.JmxUtils2;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.NanoChronometer;
+import org.jmxtrans.utils.time.SystemClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,9 +44,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.util.Objects.hash;
 
 /**
  * Describe a JMX query on which metrics are collected.
@@ -54,6 +59,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Query implements QueryMBean {
 
+    @Nonnull
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
@@ -76,7 +82,7 @@ public class Query implements QueryMBean {
     private final String[] attributeNames;
 
     @Nonnull
-    private final QueryMetrics metrics = new QueryMetrics();
+    private final QueryMetrics metrics;
 
     /**
      * {@link javax.management.ObjectName} of this {@link QueryMBean}
@@ -90,7 +96,8 @@ public class Query implements QueryMBean {
     private Query(@Nonnull ObjectName objectName,
                   @Nullable String resultAlias,
                   @Nonnull List<QueryAttribute> attributes,
-                  @Nonnull ObjectName queryMbeanObjectName) {
+                  @Nonnull ObjectName queryMbeanObjectName,
+                  @Nonnull Clock clock) {
         this.objectName = objectName;
         this.resultAlias = resultAlias;
         this.attributesByName = new HashMap<>();
@@ -99,6 +106,7 @@ public class Query implements QueryMBean {
         }
         this.attributeNames = attributesByName.keySet().toArray(new String[0]);
         this.queryMbeanObjectName = queryMbeanObjectName;
+        metrics = new QueryMetrics(clock);
     }
 
     @Override
@@ -168,6 +176,24 @@ public class Query implements QueryMBean {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Query that = (Query) o;
+
+        return Objects.equals(attributesByName, that.attributesByName)
+                && Objects.equals(objectName, that.objectName)
+                && Objects.equals(resultAlias, that.resultAlias);
+    }
+
+    @Override
+    public int hashCode() {
+        return hash(objectName, resultAlias, attributesByName);
+    }
+
+    @Override
+    @Nonnull
     public String toString() {
         return "Query{" +
                 "objectName=" + objectName +
@@ -207,6 +233,7 @@ public class Query implements QueryMBean {
     }
 
     public static final class Builder {
+        @Nonnull
         private static final AtomicInteger queryIdSequence = new AtomicInteger();
 
         @Nullable
@@ -215,12 +242,15 @@ public class Query implements QueryMBean {
         private String resultAlias;
         @Nonnull
         private List<QueryAttribute> attributes = new ArrayList<>();
+        @Nonnull
+        private final SystemClock clock;
 
         private Builder() {
+            this.clock = new SystemClock();
         }
 
         @Nonnull
-        public Builder withObjectName(String objectName) {
+        public Builder withObjectName(@Nonnull String objectName) {
             try {
                 withObjectName(new ObjectName(objectName));
                 return this;
@@ -229,31 +259,33 @@ public class Query implements QueryMBean {
             }
         }
 
-        public Builder withObjectName(ObjectName objectName) {
+        @Nonnull
+        public Builder withObjectName(@Nonnull ObjectName objectName) {
             this.objectName = objectName;
             return this;
         }
 
-        public Builder withResultAlias(String resultAlias) {
+        public Builder withResultAlias(@Nullable String resultAlias) {
             this.resultAlias = resultAlias;
             return this;
         }
 
-        public Builder addAttribute(String attributeName) {
+        public Builder addAttribute(@Nonnull String attributeName) {
             addAttribute(QueryAttribute.builder(attributeName).build());
             return this;
         }
 
-        public Builder addAttribute(QueryAttribute attribute) {
+        public Builder addAttribute(@Nonnull QueryAttribute attribute) {
             attributes.add(attribute);
             return this;
         }
 
-        public Builder addAttributes(Collection<QueryAttribute> attributes) {
+        public Builder addAttributes(@Nonnull Collection<QueryAttribute> attributes) {
             this.attributes.addAll(attributes);
             return this;
         }
 
+        @Nonnull
         public Query build() {
             try {
                 if (objectName == null) {
@@ -263,7 +295,8 @@ public class Query implements QueryMBean {
                         objectName,
                         resultAlias,
                         attributes,
-                        new ObjectName("org.jmxtrans.embedded:Type=Query,id=" + queryIdSequence.incrementAndGet())
+                        new ObjectName("org.jmxtrans.embedded:Type=Query,id=" + queryIdSequence.incrementAndGet()),
+                        clock
                 );
             } catch (MalformedObjectNameException e) {
                 throw new RuntimeException("Object name [" + objectName + "] is not valid, cannot expose MBean for this query.");

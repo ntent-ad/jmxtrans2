@@ -20,52 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.config;
+package org.jmxtrans.utils.time;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+public class SystemClock implements Clock {
 
-@Immutable
-@ThreadSafe
-public class Interval {
-
-    private final int value;
-    private final TimeUnit timeUnit;
-
-    public Interval(int value, @Nonnull TimeUnit timeUnit) {
-        this.value = value;
-        this.timeUnit = Objects.requireNonNull(timeUnit, "timeUnit cannot be null");
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    @Nonnull
-    public TimeUnit getTimeUnit() {
-        return timeUnit;
+    @Override
+    public long currentTimeMillis() {
+        return System.currentTimeMillis();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Interval interval = (Interval) o;
-
-        if (value != interval.value) return false;
-        if (timeUnit != interval.timeUnit) return false;
-
-        return true;
+    public long nanoTime() {
+        return System.nanoTime();
     }
 
-    @Override
-    public int hashCode() {
-        int result = value;
-        result = 31 * result + (timeUnit != null ? timeUnit.hashCode() : 0);
-        return result;
-    }
 }

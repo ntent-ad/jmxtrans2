@@ -23,9 +23,12 @@
 package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.query.Query;
-import org.jmxtrans.query.ResultNameStrategy;
+import org.jmxtrans.query.Invocation;
+import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.QueryAttribute;
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
+import org.jmxtrans.utils.time.Interval;
+import org.jmxtrans.utils.time.SystemClock;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -34,8 +37,6 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import java.util.Collection;
-
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,6 +44,7 @@ public class XmlConfigParserTest {
 
     private Document configDocument;
     private Element config;
+    private XmlConfigParser parser;
 
     @Before
     public void createEmptyConfig() throws ParserConfigurationException {
@@ -51,20 +53,29 @@ public class XmlConfigParserTest {
         configDocument.appendChild(config);
     }
 
-    @Test
-    public void intervalIsNullWhenNotInConfig() throws ParserConfigurationException {
-        ConfigParser parser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        assertThat(parser.parseInterval()).isNull();
+    @Before
+    public void createConfigurationParser() {
+        parser = new XmlConfigParser(new PropertyPlaceholderResolver(), new SystemClock());
     }
 
     @Test
-    public void intervalIsReadCorrectly() throws ParserConfigurationException {
+    public void defaultQueryPeriodIsReturnedWhenNotInConfigFile() throws ParserConfigurationException {
+        parser.setConfiguration(configDocument);
+        Configuration configuration = parser.parseConfiguration();
+        assertThat(configuration.getQueryPeriod()).isEqualTo(new Interval(10, SECONDS));
+    }
+
+    @Test
+    public void queryPeriodIsReadCorrectly() throws ParserConfigurationException {
         Element interval = configDocument.createElement("collectIntervalInSeconds");
         interval.setTextContent("10");
         config.appendChild(interval);
 
-        ConfigParser parser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        assertThat(parser.parseInterval()).isEqualTo(new Interval(10, SECONDS));
+        parser.setConfiguration(configDocument);
+
+        Configuration configuration = parser.parseConfiguration();
+
+        assertThat(configuration.getQueryPeriod()).isEqualTo(new Interval(10, SECONDS));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -73,7 +84,8 @@ public class XmlConfigParserTest {
         interval.setTextContent("abc");
         config.appendChild(interval);
 
-        new XmlConfigParser(new PropertyPlaceholderResolver(), config).parseInterval();
+        parser.setConfiguration(configDocument);
+        parser.parseInterval();
     }
 
     @Test(expected = IllegalStateException.class)
@@ -86,48 +98,16 @@ public class XmlConfigParserTest {
         secondInterval.setTextContent("20");
         config.appendChild(secondInterval);
 
-        new XmlConfigParser(new PropertyPlaceholderResolver(), config).parseInterval();
-    }
-
-    @Test
-    public void resultNameStrategyIsNullWhenNotInConfig() throws ParserConfigurationException {
-        ConfigParser parser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        assertThat(parser.parseResultNameStrategy()).isNull();
-    }
-
-    @Test
-    public void resultNameStrategyWithoutParametersIsInstantiated() throws ParserConfigurationException {
-        Element resultNameStrategyConfig = configDocument.createElement("resultNameStrategy");
-        resultNameStrategyConfig.setAttribute("class", DummyResultNameStrategy.class.getName());
-        config.appendChild(resultNameStrategyConfig);
-
-        ConfigParser parser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-
-        ResultNameStrategy resultNameStrategy = parser.parseResultNameStrategy();
-        assertThat(resultNameStrategy).isNotNull();
-        assertThat(resultNameStrategy).isExactlyInstanceOf(DummyResultNameStrategy.class);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void resultNameStrategyWithoutClassIsInvalid() throws ParserConfigurationException {
-        Element resultNameStrategyConfig = configDocument.createElement("resultNameStrategy");
-        config.appendChild(resultNameStrategyConfig);
-
-        new XmlConfigParser(new PropertyPlaceholderResolver(), config).parseResultNameStrategy();
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void multipleResultNameStrategyAreNotAllowed() throws ParserConfigurationException {
-        config.appendChild(configDocument.createElement("resultNameStrategy"));
-        config.appendChild(configDocument.createElement("resultNameStrategy"));
-
-        new XmlConfigParser(new PropertyPlaceholderResolver(), config).parseResultNameStrategy();
+        parser.setConfiguration(configDocument);
+        parser.parseInterval();
     }
 
     @Test
     public void emptyListReturnedWhenNoQueryInConfig() {
-        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        assertThat(configParser.parseQueries(new DummyResultNameStrategy())).isEmpty();
+        parser.setConfiguration(configDocument);
+        Configuration configuration = parser.parseConfiguration();
+
+        assertThat(configuration.getQueries()).isEmpty();
     }
 
     @Test
@@ -143,25 +123,22 @@ public class XmlConfigParserTest {
         queryElement.setAttribute("type", "type");
         queryElement.setAttribute("resultAlias", "resultAlias");
 
-        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        ResultNameStrategy resultNameStrategy = new DummyResultNameStrategy();
-        Collection<Query> queries = configParser.parseQueries(resultNameStrategy);
+        parser.setConfiguration(configDocument);
+
+        Iterable<Query> queries = parser.parseConfiguration().getQueries();
 
         assertThat(queries).hasSize(1);
-        assertThat(queries).containsOnly(new Query(
-                "java.lang:type=OperatingSystem",
-                "attribute",
-                "key",
-                1,
-                "type",
-                "resultAlias",
-                resultNameStrategy));
+        assertThat(queries).containsOnly(Query.builder()
+                .withObjectName("java.lang:type=OperatingSystem")
+                .withResultAlias("resultAlias")
+                .addAttribute(QueryAttribute.builder("attribute").build())
+                .build());
     }
 
     @Test
     public void emptyListReturnedWhenNoInvocationInConfig() {
-        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        assertThat(configParser.parseInvocations()).isEmpty();
+        parser.setConfiguration(configDocument);
+        assertThat(parser.parseConfiguration().getInvocations()).isEmpty();
     }
 
     @Test
@@ -174,8 +151,8 @@ public class XmlConfigParserTest {
         invocationElement.setAttribute("operation", "operation");
         invocationElement.setAttribute("resultAlias", "resultAlias");
 
-        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        Collection<Invocation> invocations = configParser.parseInvocations();
+        parser.setConfiguration(configDocument);
+        Iterable<Invocation> invocations = parser.parseConfiguration().getInvocations();
 
         assertThat(invocations).hasSize(1);
         assertThat(invocations).containsOnly(new Invocation(
@@ -188,8 +165,8 @@ public class XmlConfigParserTest {
 
     @Test
     public void emptyListReturnedWhenNoOutputWriterInConfig() {
-        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        assertThat(configParser.parseOutputWriters()).isEmpty();
+        parser.setConfiguration(configDocument);
+        assertThat(parser.parseConfiguration().getOutputWriters()).isEmpty();
     }
 
     @Test
@@ -198,16 +175,11 @@ public class XmlConfigParserTest {
         config.appendChild(outputWriterElement);
         outputWriterElement.setAttribute("class", DummyOutputWriter.class.getName());
 
-        ConfigParser configParser = new XmlConfigParser(new PropertyPlaceholderResolver(), config);
-        Collection<OutputWriter> outputWriters = configParser.parseOutputWriters();
+        parser.setConfiguration(configDocument);
+
+        Iterable<OutputWriter> outputWriters = parser.parseConfiguration().getOutputWriters();
 
         assertThat(outputWriters).hasSize(1);
-        OutputWriter outputWriter = outputWriters.iterator().next();
-
-        assertThat(outputWriter).isInstanceOf(OutputWriterCircuitBreakerDecorator.class);
-
-        OutputWriterCircuitBreakerDecorator circuitBreaker = (OutputWriterCircuitBreakerDecorator) outputWriter;
-        assertThat(circuitBreaker.delegate).isInstanceOf(DummyOutputWriter.class);
     }
 
 }

@@ -23,71 +23,79 @@
     THE SOFTWARE.
 
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns="http://jmxtrans.org/config/2.0"
+        targetNamespace="http://jmxtrans.org/config/2.0"
+        elementFormDefault="qualified">
 
     <xs:element name="jmxtrans">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element name="invocations" minOccurs="0" maxOccurs="1">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="invocation" type="invocationType" minOccurs="1" maxOccurs="unbounded" />
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
+            <xs:all>
                 <xs:element name="queries" minOccurs="0" maxOccurs="1">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="query" type="queryType" minOccurs="1" maxOccurs="unbounded" />
+                            <xs:element name="query" type="queryType" minOccurs="1" maxOccurs="unbounded"/>
                         </xs:sequence>
+                        <xs:attribute name="collectIntervalInSeconds" type="xs:int"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="invocations" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="invocation" type="invocationType" minOccurs="1" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="collectIntervalInSeconds" type="xs:int"/>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="outputWriters" minOccurs="0" maxOccurs="1">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="outputWriter" type="outputWriterType" minOccurs="1" maxOccurs="unbounded" />
+                            <xs:element name="outputWriter" type="outputWriterType" minOccurs="1"
+                                        maxOccurs="unbounded"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="collectIntervalInSeconds" minOccurs="0" maxOccurs="1">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:integer"/>
-                    </xs:simpleType>
-                </xs:element>
-            </xs:sequence>
+            </xs:all>
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="invocationType">
-        <xs:attribute
-                name="objectName"
-                type="xs:string"/>
-        <xs:attribute
-                name="operation"
-                type="xs:string"/>
-        <xs:attribute
-                name="resultAlias"
-                type="xs:string"/>
+    <xs:complexType name="queryType">
+        <xs:sequence>
+            <xs:element name="queryAttribute" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="key" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                    <xs:attribute name="name" type="xs:string" use="required"/>
+                    <xs:attribute name="type" type="xs:string"/>
+                    <xs:attribute name="resultAlias" type="xs:string"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="objectName" type="xs:string" use="required"/>
+        <xs:attribute name="resultAlias" type="xs:string"/>
     </xs:complexType>
 
-    <xs:complexType name="queryType">
-        <xs:attribute
-                name="objectName"
-                type="xs:string"/>
-        <xs:attribute
-                name="attribute"
-                type="xs:string"/>
-        <xs:attribute
-                name="key"
-                type="xs:string"/>
-        <xs:attribute
-                name="resultAlias"
-                type="xs:string"/>
+    <xs:complexType name="invocationType">
+        <xs:attribute name="objectName" type="xs:string" use="required"/>
+        <xs:attribute name="operationName" type="xs:string" use="required"/>
+        <xs:attribute name="resultAlias" type="xs:string"/>
+        <xs:anyAttribute processContents="skip"/>
     </xs:complexType>
 
     <xs:complexType name="outputWriterType">
-        <xs:attribute
-                name="class"
-                type="xs:string"/>
+        <xs:attribute name="class" type="className" use="required"/>
+        <xs:anyAttribute processContents="skip"/>
     </xs:complexType>
+
+    <xs:simpleType name="className">
+        <xs:restriction base="xs:string">
+            <!--
+                This is a bit over restrictive, but if you want to use unicode letters or symbols in your class names,
+                you deserve to be punished -->
+            <xs:pattern value="([a-zA-Z_$][a-zA-Z\d_$]*\.)*[a-zA-Z_$][a-zA-Z\d_$]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+
 </xs:schema>

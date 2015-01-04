@@ -22,6 +22,9 @@
  */
 package org.jmxtrans.utils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.Serializable;
 
 /**
@@ -43,6 +46,7 @@ import java.io.Serializable;
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
+@ThreadSafe
 public class PropertyPlaceholderResolver implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,7 +58,8 @@ public class PropertyPlaceholderResolver implements Serializable {
      * @return the parsed string. Non <code>null</code>.
      * @throws IllegalStateException a property placeholder could not be resolved and no default value has been defined.
      */
-    public String resolveString(String string) throws IllegalStateException {
+    @Nonnull
+    public String resolveString(@Nonnull String string) throws IllegalStateException {
 
         StringBuilder result = new StringBuilder(string.length());
 
@@ -101,7 +106,8 @@ public class PropertyPlaceholderResolver implements Serializable {
      * @throws IllegalStateException if the placeholder is not found and the given <code>defaultValue</code> is not
      *                              defined (<code>null</code>)
      */
-    protected String resolvePlaceholder(String property, String defaultValue) throws IllegalStateException {
+    @Nonnull
+    protected String resolvePlaceholder(@Nonnull String property, @Nullable String defaultValue) throws IllegalStateException {
 
 
         // "graphite.host" -> "GRAPHITE_HOST"

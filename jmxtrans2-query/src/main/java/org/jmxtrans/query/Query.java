@@ -52,6 +52,7 @@ import java.util.logging.Logger;
 @ThreadSafe
 public class Query {
 
+    @Nonnull
     private final Logger logger = Logger.getLogger(getClass().getName());
 
     @Nonnull

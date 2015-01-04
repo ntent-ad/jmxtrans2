@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.utils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -40,7 +42,7 @@ public final class ConfigurationUtils {
      * @return int value of the setting / property
      * @throws IllegalArgumentException if setting is not found or is not an integer.
      */
-    public static int getInt(Map<String, String> settings, String name) throws IllegalArgumentException {
+    public static int getInt(@Nonnull Map<String, String> settings, @Nonnull String name) throws IllegalArgumentException {
         String value = getString(settings, name);
         try {
             return Integer.parseInt(value);
@@ -59,7 +61,7 @@ public final class ConfigurationUtils {
      * @return int value of the property or <code>defaultValue</code> if the property is not defined.
      * @throws IllegalArgumentException if setting is not is not an integer.
      */
-    public static int getInt(Map<String, String> settings, String name, int defaultValue) throws IllegalArgumentException {
+    public static int getInt(@Nonnull Map<String, String> settings, @Nonnull String name, int defaultValue) throws IllegalArgumentException {
         if (settings.containsKey(name)) {
 
             String value = settings.get(name);
@@ -83,7 +85,7 @@ public final class ConfigurationUtils {
      * @return int value of the property or <code>defaultValue</code> if the property is not defined.
      * @throws IllegalArgumentException if setting is not is not a long.
      */
-    public static long getLong(Map<String, String> settings, String name, long defaultValue) throws IllegalArgumentException {
+    public static long getLong(@Nonnull Map<String, String> settings, @Nonnull String name, @Nonnull long defaultValue) throws IllegalArgumentException {
         if (settings.containsKey(name)) {
 
             String value = settings.get(name);
@@ -106,7 +108,7 @@ public final class ConfigurationUtils {
      * @param defaultValue default value if the property is not defined.
      * @return int value of the property or <code>defaultValue</code> if the property is not defined.
      */
-    public static boolean getBoolean(Map<String, String> settings, String name, boolean defaultValue) {
+    public static boolean getBoolean(@Nonnull Map<String, String> settings, @Nonnull String name, boolean defaultValue) {
         if (settings.containsKey(name)) {
 
             String value = settings.get(name);
@@ -126,7 +128,8 @@ public final class ConfigurationUtils {
      * @return value of the property
      * @throws IllegalArgumentException if setting is not found.
      */
-    public static String getString(Map<String, String> settings, String name) throws IllegalArgumentException {
+    @Nullable
+    public static String getString(@Nonnull Map<String, String> settings, @Nonnull String name) throws IllegalArgumentException {
         if (!settings.containsKey(name)) {
             throw new IllegalArgumentException("No setting '" + name + "' found");
         }
@@ -142,7 +145,8 @@ public final class ConfigurationUtils {
      * @param defaultValue default value if the property is not defined.
      * @return value of the property or <code>defaultValue</code> if the property is not defined.
      */
-    public static String getString(Map<String, String> settings, String name, String defaultValue) {
+    @Nullable
+    public static String getString(@Nonnull Map<String, String> settings, @Nonnull String name, @Nullable String defaultValue) {
         if (settings.containsKey(name)) {
             return settings.get(name);
         } else {

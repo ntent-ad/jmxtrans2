@@ -31,7 +31,7 @@ import java.util.*;
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class StringUtils2 {
+public final class StringUtils2 {
 
     private StringUtils2() {
     }
@@ -42,6 +42,7 @@ public class StringUtils2 {
      * @param delimitedString
      * @return splitted string or <code>null</code> if given <code>delimitedString</code> is <code>null</code>
      */
+    @Nullable
     public static List<String> delimitedStringToList(@Nullable String delimitedString) {
         if (delimitedString == null) {
             return null;
@@ -69,6 +70,7 @@ public class StringUtils2 {
      * @param delimiter
      * @return the joined tokens (<code>null</code> if given <code>tokens</code> is <code>null</code>
      */
+    @Nullable
     public static String join(@Nullable List<String> tokens, @Nonnull String delimiter) {
         if (tokens == null) {
             return null;
@@ -95,6 +97,7 @@ public class StringUtils2 {
      * @param delimiter
      * @return reversed string or <code>null</code> if given string is <code>null</code>
      */
+    @Nullable
     public static String reverseTokens(@Nullable String str, @Nonnull String delimiter) {
         if (str == null) {
             return null;

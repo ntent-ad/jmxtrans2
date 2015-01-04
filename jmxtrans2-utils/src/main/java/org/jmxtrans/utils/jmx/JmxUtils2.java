@@ -25,6 +25,7 @@ package org.jmxtrans.utils.jmx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -51,7 +52,7 @@ public class JmxUtils2 {
      * @return the ObjectName of the registered object or <code>null</code> if registration failed.
      */
     @Nullable
-    public static ObjectName registerObject(Object object, String objectName, MBeanServer mbeanServer) {
+    public static ObjectName registerObject(@Nonnull Object object, @Nonnull String objectName, @Nonnull MBeanServer mbeanServer) {
         try {
             return mbeanServer.registerMBean(object, new ObjectName(objectName)).getObjectName();
         } catch (Exception e) {
@@ -69,7 +70,7 @@ public class JmxUtils2 {
      * @param objectName  objectName to unregister
      * @param mbeanServer MBeanServer to which the objectName is unregistered
      */
-    public static void unregisterObject(ObjectName objectName, MBeanServer mbeanServer) {
+    public static void unregisterObject(@Nullable ObjectName objectName, @Nonnull MBeanServer mbeanServer) {
         if (objectName == null) {
             return;
         }

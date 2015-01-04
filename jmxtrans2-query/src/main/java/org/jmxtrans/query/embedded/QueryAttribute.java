@@ -33,6 +33,8 @@ import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
 import java.util.*;
 
+import static java.util.Objects.hash;
+
 /**
  * Describe a JMX MBean attribute to collect and hold the attribute collection logic.
  * <p/>
@@ -45,6 +47,7 @@ import java.util.*;
  */
 public class QueryAttribute {
 
+    @Nonnull
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
@@ -117,8 +120,13 @@ public class QueryAttribute {
      * @param resultNameStrategy
      * @return collected metrics count
      */
-    public int collectMetrics(@Nonnull ObjectName objectName, @Nonnull Object value, long epochInMillis,
-                              @Nonnull Queue<QueryResult> results, Query query, ResultNameStrategy resultNameStrategy) {
+    public int collectMetrics(
+            @Nonnull ObjectName objectName,
+            @Nonnull Object value,
+            long epochInMillis,
+            @Nonnull Queue<QueryResult> results,
+            @Nonnull Query query,
+            @Nonnull ResultNameStrategy resultNameStrategy) {
         if (value instanceof CompositeData) {
             CompositeData compositeData = (CompositeData) value;
             return collectCompositeData(objectName, epochInMillis, results, query, resultNameStrategy, compositeData);
@@ -129,7 +137,13 @@ public class QueryAttribute {
         return 0;
     }
 
-    private int collectScalar(ObjectName objectName, Object value, long epochInMillis, Queue<QueryResult> results, Query query, ResultNameStrategy resultNameStrategy) {
+    private int collectScalar(
+            @Nonnull ObjectName objectName,
+            @Nullable Object value,
+            long epochInMillis,
+            @Nonnull Queue<QueryResult> results,
+            @Nonnull Query query,
+            @Nonnull ResultNameStrategy resultNameStrategy) {
         if (keys != null && logger.isInfoEnabled()) {
             logger.info("Ignore keys configured for 'simple' jmx attribute. {}:{}:{}", query, objectName, this);
         }
@@ -140,7 +154,13 @@ public class QueryAttribute {
         return 1;
     }
 
-    private int collectCompositeData(ObjectName objectName, long epochInMillis, Queue<QueryResult> results, Query query, ResultNameStrategy resultNameStrategy, CompositeData compositeData) {
+    private int collectCompositeData(
+            @Nonnull ObjectName objectName,
+            long epochInMillis,
+            @Nonnull Queue<QueryResult> results,
+            @Nonnull Query query,
+            @Nonnull ResultNameStrategy resultNameStrategy,
+            @Nonnull CompositeData compositeData) {
         int metricsCounter = 0;
         String[] keysToCollect;
         if (keys == null) {
@@ -165,6 +185,25 @@ public class QueryAttribute {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        QueryAttribute that = (QueryAttribute) o;
+
+        return Objects.equals(keys, that.keys)
+                && Objects.equals(name, that.name)
+                && Objects.equals(resultAlias, that.resultAlias)
+                && Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return hash(name, resultAlias, type, keys);
+    }
+
+    @Override
+    @Nonnull
     public String toString() {
         return "QueryAttribute{" +
                 "name='" + getName() + '\'' +
@@ -173,6 +212,7 @@ public class QueryAttribute {
                 '}';
     }
 
+    @Nonnull
     public static Builder builder(@Nonnull String name) {
         return new Builder(name);
     }
@@ -205,10 +245,13 @@ public class QueryAttribute {
             if (keys != null) {
                 this.keys = new HashSet<>();
                 this.keys.addAll(keys);
+            } else {
+                this.keys = null;
             }
             return this;
         }
 
+        @Nonnull
         public QueryAttribute build() {
             return new QueryAttribute(name, type, resultAlias, keys);
         }

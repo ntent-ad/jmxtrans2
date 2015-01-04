@@ -22,50 +22,32 @@
  */
 package org.jmxtrans.agent;
 
-import org.jmxtrans.config.Interval;
-import org.jmxtrans.config.Invocation;
-import org.jmxtrans.output.DevNullOutputWriter;
+import org.jmxtrans.config.Configuration;
 import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.query.Query;
+import org.jmxtrans.query.Invocation;
+import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.results.QueryResult;
+import org.jmxtrans.utils.concurrent.DiscardingBlockingQueue;
 
-import javax.annotation.Nonnull;
 import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.lang.String.format;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public class JmxTransExporter {
-    /**
-     * visible for test
-     */
-    protected List<Query> queries = new ArrayList<Query>();
-    /**
-     * visible for test
-     */
-    protected List<Invocation> invocations = new ArrayList<Invocation>();
-    /**
-     * visible for test
-     */
-    protected OutputWriter outputWriter;
 
-    protected int collectInterval = 10;
-    protected TimeUnit collectIntervalTimeUnit = TimeUnit.SECONDS;
+    private final Configuration configuration;
     private Logger logger = Logger.getLogger(getClass().getName());
     private ThreadFactory threadFactory = new ThreadFactory() {
         final AtomicInteger counter = new AtomicInteger();
@@ -82,33 +64,8 @@ public class JmxTransExporter {
     private MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
     private ScheduledFuture scheduledFuture;
 
-    public JmxTransExporter() {
-        this.outputWriter = new DevNullOutputWriter.Factory().create(Collections.<String, String>emptyMap());
-    }
-
-    @Nonnull
-    public JmxTransExporter withQueries(@Nonnull Collection<Query> queries) {
-        this.queries.addAll(queries);
-        return this;
-    }
-
-    @Nonnull
-    public JmxTransExporter withInvocations(@Nonnull Collection<Invocation> invocations) {
-        this.invocations.addAll(invocations);
-        return this;
-    }
-
-    @Nonnull
-    public JmxTransExporter withOutputWriter(@Nonnull OutputWriter outputWriter) {
-        this.outputWriter = outputWriter;
-        return this;
-    }
-
-    @Nonnull
-    public JmxTransExporter withCollectInterval(@Nonnull Interval interval) {
-        this.collectInterval = interval.getValue();
-        this.collectIntervalTimeUnit = interval.getTimeUnit();
-        return this;
+    public JmxTransExporter(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     public void start() {
@@ -127,7 +84,9 @@ public class JmxTransExporter {
             public void run() {
                 collectAndExport();
             }
-        }, collectInterval / 2, collectInterval, collectIntervalTimeUnit);
+        }, configuration.getQueryPeriod().getValue() / 2,
+                configuration.getQueryPeriod().getValue(),
+                configuration.getQueryPeriod().getTimeUnit());
 
         logger.fine(getClass().getName() + " started");
     }
@@ -145,7 +104,9 @@ public class JmxTransExporter {
 
         // wait for stop
         try {
-            scheduledExecutorService.awaitTermination(collectInterval, collectIntervalTimeUnit);
+            scheduledExecutorService.awaitTermination(
+                    configuration.getQueryPeriod().getValue(),
+                    configuration.getQueryPeriod().getTimeUnit());
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
@@ -154,36 +115,38 @@ public class JmxTransExporter {
     }
 
     protected void collectAndExport() {
-        try {
-            for (Invocation invocation : invocations) {
-                try {
-                    invocation.invoke(mbeanServer, outputWriter);
-                } catch (Exception e) {
-                    logger.log(Level.WARNING, "Ignore exception invoking " + invocation, e);
-                }
+        for (Invocation invocation : configuration.getInvocations()) {
+            try {
+                BlockingQueue<QueryResult> results = new DiscardingBlockingQueue<>(100);
+                invocation.invoke(mbeanServer, results);
+                writeResults(results);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Ignore exception invoking " + invocation, e);
             }
-            for (Query query : queries) {
-                try {
-                    Queue<QueryResult> results = new LinkedList<QueryResult>();
-                    query.collectMetrics(mbeanServer, results);
-                    outputWriter.write(results);
-                } catch (Exception e) {
-                    logger.log(Level.WARNING, "Ignore exception collecting metrics for " + query, e);
-                }
+        }
+        for (Query query : configuration.getQueries()) {
+            try {
+                BlockingQueue<QueryResult> results = new DiscardingBlockingQueue<>(100);
+                query.collectMetrics(mbeanServer, results);
+                writeResults(results);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Ignore exception collecting metrics for " + query, e);
             }
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "Ignore exception flushing metrics ", e);
+        }
+    }
+
+    private void writeResults(BlockingQueue<QueryResult> results) {
+        for (OutputWriter outputWriter : configuration.getOutputWriters()) {
+            try {
+                outputWriter.write(results);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, format("Could not write results to output writer [%s].", outputWriter), e);
+            }
         }
     }
 
     @Override
     public String toString() {
-        return "JmxTransExporter{" +
-                "queries=" + queries +
-                ", invocations=" + invocations +
-                ", outputWriter=" + outputWriter +
-                ", collectInterval=" + collectInterval +
-                " " + collectIntervalTimeUnit +
-                '}';
+        return "JmxTransExporter{}";
     }
 }

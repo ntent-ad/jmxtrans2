@@ -26,6 +26,7 @@ import org.jmxtrans.output.AbstractOutputWriter;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.output.writers.utils.EvictingQueue;
 import org.jmxtrans.results.QueryResult;
+import org.jmxtrans.results.QueryResultComparator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,6 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -95,15 +98,15 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
             return null;
         }
 
-        final long targetTimeInMillis = currentResult.getEpochInMillis() - TimeUnit.MILLISECONDS.convert(60, TimeUnit.SECONDS);
+        final long targetTimeInMillis = currentResult.getEpoch(MILLISECONDS) - TimeUnit.MILLISECONDS.convert(60, TimeUnit.SECONDS);
         long closestDistanceToTarget = Long.MAX_VALUE;
         QueryResult closestQueryResultToTarget = null;
         for (QueryResult queryResult : queue) {
-            if (queryResult.isValueGreaterThan(currentResult)) {
+            if (new QueryResultComparator().compare(queryResult, currentResult) > 0) {
                 // skip older result that is greater than current value
                 // ever increasing counter must be increasing
             } else {
-                long distanceToTarget = Math.abs(queryResult.getEpochInMillis() - targetTimeInMillis);
+                long distanceToTarget = Math.abs(queryResult.getEpoch(MILLISECONDS) - targetTimeInMillis);
                 if (distanceToTarget < closestDistanceToTarget) {
                     closestQueryResultToTarget = queryResult;
                     closestDistanceToTarget = distanceToTarget;
@@ -128,7 +131,7 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
             if (logger.isLoggable(getTraceLevel()))
                 logger.log(getTraceLevel(), "No previous value found for metric '" + currentResult.getName() + "'");
 
-            return new QueryResult(currentResult.getName(), "gauge", currentResult.getValue(), currentResult.getEpochInMillis());
+            return new QueryResult(currentResult.getName(), "gauge", currentResult.getValue(), currentResult.getEpoch(MILLISECONDS));
         }
         if (!(previousResult.getValue() instanceof Number)) {
             if (logger.isLoggable(getInfoLevel()))
@@ -137,7 +140,7 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
             return currentResult;
         }
 
-        BigDecimal durationInMillis = new BigDecimal(currentResult.getEpochInMillis() - previousResult.getEpochInMillis());
+        BigDecimal durationInMillis = new BigDecimal(currentResult.getEpoch(MILLISECONDS) - previousResult.getEpoch(MILLISECONDS));
 
         Number currentValue = (Number) currentResult.getValue();
         Number previousValue = (Number) previousResult.getValue();
@@ -146,7 +149,7 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
             if (logger.isLoggable(getTraceLevel()))
                 logger.log(getTraceLevel(), "Previous value is greater than current value for metric '" + currentResult.getName() + "', ignore it");
 
-            return new QueryResult(currentResult.getName(), "gauge", currentResult.getValue(), currentResult.getEpochInMillis());
+            return new QueryResult(currentResult.getName(), "gauge", currentResult.getValue(), currentResult.getEpoch(MILLISECONDS));
         }
 
         BigDecimal valueDelta;
@@ -185,7 +188,7 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
             return currentResult;
         }
 
-        return new QueryResult(currentResult.getName(), "gauge", newCurrentValue, currentResult.getEpochInMillis());
+        return new QueryResult(currentResult.getName(), "gauge", newCurrentValue, currentResult.getEpoch(MILLISECONDS));
     }
 
 }

@@ -22,13 +22,10 @@
  */
 package org.jmxtrans.agent;
 
-import org.jmxtrans.config.Interval;
-import org.jmxtrans.config.Invocation;
-import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.config.Configuration;
+import org.jmxtrans.query.Invocation;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-
-import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.spy;
@@ -43,20 +40,16 @@ public class JmxTransExporterBuilderTest {
 
         assertThat(jmxTransExporter).isNotNull();
 
-        ArgumentCaptor<Collection> invocations = ArgumentCaptor.forClass(Collection.class);
-        ArgumentCaptor<Collection> queries = ArgumentCaptor.forClass(Collection.class);
-        ArgumentCaptor<OutputWriter> outputWriter = ArgumentCaptor.forClass(OutputWriter.class);
-        ArgumentCaptor<Interval> interval = ArgumentCaptor.forClass(Interval.class);
+        ArgumentCaptor<Configuration> configurationCaptor = ArgumentCaptor.forClass(Configuration.class);
 
         verify(jmxTransExporterBuilder).createJmxTransExporter(
-                invocations.capture(),
-                queries.capture(),
-                outputWriter.capture(),
-                interval.capture()
+                configurationCaptor.capture()
         );
 
-        assertThat(invocations.getValue()).hasSize(1);
-        Invocation invocation = (Invocation) invocations.getValue().iterator().next();
+        Configuration configuration = configurationCaptor.getValue();
+
+        assertThat(configuration.getInvocations()).hasSize(1);
+        Invocation invocation = configuration.getInvocations().iterator().next();
         assertThat(invocation.resultAlias).isEqualTo("jvm.gc");
     }
 

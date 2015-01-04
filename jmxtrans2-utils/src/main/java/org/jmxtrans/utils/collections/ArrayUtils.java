@@ -22,12 +22,18 @@
  */
 package org.jmxtrans.utils.collections;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArrayUtils {
-    public static Object transformToListIfIsArray(Object value) {
+public final class ArrayUtils {
+
+    private ArrayUtils() {
+    }
+
+    @Nullable
+    public static Object transformToListIfIsArray(@Nullable Object value) {
         if (value == null || !value.getClass().isArray()) {
             return value;
         }

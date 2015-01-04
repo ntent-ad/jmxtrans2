@@ -122,21 +122,24 @@ public class ResultNameStrategy {
         }
     }
 
-    public String getResultName(Query query, ObjectName objectName, QueryAttribute queryAttribute) {
+    @Nonnull
+    public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nonnull QueryAttribute queryAttribute) {
 
         StringBuilder result = _getResultName(query, objectName, queryAttribute);
 
         return result.toString();
     }
 
-    public String getResultName(Query query, ObjectName objectName, QueryAttribute queryAttribute, String key) {
+    @Nonnull
+    public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nonnull QueryAttribute queryAttribute, @Nonnull String key) {
         StringBuilder result = _getResultName(query, objectName, queryAttribute);
         result.append(".");
         result.append(key);
         return result.toString();
     }
 
-    protected StringBuilder _getResultName(Query query, ObjectName objectName, QueryAttribute queryAttribute) {
+    @Nonnull
+    protected StringBuilder _getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nonnull QueryAttribute queryAttribute) {
         StringBuilder result = new StringBuilder();
 
         String queryName;
@@ -166,7 +169,8 @@ public class ResultNameStrategy {
      * @param expression the expression to resolve (e.g. <code>"servers.#hostname#."</code>)
      * @return the resolved expression (e.g. <code>"servers.tomcat5"</code>)
      */
-    public String resolveExpression(String expression) {
+    @Nonnull
+    public String resolveExpression(@Nonnull String expression) {
         StringBuilder result = new StringBuilder(expression.length());
 
         int position = 0;
@@ -205,7 +209,8 @@ public class ResultNameStrategy {
 
     }
 
-    protected String resolveExpression(String expression, ObjectName exactObjectName) {
+    @Nonnull
+    protected String resolveExpression(@Nonnull String expression, @Nonnull ObjectName exactObjectName) {
 
         StringBuilder result = new StringBuilder(expression.length());
 
@@ -262,7 +267,8 @@ public class ResultNameStrategy {
      * <p/>
      * '_' is the escape char for not compliant chars.
      */
-    protected String escapeObjectName(ObjectName objectName) {
+    @Nonnull
+    protected String escapeObjectName(@Nonnull ObjectName objectName) {
         StringBuilder result = new StringBuilder();
         appendEscapedNonAlphaNumericChars(objectName.getDomain(), result);
         result.append('.');
@@ -287,7 +293,7 @@ public class ResultNameStrategy {
      * @param str    the string to escape
      * @param result the {@linkplain StringBuilder} in which the escaped string is appended
      */
-    private void appendEscapedNonAlphaNumericChars(String str, StringBuilder result) {
+    private void appendEscapedNonAlphaNumericChars(@Nonnull String str, @Nonnull StringBuilder result) {
         appendEscapedNonAlphaNumericChars(str, true, result);
     }
 
@@ -300,7 +306,7 @@ public class ResultNameStrategy {
      * @param escapeDot indicates whether '.' should be escaped into '_' or not.
      * @param result    the {@linkplain StringBuilder} in which the escaped string is appended
      */
-    private void appendEscapedNonAlphaNumericChars(String str, boolean escapeDot, StringBuilder result) {
+    private void appendEscapedNonAlphaNumericChars(@Nonnull String str, boolean escapeDot, @Nonnull StringBuilder result) {
         char[] chars = str.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             char ch = chars[i];
@@ -319,14 +325,14 @@ public class ResultNameStrategy {
     /**
      * Registers an expression evaluator with a static value.
      */
-    public void registerExpressionEvaluator(String expression, Callable<String> evaluator) {
+    public void registerExpressionEvaluator(@Nonnull String expression, @Nonnull Callable<String> evaluator) {
         expressionEvaluators.put(expression, evaluator);
     }
 
     /**
      * Registers an expression evaluator with a static value.
      */
-    public void registerExpressionEvaluator(String expression, String value) {
+    public void registerExpressionEvaluator(@Nonnull String expression, @Nonnull String value) {
         expressionEvaluators.put(expression, new StaticEvaluator(value));
     }
 
@@ -336,9 +342,10 @@ public class ResultNameStrategy {
     }
 
     public static class StaticEvaluator implements Callable<String> {
-        final String value;
+        @Nonnull
+        private final String value;
 
-        public StaticEvaluator(String value) {
+        public StaticEvaluator(@Nonnull String value) {
             this.value = value;
         }
 
@@ -348,6 +355,7 @@ public class ResultNameStrategy {
         }
 
         @Override
+        @Nonnull
         public String toString() {
             return "StaticStringCallable{" +
                     "value='" + value + '\'' +

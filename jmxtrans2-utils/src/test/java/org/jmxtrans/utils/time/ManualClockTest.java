@@ -20,31 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.config;
+package org.jmxtrans.utils.time;
 
-import org.jmxtrans.query.Query;
-import org.jmxtrans.query.ResultNameStrategy;
+import org.junit.Test;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.management.ObjectName;
-import java.util.Map;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public final class DummyResultNameStrategy implements ResultNameStrategy {
+public class ManualClockTest {
 
-    @Nonnull
-    @Override
-    public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName) {
-        return "";
+    @Test
+    public void clockInitializedAtTimeZero() {
+        ManualClock clock = new ManualClock();
+
+        assertThat(clock.nanoTime()).isEqualTo(0);
+        assertThat(clock.currentTimeMillis()).isEqualTo(0);
     }
 
-    @Nonnull
-    @Override
-    public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nullable String key) {
-        return "";
+    @Test
+    public void waitTimeIncreasesBothMillisAndNanos() {
+        ManualClock clock = new ManualClock();
+
+        clock.waitFor(1, MILLISECONDS);
+
+        assertThat(clock.currentTimeMillis()).isEqualTo(1);
+        assertThat(clock.nanoTime()).isEqualTo(1000000);
     }
 
-    @Override
-    public void postConstruct(@Nonnull Map<String, String> settings) {
-    }
 }

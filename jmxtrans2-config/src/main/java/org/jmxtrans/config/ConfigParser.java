@@ -22,28 +22,11 @@
  */
 package org.jmxtrans.config;
 
-import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.query.Query;
-import org.jmxtrans.query.ResultNameStrategy;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
 
 public interface ConfigParser {
 
-    @Nullable
-    Interval parseInterval();
-
-    @Nullable
-    ResultNameStrategy parseResultNameStrategy();
-
     @Nonnull
-    Collection<Query> parseQueries(@Nonnull ResultNameStrategy resultNameStrategy);
+    Configuration parseConfiguration();
 
-    @Nonnull
-    Collection<Invocation> parseInvocations();
-
-    @Nonnull
-    Collection<OutputWriter> parseOutputWriters();
 }

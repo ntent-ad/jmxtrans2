@@ -24,6 +24,7 @@ package org.jmxtrans.results;
 
 import org.junit.Test;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class QueryResultTest {
@@ -34,20 +35,13 @@ public class QueryResultTest {
     }
 
     @Test
-    public void twoIsGreaterThanOne() {
-        QueryResult resultOne = new QueryResult("one", 1, 0);
-        QueryResult resultTwo = new QueryResult("two", 2, 0);
-        assertThat(resultTwo.isValueGreaterThan(resultOne)).isTrue();
-    }
-
-    @Test
     public void initializedCorrectly() {
         QueryResult queryResult = new QueryResult("name", "type", "value", 1L);
 
         assertThat(queryResult.getName()).isEqualTo("name");
         assertThat(queryResult.getType()).isEqualTo("type");
         assertThat(queryResult.getValue()).isEqualTo("value");
-        assertThat(queryResult.getEpochInMillis()).isEqualTo(1L);
+        assertThat(queryResult.getEpoch(MILLISECONDS)).isEqualTo(1L);
     }
 
     @Test

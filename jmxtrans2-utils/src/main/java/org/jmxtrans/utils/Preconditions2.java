@@ -22,21 +22,30 @@
  */
 package org.jmxtrans.utils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Inspired by <code>com.google.common.base.Preconditions</code>
  *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-public class Preconditions2 {
+public final class Preconditions2 {
 
-    public static String checkNotEmpty(String str) {
-        if (str == null)
-            throw new NullPointerException();
-        if (str.isEmpty())
+    private Preconditions2() {
+    }
+
+    @Nonnull
+    @SuppressFBWarnings(value = "NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE", justification = "Don't understand why this is reported as bug...")
+    public static String checkNotEmpty(@Nullable String str) {
+        String internalSrt = requireNonNull(str);
+        if (internalSrt.isEmpty())
             throw new IllegalArgumentException("Can not be empty");
-        return str;
+        return internalSrt;
     }
 
     public static void checkArgument(boolean expression) throws IllegalArgumentException {
@@ -58,7 +67,7 @@ public class Preconditions2 {
      * @throws IllegalArgumentException
      * @see String#format(String, Object...)
      */
-    public static void checkArgument(boolean expression, @Nullable String msgFormat, Object... msgArgs) throws IllegalArgumentException {
+    public static void checkArgument(boolean expression, @Nullable String msgFormat, @Nullable Object... msgArgs) throws IllegalArgumentException {
         if (!expression) {
             if (msgFormat == null) {
                 throw new IllegalArgumentException();
