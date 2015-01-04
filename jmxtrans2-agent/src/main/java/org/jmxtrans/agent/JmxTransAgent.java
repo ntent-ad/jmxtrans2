@@ -22,6 +22,13 @@
  */
 package org.jmxtrans.agent;
 
+import org.jmxtrans.config.ConfigParser;
+import org.jmxtrans.config.PropertyPlaceholderResolverXmlPreprocessor;
+import org.jmxtrans.config.XmlConfigParser;
+import org.jmxtrans.utils.PropertyPlaceholderResolver;
+import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.time.SystemClock;
+
 import java.lang.instrument.Instrumentation;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,9 +46,14 @@ public class JmxTransAgent {
             logger.log(Level.SEVERE, msg);
             throw new IllegalStateException(msg);
         }
-        JmxTransExporter jmxTransExporter;
+
         try {
-            jmxTransExporter = new JmxTransExporterBuilder().build(configFile);
+            ConfigParser configParser = XmlConfigParser.newInstance(
+                    new PropertyPlaceholderResolverXmlPreprocessor(new PropertyPlaceholderResolver()),
+                    new SystemClock());
+            configParser.setSource(new Resource(configFile));
+
+            JmxTransExporter jmxTransExporter = new JmxTransExporter(configParser.parseConfiguration());
             //START
             jmxTransExporter.start();
             logger.info("JmxTransAgent started with configuration '" + configFile + "'");

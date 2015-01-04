@@ -20,37 +20,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.query;
 
-import org.jmxtrans.config.Configuration;
-import org.jmxtrans.query.Invocation;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
-public class JmxTransExporterBuilderTest {
+public class InvocationTest {
 
     @Test
-    public void loadConfigurationFromClasspath() throws Exception {
-        JmxTransExporterBuilder jmxTransExporterBuilder = spy(new JmxTransExporterBuilder());
-        JmxTransExporter jmxTransExporter = jmxTransExporterBuilder.build("classpath:jmxtrans-agent.xml");
-
-        assertThat(jmxTransExporter).isNotNull();
-
-        ArgumentCaptor<Configuration> configurationCaptor = ArgumentCaptor.forClass(Configuration.class);
-
-        verify(jmxTransExporterBuilder).createJmxTransExporter(
-                configurationCaptor.capture()
-        );
-
-        Configuration configuration = configurationCaptor.getValue();
-
-        assertThat(configuration.getInvocations()).hasSize(1);
-        Invocation invocation = configuration.getInvocations().iterator().next();
-        assertThat(invocation.resultAlias).isEqualTo("jvm.gc");
+    public void sameInvocationsAreEquals() {
+        Invocation firstInvocation = new Invocation(
+                "java.lang:type=Memory",
+                "getThreadCpuTime",
+                new Object[] { 1 },
+                new String[] {},
+                "jvm.thread.cpu");
+        Invocation secondInvocation = new Invocation(
+                "java.lang:type=Memory",
+                "getThreadCpuTime",
+                new Object[] { 1 },
+                new String[] {},
+                "jvm.thread.cpu");
+        assertThat(firstInvocation).isEqualTo(secondInvocation);
     }
 
 }

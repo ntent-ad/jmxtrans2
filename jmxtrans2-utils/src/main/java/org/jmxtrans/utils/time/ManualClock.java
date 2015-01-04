@@ -39,14 +39,6 @@ public class ManualClock implements Clock{
     @Nonnull
     private final AtomicLong nanoTime = new AtomicLong();
 
-    public void setCurrentTimeMillis(long currentTimeMillis) {
-        this.currentTimeMillis.set(currentTimeMillis);
-    }
-
-    public void setNanoTime(long nanoTime) {
-        this.nanoTime.set(nanoTime);
-    }
-
     public void setTime(long time, @Nonnull TimeUnit unit) {
         currentTimeMillis.set(MILLISECONDS.convert(time, unit));
         nanoTime.set(NANOSECONDS.convert(time, unit));

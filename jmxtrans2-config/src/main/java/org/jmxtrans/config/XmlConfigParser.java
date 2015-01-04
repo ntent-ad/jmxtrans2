@@ -22,133 +22,143 @@
  */
 package org.jmxtrans.config;
 
+import org.jmxtrans.config.jaxb.InvocationType;
+import org.jmxtrans.config.jaxb.Jmxtrans;
+import org.jmxtrans.config.jaxb.OutputWriterType;
+import org.jmxtrans.config.jaxb.QueryType;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.output.OutputWriterFactory;
 import org.jmxtrans.query.Invocation;
 import org.jmxtrans.query.embedded.Query;
-import org.jmxtrans.utils.PropertyPlaceholderResolver;
+import org.jmxtrans.query.embedded.QueryAttribute;
 import org.jmxtrans.utils.circuitbreaker.CircuitBreakerProxy;
+import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.Interval;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-import static java.lang.Integer.parseInt;
-import static java.util.Collections.unmodifiableCollection;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
+@ThreadSafe
 public class XmlConfigParser implements ConfigParser {
 
-    public static final Interval DEFAULT_QUERY_PERIOD = new Interval(10, TimeUnit.SECONDS);
+    public static final String JMXTRANS_XSD_PATH = "classpath:jmxtrans.xsd";
+
     public static final int MAX_FAILURES = 5;
     public static final int DISABLE_DURATION_MILLIS = 60 * 1000;
-    private final PropertyPlaceholderResolver propertyPlaceholderResolver;
 
-    private Document configurationRoot;
     private final Clock clock;
+    private final PropertyPlaceholderResolverXmlPreprocessor preprocessor;
+    private final StandardConfiguration configuration = new StandardConfiguration(DefaultConfiguration.getInstance());
+    private final DocumentBuilder documentBuilder;
+    private final Unmarshaller unmarshaller;
+    private Resource source;
 
-    public XmlConfigParser(PropertyPlaceholderResolver propertyPlaceholderResolver, Clock clock) {
-        this.propertyPlaceholderResolver = propertyPlaceholderResolver;
+    private XmlConfigParser(
+            @Nonnull DocumentBuilder documentBuilder,
+            @Nonnull Unmarshaller unmarshaller,
+            @Nonnull PropertyPlaceholderResolverXmlPreprocessor preprocessor,
+            @Nonnull Clock clock) {
+        this.documentBuilder = documentBuilder;
+        this.unmarshaller = unmarshaller;
+        this.preprocessor = preprocessor;
         this.clock = clock;
     }
 
-    public void setConfiguration(Document configuration) {
-        this.configurationRoot = configuration;
+    @Override
+    public synchronized void setSource(@Nonnull Resource source) throws IOException, SAXException, JAXBException {
+        this.source = source;
     }
 
-    @Nullable
-    public Interval parseInterval() {
-        Interval result;
-        NodeList collectIntervalNodeList = configurationRoot.getElementsByTagName("collectIntervalInSeconds");
-        switch (collectIntervalNodeList.getLength()) {
-            case 0:
-                result = null;
-                break;
-            case 1:
-                Element collectIntervalElement = (Element) collectIntervalNodeList.item(0);
-                String collectIntervalString = propertyPlaceholderResolver.resolveString(collectIntervalElement.getTextContent());
-                try {
-                    result = new Interval(parseInt(collectIntervalString), TimeUnit.SECONDS);
-                } catch (NumberFormatException e) {
-                    throw new IllegalStateException("Invalid <collectIntervalInSeconds> value '" + collectIntervalString + "', integer expected", e);
+    private void parse(@Nonnull Jmxtrans jmxtrans, @Nonnull TemporaryConfiguration configuration) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+        if (jmxtrans.getQueries() != null) {
+            parse(jmxtrans.getQueries(), configuration);
+        }
+        if (jmxtrans.getInvocations() != null) {
+            parse(jmxtrans.getInvocations(), configuration);
+        }
+        if (jmxtrans.getOutputWriters() != null) {
+            parse(jmxtrans.getOutputWriters(), configuration);
+        }
+    }
+
+    private void parse(@Nonnull Jmxtrans.Queries queries, @Nonnull TemporaryConfiguration configuration) {
+        if (queries.getCollectIntervalInSeconds() != null) {
+            configuration.queryPeriod = new Interval(queries.getCollectIntervalInSeconds(), SECONDS);
+        }
+        for (QueryType query : queries.getQuery()) {
+            Query.Builder queryBuilder = Query.builder()
+                    .withObjectName(query.getObjectName())
+                    .withResultAlias(query.getResultAlias());
+            for (QueryType.QueryAttribute attribute : query.getQueryAttribute()) {
+                QueryAttribute.Builder attributeBuilder = QueryAttribute
+                        .builder(attribute.getName())
+                        .withResultAlias(attribute.getResultAlias())
+                        .withType(attribute.getType());
+                for (String key : attribute.getKey()) {
+                    attributeBuilder.addKey(key);
                 }
-                break;
-            default:
-                throw new IllegalStateException("Multiple <collectIntervalInSeconds> in configuration");
-        }
-        return result;
-    }
-
-    @Nonnull
-    public Collection<Query> parseQueries() {
-        List<Query> result = new ArrayList<Query>();
-        NodeList queries = configurationRoot.getElementsByTagName("query");
-        for (int i = 0; i < queries.getLength(); i++) {
-            Element queryElement = (Element) queries.item(i);
-            String objectName = queryElement.getAttribute("objectName");
-            String attribute = queryElement.getAttribute("attribute");
-            String resultAlias = queryElement.getAttribute("resultAlias");
-            result.add(Query.builder()
-                    .withObjectName(objectName)
-                    .addAttribute(attribute)
-                    .withResultAlias(resultAlias)
-                    .build());
-        }
-        return unmodifiableCollection(result);
-    }
-
-    @Nonnull
-    public Collection<Invocation> parseInvocations() {
-        List<Invocation> result = new ArrayList<Invocation>();
-        NodeList invocations = configurationRoot.getElementsByTagName("invocation");
-        for (int i = 0; i < invocations.getLength(); i++) {
-            Element invocationElement = (Element) invocations.item(i);
-            String objectName = invocationElement.getAttribute("objectName");
-            String operation = invocationElement.getAttribute("operation");
-            String resultAlias = invocationElement.getAttribute("resultAlias");
-
-            result.add(new Invocation(objectName, operation, new Object[0], new String[0], resultAlias));
-        }
-        return unmodifiableCollection(result);
-    }
-
-    @Nonnull
-    public Collection<OutputWriter> parseOutputWriters() {
-        List<OutputWriter> outputWriters = new ArrayList<OutputWriter>();
-
-        NodeList outputWriterNodeList = configurationRoot.getElementsByTagName("outputWriter");
-
-        for (int i = 0; i < outputWriterNodeList.getLength(); i++) {
-            Element outputWriterElement = (Element) outputWriterNodeList.item(i);
-            String outputWriterClass = outputWriterElement.getAttribute("class");
-            if (outputWriterClass.isEmpty()) {
-                throw new IllegalArgumentException("<outputWriter> element must contain a 'class' attribute");
+                queryBuilder.addAttribute(attributeBuilder.build());
             }
-            try {
-                Map<String, String> settings = new HashMap<String, String>();
-                NodeList settingsNodeList = outputWriterElement.getElementsByTagName("*");
-                for (int j = 0; j < settingsNodeList.getLength(); j++) {
-                    Element settingElement = (Element) settingsNodeList.item(j);
-                    settings.put(settingElement.getNodeName(), propertyPlaceholderResolver.resolveString(settingElement.getTextContent()));
-                }
-                outputWriters.add(instantiateOutputWriter(outputWriterClass, settings));
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Exception instantiating " + outputWriterClass, e);
-            }
+            configuration.queries.add(queryBuilder.build());
         }
-        return unmodifiableCollection(outputWriters);
     }
 
-    private OutputWriter instantiateOutputWriter(String outputWriterClass, Map<String, String> settings)
+    private void parse(@Nonnull Jmxtrans.Invocations invocations, @Nonnull TemporaryConfiguration configuration) {
+        if (invocations.getCollectIntervalInSeconds() != null) {
+            configuration.invocationPeriod = new Interval(invocations.getCollectIntervalInSeconds(), SECONDS);
+        }
+        for (InvocationType invocation : invocations.getInvocation()) {
+            List<String> params = new ArrayList<>();
+            List<String> signature = new ArrayList<>();
+            for (InvocationType.Parameter parameter : invocation.getParameter()) {
+                params.add(parameter.getValue());
+                signature.add(parameter.getType());
+            }
+            configuration.invocations.add(
+                    new Invocation(
+                            invocation.getObjectName(),
+                            invocation.getOperationName(),
+                            params.toArray(),
+                            signature.toArray(new String[0]),
+                            invocation.getResultAlias()));
+        }
+    }
+
+    private void parse(@Nonnull Jmxtrans.OutputWriters outputWriters, @Nonnull TemporaryConfiguration configuration) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+        for (OutputWriterType outputWriter : outputWriters.getOutputWriter()) {
+            Map<String, String> settings = new HashMap<>();
+            for (Map.Entry<QName, String> attribute : outputWriter.getOtherAttributes().entrySet()) {
+                settings.put(attribute.getKey().getLocalPart(), attribute.getValue());
+            }
+            configuration.outputWriters.add(instantiateOutputWriter(outputWriter.getClazz(), settings));
+        }
+    }
+
+    @Nonnull
+    private OutputWriter instantiateOutputWriter(@Nonnull String outputWriterClass, @Nonnull Map<String, String> settings)
             throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         Class<OutputWriterFactory<?>> builderClass = (Class<OutputWriterFactory<?>>) Class.forName(outputWriterClass + "$Factory");
         OutputWriterFactory<?> builder = builderClass.newInstance();
@@ -161,18 +171,95 @@ public class XmlConfigParser implements ConfigParser {
     }
 
     @Override
-    public Configuration parseConfiguration() {
-        // Collection interval
-        Interval collectionInterval = parseInterval();
-        if (collectionInterval == null) {
-            collectionInterval = DEFAULT_QUERY_PERIOD;
+    @Nonnull
+    public synchronized Configuration parseConfiguration() throws IOException, SAXException, JAXBException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+        try (InputStream in = source.getInputStream()) {
+            Document document = documentBuilder.parse(in);
+            document = preprocessor.preprocess(document);
+            Jmxtrans jmxtrans = (Jmxtrans) unmarshaller.unmarshal(document);
+
+            TemporaryConfiguration newConfiguration = new TemporaryConfiguration();
+
+            parse(jmxtrans, newConfiguration);
+
+            return configuration.replaceWith(newConfiguration);
+        } finally {
+            documentBuilder.reset();
+        }
+    }
+
+    @Nonnull
+    public static XmlConfigParser newInstance(
+            @Nonnull PropertyPlaceholderResolverXmlPreprocessor preprocessor,
+            @Nonnull Clock clock) throws JAXBException, ParserConfigurationException, SAXException, IOException {
+
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        JAXBContext jaxbContext = JAXBContext.newInstance(Jmxtrans.class);
+
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+        unmarshaller.setSchema(loadSchema());
+
+        return new XmlConfigParser(
+                dbf.newDocumentBuilder(),
+                unmarshaller,
+                preprocessor,
+                clock
+        );
+    }
+
+    @Nonnull
+    private static Schema loadSchema() throws SAXException, IOException {
+        Resource xsd = new Resource(JMXTRANS_XSD_PATH);
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
+        try (InputStream in = xsd.getInputStream()) {
+            return schemaFactory.newSchema(new StreamSource(in));
+        }
+    }
+
+
+    private static final class TemporaryConfiguration implements Configuration {
+
+        @Nonnull
+        private final Collection<Query> queries = new ArrayList<>();
+        private Interval queryPeriod;
+        @Nonnull
+        private final Collection<OutputWriter> outputWriters = new ArrayList<>();
+        @Nonnull
+        private final Collection<Invocation> invocations = new ArrayList<>();
+        private Interval invocationPeriod;
+
+        @Nonnull
+        @Override
+        public Iterable<Query> getQueries() {
+            return queries;
         }
 
-        StandardConfiguration configuration = new StandardConfiguration();
-        configuration.addInvocations(parseInvocations());
-        configuration.addQueries(parseQueries());
-        configuration.addOutputWriters(parseOutputWriters());
-        configuration.setQueryPeriod(collectionInterval);
-        return configuration;
+        @Nonnull
+        @Override
+        public Interval getQueryPeriod() {
+            if (queryPeriod == null) return DefaultConfiguration.getInstance().getQueryPeriod();
+            return queryPeriod;
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<OutputWriter> getOutputWriters() {
+            return outputWriters;
+        }
+
+        @Nonnull
+        @Override
+        public Iterable<Invocation> getInvocations() {
+            return invocations;
+        }
+
+        @Nonnull
+        @Override
+        public Interval getInvocationPeriod() {
+            if (invocationPeriod == null) return DefaultConfiguration.getInstance().getInvocationPeriod();
+            return invocationPeriod;
+        }
     }
 }

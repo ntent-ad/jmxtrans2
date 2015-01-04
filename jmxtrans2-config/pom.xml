@@ -35,7 +35,8 @@
     <name>JMXTrans - config</name>
 
     <properties>
-        <verify.coverage.threshold>58</verify.coverage.threshold>
+        <verify.cobertura.totalLineRate>70</verify.cobertura.totalLineRate>
+        <verify.coverage.threshold>62</verify.coverage.threshold>
     </properties>
 
     <dependencies>
@@ -83,6 +84,11 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/xsd</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>com.github.github</groupId>
@@ -91,6 +97,32 @@
                     <merge>true</merge>
                     <message>Creating site for ${project.name} ${project.version}</message>
                     <path>${project.artifactId}</path>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <packageName>org.jmxtrans.config.jaxb</packageName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <configuration>
+                    <excludedClasses>
+                        <!-- no need to test generated classes -->
+                        <excludedClass>org.jmxtrans.config.jaxb.*</excludedClass>
+                    </excludedClasses>
                 </configuration>
             </plugin>
         </plugins>

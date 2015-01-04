@@ -241,6 +241,11 @@ public class QueryAttribute {
             return this;
         }
 
+        public void addKey(String key) {
+            if (keys == null) keys = new HashSet<>();
+            keys.add(key);
+        }
+
         public Builder withKeys(@Nullable Collection<String> keys) {
             if (keys != null) {
                 this.keys = new HashSet<>();

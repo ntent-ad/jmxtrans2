@@ -22,164 +22,83 @@
  */
 package org.jmxtrans.config;
 
-import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.Query;
-import org.jmxtrans.query.embedded.QueryAttribute;
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
+import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.time.Interval;
 import org.jmxtrans.utils.time.SystemClock;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.management.MalformedObjectNameException;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.UnmarshalException;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.util.Iterator;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class XmlConfigParserTest {
 
-    private Document configDocument;
-    private Element config;
     private XmlConfigParser parser;
 
     @Before
-    public void createEmptyConfig() throws ParserConfigurationException {
-        configDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        config = configDocument.createElement("jmxtrans");
-        configDocument.appendChild(config);
+    public void createConfigurationParser() throws JAXBException, ParserConfigurationException, IOException, SAXException {
+        parser = XmlConfigParser.newInstance(
+                new PropertyPlaceholderResolverXmlPreprocessor(new PropertyPlaceholderResolver()),
+                new SystemClock());
     }
 
-    @Before
-    public void createConfigurationParser() {
-        parser = new XmlConfigParser(new PropertyPlaceholderResolver(), new SystemClock());
+    @Test(expected = UnmarshalException.class)
+    public void invalidConfigurationThrowsException() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+        Resource resource = new Resource("classpath:org/jmxtrans/config/invalid-configuration.xml");
+        parser.setSource(resource);
+        parser.parseConfiguration();
     }
 
     @Test
-    public void defaultQueryPeriodIsReturnedWhenNotInConfigFile() throws ParserConfigurationException {
-        parser.setConfiguration(configDocument);
+    public void queriesAreParsed() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException {
+        Resource resource = new Resource("classpath:org/jmxtrans/config/simple-configuration.xml");
+        parser.setSource(resource);
         Configuration configuration = parser.parseConfiguration();
+        assertThat(configuration).isNotNull();
+        assertThat(configuration.getQueries()).hasSize(1);
         assertThat(configuration.getQueryPeriod()).isEqualTo(new Interval(10, SECONDS));
     }
 
     @Test
-    public void queryPeriodIsReadCorrectly() throws ParserConfigurationException {
-        Element interval = configDocument.createElement("collectIntervalInSeconds");
-        interval.setTextContent("10");
-        config.appendChild(interval);
-
-        parser.setConfiguration(configDocument);
-
+    public void invocationsAreParsed() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException, MalformedObjectNameException {
+        Resource resource = new Resource("classpath:org/jmxtrans/config/simple-configuration.xml");
+        parser.setSource(resource);
         Configuration configuration = parser.parseConfiguration();
+        assertThat(configuration).isNotNull();
+        assertThat(configuration.getInvocationPeriod()).isEqualTo(new Interval(20, SECONDS));
+        assertThat(configuration.getInvocations()).hasSize(2);
 
-        assertThat(configuration.getQueryPeriod()).isEqualTo(new Interval(10, SECONDS));
-    }
+        Iterator<Invocation> invocationIterator = configuration.getInvocations().iterator();
 
-    @Test(expected = IllegalStateException.class)
-    public void intervalMustBeAnInteger() throws ParserConfigurationException {
-        Element interval = configDocument.createElement("collectIntervalInSeconds");
-        interval.setTextContent("abc");
-        config.appendChild(interval);
+        Invocation gc = invocationIterator.next();
+        assertThat(gc).isEqualTo(new Invocation("java.lang:type=Memory", "gc", new Object[0], new String[0], "jvm.gc"));
 
-        parser.setConfiguration(configDocument);
-        parser.parseInterval();
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void multipleIntervalsAreNotAllowed() throws ParserConfigurationException {
-        Element interval = configDocument.createElement("collectIntervalInSeconds");
-        interval.setTextContent("10");
-        config.appendChild(interval);
-
-        Element secondInterval = configDocument.createElement("collectIntervalInSeconds");
-        secondInterval.setTextContent("20");
-        config.appendChild(secondInterval);
-
-        parser.setConfiguration(configDocument);
-        parser.parseInterval();
+        Invocation threadCpuTime = invocationIterator.next();
+        assertThat(threadCpuTime).isEqualTo(new Invocation(
+                "java.lang:type=Threading",
+                "getThreadCpuTime",
+                new Object[] { "1" },
+                new String[] { "long" },
+                "jvm.thread.cpu"
+        ));
     }
 
     @Test
-    public void emptyListReturnedWhenNoQueryInConfig() {
-        parser.setConfiguration(configDocument);
+    public void outputWritersAreParsed() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+        Resource resource = new Resource("classpath:org/jmxtrans/config/simple-configuration.xml");
+        parser.setSource(resource);
         Configuration configuration = parser.parseConfiguration();
-
-        assertThat(configuration.getQueries()).isEmpty();
+        assertThat(configuration).isNotNull();
+        assertThat(configuration.getOutputWriters()).hasSize(2);
     }
-
-    @Test
-    public void canParseSingleQuery() {
-        Element queriesElement = configDocument.createElement("queries");
-        config.appendChild(queriesElement);
-        Element queryElement = configDocument.createElement("query");
-        queriesElement.appendChild(queryElement);
-        queryElement.setAttribute("objectName", "java.lang:type=OperatingSystem");
-        queryElement.setAttribute("attribute", "attribute");
-        queryElement.setAttribute("key", "key");
-        queryElement.setAttribute("position", "1");
-        queryElement.setAttribute("type", "type");
-        queryElement.setAttribute("resultAlias", "resultAlias");
-
-        parser.setConfiguration(configDocument);
-
-        Iterable<Query> queries = parser.parseConfiguration().getQueries();
-
-        assertThat(queries).hasSize(1);
-        assertThat(queries).containsOnly(Query.builder()
-                .withObjectName("java.lang:type=OperatingSystem")
-                .withResultAlias("resultAlias")
-                .addAttribute(QueryAttribute.builder("attribute").build())
-                .build());
-    }
-
-    @Test
-    public void emptyListReturnedWhenNoInvocationInConfig() {
-        parser.setConfiguration(configDocument);
-        assertThat(parser.parseConfiguration().getInvocations()).isEmpty();
-    }
-
-    @Test
-    public void canParseSingleInvocation() {
-        Element invocationsElement = configDocument.createElement("invocations");
-        config.appendChild(invocationsElement);
-        Element invocationElement = configDocument.createElement("invocation");
-        invocationsElement.appendChild(invocationElement);
-        invocationElement.setAttribute("objectName", "java.lang:type=OperatingSystem");
-        invocationElement.setAttribute("operation", "operation");
-        invocationElement.setAttribute("resultAlias", "resultAlias");
-
-        parser.setConfiguration(configDocument);
-        Iterable<Invocation> invocations = parser.parseConfiguration().getInvocations();
-
-        assertThat(invocations).hasSize(1);
-        assertThat(invocations).containsOnly(new Invocation(
-                "java.lang:type=OperatingSystem",
-                "operation",
-                new Object[0],
-                new String[0],
-                "resultAlias"));
-    }
-
-    @Test
-    public void emptyListReturnedWhenNoOutputWriterInConfig() {
-        parser.setConfiguration(configDocument);
-        assertThat(parser.parseConfiguration().getOutputWriters()).isEmpty();
-    }
-
-    @Test
-    public void canParseSingleOutputWriter() {
-        Element outputWriterElement = configDocument.createElement("outputWriter");
-        config.appendChild(outputWriterElement);
-        outputWriterElement.setAttribute("class", DummyOutputWriter.class.getName());
-
-        parser.setConfiguration(configDocument);
-
-        Iterable<OutputWriter> outputWriters = parser.parseConfiguration().getOutputWriters();
-
-        assertThat(outputWriters).hasSize(1);
-    }
-
 }

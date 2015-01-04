@@ -71,6 +71,8 @@ public class CircuitBreakerProxyTest {
             counter.incrementAndGet();
         } catch (CircuitBreakerOpenException e) {
             assertThat(e.getDisabledUntil()).isEqualTo(101000);
+            assertThat(e.getTarget() == target).isTrue();
+            assertThat(e).hasMessageContaining("[org.jmxtrans.utils.circuitbreaker");
             assertThat(e).hasMessageContaining("disabledUntil=101000");
             throw e;
         }

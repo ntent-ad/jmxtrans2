@@ -22,18 +22,54 @@
  */
 package org.jmxtrans.config;
 
-import org.jmxtrans.utils.io.Resource;
-import org.xml.sax.SAXException;
+import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.query.Invocation;
+import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.utils.time.Interval;
 
 import javax.annotation.Nonnull;
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
 
-public interface ConfigParser {
+import static java.util.Collections.emptyList;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
-    void setSource(@Nonnull Resource source) throws IOException, SAXException, JAXBException;
+public class DefaultConfiguration implements Configuration {
+
+    private static final Configuration INSTANCE = new DefaultConfiguration();
+
+    private DefaultConfiguration() {
+    }
 
     @Nonnull
-    Configuration parseConfiguration() throws IOException, SAXException, JAXBException, IllegalAccessException, ClassNotFoundException, InstantiationException;
+    @Override
+    public Iterable<Query> getQueries() {
+        return emptyList();
+    }
 
+    @Nonnull
+    @Override
+    public Interval getQueryPeriod() {
+        return new Interval(60, SECONDS);
+    }
+
+    @Nonnull
+    @Override
+    public Iterable<OutputWriter> getOutputWriters() {
+        return emptyList();
+    }
+
+    @Nonnull
+    @Override
+    public Iterable<Invocation> getInvocations() {
+        return emptyList();
+    }
+
+    @Nonnull
+    @Override
+    public Interval getInvocationPeriod() {
+        return new Interval(60, SECONDS);
+    }
+
+    public static Configuration getInstance() {
+        return INSTANCE;
+    }
 }

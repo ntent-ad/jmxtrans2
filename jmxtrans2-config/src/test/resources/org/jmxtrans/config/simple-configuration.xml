@@ -23,17 +23,22 @@
     THE SOFTWARE.
 
 -->
-<jmxtrans
-        xmlns="http://jmxtrans.org/config/2.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://jmxtrans.org/config/2.0 jmxtrans.xsd">
+<jmxtrans xmlns="http://jmxtrans.org/config/2.0">
 
     <queries collectIntervalInSeconds="10">
-        <query objectName="java.lang:type=MemoryPool,name=PS Eden Space" resultAlias="resultAlias" />
+        <query objectName="java.lang:type=MemoryPool,name=PS Eden Space" resultAlias="eden" />
     </queries>
+
+    <invocations collectIntervalInSeconds="20">
+        <invocation objectName="java.lang:type=Memory" operationName="gc" resultAlias="jvm.gc"/>
+        <invocation objectName="java.lang:type=Threading" operationName="getThreadCpuTime" resultAlias="jvm.thread.cpu">
+            <parameter value="1" type="long"/>
+        </invocation>
+    </invocations>
 
     <outputWriters>
         <outputWriter class="org.jmxtrans.config.DummyOutputWriter"/>
+        <outputWriter class="org.jmxtrans.output.DevNullOutputWriter"/>
     </outputWriters>
 
 </jmxtrans>

@@ -29,68 +29,86 @@ import org.jmxtrans.utils.time.Interval;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-
-@ThreadSafe
+@ThreadSafe // TODO: synchronization is overly aggressive
 public class StandardConfiguration implements Configuration {
 
     @Nonnull
     private final CopyOnWriteArrayList<Query> queries = new CopyOnWriteArrayList<>();
     @Nonnull
-    private volatile Interval queryPeriod = new Interval(60, SECONDS);
+    private volatile Interval queryPeriod;
     @Nonnull
     private final CopyOnWriteArrayList<OutputWriter> outputWriters = new CopyOnWriteArrayList<>();
     @Nonnull
     private final CopyOnWriteArrayList<Invocation> invocations = new CopyOnWriteArrayList<>();
     @Nonnull
-    private volatile Interval invocationPeriod = new Interval(60, SECONDS);
+    private volatile Interval invocationPeriod;
+
+    public StandardConfiguration(Configuration configuration) {
+        queries.clear();
+        for (Query query : configuration.getQueries()) {
+            queries.add(query);
+        }
+        queryPeriod = configuration.getQueryPeriod();
+        outputWriters.clear();
+        for (OutputWriter outputWriter : configuration.getOutputWriters()) {
+            outputWriters.add(outputWriter);
+        }
+        invocations.clear();
+        for (Invocation invocation : configuration.getInvocations()) {
+            invocations.add(invocation);
+        }
+        invocationPeriod = configuration.getInvocationPeriod();
+    }
 
     @Override
     @Nonnull
-    public Iterable<Query> getQueries() {
+    public synchronized Iterable<Query> getQueries() {
         return queries;
     }
 
     @Override
     @Nonnull
-    public Interval getQueryPeriod() {
+    public synchronized Interval getQueryPeriod() {
         return queryPeriod;
     }
 
     @Override
     @Nonnull
-    public Iterable<OutputWriter> getOutputWriters() {
+    public synchronized Iterable<OutputWriter> getOutputWriters() {
         return outputWriters;
     }
 
     @Override
     @Nonnull
-    public Iterable<Invocation> getInvocations() {
+    public synchronized Iterable<Invocation> getInvocations() {
         return invocations;
     }
 
     @Override
     @Nonnull
-    public Interval getInvocationPeriod() {
+    public synchronized Interval getInvocationPeriod() {
         return invocationPeriod;
     }
 
-    public void addQueries(@Nonnull Collection<Query> queries) {
-        this.queries.addAll(queries);
+    @Nonnull
+    public synchronized StandardConfiguration replaceWith(@Nonnull Configuration configuration) {
+        queries.clear();
+        for (Query query : configuration.getQueries()) {
+            queries.add(query);
+        }
+        queryPeriod = configuration.getQueryPeriod();
+        outputWriters.clear();
+        for (OutputWriter outputWriter : configuration.getOutputWriters()) {
+            outputWriters.add(outputWriter);
+        }
+        invocations.clear();
+        for (Invocation invocation : configuration.getInvocations()) {
+            invocations.add(invocation);
+        }
+        invocationPeriod = configuration.getInvocationPeriod();
+        return this;
     }
 
-    public void addInvocations(@Nonnull Collection<Invocation> invocations) {
-        this.invocations.addAll(invocations);
-    }
-
-    public void addOutputWriters(@Nonnull Collection<OutputWriter> outputWriters) {
-        this.outputWriters.addAll(outputWriters);
-    }
-
-    public void setQueryPeriod(@Nonnull Interval queryPeriod) {
-        this.queryPeriod = queryPeriod;
-    }
 }
