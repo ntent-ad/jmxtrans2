@@ -29,9 +29,8 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
@@ -53,13 +52,10 @@ public class ManagedGenericKeyedObjectPoolTest {
         objectName = mbeanServer.registerMBean(objectPool, objectName).getObjectName();
         try {
             Object numIdle = mbeanServer.getAttribute(objectName, "NumIdle");
-            assertThat(numIdle, instanceOf(Number.class));
+            assertThat(numIdle).isInstanceOf(Number.class);
 
         } finally {
             mbeanServer.unregisterMBean(objectName);
         }
-
-
-
     }
 }

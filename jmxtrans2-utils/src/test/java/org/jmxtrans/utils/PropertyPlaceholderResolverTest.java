@@ -24,8 +24,7 @@ package org.jmxtrans.utils;
 
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
@@ -38,8 +37,8 @@ public class PropertyPlaceholderResolverTest {
     public void testResolveStringWithSystemProperty() {
         System.setProperty("graphite.host", "graphite-server.private.mycompany.com");
         try {
-            String actual = resolver.resolveString("${graphite.host:localhost}");
-            assertThat(actual, is("graphite-server.private.mycompany.com"));
+            assertThat(resolver.resolveString("${graphite.host:localhost}"))
+                    .isEqualTo("graphite-server.private.mycompany.com");
         } finally {
             System.getProperties().remove("graphite.host");
         }
@@ -49,8 +48,8 @@ public class PropertyPlaceholderResolverTest {
     public void testResolveComplexStringWithSystemProperty() {
         System.setProperty("graphite.host", "graphite-server.private.mycompany.com");
         try {
-            String actual = resolver.resolveString("${graphite.host:localhost}:${graphite.port:2003}");
-            assertThat(actual, is("graphite-server.private.mycompany.com:2003"));
+            assertThat(resolver.resolveString("${graphite.host:localhost}:${graphite.port:2003}"))
+                    .isEqualTo("graphite-server.private.mycompany.com:2003");
         } finally {
             System.getProperties().remove("graphite.host");
         }
@@ -58,8 +57,8 @@ public class PropertyPlaceholderResolverTest {
 
     @Test
     public void testResolveStringWithDefaultValue() {
-        String actual = resolver.resolveString("${graphite.host:localhost}");
-        assertThat(actual, is("localhost"));
+        assertThat(resolver.resolveString("${graphite.host:localhost}"))
+                .isEqualTo("localhost");
     }
 
 }

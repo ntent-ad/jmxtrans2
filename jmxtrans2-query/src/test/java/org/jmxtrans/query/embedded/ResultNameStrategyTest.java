@@ -27,8 +27,7 @@ import org.junit.Test;
 
 import javax.management.ObjectName;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
@@ -61,21 +60,21 @@ public class ResultNameStrategyTest {
         String actual = strategy.resolveExpression(expression, new ObjectName(objectName));
 
         // verify
-        assertThat(actual, is("tomcat1.tomcat.datasource.localhost._.jdbc_my-datasource"));
+        assertThat(actual).isEqualTo("tomcat1.tomcat.datasource.localhost._.jdbc_my-datasource");
     }
 
     @Test
     public void testEscapeObjectName1() throws Exception {
         String objectName = "java.lang:type=GarbageCollector,name=PS Scavenge";
         String actual = strategy.escapeObjectName(new ObjectName(objectName));
-        assertThat(actual, is("java_lang.name__PS_Scavenge.type__GarbageCollector"));
+        assertThat(actual).isEqualTo("java_lang.name__PS_Scavenge.type__GarbageCollector");
     }
 
     @Test
     public void testEscapeObjectName2() throws Exception {
         String objectName = "Catalina:type=Resource,resourcetype=Context,path=/,host=localhost,class=javax.sql.DataSource,name=\"jdbc/my-datasource\"";
         String actual = strategy.escapeObjectName(new ObjectName(objectName));
-        assertThat(actual, is("Catalina.class__javax_sql_DataSource.host__localhost.name__jdbc_my-datasource.path___.resourcetype__Context.type__Resource"));
+        assertThat(actual).isEqualTo("Catalina.class__javax_sql_DataSource.host__localhost.name__jdbc_my-datasource.path___.resourcetype__Context.type__Resource");
     }
 
     @Test
@@ -83,6 +82,6 @@ public class ResultNameStrategyTest {
         ResultNameStrategy resultNameStrategy = new ResultNameStrategy();
         resultNameStrategy.registerExpressionEvaluator("canonical_hostname", "server1.mycompany.com");
         String actual = resultNameStrategy.resolveExpression("#canonical_hostname#");
-        assertThat(actual, is("server1.mycompany.com"));
+        assertThat(actual).isEqualTo("server1.mycompany.com");
     }
 }

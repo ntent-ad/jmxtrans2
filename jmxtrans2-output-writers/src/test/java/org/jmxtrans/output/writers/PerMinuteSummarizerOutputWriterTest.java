@@ -22,16 +22,16 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.hamcrest.Matchers;
 import org.jmxtrans.output.DevNullOutputWriter;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.results.QueryResult;
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
@@ -57,7 +57,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, previous);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        Assert.assertThat(actualPerMinuteValue, Matchers.is(13));
+        assertThat(actualPerMinuteValue).isEqualTo(13);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, previous);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        Assert.assertThat(actualPerMinuteValue, Matchers.is(39));
+        assertThat(actualPerMinuteValue).isEqualTo(39);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, previous);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        Assert.assertThat(actualPerMinuteValue, Matchers.is(20));
+        assertThat(actualPerMinuteValue).isEqualTo(20);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, previous);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        Assert.assertThat(actualPerMinuteValue, Matchers.is(13));
+        assertThat(actualPerMinuteValue).isEqualTo(13);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, previous);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        Assert.assertThat(actualPerMinuteValue, Matchers.is(13));
+        assertThat(actualPerMinuteValue).isEqualTo(13);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class PerMinuteSummarizerOutputWriterTest {
         QueryResult actualResult = writer.perMinute(current, null);
         int actualPerMinuteValue = (Integer) actualResult.getValue();
 
-        Assert.assertThat(actualPerMinuteValue, Matchers.is(13));
+        assertThat(actualPerMinuteValue).isEqualTo(13);
     }
 
     @Test
@@ -147,7 +147,7 @@ public class PerMinuteSummarizerOutputWriterTest {
 
         QueryResult actual = writer.getPreviousQueryResult(currentResult);
 
-        Assert.assertThat(actual, Matchers.is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -163,7 +163,7 @@ public class PerMinuteSummarizerOutputWriterTest {
 
         QueryResult actual = writer.getPreviousQueryResult(currentResult);
 
-        Assert.assertThat(actual, Matchers.is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -180,6 +180,6 @@ public class PerMinuteSummarizerOutputWriterTest {
 
         QueryResult actual = writer.getPreviousQueryResult(currentResult);
 
-        Assert.assertThat(actual, Matchers.is(expected));
+        assertThat(actual).isEqualTo(expected);
     }
 }

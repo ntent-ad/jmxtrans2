@@ -28,8 +28,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
@@ -48,11 +47,11 @@ public class PlaceholderEnabledJsonNodeFactoryTest {
             JsonNode rootNode = objectMapper.readValue(in, JsonNode.class);
             JsonNode outputWritersNode = rootNode.path("outputWriters");
             JsonNode outputWriterNode = outputWritersNode.get(1);
-            assertThat(outputWriterNode.path("@class").asText(), is("org.jmxtrans.embedded.output.GraphiteWriter"));
+            assertThat(outputWriterNode.path("@class").asText()).isEqualTo("org.jmxtrans.embedded.output.GraphiteWriter");
             JsonNode settingsNode = outputWriterNode.path("settings");
-            assertThat(settingsNode.path("host").asText(), is("graphite.www.private.mycompany.com"));
-            assertThat(settingsNode.path("port").asInt(), is(2003));
-            assertThat(settingsNode.path("namePrefix").asText(), is("servers.tomcat1."));
+            assertThat(settingsNode.path("host").asText()).isEqualTo("graphite.www.private.mycompany.com");
+            assertThat(settingsNode.path("port").asInt()).isEqualTo(2003);
+            assertThat(settingsNode.path("namePrefix").asText()).isEqualTo("servers.tomcat1.");
 
         } finally {
             System.getProperties().remove("graphite.host");

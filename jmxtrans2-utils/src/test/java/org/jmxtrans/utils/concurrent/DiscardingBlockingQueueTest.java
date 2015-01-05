@@ -22,7 +22,6 @@
  */
 package org.jmxtrans.utils.concurrent;
 
-import org.jmxtrans.utils.concurrent.DiscardingBlockingQueue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,8 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
@@ -53,12 +52,12 @@ public class DiscardingBlockingQueueTest {
     }
 
     private void verifyQueueElements() {
-        assertThat(queue.remainingCapacity(), is(0));
-        assertThat(queue.poll(), is(5));
-        assertThat(queue.poll(), is(6));
-        assertThat(queue.poll(), is(7));
-        assertThat(queue.poll(), is(8));
-        assertThat(queue.poll(), is(9));
+        assertThat(queue.remainingCapacity()).isEqualTo(0);
+        assertThat(queue.poll()).isEqualTo(5);
+        assertThat(queue.poll()).isEqualTo(6);
+        assertThat(queue.poll()).isEqualTo(7);
+        assertThat(queue.poll()).isEqualTo(8);
+        assertThat(queue.poll()).isEqualTo(9);
     }
 
     @Test
@@ -101,6 +100,6 @@ public class DiscardingBlockingQueueTest {
         verifyQueueElements();
         queue.put(10);
         queue.put(11);
-        assertThat(queue.size(), is(2));
+        assertThat(queue).hasSize(2);
     }
 }
