@@ -35,9 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CliArgumentParserTest {
 
@@ -60,7 +58,7 @@ public class CliArgumentParserTest {
 		try {
 			parseConfiguration(new String[]{""});
 		} catch (OptionsException oe) {
-			assertThat(oe.getMessage(), is("Please specify either the -f or -j option."));
+			assertThat(oe).hasMessage("Please specify either the -f or -j option.");
 			throw oe;
 		}
 	}
@@ -75,7 +73,7 @@ public class CliArgumentParserTest {
 					"-j", mockConfigurationDirectory.getRoot().getAbsolutePath()
 			});
 		} catch (OptionsException oe) {
-			assertThat(oe.getMessage(), is("You cannot give both a JSON file and a directory for configuration"));
+			assertThat(oe).hasMessage("You cannot give both a JSON file and a directory for configuration");
 			throw oe;
 		}
 	}
@@ -83,16 +81,16 @@ public class CliArgumentParserTest {
 	@Test
 	public void continueOnJsonErrorIsFalseByDefault() throws OptionsException, ParseException {
 		JmxTransConfiguration configuration = parseConfiguration(requiredOptions());
-		assertThat(configuration.isContinueOnJsonError(), is(false));
+		assertThat(configuration.isContinueOnJsonError()).isTrue();
 	}
 
 	@Test
 	public void continueOnJsonErrorIsCanBeSetToTrueOrFalse() throws OptionsException, ParseException {
 		JmxTransConfiguration configuration = parseConfiguration(requiredOptionsAnd("-c", "true"));
-		assertThat(configuration.isContinueOnJsonError(), is(true));
+		assertThat(configuration.isContinueOnJsonError()).isTrue();
 
 		configuration = parseConfiguration(requiredOptionsAnd("-c", "false"));
-		assertThat(configuration.isContinueOnJsonError(), is(false));
+		assertThat(configuration.isContinueOnJsonError()).isTrue();
 	}
 
 	@Test(expected = OptionsException.class)
@@ -102,7 +100,7 @@ public class CliArgumentParserTest {
 					"-j", mockConfigurationFile.getAbsolutePath()
 			});
 		} catch (OptionsException oe) {
-			assertThat(oe.getMessage(), startsWith("Path to json directory is invalid"));
+			assertThat(oe).hasMessageStartingWith("Path to json directory is invalid");
 			throw oe;
 		}
 	}
@@ -114,7 +112,7 @@ public class CliArgumentParserTest {
 					"-j", new File(mockConfigurationDirectory.getRoot(), "non-existing").getAbsolutePath()
 			});
 		} catch (OptionsException oe) {
-			assertThat(oe.getMessage(), startsWith("Path to json directory is invalid"));
+			assertThat(oe).hasMessageStartingWith("Path to json directory is invalid");
 			throw oe;
 		}
 	}
@@ -126,7 +124,7 @@ public class CliArgumentParserTest {
 					"-f", mockConfigurationDirectory.getRoot().getAbsolutePath()
 			});
 		} catch (OptionsException oe) {
-			assertThat(oe.getMessage(), startsWith("Path to json file is invalid"));
+			assertThat(oe).hasMessageStartingWith("Path to json file is invalid");
 			throw oe;
 		}
 	}
@@ -138,7 +136,7 @@ public class CliArgumentParserTest {
 					"-f", new File(mockConfigurationDirectory.getRoot(), "non-existing").getAbsolutePath()
 			});
 		} catch (OptionsException oe) {
-			assertThat(oe.getMessage(), startsWith("Path to json file is invalid"));
+			assertThat(oe).hasMessageStartingWith("Path to json file is invalid");
 			throw oe;
 		}
 	}
@@ -150,7 +148,7 @@ public class CliArgumentParserTest {
 					"-q", mockConfigurationDirectory.getRoot().getAbsolutePath()
 			));
 		} catch (OptionsException oe) {
-			assertThat(oe.getMessage(), startsWith("Could not find path to the quartz properties file"));
+			assertThat(oe).hasMessageStartingWith("Could not find path to the quartz properties file");
 			throw oe;
 		}
 	}
@@ -162,7 +160,7 @@ public class CliArgumentParserTest {
 					"-q", new File(mockConfigurationDirectory.getRoot(), "non-existing").getAbsolutePath()
 			));
 		} catch (OptionsException oe) {
-			assertThat(oe.getMessage(), startsWith("Could not find path to the quartz properties file"));
+			assertThat(oe).hasMessageStartingWith("Could not find path to the quartz properties file");
 			throw oe;
 		}
 	}
@@ -172,7 +170,7 @@ public class CliArgumentParserTest {
 		JmxTransConfiguration configuration = parseConfiguration(requiredOptionsAnd(
 				"-s", "20"
 		));
-		assertThat(configuration.getRunPeriod(), is(20));
+		assertThat(configuration.getRunPeriod()).isEqualTo(20);
 	}
 
 	@Test(expected = OptionsException.class)
@@ -182,7 +180,7 @@ public class CliArgumentParserTest {
 					"-s", "abc"
 			));
 		} catch (OptionsException oe) {
-			assertThat(oe.getMessage(), startsWith("Seconds between server job runs must be an integer"));
+			assertThat(oe).hasMessageStartingWith("Seconds between server job runs must be an integer");
 			throw oe;
 		}
 	}

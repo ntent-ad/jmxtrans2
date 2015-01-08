@@ -321,14 +321,4 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
         return 0;
     }
 
-//    public int getDiscardedResultsCount() {
-//        int result = 0;
-//        for (Query query : queries) {
-//            int discardedResultsCount = query.getDiscardedResultsCount();
-//            if (discardedResultsCount != -1) {
-//                result += discardedResultsCount;
-//            }
-//        }
-//        return result;
-//    }
 }

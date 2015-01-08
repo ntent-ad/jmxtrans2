@@ -1,6 +1,0 @@
-# Tooling related information for the management namespace
-http\://www.jmxtrans.org/schema/embedded@name=org.jmxtrans namespace
-http\://www.jmxtrans.org/schema/embedded@prefix=org.jmxtrans
-http\://www.jmxtrans.org/schema/embedded@icon=org/springframework/beans/factory/xml/spring-util.gif
-
-

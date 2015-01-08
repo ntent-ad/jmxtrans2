@@ -31,83 +31,38 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jmxtrans2-embeded</artifactId>
-    <name>JMXTrans - embeded</name>
-    <description>In process JMX metrics exporter</description>
+    <artifactId>jmxtrans2-spring</artifactId>
+    <name>JMXTrans - spring</name>
 
     <properties>
-        <verify.cobertura.totalBranchRate>29</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>37</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>62</verify.coverage.threshold>
-        <verify.mutation.threshold>31</verify.mutation.threshold>
+        <verify.coverage.threshold>64</verify.coverage.threshold>
+        <verify.mutation.threshold>52</verify.mutation.threshold>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>commons-pool</groupId>
-            <artifactId>commons-pool</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-        </dependency>
-        <dependency>
-            <!-- used for EmbeddedJmxTransLoaderListener  -->
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-output</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-query</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-results</artifactId>
+            <artifactId>jmxtrans2-embeded</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-utils</artifactId>
         </dependency>
         <dependency>
-            <!-- used by GraphitePickleWriter -->
-            <groupId>org.python</groupId>
-            <artifactId>jython</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <!-- used by the EmbeddedJmxTransFactory -->
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <!-- used for EmbeddedJmxTransFactory  -->
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <optional>true</optional>
@@ -118,13 +73,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-output-writers</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -135,20 +90,6 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <filtering>true</filtering>
-                <directory>${basedir}/src/main/resources</directory>
-            </resource>
-            <resource>
-                <targetPath>META-INF</targetPath>
-                <directory>${basedir}</directory>
-                <includes>
-                    <include>LICENSE</include>
-                    <include>NOTICE</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>com.github.github</groupId>
@@ -158,17 +99,6 @@
                     <message>Creating site for ${project.name} ${project.version}</message>
                     <path>${project.artifactId}</path>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-no-package-cycles</id>
-                        <!-- FIXME: break package cycles and reactivate check -->
-                        <phase>none</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

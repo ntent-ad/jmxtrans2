@@ -24,7 +24,9 @@ package org.jmxtrans.model.output;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.hamcrest.Matchers;
+import org.jmxtrans.exceptions.LifecycleException;
+import org.jmxtrans.model.Query;
+import org.jmxtrans.model.Result;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,15 +42,8 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.Map;
 
-import org.jmxtrans.exceptions.LifecycleException;
-import org.jmxtrans.model.Query;
-import org.jmxtrans.model.Result;
-
 import static com.google.common.collect.Maps.newHashMap;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.contains;
 import static org.mockito.Mockito.eq;
@@ -121,8 +116,8 @@ public class TCollectorUDPWriterTests {
 				packetCapture.getValue().getOffset(),
 				packetCapture.getValue().getLength());
 
-		assertThat(sentString, Matchers.startsWith("X-DOMAIN.PKG.CLASS-X.X-ATT-X 0 120021"));
-		assertThat(sentString, not(containsString("host=")));
+		assertThat(sentString).startsWith("X-DOMAIN.PKG.CLASS-X.X-ATT-X 0 120021");
+		assertThat(sentString).doesNotContain("host=");
 	}
 
 	/**
@@ -141,7 +136,7 @@ public class TCollectorUDPWriterTests {
 			fail("LifecycleException missing");
 		} catch (LifecycleException lcExc) {
 			// Verify
-			assertSame(sockExc, lcExc.getCause());
+			assertThat(sockExc).isSameAs(lcExc.getCause());
 			verify(this.mockLog).error(contains("create a datagram socket"), eq(sockExc));
 		}
 	}

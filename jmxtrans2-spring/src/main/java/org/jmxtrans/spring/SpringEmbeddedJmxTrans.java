@@ -20,60 +20,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.config;
+package org.jmxtrans.spring;
 
-import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.Query;
-import org.jmxtrans.utils.time.Interval;
+import org.jmxtrans.embedded.EmbeddedJmxTrans;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.jmx.export.naming.SelfNaming;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 
-import static java.util.Collections.emptyList;
-import static java.util.concurrent.TimeUnit.SECONDS;
+/**
+ * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ */
+public class SpringEmbeddedJmxTrans extends EmbeddedJmxTrans implements SpringEmbeddedJmxTransMBean, InitializingBean, DisposableBean, SelfNaming {
 
-@Immutable
-@ThreadSafe
-public class DefaultConfiguration implements Configuration {
+    private String objectName;
 
-    private static final Configuration INSTANCE = new DefaultConfiguration();
-
-    private DefaultConfiguration() {
-    }
-
-    @Nonnull
     @Override
-    public Iterable<Query> getQueries() {
-        return emptyList();
+    public void afterPropertiesSet() throws Exception {
+        super.start();
     }
 
-    @Nonnull
     @Override
-    public Interval getQueryPeriod() {
-        return new Interval(60, SECONDS);
+    public void destroy() throws Exception {
+        super.stop();
     }
 
-    @Nonnull
     @Override
-    public Iterable<OutputWriter> getOutputWriters() {
-        return emptyList();
+    public ObjectName getObjectName() throws MalformedObjectNameException {
+        return new ObjectName(objectName);
     }
 
-    @Nonnull
-    @Override
-    public Iterable<Invocation> getInvocations() {
-        return emptyList();
-    }
-
-    @Nonnull
-    @Override
-    public Interval getInvocationPeriod() {
-        return new Interval(60, SECONDS);
-    }
-
-    public static Configuration getInstance() {
-        return INSTANCE;
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
     }
 }

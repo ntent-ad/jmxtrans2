@@ -20,60 +20,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.config;
+package org.jmxtrans.scheduler;
 
-import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.Query;
-import org.jmxtrans.utils.time.Interval;
+import org.jmxtrans.utils.time.Clock;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import static java.util.Collections.emptyList;
-import static java.util.concurrent.TimeUnit.SECONDS;
-
-@Immutable
 @ThreadSafe
-public class DefaultConfiguration implements Configuration {
-
-    private static final Configuration INSTANCE = new DefaultConfiguration();
-
-    private DefaultConfiguration() {
-    }
+public abstract class DeadlineRunnable implements Runnable {
 
     @Nonnull
-    @Override
-    public Iterable<Query> getQueries() {
-        return emptyList();
+    private final Clock clock;
+    private final long deadline;
+
+    public DeadlineRunnable(@Nonnull Clock clock, long deadline) {
+        this.clock = clock;
+        this.deadline = deadline;
     }
+
+    @Override
+    public final void run() {
+        if (deadline < clock.currentTimeMillis()) {
+            // TODO: log and count
+            return;
+        }
+        doRun();
+    }
+
+    protected abstract void doRun();
 
     @Nonnull
-    @Override
-    public Interval getQueryPeriod() {
-        return new Interval(60, SECONDS);
+    protected Clock getClock() {
+        return clock;
     }
 
-    @Nonnull
-    @Override
-    public Iterable<OutputWriter> getOutputWriters() {
-        return emptyList();
-    }
-
-    @Nonnull
-    @Override
-    public Iterable<Invocation> getInvocations() {
-        return emptyList();
-    }
-
-    @Nonnull
-    @Override
-    public Interval getInvocationPeriod() {
-        return new Interval(60, SECONDS);
-    }
-
-    public static Configuration getInstance() {
-        return INSTANCE;
+    protected long getDeadline() {
+        return deadline;
     }
 }

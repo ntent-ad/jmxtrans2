@@ -20,60 +20,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.config;
+package org.jmxtrans.scheduler;
 
-import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.Query;
-import org.jmxtrans.utils.time.Interval;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.ManualClock;
+import org.junit.Test;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 
-import static java.util.Collections.emptyList;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@Immutable
-@ThreadSafe
-public class DefaultConfiguration implements Configuration {
+public class DeadlineRunnableTest {
 
-    private static final Configuration INSTANCE = new DefaultConfiguration();
-
-    private DefaultConfiguration() {
+    @Test
+    public void jobIsRunBeforeDeadline() {
+        ManualClock clock = new ManualClock();
+        long deadline = clock.currentTimeMillis() + 1000;
+        DummyJob job = new DummyJob(clock, deadline);
+        job.run();
+        assertThat(job.hasRun).isTrue();
     }
 
-    @Nonnull
-    @Override
-    public Iterable<Query> getQueries() {
-        return emptyList();
+    @Test
+    public void jodIsNotRunAfterDeadline() {
+        ManualClock clock = new ManualClock();
+        long deadline = clock.currentTimeMillis() + 1000;
+        DummyJob job = new DummyJob(clock, deadline);
+        clock.waitFor(2, SECONDS);
+        job.run();
+        assertThat(job.hasRun).isFalse();
     }
 
-    @Nonnull
-    @Override
-    public Interval getQueryPeriod() {
-        return new Interval(60, SECONDS);
-    }
-
-    @Nonnull
-    @Override
-    public Iterable<OutputWriter> getOutputWriters() {
-        return emptyList();
-    }
-
-    @Nonnull
-    @Override
-    public Iterable<Invocation> getInvocations() {
-        return emptyList();
-    }
-
-    @Nonnull
-    @Override
-    public Interval getInvocationPeriod() {
-        return new Interval(60, SECONDS);
-    }
-
-    public static Configuration getInstance() {
-        return INSTANCE;
+    private static final class DummyJob extends DeadlineRunnable {
+        private boolean hasRun = false;
+        public DummyJob(@Nonnull Clock clock, long deadline) {
+            super(clock, deadline);
+        }
+        @Override
+        protected void doRun() {
+            hasRun = true;
+        }
     }
 }

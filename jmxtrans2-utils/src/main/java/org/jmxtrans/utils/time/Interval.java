@@ -54,6 +54,10 @@ public class Interval {
         return timeUnit;
     }
 
+    public long getDuration(TimeUnit timeUnit) {
+        return timeUnit.convert(value, this.timeUnit);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

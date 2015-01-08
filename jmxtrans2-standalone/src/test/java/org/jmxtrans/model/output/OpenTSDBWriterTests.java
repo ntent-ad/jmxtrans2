@@ -24,7 +24,9 @@ package org.jmxtrans.model.output;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import org.hamcrest.Matchers;
+import org.jmxtrans.exceptions.LifecycleException;
+import org.jmxtrans.model.Query;
+import org.jmxtrans.model.Result;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,12 +45,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import org.jmxtrans.exceptions.LifecycleException;
-import org.jmxtrans.model.Query;
-import org.jmxtrans.model.Result;
-
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.contains;
@@ -136,8 +133,8 @@ public class OpenTSDBWriterTests {
 		// Verify.
 		verify(this.mockOut).writeBytes(lineCapture.capture());
 
-		assertThat(lineCapture.getValue(), Matchers.startsWith("put X-DOMAIN.PKG.CLASS-X.X-ATT-X 0 120021"));
-		assertThat(lineCapture.getValue(), Matchers.containsString(" host="));
+		assertThat(lineCapture.getValue()).startsWith("put X-DOMAIN.PKG.CLASS-X.X-ATT-X 0 120021");
+		assertThat(lineCapture.getValue()).contains(" host=");
 	}
 
 	/**
@@ -198,7 +195,7 @@ public class OpenTSDBWriterTests {
 			fail("LifecycleException missing");
 		} catch ( LifecycleException lcExc ) {
 			// Verify.
-			assertSame(uhExc, lcExc.getCause());
+			assertThat(uhExc).isSameAs(lcExc.getCause());
 			verify(this.mockLog).error(contains("opening socket"), eq(uhExc));
 		}
 	}
@@ -219,7 +216,7 @@ public class OpenTSDBWriterTests {
 			fail("LifecycleException missing");
 		} catch ( LifecycleException lcExc ) {
 			// Verify.
-			assertSame(ioExc, lcExc.getCause());
+			assertThat(ioExc).isSameAs(lcExc.getCause());
 			verify(this.mockLog).error(contains("opening socket"), eq(ioExc));
 		}
 	}
@@ -240,7 +237,7 @@ public class OpenTSDBWriterTests {
 			fail("LifecycleException missing");
 		} catch ( LifecycleException lcExc ) {
 			// Verify.
-			assertSame(ioExc, lcExc.getCause());
+			assertThat(ioExc).isSameAs(lcExc.getCause());
 			verify(this.mockLog).error(contains("closing socket"), eq(ioExc));
 		}
 	}
@@ -261,7 +258,7 @@ public class OpenTSDBWriterTests {
 			fail("IOException missing");
 		} catch ( IOException ioCaught ) {
 			// Verify.
-			assertSame(ioExc, ioCaught);
+			assertThat(ioExc).isSameAs(ioCaught);
 			verify(this.mockLog).error(contains("output stream"), eq(ioExc));
 		}
 	}
@@ -282,7 +279,7 @@ public class OpenTSDBWriterTests {
 			fail("IOException missing");
 		} catch ( IOException ioCaught ) {
 			// Verify.
-			assertSame(ioExc, ioCaught);
+			assertThat(ioExc).isSameAs(ioCaught);
 			verify(this.mockLog).error(contains("writing result"), eq(ioExc));
 		}
 	}
@@ -300,7 +297,7 @@ public class OpenTSDBWriterTests {
 			fail("exception on flush was not thrown");
 		} catch ( IOException ioCaught ) {
 			// Verify.
-			assertSame(ioExc, ioCaught);
+			assertThat(ioExc).isSameAs(ioCaught);
 			verify(this.mockLog).error(contains("flush failed"), eq(ioExc));
 		}
 	}

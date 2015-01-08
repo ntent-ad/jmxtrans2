@@ -1,0 +1,3 @@
+http\://www.jmxtrans.org/schema/jmxtrans=org/jmxtrans/spring/jmxtrans-2.0.xsd
+http\://www.jmxtrans.org/schema/jmxtrans/jmxtrans.xsd=org/jmxtrans/spring/jmxtrans-2.0.xsd
+http\://www.jmxtrans.org/schema/jmxtrans/jmxtrans-2.0.xsd=org/jmxtrans/spring/jmxtrans-2.0.xsd
