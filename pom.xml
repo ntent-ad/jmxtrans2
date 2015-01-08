@@ -112,8 +112,8 @@
         -->
         <verify.cobertura.branchRate>0</verify.cobertura.branchRate>
         <verify.cobertura.lineRate>0</verify.cobertura.lineRate>
-        <verify.cobertura.packageBranchRate>0</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>0</verify.cobertura.packageLineRate>
+        <verify.cobertura.packageBranchRate>60</verify.cobertura.packageBranchRate>
+        <verify.cobertura.packageLineRate>80</verify.cobertura.packageLineRate>
         <verify.cobertura.totalBranchRate>60</verify.cobertura.totalBranchRate>
         <verify.cobertura.totalLineRate>80</verify.cobertura.totalLineRate>
         <verify.coverage.threshold>80</verify.coverage.threshold>

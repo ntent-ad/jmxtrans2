@@ -23,7 +23,6 @@
 package org.jmxtrans.query.embedded;
 
 import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.utils.jmx.JmxUtils2;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.NanoChronometer;
 import org.jmxtrans.utils.time.SystemClock;
@@ -149,7 +148,7 @@ public class Query implements QueryMBean {
     @PreDestroy
     public void stop() throws Exception {
         if (mbeanServer != null) {
-            JmxUtils2.unregisterObject(queryMbeanObjectName, mbeanServer);
+            mbeanServer.unregisterMBean(queryMbeanObjectName);
         }
     }
 

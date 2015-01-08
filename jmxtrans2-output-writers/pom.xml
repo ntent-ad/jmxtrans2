@@ -35,6 +35,8 @@
     <name>JMXTrans - output writers</name>
 
     <properties>
+        <verify.cobertura.packageBranchRate>21</verify.cobertura.packageBranchRate>
+        <verify.cobertura.packageLineRate>18</verify.cobertura.packageLineRate>
         <verify.cobertura.totalBranchRate>20</verify.cobertura.totalBranchRate>
         <verify.cobertura.totalLineRate>20</verify.cobertura.totalLineRate>
         <verify.coverage.threshold>52</verify.coverage.threshold>

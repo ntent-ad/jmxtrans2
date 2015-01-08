@@ -35,10 +35,12 @@
     <name>JMXTrans - query</name>
 
     <properties>
-        <verify.cobertura.totalBranchRate>21</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>48</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>54</verify.coverage.threshold>
-        <verify.mutation.threshold>23</verify.mutation.threshold>
+        <verify.cobertura.packageBranchRate>26</verify.cobertura.packageBranchRate>
+        <verify.cobertura.packageLineRate>49</verify.cobertura.packageLineRate>
+        <verify.cobertura.totalBranchRate>26</verify.cobertura.totalBranchRate>
+        <verify.cobertura.totalLineRate>49</verify.cobertura.totalLineRate>
+        <verify.coverage.threshold>70</verify.coverage.threshold>
+        <verify.mutation.threshold>42</verify.mutation.threshold>
     </properties>
 
     <dependencies>
