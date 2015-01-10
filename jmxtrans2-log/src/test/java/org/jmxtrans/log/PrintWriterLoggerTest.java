@@ -32,6 +32,8 @@ import java.io.UnsupportedEncodingException;
 
 import static java.lang.System.lineSeparator;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.regex.Pattern.DOTALL;
+import static java.util.regex.Pattern.compile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jmxtrans.log.Level.DEBUG;
 import static org.jmxtrans.log.Level.ERROR;
@@ -114,7 +116,7 @@ public class PrintWriterLoggerTest {
                 .contains("testMessage")
                 .contains(DEBUG.toString())
                 .contains("testLogger")
-                .contains("1970.01.01 01:16:40.000")
+                .matches(compile(".*1970\\.01\\.01 ..:16:40\\.000.*", DOTALL)) // ignore hours to not test timezone
                 .endsWith(lineSeparator());
     }
 
@@ -126,7 +128,7 @@ public class PrintWriterLoggerTest {
                 .contains("testMessage")
                 .contains(DEBUG.toString())
                 .contains("testLogger")
-                .contains("1970.01.01 01:16:40.000")
+                .matches(compile(".*1970\\.01\\.01 ..:16:40\\.000.*", DOTALL)) // ignore hours to not test timezone
                 .contains("myException")
                 .endsWith(lineSeparator());
     }
