@@ -36,7 +36,7 @@
 
     <properties>
         <verify.coverage.threshold>64</verify.coverage.threshold>
-        <verify.mutation.threshold>52</verify.mutation.threshold>
+        <verify.mutation.threshold>51</verify.mutation.threshold>
     </properties>
 
     <dependencies>

@@ -22,13 +22,13 @@
  */
 package org.jmxtrans.embedded;
 
-import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.concurrent.DiscardingBlockingQueue;
 import org.jmxtrans.utils.concurrent.NamedThreadFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
@@ -44,6 +44,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static java.lang.String.format;
 
 /**
  * <p/>
@@ -73,7 +75,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
 		this.mbeanServer = mbeanServer;
 	}
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     private boolean running = false;
 
@@ -156,7 +158,7 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
                 try {
                     outputWriter.write(availableQueryResults);
                 } catch (IOException ioe) {
-                    logger.error("Could not send metrics to output writer {} for query {}.", outputWriter, this, ioe);
+                    logger.error(format("Could not send metrics to output writer %s for query %s.", outputWriter, this), ioe);
                 }
             }
             availableQueryResults.clear();

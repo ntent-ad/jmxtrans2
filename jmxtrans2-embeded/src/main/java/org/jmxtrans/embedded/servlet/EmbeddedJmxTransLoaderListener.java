@@ -26,9 +26,9 @@ import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.embedded.config.Config;
 import org.jmxtrans.embedded.config.ConfigurationParser;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.utils.StringUtils2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -72,7 +72,7 @@ public class EmbeddedJmxTransLoaderListener implements ServletContextListener {
      */
     public static final String CONFIG_LOCATION_PARAM = "org.jmxtrans.config";
     public static final String SYSTEM_CONFIG_LOCATION_PARAM = "org.jmxtrans.system.config";
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass().getName());
     private EmbeddedJmxTrans embeddedJmxTrans;
     private ObjectName objectName;
     private MBeanServer mbeanServer;

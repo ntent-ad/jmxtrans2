@@ -27,12 +27,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.jmxtrans.embedded.util.json.PlaceholderEnabledJsonNodeFactory;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.output.OutputWriterFactory;
 import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.query.embedded.QueryAttribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.lang.String.format;
+
 /**
  * JSON Configuration parser to create {@link org.jmxtrans.embedded.EmbeddedJmxTrans}.
  *
@@ -52,7 +54,7 @@ import java.util.Objects;
  */
 public class ConfigurationParser {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     private final ObjectMapper mapper;
 
@@ -75,7 +77,7 @@ public class ConfigurationParser {
 
     private InputStream openResource(String configurationUrl) throws IOException {
         if (configurationUrl.startsWith("classpath:")) {
-            logger.debug("mergeEmbeddedJmxTransConfiguration({})", configurationUrl);
+            logger.debug(format("mergeEmbeddedJmxTransConfiguration(%s)", configurationUrl));
             String path = configurationUrl.substring("classpath:".length());
 
             return Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResourceAsStream(path), "No file found for '" + configurationUrl + "'");
@@ -97,7 +99,7 @@ public class ConfigurationParser {
             } else if (resultAliasNode.isValueNode()) {
                 queryBuilder.withResultAlias(resultAliasNode.asText());
             } else {
-                logger.warn("Ignore invalid node {}", resultAliasNode);
+                logger.warn(format("Ignore invalid node %s", resultAliasNode));
             }
 
             JsonNode attributesNode = queryNode.path("attributes");
@@ -109,14 +111,14 @@ public class ConfigurationParser {
                     queryBuilder.addAttributes(parseQueryAttributeNode(attributeNode));
                 }
             } else {
-                logger.warn("Ignore invalid node {}", resultAliasNode);
+                logger.warn(format("Ignore invalid node %s", resultAliasNode));
             }
 
             JsonNode attributeNode = queryNode.path("attribute");
             queryBuilder.addAttributes(parseQueryAttributeNode(attributeNode));
 
             Query query = queryBuilder.build();
-            logger.trace("Add {}", query);
+            logger.debug("Add " + query);
             config.addQuery(query);
         }
 
@@ -158,14 +160,14 @@ public class ConfigurationParser {
                 try {
                     String className = outputWriterNode.path("@class").asText();
                     OutputWriter outputWriter = instantiateOutputWriter(outputWriterNode, className);
-                    logger.trace("Add {}", outputWriter);
+                    logger.debug("Add " + outputWriter);
                     outputWriters.add(outputWriter);
                 } catch (Exception e) {
                     throw new EmbeddedJmxTransException("Exception converting settings " + outputWritersNode, e);
                 }
             }
         } else {
-            logger.warn("Ignore invalid node {}", outputWritersNode);
+            logger.warn("Ignore invalid node " + outputWritersNode);
         }
         return outputWriters;
     }
@@ -180,7 +182,7 @@ public class ConfigurationParser {
             ObjectMapper mapper = new ObjectMapper();
             settings = mapper.treeToValue(settingsNode, Map.class);
         } else {
-            logger.warn("Ignore invalid node {}", outputWriterNode);
+            logger.warn("Ignore invalid node " + outputWriterNode);
         }
         return factory.create(settings);
     }
@@ -205,11 +207,11 @@ public class ConfigurationParser {
                     if (keyNode.isValueNode()) {
                         keys.add(keyNode.asText());
                     } else {
-                        logger.warn("Ignore invalid node {}", keyNode);
+                        logger.warn("Ignore invalid node " + keyNode);
                     }
                 }
             } else {
-                logger.warn("Ignore invalid node {}", keysNode);
+                logger.warn("Ignore invalid node " + keysNode);
             }
 
             JsonNode keyNode = attributeNode.path("key");
@@ -220,7 +222,7 @@ public class ConfigurationParser {
                 }
                 keys.add(keyNode.asText());
             } else {
-                logger.warn("Ignore invalid node {}", keyNode);
+                logger.warn("Ignore invalid node " + keyNode);
             }
 
             String name = attributeNode.path("name").asText();
@@ -241,7 +243,7 @@ public class ConfigurationParser {
                         .build());
             }
         } else {
-            logger.warn("Ignore invalid node {}", attributeNode);
+            logger.warn("Ignore invalid node " + attributeNode);
         }
         return attributes;
     }

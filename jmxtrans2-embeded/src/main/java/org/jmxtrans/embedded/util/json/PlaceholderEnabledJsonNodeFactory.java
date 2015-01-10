@@ -24,8 +24,10 @@ package org.jmxtrans.embedded.util.json;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.TextNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
+
+import static java.lang.String.format;
 
 /**
  * Property placeholder / substitution enabled {@link JsonNodeFactory}.
@@ -42,7 +44,7 @@ public class PlaceholderEnabledJsonNodeFactory extends JsonNodeFactory {
 
     private static final long serialVersionUID = 1L;
 
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private transient final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     private org.jmxtrans.utils.PropertyPlaceholderResolver resolver = new org.jmxtrans.utils.PropertyPlaceholderResolver();
 
@@ -89,9 +91,9 @@ public class PlaceholderEnabledJsonNodeFactory extends JsonNodeFactory {
         String resolvedText = (text == null) ? null : resolver.resolveString(text);
         if (logger.isInfoEnabled()) {
             if (text == null || text.equals(resolvedText)) {
-                logger.debug("Resolve '{}' into '{}'", text, resolvedText);
+                logger.debug(format("Resolve '%s' into '%s'", text, resolvedText));
             } else {
-                logger.info("Resolve '{}' into '{}'", text, resolvedText);
+                logger.info(format("Resolve '%s' into '%s'", text, resolvedText));
             }
         }
         return super.textNode(resolvedText);

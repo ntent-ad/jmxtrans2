@@ -31,14 +31,13 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jmxtrans2-config</artifactId>
-    <name>JMXTrans - config</name>
+    <artifactId>jmxtrans2-log</artifactId>
+    <name>JMXTrans - log</name>
 
     <properties>
-        <verify.cobertura.packageBranchRate>50</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>41</verify.cobertura.packageLineRate>
-        <verify.cobertura.totalLineRate>70</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>59</verify.coverage.threshold>
+        <verify.cobertura.packageBranchRate>54</verify.cobertura.packageBranchRate>
+        <verify.cobertura.totalBranchRate>54</verify.cobertura.totalBranchRate>
+        <verify.mutation.threshold>39</verify.mutation.threshold>
     </properties>
 
     <dependencies>
@@ -46,27 +45,6 @@
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-output</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-query</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-results</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -78,19 +56,9 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-guava</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/xsd</directory>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>com.github.github</groupId>
@@ -99,32 +67,6 @@
                     <merge>true</merge>
                     <message>Creating site for ${project.name} ${project.version}</message>
                     <path>${project.artifactId}</path>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>1.6</version>
-                <configuration>
-                    <packageName>org.jmxtrans.config.jaxb</packageName>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>xjc</id>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <configuration>
-                    <excludedClasses>
-                        <!-- no need to test generated classes -->
-                        <excludedClass>org.jmxtrans.config.jaxb.*</excludedClass>
-                    </excludedClasses>
                 </configuration>
             </plugin>
         </plugins>

@@ -23,6 +23,7 @@
 package org.jmxtrans.agent;
 
 import org.jmxtrans.config.Configuration;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Invocation;
 import org.jmxtrans.query.embedded.Query;
@@ -37,8 +38,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static java.lang.String.format;
 
@@ -48,7 +47,7 @@ import static java.lang.String.format;
 public class JmxTransExporter {
 
     private final Configuration configuration;
-    private Logger logger = Logger.getLogger(getClass().getName());
+    private org.jmxtrans.log.Logger logger = LoggerFactory.getLogger(getClass().getName());
     private ThreadFactory threadFactory = new ThreadFactory() {
         final AtomicInteger counter = new AtomicInteger();
 
@@ -69,10 +68,8 @@ public class JmxTransExporter {
     }
 
     public void start() {
-        if (logger.isLoggable(Level.FINER)) {
-            logger.fine("starting " + this.toString() + " ...");
-        } else {
-            logger.fine("starting " + getClass().getName() + " ...");
+        if (logger.isDebugEnabled()) {
+            logger.debug("starting " + this.toString() + " ...");
         }
 
         if (scheduledFuture != null) {
@@ -88,7 +85,7 @@ public class JmxTransExporter {
                 configuration.getQueryPeriod().getValue(),
                 configuration.getQueryPeriod().getTimeUnit());
 
-        logger.fine(getClass().getName() + " started");
+        logger.debug(getClass().getName() + " started");
     }
 
     public void stop() {
@@ -121,7 +118,7 @@ public class JmxTransExporter {
                 invocation.invoke(mbeanServer, results);
                 writeResults(results);
             } catch (Exception e) {
-                logger.log(Level.WARNING, "Ignore exception invoking " + invocation, e);
+                logger.warn("Ignore exception invoking " + invocation, e);
             }
         }
         for (Query query : configuration.getQueries()) {
@@ -130,7 +127,7 @@ public class JmxTransExporter {
                 query.collectMetrics(mbeanServer, results);
                 writeResults(results);
             } catch (Exception e) {
-                logger.log(Level.WARNING, "Ignore exception collecting metrics for " + query, e);
+                logger.warn("Ignore exception collecting metrics for " + query, e);
             }
         }
     }
@@ -140,7 +137,7 @@ public class JmxTransExporter {
             try {
                 outputWriter.write(results);
             } catch (Exception e) {
-                logger.log(Level.WARNING, format("Could not write results to output writer [%s].", outputWriter), e);
+                logger.warn(format("Could not write results to output writer [%s].", outputWriter), e);
             }
         }
     }

@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.naming;
 
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.query.Query;
 import org.jmxtrans.query.ResultNameStrategy;
 import org.jmxtrans.utils.StringUtils2;
@@ -29,9 +31,9 @@ import org.jmxtrans.utils.StringUtils2;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.management.ObjectName;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Build a {@linkplain org.jmxtrans.results.QueryResult#name} from a collected metric ({@linkplain org.jmxtrans.query.Query}).
@@ -94,7 +96,7 @@ import java.util.logging.Logger;
  */
 public class ResultNameStrategyImpl implements ResultNameStrategy {
 
-    protected final Logger logger = Logger.getLogger(getClass().getName());
+    protected final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     @Nonnull
     private ExpressionLanguageEngine expressionLanguageEngine = new ExpressionLanguageEngineImpl();
@@ -132,8 +134,8 @@ public class ResultNameStrategyImpl implements ResultNameStrategy {
                 result.append('.');
             }
         }
-        if (logger.isLoggable(Level.FINEST))
-            logger.log(Level.FINEST, "escapeObjectName(" + objectName + "): " + result);
+        if (logger.isDebugEnabled())
+            logger.debug("escapeObjectName(" + objectName + "): " + result);
         return result.toString();
     }
 

@@ -31,15 +31,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jmxtrans2-config</artifactId>
-    <name>JMXTrans - config</name>
-
-    <properties>
-        <verify.cobertura.packageBranchRate>50</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>41</verify.cobertura.packageLineRate>
-        <verify.cobertura.totalLineRate>70</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>59</verify.coverage.threshold>
-    </properties>
+    <artifactId>jmxtrans2-log-slf4j</artifactId>
+    <name>JMXTrans - log - slf4j</name>
 
     <dependencies>
         <dependency>
@@ -48,25 +41,16 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-output</artifactId>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-query</artifactId>
+            <artifactId>jmxtrans2-log</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-results</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <scope>test</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -74,23 +58,18 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-guava</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/xsd</directory>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>com.github.github</groupId>
@@ -102,30 +81,19 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>1.6</version>
-                <configuration>
-                    <packageName>org.jmxtrans.config.jaxb</packageName>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>xjc</id>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <configuration>
-                    <excludedClasses>
-                        <!-- no need to test generated classes -->
-                        <excludedClass>org.jmxtrans.config.jaxb.*</excludedClass>
-                    </excludedClasses>
+                    <!-- seems that implementation is so simple we can't even find mutations ... -->
+                    <failWhenNoMutations>false</failWhenNoMutations>
                 </configuration>
+                <!--<executions>-->
+                <!--&lt;!&ndash; can't get failWhenNoMutations to work, so let's disable pitest for this module &ndash;&gt;-->
+                <!--<execution>-->
+                <!--<id>pitest</id>-->
+                <!--<phase>none</phase>-->
+                <!--</execution>-->
+                <!--</executions>-->
             </plugin>
         </plugins>
     </build>

@@ -78,6 +78,10 @@
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-output</artifactId>
         </dependency>
         <dependency>
@@ -99,10 +103,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
             <!-- used by the EmbeddedJmxTransFactory -->
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
@@ -118,6 +118,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-log-slf4j</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>

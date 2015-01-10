@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.naming;
 
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.utils.StringUtils2;
 
 import javax.annotation.Nonnull;
@@ -30,14 +32,12 @@ import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public class ExpressionLanguageEngineImpl implements ExpressionLanguageEngine {
-    protected final Logger logger = Logger.getLogger(getClass().getName());
+    protected final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     public ExpressionLanguageEngineImpl() {
         try {
@@ -57,7 +57,7 @@ public class ExpressionLanguageEngineImpl implements ExpressionLanguageEngine {
             registerExpressionEvaluator("hostaddress", hostAddress);
             registerExpressionEvaluator("escaped_hostaddress", hostAddress.replaceAll("\\.", "_"));
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Exception resolving localhost, expressions like #hostname#, #canonical_hostname# or #hostaddress# will not be available", e);
+            logger.warn("Exception resolving localhost, expressions like #hostname#, #canonical_hostname# or #hostaddress# will not be available", e);
         }
     }
 
@@ -97,7 +97,7 @@ public class ExpressionLanguageEngineImpl implements ExpressionLanguageEngine {
                         value = expressionProcessor.call();
                     } catch (Exception e) {
                         value = "#expression_error#";
-                        logger.log(Level.WARNING, "Error evaluating expression '" + key + "'", e);
+                        logger.warn("Error evaluating expression '" + key + "'", e);
                     }
                 }
                 StringUtils2.appendEscapedNonAlphaNumericChars(value, false, result);
@@ -108,8 +108,7 @@ public class ExpressionLanguageEngineImpl implements ExpressionLanguageEngine {
                 position++;
             }
         }
-        if (logger.isLoggable(Level.FINEST))
-            logger.log(Level.FINEST, "resolveExpression(" + expression + "): " + result);
+        if (logger.isDebugEnabled()) logger.debug("resolveExpression(" + expression + "): " + result);
         return result.toString();
 
     }
@@ -152,7 +151,7 @@ public class ExpressionLanguageEngineImpl implements ExpressionLanguageEngine {
                         value = expressionProcessor.call();
                     } catch (Exception e) {
                         value = "#expression_error#";
-                        logger.log(Level.WARNING, "Error evaluating expression '" + key + "'", e);
+                        logger.warn("Error evaluating expression '" + key + "'", e);
                     }
                 }
                 StringUtils2.appendEscapedNonAlphaNumericChars(value, false, result);
@@ -163,8 +162,8 @@ public class ExpressionLanguageEngineImpl implements ExpressionLanguageEngine {
                 position++;
             }
         }
-        if (logger.isLoggable(Level.FINEST))
-            logger.log(Level.FINEST, "resolveExpression(" + expression + ", " + exactObjectName + "): " + result);
+        if (logger.isDebugEnabled())
+            logger.debug("resolveExpression(" + expression + ", " + exactObjectName + "): " + result);
 
         return result.toString();
     }

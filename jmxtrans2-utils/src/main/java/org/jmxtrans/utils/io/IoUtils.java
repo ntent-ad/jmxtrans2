@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.utils.io;
 
+import org.jmxtrans.log.LoggerFactory;
+
 import javax.annotation.Nonnull;
 import java.io.Closeable;
 import java.io.File;
@@ -31,14 +33,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
 * Created by gehel on 12/17/14.
 */
 public final class IoUtils {
-    private static final Logger LOGGER = Logger.getLogger(IoUtils.class.getName());
+    private static final org.jmxtrans.log.Logger LOGGER = LoggerFactory.getLogger(IoUtils.class.getName());
 
     private static final int COPY_BUFFER_SIZE = 512;
 
@@ -90,7 +90,7 @@ public final class IoUtils {
         } catch (IOException e) {
             // Not being able to close something is still a problem : potential data loss, not releasing
             // resources, ... So we should still log it.
-            LOGGER.log(Level.WARNING, "Could not close closeable");
+            LOGGER.warn("Could not close closeable");
         }
     }
 

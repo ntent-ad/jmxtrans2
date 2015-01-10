@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.utils.circuitbreaker;
 
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.utils.time.Clock;
 
 import javax.annotation.Nonnull;
@@ -32,14 +33,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Timestamp;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @ThreadSafe
 public class CircuitBreakerProxy implements InvocationHandler {
 
     @Nonnull
-    private final Logger logger;
+    private final org.jmxtrans.log.Logger logger;
 
     @Nonnull
     public final Object target;
@@ -64,7 +63,7 @@ public class CircuitBreakerProxy implements InvocationHandler {
         this.target = target;
         this.maxFailures = maxFailures;
         this.disableDurationMillis = disableDurationMillis;
-        logger = Logger.getLogger(target.getClass().getName() + "CircuitBreaker");
+        logger = LoggerFactory.getLogger(target.getClass().getName() + "CircuitBreaker");
     }
 
     @Override
@@ -88,16 +87,16 @@ public class CircuitBreakerProxy implements InvocationHandler {
 
     private boolean isDisabled() {
         if (disabledUntil == 0) {
-            logger.finer("OutputWriter is not temporarily disabled");
+            logger.debug("OutputWriter is not temporarily disabled");
             return false;
         } else if (disabledUntil < clock.currentTimeMillis()) {
-            logger.fine("re-enable OutputWriter");
+            logger.debug("re-enable OutputWriter");
             // reset counter
             disabledUntil = 0;
             return false;
         } else {
-            if (logger.isLoggable(Level.FINE))
-                logger.fine("OutputWriter is disabled until " + new Timestamp(disabledUntil));
+            if (logger.isDebugEnabled())
+                logger.debug("OutputWriter is disabled until " + new Timestamp(disabledUntil));
             return true;
         }
     }
@@ -107,13 +106,13 @@ public class CircuitBreakerProxy implements InvocationHandler {
         if (failuresCount >= maxFailures) {
             disabledUntil = clock.currentTimeMillis() + disableDurationMillis;
             failuresCounter.set(0);
-            logger.warning("Too many exceptions, disable writer until " + new Timestamp(disabledUntil));
+            logger.warn("Too many exceptions, disable writer until " + new Timestamp(disabledUntil));
         }
     }
 
     private void incrementSuccess() {
         if (failuresCounter.get() > 0) {
-            logger.fine("Reset failures counter to 0");
+            logger.debug("Reset failures counter to 0");
             failuresCounter.set(0);
         }
     }

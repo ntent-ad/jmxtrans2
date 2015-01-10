@@ -36,9 +36,9 @@
 
     <properties>
         <verify.cobertura.packageBranchRate>31</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>41</verify.cobertura.packageLineRate>
+        <verify.cobertura.packageLineRate>40</verify.cobertura.packageLineRate>
         <verify.cobertura.totalBranchRate>31</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>41</verify.cobertura.totalLineRate>
+        <verify.cobertura.totalLineRate>40</verify.cobertura.totalLineRate>
         <verify.mutation.threshold>0</verify.mutation.threshold>
     </properties>
 
@@ -51,6 +51,10 @@
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-log</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
