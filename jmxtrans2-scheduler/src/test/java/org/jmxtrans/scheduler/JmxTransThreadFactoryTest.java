@@ -22,43 +22,32 @@
  */
 package org.jmxtrans.scheduler;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
-import org.jmxtrans.utils.time.Clock;
+import org.junit.Test;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@ThreadSafe
-public abstract class DeadlineRunnable implements Runnable {
+public class JmxTransThreadFactoryTest {
 
-    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-    @Nonnull private final Clock clock;
-    private final long deadline;
-
-    public DeadlineRunnable(@Nonnull Clock clock, long deadline) {
-        this.clock = clock;
-        this.deadline = deadline;
+    @Test
+    public void threadCreatedWithCorrectOptions() {
+        Thread thread = new JmxTransThreadFactory("component").newThread(new DoNothing());
+        assertThat(thread.getName())
+                .contains("jmxtrans")
+                .contains("component")
+                .endsWith("1");
     }
 
-    @Override
-    public final void run() {
-        if (deadline < clock.currentTimeMillis()) {
-            // TODO: log and count
-            logger.warn("Deadline is passed, dropping job");
-            return;
+    @Test
+    public void threadNumberIsIncremented() {
+        JmxTransThreadFactory threadFactory = new JmxTransThreadFactory("component");
+        assertThat(threadFactory.newThread(new DoNothing()).getName()).endsWith("1");
+        assertThat(threadFactory.newThread(new DoNothing()).getName()).endsWith("2");
+        assertThat(threadFactory.newThread(new DoNothing()).getName()).endsWith("3");
+    }
+
+    private static class DoNothing implements Runnable {
+        @Override
+        public void run() {
         }
-        doRun();
-    }
-
-    protected abstract void doRun();
-
-    @Nonnull
-    protected Clock getClock() {
-        return clock;
-    }
-
-    protected long getDeadline() {
-        return deadline;
     }
 }

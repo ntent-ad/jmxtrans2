@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
@@ -159,15 +160,21 @@ public class XmlConfigParser implements ConfigParser {
 
     @Nonnull
     private OutputWriter instantiateOutputWriter(@Nonnull String outputWriterClass, @Nonnull Map<String, String> settings)
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        Class<OutputWriterFactory<?>> builderClass = (Class<OutputWriterFactory<?>>) Class.forName(outputWriterClass + "$Factory");
-        OutputWriterFactory<?> builder = builderClass.newInstance();
-        return CircuitBreakerProxy.create(
-                clock,
-                OutputWriter.class,
-                builder.create(settings),
-                MAX_FAILURES,
-                DISABLE_DURATION_MILLIS);
+            throws InstantiationException, IllegalAccessException {
+        try {
+            Class<OutputWriterFactory<?>> builderClass = (Class<OutputWriterFactory<?>>) Class.forName(outputWriterClass + "$Factory");
+            OutputWriterFactory<?> builder = builderClass.newInstance();
+            return CircuitBreakerProxy.create(
+                    clock,
+                    OutputWriter.class,
+                    builder.create(settings),
+                    MAX_FAILURES,
+                    DISABLE_DURATION_MILLIS);
+        } catch (ClassNotFoundException e) {
+            throw new JmxtransConfigurationException(
+                    format("Could not load class %s, this can happen if you use non standard outputwriters and did not" +
+                            " add the appropriate jar on the classpath", outputWriterClass), e);
+        }
     }
 
     @Override

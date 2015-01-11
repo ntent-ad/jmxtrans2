@@ -69,14 +69,14 @@ public class PrintWriterLogger implements Logger {
     @Override
     public void debug(@Nullable String msg) {
         if (isDebugEnabled()) {
-            write(msg);
+            write(DEBUG, msg);
         }
     }
 
     @Override
     public void debug(@Nullable String msg, @Nullable Throwable throwable) {
         if (isDebugEnabled()) {
-            write(msg, throwable);
+            write(DEBUG, msg, throwable);
         }
     }
 
@@ -88,14 +88,14 @@ public class PrintWriterLogger implements Logger {
     @Override
     public void info(@Nullable String msg) {
         if (isInfoEnabled()) {
-            write(msg);
+            write(INFO, msg);
         }
     }
 
     @Override
     public void info(@Nullable String msg, @Nullable Throwable throwable) {
         if (isInfoEnabled()) {
-            write(msg, throwable);
+            write(INFO, msg, throwable);
         }
     }
 
@@ -107,14 +107,14 @@ public class PrintWriterLogger implements Logger {
     @Override
     public void warn(@Nullable String msg) {
         if (isWarnEnabled()) {
-            write(msg);
+            write(WARN, msg);
         }
     }
 
     @Override
     public void warn(@Nullable String msg, @Nullable Throwable throwable) {
         if (isWarnEnabled()) {
-            write(msg, throwable);
+            write(WARN, msg, throwable);
         }
     }
 
@@ -126,21 +126,21 @@ public class PrintWriterLogger implements Logger {
     @Override
     public void error(@Nullable String msg) {
         if (isErrorEnabled()) {
-            write(msg);
+            write(ERROR, msg);
         }
     }
 
     @Override
     public void error(@Nullable String msg, @Nullable Throwable throwable) {
         if (isErrorEnabled()) {
-            write(msg, throwable);
+            write(ERROR, msg, throwable);
         }
     }
 
-    private void write(@Nullable String msg) {
+    private void write(Level logLevel, @Nullable String msg) {
         out.print(dateFormat.get().format(new Date(clock.currentTimeMillis())));
         out.print(" - ");
-        out.print(level);
+        out.print(logLevel);
         out.print(" - ");
         out.print(name);
         out.print(" - ");
@@ -148,8 +148,8 @@ public class PrintWriterLogger implements Logger {
         out.flush();
     }
 
-    private void write(@Nullable String msg, @Nullable Throwable throwable) {
-        write(msg);
+    private void write(Level logLevel, @Nullable String msg, @Nullable Throwable throwable) {
+        write(logLevel, msg);
         if (throwable != null) throwable.printStackTrace(out);
         out.flush();
     }

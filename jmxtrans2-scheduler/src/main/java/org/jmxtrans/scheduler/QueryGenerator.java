@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.scheduler;
 
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.Interval;
@@ -32,19 +34,16 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @ThreadSafe
 public class QueryGenerator implements Runnable {
-    @Nonnull
-    private final Clock clock;
-    @Nonnull
-    private final Interval queryPeriod;
-    @Nonnull
-    private final Iterable<Query> queries;
-    @Nonnull
-    private final QueryProcessor queryProcessor;
-    @Nonnull
-    private final ScheduledExecutorService queryTimer;
+    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+    @Nonnull private final Clock clock;
+    @Nonnull private final Interval queryPeriod;
+    @Nonnull private final Iterable<Query> queries;
+    @Nonnull private final QueryProcessor queryProcessor;
+    @Nonnull private final ScheduledExecutorService queryTimer;
     private volatile boolean running = false;
 
     public QueryGenerator(
@@ -61,21 +60,26 @@ public class QueryGenerator implements Runnable {
 
     @Override
     public void run() {
-        long startTimeMillis = clock.currentTimeMillis();
-        long deadline = startTimeMillis + queryPeriod.getDuration(MILLISECONDS);
+            long deadline = clock.currentTimeMillis() + queryPeriod.getDuration(MILLISECONDS);
         for (final Query query : queries) {
             try {
+                logger.debug("Enquing query " + query);
                 queryProcessor.process(deadline, query);
             } catch (RejectedExecutionException e) {
-                // todo
+                logger.warn("Could not enqueue query " + query, e);
             }
         }
 
         if (running) {
-            queryTimer.schedule(
-                    this,
-                    startTimeMillis + queryPeriod.getDuration(MILLISECONDS),
-                    MILLISECONDS);
+            logger.debug("Scheduling next run in " + queryPeriod.getDuration(SECONDS) + " seconds.");
+            try {
+                queryTimer.schedule(
+                        this,
+                        queryPeriod.getDuration(MILLISECONDS),
+                        MILLISECONDS);
+            } catch (RejectedExecutionException e) {
+                logger.error("Could not schedule next task");
+            }
         }
     }
 

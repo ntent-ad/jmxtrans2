@@ -22,15 +22,21 @@
  */
 package org.jmxtrans.query.embedded;
 
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.utils.StringUtils2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.management.ObjectName;
 import java.net.InetAddress;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
+
+import static java.lang.String.format;
 
 /**
  * Build a {@linkplain org.jmxtrans.results.QueryResult#name} from a collected metric ({@linkplain QueryAttribute}, {@linkplain Query}).
@@ -93,7 +99,7 @@ import java.util.concurrent.Callable;
  */
 public class ResultNameStrategy {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
     /**
      * Function based evaluators for expressions like '#hostname#' or '#hostname_canonical#'
      */
@@ -204,7 +210,7 @@ public class ResultNameStrategy {
                 position++;
             }
         }
-        logger.trace("resolveExpression({}): {}", expression, result);
+        logger.debug(format("resolveExpression(%s): %s", expression, result));
         return result.toString();
 
     }
@@ -258,7 +264,7 @@ public class ResultNameStrategy {
                 position++;
             }
         }
-        logger.trace("resolveExpression({}, {}): {}", expression, exactObjectName, result);
+        logger.debug(format("resolveExpression(%s, %s): %s", expression, exactObjectName, result));
         return result.toString();
     }
 
@@ -283,7 +289,7 @@ public class ResultNameStrategy {
                 result.append('.');
             }
         }
-        logger.trace("escapeObjectName({}): {}", objectName, result);
+        logger.debug(format("escapeObjectName(%s): %s", objectName, result));
         return result.toString();
     }
 

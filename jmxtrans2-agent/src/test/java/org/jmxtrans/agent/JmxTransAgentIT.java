@@ -20,45 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.scheduler;
+package org.jmxtrans.agent;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
-import org.jmxtrans.utils.time.Clock;
+import org.junit.Test;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import java.io.IOException;
 
-@ThreadSafe
-public abstract class DeadlineRunnable implements Runnable {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-    @Nonnull private final Clock clock;
-    private final long deadline;
+public class JmxTransAgentIT extends AbstractAgentTest {
 
-    public DeadlineRunnable(@Nonnull Clock clock, long deadline) {
-        this.clock = clock;
-        this.deadline = deadline;
-    }
+    @Test
+    public void agentIsStarting() throws IOException, InterruptedException {
+        startDummyApplication();
 
-    @Override
-    public final void run() {
-        if (deadline < clock.currentTimeMillis()) {
-            // TODO: log and count
-            logger.warn("Deadline is passed, dropping job");
-            return;
-        }
-        doRun();
-    }
+        Thread.sleep(3000);
 
-    protected abstract void doRun();
-
-    @Nonnull
-    protected Clock getClock() {
-        return clock;
-    }
-
-    protected long getDeadline() {
-        return deadline;
+        assertThat(getOut().toString("UTF-8")).contains("counter.Value 0");
+        assertThat(getOut().toString("UTF-8")).contains("counter.Value 1");
     }
 }

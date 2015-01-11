@@ -20,45 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.scheduler;
+package org.jmxtrans.agent;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
-import org.jmxtrans.utils.time.Clock;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+class Counter implements CounterMBean {
+    private final AtomicInteger counter = new AtomicInteger();
+    private final String name;
 
-@ThreadSafe
-public abstract class DeadlineRunnable implements Runnable {
-
-    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-    @Nonnull private final Clock clock;
-    private final long deadline;
-
-    public DeadlineRunnable(@Nonnull Clock clock, long deadline) {
-        this.clock = clock;
-        this.deadline = deadline;
+    public Counter(String name) {
+        this.name = name;
     }
 
     @Override
-    public final void run() {
-        if (deadline < clock.currentTimeMillis()) {
-            // TODO: log and count
-            logger.warn("Deadline is passed, dropping job");
-            return;
-        }
-        doRun();
+    public Integer getValue() {
+        return counter.getAndIncrement();
     }
 
-    protected abstract void doRun();
-
-    @Nonnull
-    protected Clock getClock() {
-        return clock;
-    }
-
-    protected long getDeadline() {
-        return deadline;
+    @Override
+    public String getName() {
+        return name;
     }
 }

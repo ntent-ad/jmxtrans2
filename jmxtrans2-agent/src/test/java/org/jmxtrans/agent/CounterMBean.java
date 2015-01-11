@@ -20,19 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package orn.jmxtrans.agent;
+package org.jmxtrans.agent;
 
-import org.jmxtrans.agent.JmxTransExporter;
-import org.jmxtrans.config.DefaultConfiguration;
-import org.junit.Test;
+public interface CounterMBean {
+    Integer getValue();
 
-public class JmxTransExporterTest {
-
-    @Test
-    public void minimalTestJustToMakeReportingHappy() {
-        JmxTransExporter jmxTransExporter = new JmxTransExporter(DefaultConfiguration.getInstance());
-        jmxTransExporter.start();
-        jmxTransExporter.stop();
-    }
-
+    String getName();
 }

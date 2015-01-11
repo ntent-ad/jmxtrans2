@@ -22,43 +22,27 @@
  */
 package org.jmxtrans.scheduler;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
-import org.jmxtrans.utils.time.Clock;
-
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
-@ThreadSafe
-public abstract class DeadlineRunnable implements Runnable {
+import static java.util.concurrent.Executors.defaultThreadFactory;
 
-    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-    @Nonnull private final Clock clock;
-    private final long deadline;
+public class JmxTransThreadFactory implements ThreadFactory {
 
-    public DeadlineRunnable(@Nonnull Clock clock, long deadline) {
-        this.clock = clock;
-        this.deadline = deadline;
+    @Nonnull private final AtomicInteger counter = new AtomicInteger();
+    @Nonnull private final String componentName;
+
+    public JmxTransThreadFactory(@Nonnull String componentName) {
+        this.componentName = componentName;
     }
 
     @Override
-    public final void run() {
-        if (deadline < clock.currentTimeMillis()) {
-            // TODO: log and count
-            logger.warn("Deadline is passed, dropping job");
-            return;
-        }
-        doRun();
-    }
-
-    protected abstract void doRun();
-
     @Nonnull
-    protected Clock getClock() {
-        return clock;
-    }
-
-    protected long getDeadline() {
-        return deadline;
+    public Thread newThread(@Nonnull Runnable r) {
+        Thread thread = defaultThreadFactory().newThread(r);
+        thread.setDaemon(true);
+        thread.setName("jmxtrans-" + componentName + "-" + counter.incrementAndGet());
+        return thread;
     }
 }

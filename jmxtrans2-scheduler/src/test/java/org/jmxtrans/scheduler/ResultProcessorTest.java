@@ -37,6 +37,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -61,5 +63,11 @@ public class ResultProcessorTest {
         verify(outputWriter).write(results);
     }
 
+    @Test
+    public void exceptionsFromWriterAreManaged() throws IOException {
+        doThrow(new IOException()).when(outputWriter).write(any(Iterable.class));
+        ResultProcessor.Processor processor = new ResultProcessor.Processor(clock, 10, results, outputWriter);
+        processor.run();
+    }
 
 }

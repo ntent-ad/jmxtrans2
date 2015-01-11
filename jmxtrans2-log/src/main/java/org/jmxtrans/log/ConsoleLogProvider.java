@@ -28,7 +28,7 @@ import static org.jmxtrans.log.Level.WARN;
 
 public class ConsoleLogProvider implements LogProvider {
 
-    public static final String JMXTRANS_LOG_LEVEL_PROP = "jmxtrans.log.level";
+    public static final String JMXTRANS_LOG_LEVEL_PROP = "org.jmxtrans.log.level";
 
     private final SystemClock clock = new SystemClock();
 

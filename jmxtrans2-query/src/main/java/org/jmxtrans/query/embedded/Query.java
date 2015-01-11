@@ -22,12 +22,12 @@
  */
 package org.jmxtrans.query.embedded;
 
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.NanoChronometer;
 import org.jmxtrans.utils.time.SystemClock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,9 +45,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.lang.String.format;
 import static java.util.Objects.hash;
 
 /**
@@ -59,7 +59,7 @@ import static java.util.Objects.hash;
 public class Query implements QueryMBean {
 
     @Nonnull
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     /**
      * ObjectName of the Query MBean(s) to monitor, can contain
@@ -108,22 +108,22 @@ public class Query implements QueryMBean {
         metrics = new QueryMetrics(clock);
     }
 
-    @Override
-    public void collectMetrics(@Nonnull MBeanServer mbeanServer, @Nonnull BlockingQueue<QueryResult> results) {
+    public Iterable<QueryResult> collectMetrics(@Nonnull MBeanServer mbeanServer) {
         try (NanoChronometer chrono = metrics.collectionDurationChronometer()) {
+            Collection results = new ArrayList();
             /*
              * Optimisation tip: no need to skip 'mbeanServer.queryNames()' if the ObjectName is not a pattern
              * (i.e. not '*' or '?' wildcard) because the mbeanserver internally performs the check.
              * Seen on com.sun.jmx.interceptor.DefaultMBeanServerInterceptor
              */
             Set<ObjectName> matchingObjectNames = mbeanServer.queryNames(this.objectName, null);
-            logger.trace("Query {} returned {}", objectName, matchingObjectNames);
+            logger.debug(format("Query %s returned %s", objectName, matchingObjectNames));
 
             for (ObjectName matchingObjectName : matchingObjectNames) {
                 long epochInMillis = System.currentTimeMillis();
                 try {
                     AttributeList jmxAttributes = mbeanServer.getAttributes(matchingObjectName, this.attributeNames);
-                    logger.trace("Query {} returned {}", matchingObjectName, jmxAttributes);
+                    logger.debug(format("Query %s returned %s", matchingObjectName, jmxAttributes));
                     for (Attribute jmxAttribute : jmxAttributes.asList()) {
                         QueryAttribute queryAttribute = this.attributesByName.get(jmxAttribute.getName());
                         Object value = jmxAttribute.getValue();
@@ -131,10 +131,11 @@ public class Query implements QueryMBean {
                         metrics.incrementCollected(count);
                     }
                 } catch (Exception e) {
-                    logger.warn("Exception processing query {}", this, e);
+                    logger.warn(format("Exception processing query %s", this), e);
                 }
             }
             metrics.incrementCollectionsCount();
+            return results;
         }
     }
 

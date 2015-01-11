@@ -22,19 +22,14 @@
  */
 package org.jmxtrans.query.embedded;
 
-import org.jmxtrans.results.QueryResult;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import java.util.concurrent.BlockingQueue;
 
 /**
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
 public interface QueryMBean {
-    void collectMetrics(MBeanServer mBeanServer, BlockingQueue<QueryResult> results);
 
     int getCollectedMetricsCount();
 

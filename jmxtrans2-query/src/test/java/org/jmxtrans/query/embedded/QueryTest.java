@@ -23,7 +23,6 @@
 package org.jmxtrans.query.embedded;
 
 import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.utils.concurrent.DiscardingBlockingQueue;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,7 +30,7 @@ import org.junit.Test;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
-import java.util.concurrent.BlockingQueue;
+import java.util.Iterator;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,14 +61,13 @@ public class QueryTest {
 
     @Test
     public void basic_jmx_attribute_return_simple_result() throws Exception {
-        BlockingQueue<QueryResult> results = new DiscardingBlockingQueue<QueryResult>(10);
-        Query.builder().withObjectName("test:type=MemoryPool,name=PS Eden Space")
+        Iterable<QueryResult> results = Query.builder().withObjectName("test:type=MemoryPool,name=PS Eden Space")
                 .addAttribute("CollectionUsageThreshold")
                 .build()
-                .collectMetrics(mbeanServer, results);
+                .collectMetrics(mbeanServer);
         assertThat(results).hasSize(1);
 
-        QueryResult result = results.poll();
+        QueryResult result = results.iterator().next();
         assertThat(result.getValue()).isInstanceOf(Number.class);
     }
 
@@ -81,14 +79,15 @@ public class QueryTest {
                     .withKeys(asList("committed", "init", "max", "used"))
                     .build())
                 .build();
-        BlockingQueue<QueryResult> results = new DiscardingBlockingQueue<QueryResult>(10);
-        query.collectMetrics(mbeanServer, results);
+        Iterable<QueryResult> results = query.collectMetrics(mbeanServer);
         assertThat(results).hasSize(4);
 
-        QueryResult result1 = results.poll();
+        Iterator<QueryResult> queryResultIterator = results.iterator();
+
+        QueryResult result1 = queryResultIterator.next();
         assertThat(result1.getValue()).isInstanceOf(Number.class);
 
-        QueryResult result2 = results.poll();
+        QueryResult result2 = queryResultIterator.next();
         assertThat(result2.getValue()).isInstanceOf(Number.class);
     }
 

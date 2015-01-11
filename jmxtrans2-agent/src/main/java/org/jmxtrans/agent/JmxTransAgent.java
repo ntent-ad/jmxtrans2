@@ -22,14 +22,8 @@
  */
 package org.jmxtrans.agent;
 
-import org.jmxtrans.config.ConfigParser;
-import org.jmxtrans.config.PropertyPlaceholderResolverXmlPreprocessor;
-import org.jmxtrans.config.XmlConfigParser;
 import org.jmxtrans.log.Logger;
 import org.jmxtrans.log.LoggerFactory;
-import org.jmxtrans.utils.PropertyPlaceholderResolver;
-import org.jmxtrans.utils.io.Resource;
-import org.jmxtrans.utils.time.SystemClock;
 
 import java.lang.instrument.Instrumentation;
 
@@ -37,25 +31,18 @@ import java.lang.instrument.Instrumentation;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public class JmxTransAgent {
-    private static Logger logger = LoggerFactory.getLogger(JmxTransAgent.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(JmxTransAgent.class.getName());
 
     public static void premain(String configFile, Instrumentation inst) {
 
         if (configFile == null || configFile.isEmpty()) {
-            String msg = "JmxTransExporter configurationFile must be defined";
+            String msg = "JmxTransAgent configurationFile must be defined";
             logger.error(msg);
             throw new IllegalStateException(msg);
         }
 
         try {
-            ConfigParser configParser = XmlConfigParser.newInstance(
-                    new PropertyPlaceholderResolverXmlPreprocessor(new PropertyPlaceholderResolver()),
-                    new SystemClock());
-            configParser.setSource(new Resource(configFile));
-
-            JmxTransExporter jmxTransExporter = new JmxTransExporter(configParser.parseConfiguration());
-            //START
-            jmxTransExporter.start();
+            new JmxTransBuilder(configFile).build().start();
             logger.info("JmxTransAgent started with configuration '" + configFile + "'");
         } catch (Exception e) {
             String msg = "Exception loading JmxTransExporter from '" + configFile + "'";

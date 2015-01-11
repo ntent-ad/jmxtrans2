@@ -22,17 +22,23 @@
  */
 package org.jmxtrans.query.embedded;
 
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.Preconditions2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
+import static java.lang.String.format;
 import static java.util.Objects.hash;
 
 /**
@@ -40,7 +46,7 @@ import static java.util.Objects.hash;
  * <p/>
  * Collected values are sent to a {@linkplain java.util.concurrent.BlockingQueue}
  * for later export to the target monitoring systems
- * (see {@link #collectMetrics(javax.management.ObjectName, Object, long, java.util.Queue, Query, ResultNameStrategy)}).
+ * (see {@link #collectMetrics(javax.management.ObjectName, Object, long, java.util.Collection, Query, ResultNameStrategy)}.
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  * @author Jon Stevens
@@ -48,7 +54,7 @@ import static java.util.Objects.hash;
 public class QueryAttribute {
 
     @Nonnull
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     /**
      * Name of the JMX Attribute to collect
@@ -124,7 +130,7 @@ public class QueryAttribute {
             @Nonnull ObjectName objectName,
             @Nonnull Object value,
             long epochInMillis,
-            @Nonnull Queue<QueryResult> results,
+            @Nonnull Collection<QueryResult> results,
             @Nonnull Query query,
             @Nonnull ResultNameStrategy resultNameStrategy) {
         if (value instanceof CompositeData) {
@@ -133,7 +139,7 @@ public class QueryAttribute {
         } else if (value instanceof Number || value instanceof String || value instanceof Date) {
             return collectScalar(objectName, value, epochInMillis, results, query, resultNameStrategy);
         }
-        logger.info("Ignore non CompositeData attribute value {}:{}:{}={}", query, objectName, this, value);
+        logger.info(format("Ignore non CompositeData attribute value %s:%s:%s=%s", query, objectName, this, value));
         return 0;
     }
 
@@ -141,15 +147,15 @@ public class QueryAttribute {
             @Nonnull ObjectName objectName,
             @Nullable Object value,
             long epochInMillis,
-            @Nonnull Queue<QueryResult> results,
+            @Nonnull Collection<QueryResult> results,
             @Nonnull Query query,
             @Nonnull ResultNameStrategy resultNameStrategy) {
         if (keys != null && logger.isInfoEnabled()) {
-            logger.info("Ignore keys configured for 'simple' jmx attribute. {}:{}:{}", query, objectName, this);
+            logger.info(format("Ignore keys configured for 'simple' jmx attribute. %s:%s:%s", query, objectName, this));
         }
         String resultName = resultNameStrategy.getResultName(query, objectName, this);
         QueryResult result = new QueryResult(resultName, getType(), value, epochInMillis);
-        logger.debug("Collect {}", result);
+        logger.debug("Collect " + result);
         results.add(result);
         return 1;
     }
@@ -157,7 +163,7 @@ public class QueryAttribute {
     private int collectCompositeData(
             @Nonnull ObjectName objectName,
             long epochInMillis,
-            @Nonnull Queue<QueryResult> results,
+            @Nonnull Collection<QueryResult> results,
             @Nonnull Query query,
             @Nonnull ResultNameStrategy resultNameStrategy,
             @Nonnull CompositeData compositeData) {
@@ -165,7 +171,7 @@ public class QueryAttribute {
         String[] keysToCollect;
         if (keys == null) {
             keysToCollect = compositeData.getCompositeType().keySet().toArray(new String[0]);
-            logger.info("No 'key' has been configured to collect data on this Composite attribute, collect all keys. {}:{}:{}", query, objectName, this);
+            logger.info(format("No 'key' has been configured to collect data on this Composite attribute, collect all keys. %s:%s:%s", query, objectName, this));
         } else {
             keysToCollect = keys.toArray(new String[keys.size()]);
         }
@@ -174,11 +180,11 @@ public class QueryAttribute {
             Object compositeValue = compositeData.get(key);
             if (compositeValue instanceof Number || compositeValue instanceof String || compositeValue instanceof Date) {
                 QueryResult result = new QueryResult(resultName, getType(), compositeValue, epochInMillis);
-                logger.debug("Collect {}", result);
+                logger.debug("Collect " + result);
                 results.add(result);
                 metricsCounter++;
             } else {
-                logger.debug("Skip non supported value {}:{}:{}:{}={}", query, objectName, this, key, compositeValue);
+                logger.debug(format("Skip non supported value %s:%s:%s:%s=%s", query, objectName, this, key, compositeValue));
             }
         }
         return metricsCounter;

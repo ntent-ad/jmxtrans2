@@ -20,45 +20,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.scheduler;
+package org.jmxtrans.agent;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
-import org.jmxtrans.utils.time.Clock;
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
+import java.util.Date;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 
-@ThreadSafe
-public abstract class DeadlineRunnable implements Runnable {
+public class DummyApp {
+    public static final String MOCK_MBEAN_NAME = "org.jmxtrans:type=Counter,name=myCounter";
 
-    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-    @Nonnull private final Clock clock;
-    private final long deadline;
+    public static void main(String[] args) throws InterruptedException, MalformedObjectNameException, NotCompliantMBeanException, InstanceAlreadyExistsException, MBeanRegistrationException {
 
-    public DeadlineRunnable(@Nonnull Clock clock, long deadline) {
-        this.clock = clock;
-        this.deadline = deadline;
-    }
+        Counter mock = new Counter("myCounter");
+        getPlatformMBeanServer().registerMBean(mock, new ObjectName(MOCK_MBEAN_NAME));
 
-    @Override
-    public final void run() {
-        if (deadline < clock.currentTimeMillis()) {
-            // TODO: log and count
-            logger.warn("Deadline is passed, dropping job");
-            return;
+        while (true) {
+            System.out.println("hello, it is: " + new Date());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        doRun();
     }
 
-    protected abstract void doRun();
-
-    @Nonnull
-    protected Clock getClock() {
-        return clock;
-    }
-
-    protected long getDeadline() {
-        return deadline;
-    }
 }

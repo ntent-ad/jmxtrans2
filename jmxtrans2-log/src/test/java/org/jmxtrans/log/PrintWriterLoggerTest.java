@@ -133,6 +133,27 @@ public class PrintWriterLoggerTest {
                 .endsWith(lineSeparator());
     }
 
+    @Test
+    public void logLineContainsLogLevel() throws UnsupportedEncodingException {
+        Logger logger = createLogger(DEBUG);
+
+        logger.debug("debugMessage");
+        assertThat(byteArray.toString("UTF-8")).contains(DEBUG.toString());
+        byteArray.reset();
+
+        logger.info("infoMessage");
+        assertThat(byteArray.toString("UTF-8")).contains(INFO.toString());
+        byteArray.reset();
+
+        logger.warn("warnMessage");
+        assertThat(byteArray.toString("UTF-8")).contains(WARN.toString());
+        byteArray.reset();
+
+        logger.error("errorMessage");
+        assertThat(byteArray.toString("UTF-8")).contains(ERROR.toString());
+        byteArray.reset();
+    }
+
     private PrintWriterLogger createLogger(Level level) {
         return new PrintWriterLogger("testLogger", level, clock, out);
     }

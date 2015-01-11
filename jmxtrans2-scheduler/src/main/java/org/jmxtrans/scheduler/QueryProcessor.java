@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.scheduler;
 
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.results.QueryResult;
@@ -30,23 +32,16 @@ import org.jmxtrans.utils.time.Clock;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.management.MBeanServer;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 
 public class QueryProcessor {
 
-    @Nonnull
-    private final Clock clock;
-    @Nonnull
-    private final MBeanServer mBeanServer;
-    @Nonnull
-    private final Iterable<OutputWriter> outputWriters;
-    @Nonnull
-    private final Executor queryExecutor;
-    @Nonnull
-    private final ResultProcessor resultProcessor;
+    @Nonnull private final Clock clock;
+    @Nonnull private final MBeanServer mBeanServer;
+    @Nonnull private final Iterable<OutputWriter> outputWriters;
+    @Nonnull private final Executor queryExecutor;
+    @Nonnull private final ResultProcessor resultProcessor;
 
     public QueryProcessor(
             @Nonnull Clock clock,
@@ -68,14 +63,11 @@ public class QueryProcessor {
 
     @ThreadSafe
     private static class Processor extends DeadlineRunnable {
-        @Nonnull
-        private final Query query;
-        @Nonnull
-        private final MBeanServer mBeanServer;
-        @Nonnull
-        private final Iterable<OutputWriter> outputWriters;
-        @Nonnull
-        private final ResultProcessor resultProcessor;
+        @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+        @Nonnull private final Query query;
+        @Nonnull private final MBeanServer mBeanServer;
+        @Nonnull private final Iterable<OutputWriter> outputWriters;
+        @Nonnull private final ResultProcessor resultProcessor;
 
         public Processor(
                 @Nonnull Clock clock,
@@ -92,15 +84,15 @@ public class QueryProcessor {
         }
 
         @Override
-        public void doRun() {
+        protected void doRun() {
             try {
-                final BlockingQueue<QueryResult> results = new ArrayBlockingQueue<>(100);
-                query.collectMetrics(mBeanServer, results);
+                logger.debug("Collecting metrics for " + query);
+                Iterable<QueryResult> results = query.collectMetrics(mBeanServer);
                 for (OutputWriter outputWriter : outputWriters) {
                     try {
                         resultProcessor.writeResults(getDeadline(), results, outputWriter);
                     } catch (RejectedExecutionException e) {
-                        // TODO
+                        logger.warn("Could not enqueue result to writers.", e);
                     }
                 }
             } catch (Exception e) {

@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.scheduler;
 
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
@@ -29,7 +31,6 @@ import org.jmxtrans.utils.time.Clock;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 public class ResultProcessor {
@@ -46,18 +47,16 @@ public class ResultProcessor {
 
     public void writeResults(
             long deadline,
-            @Nonnull BlockingQueue<QueryResult> results,
+            @Nonnull Iterable<QueryResult> results,
             @Nonnull OutputWriter outputWriter) {
         resultExecutor.execute(new Processor(clock, deadline, results, outputWriter));
     }
 
     @ThreadSafe
     public static class Processor extends DeadlineRunnable {
-
-        @Nonnull
-        private final Iterable<QueryResult> results;
-        @Nonnull
-        private final OutputWriter outputWriter;
+        @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+        @Nonnull private final Iterable<QueryResult> results;
+        @Nonnull private final OutputWriter outputWriter;
 
         public Processor(
                 @Nonnull Clock clock,
@@ -70,13 +69,13 @@ public class ResultProcessor {
         }
 
         @Override
-        public void doRun() {
+        protected void doRun() {
             try {
+                logger.debug("Writing results to " + outputWriter);
                 outputWriter.write(results);
             } catch (IOException e) {
-                System.err.println("Je suis Charlie");
-                System.err.println("Sadly, error while drawing results.");
-                // TODO: log exception
+                logger.warn("Je suis Charlie");
+                logger.warn("Sadly, error while drawing results.", e);
             }
         }
     }

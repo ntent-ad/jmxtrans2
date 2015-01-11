@@ -68,7 +68,7 @@ public class QueryGeneratorTest {
     @Test
     public void nextTaskIsScheduled() {
         queryGenerator.start();
-        verify(queryTimer).schedule(any(Runnable.class), eq(11000L), eq(MILLISECONDS));
+        verify(queryTimer).schedule(any(Runnable.class), eq(10000L), eq(MILLISECONDS));
     }
 
     @Test

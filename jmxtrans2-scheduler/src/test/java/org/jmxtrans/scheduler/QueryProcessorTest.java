@@ -30,19 +30,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
 import javax.management.MBeanServer;
-import java.util.Collections;
-import java.util.concurrent.BlockingQueue;
+import java.util.Collection;
 import java.util.concurrent.Executor;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
+import static java.util.Collections.singleton;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QueryProcessorTest {
@@ -54,22 +52,15 @@ public class QueryProcessorTest {
     @Mock private ResultProcessor resultProcessor;
     @Mock private Query query;
     @Mock private QueryResult result;
-    private BlockingQueue<QueryResult> results;
+    private Collection<QueryResult> results = singleton(result);
 
     private QueryProcessor queryProcessor;
 
     @Before
     public void createQueryProcessor() {
-        queryProcessor = new QueryProcessor(clock, mBeanServer, Collections.singleton(outputWriter), queryExecutor, resultProcessor);
+        queryProcessor = new QueryProcessor(clock, mBeanServer, singleton(outputWriter), queryExecutor, resultProcessor);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                results = (BlockingQueue<QueryResult>) invocation.getArguments()[1];
-                results.add(result);
-                return null;
-            }
-        }).when(query).collectMetrics(any(MBeanServer.class), any(BlockingQueue.class));
+        when(query.collectMetrics(any(MBeanServer.class))).thenReturn(results);
     }
 
     @Test

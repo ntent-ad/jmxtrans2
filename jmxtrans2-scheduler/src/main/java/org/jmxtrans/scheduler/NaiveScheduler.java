@@ -22,6 +22,9 @@
  */
 package org.jmxtrans.scheduler;
 
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.ExecutorService;
@@ -32,19 +35,16 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 @ThreadSafe // actually, not threadsafe, but should be "safe enough", see comment below...
 public class NaiveScheduler {
 
-    @Nonnull
-    private final ExecutorService queryExecutor;
-    @Nonnull
-    private final ExecutorService resultExecutor;
+    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+
+    @Nonnull private final ExecutorService queryExecutor;
+    @Nonnull private final ExecutorService resultExecutor;
 
     // Synchronization around state transition is primitive and actually wrong. Using Guava would be cleaner, but
     // current naive implementation has a fairly low potential for trouble.
-    @Nonnull
-    private volatile State state = State.NEW;
-    @Nonnull
-    private final ScheduledExecutorService queryTimer;
-    @Nonnull
-    private final QueryGenerator queryGenerator;
+    @Nonnull private volatile State state = State.NEW;
+    @Nonnull private final ScheduledExecutorService queryTimer;
+    @Nonnull private final QueryGenerator queryGenerator;
     private final long shutdownTimeoutMillis;
 
     public NaiveScheduler(
@@ -65,9 +65,11 @@ public class NaiveScheduler {
             throw new IllegalStateException("Already started");
         }
         try {
+            logger.debug("Starting scheduler");
             this.state = State.STARTING;
             queryGenerator.start();
             this.state = State.RUNNING;
+            logger.debug("Scheduler started");
         } catch (Exception e) {
             this.state = State.FAILED;
             throw e;
@@ -79,6 +81,7 @@ public class NaiveScheduler {
             throw new IllegalStateException("Not running");
         }
         try {
+            logger.debug("Stopping scheduler");
             this.state = State.STOPPING;
             queryGenerator.stop();
             queryTimer.shutdown();
@@ -88,6 +91,7 @@ public class NaiveScheduler {
             queryExecutor.awaitTermination(shutdownTimeoutMillis, MILLISECONDS);
             resultExecutor.awaitTermination(shutdownTimeoutMillis, MILLISECONDS);
             this.state = State.TERMINATED;
+            logger.debug("Scheduler stopped");
         } catch (Exception e) {
             this.state = State.FAILED;
             throw e;

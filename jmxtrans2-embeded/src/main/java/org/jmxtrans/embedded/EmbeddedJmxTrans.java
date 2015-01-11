@@ -126,7 +126,10 @@ public class EmbeddedJmxTrans implements EmbeddedJmxTransMBean {
             collectScheduledExecutor.scheduleWithFixedDelay(new Runnable() {
                 @Override
                 public void run() {
-                    query.collectMetrics(mbeanServer, results);
+                    Iterable<QueryResult> queryResults = query.collectMetrics(mbeanServer);
+                    for (QueryResult qr : queryResults) {
+                        results.add(qr);
+                    }
                 }
             }, 0, getQueryIntervalInSeconds(), TimeUnit.SECONDS);
             // start export just after first collect

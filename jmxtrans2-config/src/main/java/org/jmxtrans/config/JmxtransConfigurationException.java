@@ -20,45 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.scheduler;
+package org.jmxtrans.config;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
-import org.jmxtrans.utils.time.Clock;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-
-@ThreadSafe
-public abstract class DeadlineRunnable implements Runnable {
-
-    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-    @Nonnull private final Clock clock;
-    private final long deadline;
-
-    public DeadlineRunnable(@Nonnull Clock clock, long deadline) {
-        this.clock = clock;
-        this.deadline = deadline;
-    }
-
-    @Override
-    public final void run() {
-        if (deadline < clock.currentTimeMillis()) {
-            // TODO: log and count
-            logger.warn("Deadline is passed, dropping job");
-            return;
-        }
-        doRun();
-    }
-
-    protected abstract void doRun();
-
-    @Nonnull
-    protected Clock getClock() {
-        return clock;
-    }
-
-    protected long getDeadline() {
-        return deadline;
+/**
+ * Created by gehel on 11/01/15.
+ */
+public class JmxtransConfigurationException extends RuntimeException {
+    public JmxtransConfigurationException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
