@@ -27,6 +27,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 public class JmxTransAgentIT extends AbstractAgentTest {
 
@@ -35,6 +36,9 @@ public class JmxTransAgentIT extends AbstractAgentTest {
         startDummyApplication();
 
         Thread.sleep(3000);
+
+        System.out.println(getOut().toString("UTF-8"));
+        System.err.println(getErr().toString("UTF-8"));
 
         assertThat(getOut().toString("UTF-8")).contains("counter.Value 0");
         assertThat(getOut().toString("UTF-8")).contains("counter.Value 1");

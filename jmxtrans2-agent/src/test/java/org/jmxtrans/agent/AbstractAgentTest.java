@@ -23,14 +23,18 @@
 package org.jmxtrans.agent;
 
 import com.google.common.io.ByteStreams;
+import org.jmxtrans.log.ConsoleLogProvider;
 import org.junit.After;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractAgentTest {
     private static final int PAUSE = 2000;
@@ -44,7 +48,8 @@ public class AbstractAgentTest {
             InterruptedException {
         List<String> args = new ArrayList<>();
         args.add("java");
-        args.add("-javaagent:" + getBuildDirectory() + "/jmxtrans2-agent-" + getVersion() + "-all.jar=" + getBaseDir() + "/src/test/resources/config.xml");
+        args.add("-javaagent:" + getAgent().getAbsolutePath() + "=" + getConfig().getAbsolutePath());
+        args.add("-D" + ConsoleLogProvider.JMXTRANS_LOG_LEVEL_PROP + "=DEBUG");
         args.add("-cp");
         args.add(getBuildDirectory() + "/test-classes/");
 
@@ -89,6 +94,20 @@ public class AbstractAgentTest {
                 }
             }
         }).start();
+    }
+
+    private File getAgent() throws IOException {
+        File agent = new File(getBuildDirectory(), getFinalName() + "-all.jar");
+        assertThat(agent).exists();
+        assertThat(agent).isFile();
+        return agent;
+    }
+
+    private File getConfig() throws IOException {
+        File config = new File(getBaseDir() + "/src/test/resources/config.xml");
+        assertThat(config).exists();
+        assertThat(config).isFile();
+        return config;
     }
 
     private String getFinalName() throws IOException {
