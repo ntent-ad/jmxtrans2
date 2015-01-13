@@ -15,3 +15,12 @@ branches:
 env:
   global:
     - secure: "h9NfI5aFT1H1UyZCj0u/Cbt0q1167OtTyGXo0AbE6lPxpttOkoFi0FkIvs/pppsXZGN6xp0pWKIMrcfMsK12nW8NH9r/hBekgVXYaJPmpnNSCephkgMoPNJFU5AByyWJo9qm5FFYlTEEwJS/1ZD9dREfbaTEgAN2tzBAjciC0PA="
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/1eb7b5d84ad8b708b093
+    on_success: change
+    on_failure: always
+    on_start: false
+
