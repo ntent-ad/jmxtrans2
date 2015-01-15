@@ -22,11 +22,14 @@
  */
 package org.jmxtrans.config;
 
-/**
- * Created by gehel on 11/01/15.
- */
+import javax.annotation.Nonnull;
+
 public class JmxtransConfigurationException extends RuntimeException {
-    public JmxtransConfigurationException(String message, Throwable cause) {
+    public JmxtransConfigurationException(@Nonnull String message, @Nonnull Throwable cause) {
         super(message, cause);
+    }
+
+    public JmxtransConfigurationException(@Nonnull String message) {
+        super(message);
     }
 }

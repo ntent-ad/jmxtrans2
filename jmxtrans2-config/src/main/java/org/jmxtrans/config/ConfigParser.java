@@ -31,9 +31,9 @@ import java.io.IOException;
 
 public interface ConfigParser {
 
-    void setSource(@Nonnull Resource source) throws IOException, SAXException, JAXBException;
+    boolean supports(@Nonnull Resource resource);
 
     @Nonnull
-    Configuration parseConfiguration() throws IOException, SAXException, JAXBException, IllegalAccessException, ClassNotFoundException, InstantiationException;
+    Configuration parseConfiguration(Resource source) throws IOException, SAXException, JAXBException, IllegalAccessException, ClassNotFoundException, InstantiationException;
 
 }

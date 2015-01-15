@@ -80,18 +80,18 @@
     <modules>
         <module>jmxtrans2-agent</module>
         <module>jmxtrans2-config</module>
-        <module>jmxtrans2-embeded</module>
+        <module>jmxtrans2-log</module>
+        <module>jmxtrans2-log-slf4j</module>
         <module>jmxtrans2-naming</module>
         <module>jmxtrans2-output</module>
         <module>jmxtrans2-output-writers</module>
         <module>jmxtrans2-query</module>
         <module>jmxtrans2-results</module>
         <module>jmxtrans2-scheduler</module>
+        <module>jmxtrans2-servlet</module>
         <module>jmxtrans2-spring</module>
         <module>jmxtrans2-standalone</module>
         <module>jmxtrans2-utils</module>
-        <module>jmxtrans2-log</module>
-        <module>jmxtrans2-log-slf4j</module>
     </modules>
 
     <scm>
@@ -339,6 +339,11 @@
             <dependency>
                 <groupId>org.jmxtrans.jmxtrans2</groupId>
                 <artifactId>jmxtrans2-scheduler</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jmxtrans.jmxtrans2</groupId>
+                <artifactId>jmxtrans2-servlet</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -692,6 +697,7 @@
                     </executions>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.18.1</version>
                     <configuration>

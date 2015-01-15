@@ -22,29 +22,20 @@
  */
 package org.jmxtrans.spring;
 
-import org.jmxtrans.embedded.EmbeddedJmxTrans;
 import org.junit.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
- */
 public class EmbeddedJmxTransFactoryTest {
-
 
     @Test
     public void testGetObject() throws Exception {
-        String configuration = "classpath:org/jmxtrans/spring/jmxtrans-factory-test.json";
+        String configuration = "classpath:org/jmxtrans/spring/simple-configuration.xml";
         EmbeddedJmxTransFactory factory = new EmbeddedJmxTransFactory(new DefaultResourceLoader());
         factory.setConfigurationUrl(configuration);
 
-        EmbeddedJmxTrans embeddedJmxTrans = factory.getObject();
+        SpringEmbeddedJmxTrans embeddedJmxTrans = factory.getObject();
         assertThat(embeddedJmxTrans).isNotNull();
-        assertThat(embeddedJmxTrans.getQueries()).hasSize(8);
-        assertThat(embeddedJmxTrans.getOutputWriters()).hasSize(1);
-
-        embeddedJmxTrans.stop();
     }
 }

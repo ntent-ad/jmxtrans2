@@ -22,7 +22,6 @@
  */
 package org.jmxtrans.spring;
 
-import org.jmxtrans.embedded.EmbeddedJmxTransException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -84,7 +83,7 @@ public class EmbeddedJmxTransBeanDefinitionParser extends AbstractSingleBeanDefi
                 logger.debug("Add configuration from attribute {}", configurationUrl);
                 configurationUrls.add(configurationUrl);
             } else {
-                throw new EmbeddedJmxTransException("Invalid configuration child element " + node);
+                throw new RuntimeException("Invalid configuration child element " + node);
             }
 
         }

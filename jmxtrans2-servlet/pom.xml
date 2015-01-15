@@ -31,22 +31,24 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jmxtrans2-spring</artifactId>
-    <name>JMXTrans - spring</name>
+    <artifactId>jmxtrans2-servlet</artifactId>
+    <name>JMXTrans - servlet</name>
 
     <properties>
-        <verify.cobertura.packageBranchRate>50</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>70</verify.cobertura.packageLineRate>
-        <verify.cobertura.totalBranchRate>50</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>70</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>52</verify.coverage.threshold>
-        <verify.mutation.threshold>20</verify.mutation.threshold>
+        <verify.cobertura.packageLineRate>52</verify.cobertura.packageLineRate>
+        <verify.cobertura.totalLineRate>52</verify.cobertura.totalLineRate>
+        <verify.coverage.threshold>73</verify.coverage.threshold>
+        <verify.mutation.threshold>55</verify.mutation.threshold>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -56,26 +58,6 @@
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-scheduler</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -88,12 +70,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

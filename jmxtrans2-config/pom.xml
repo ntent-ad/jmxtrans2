@@ -23,7 +23,8 @@
     THE SOFTWARE.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.jmxtrans.jmxtrans2</groupId>
@@ -35,10 +36,8 @@
     <name>JMXTrans - config</name>
 
     <properties>
-        <verify.cobertura.packageBranchRate>50</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>41</verify.cobertura.packageLineRate>
-        <verify.cobertura.totalLineRate>69</verify.cobertura.totalLineRate>
-        <verify.coverage.threshold>58</verify.coverage.threshold>
+        <!--<verify.cobertura.totalLineRate>69</verify.cobertura.totalLineRate>-->
+        <verify.coverage.threshold>60</verify.coverage.threshold>
     </properties>
 
     <dependencies>
@@ -58,6 +57,10 @@
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-results</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-scheduler</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
@@ -103,9 +106,25 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <configuration>
+                    <check combine.children="append"/>
+                    <instrumentation>
+                        <!--<ignores>-->
+                            <!--<ignore>org.jmxtrans.config.jaxb.*</ignore>-->
+                        <!--</ignores>-->
+                        <excludes>
+                            <exclude>org/jmxtrans/config/jaxb/**/*.class</exclude>
+                        </excludes>
+                    </instrumentation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
                 <version>1.6</version>
                 <configuration>
+                    <!-- no need to test generated classes -->
                     <packageName>org.jmxtrans.config.jaxb</packageName>
                 </configuration>
                 <executions>

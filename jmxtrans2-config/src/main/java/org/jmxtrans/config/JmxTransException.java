@@ -20,27 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.spring;
+package org.jmxtrans.config;
 
-import org.jmxtrans.scheduler.NaiveScheduler;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
+import javax.annotation.Nonnull;
 
-public class SpringEmbeddedJmxTrans implements InitializingBean, DisposableBean {
-
-    private final NaiveScheduler scheduler;
-
-    public SpringEmbeddedJmxTrans(NaiveScheduler scheduler) {
-        this.scheduler = scheduler;
+public class JmxTransException extends RuntimeException {
+    public JmxTransException(@Nonnull String message, @Nonnull Exception cause) {
+        super(message, cause);
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        scheduler.start();
-    }
-
-    @Override
-    public void destroy() throws Exception {
-        scheduler.stop();
-    }
 }

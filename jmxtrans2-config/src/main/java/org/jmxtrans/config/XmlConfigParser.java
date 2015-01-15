@@ -53,7 +53,6 @@ import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,10 +71,8 @@ public class XmlConfigParser implements ConfigParser {
 
     private final Clock clock;
     private final PropertyPlaceholderResolverXmlPreprocessor preprocessor;
-    private final StandardConfiguration configuration = new StandardConfiguration(DefaultConfiguration.getInstance());
     private final DocumentBuilder documentBuilder;
     private final Unmarshaller unmarshaller;
-    private Resource source;
 
     private XmlConfigParser(
             @Nonnull DocumentBuilder documentBuilder,
@@ -89,11 +86,27 @@ public class XmlConfigParser implements ConfigParser {
     }
 
     @Override
-    public synchronized void setSource(@Nonnull Resource source) throws IOException, SAXException, JAXBException {
-        this.source = source;
+    public boolean supports(@Nonnull Resource resource) {
+        return resource.getPath().endsWith(".xml");
     }
 
-    private void parse(@Nonnull Jmxtrans jmxtrans, @Nonnull TemporaryConfiguration configuration) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+    @Override
+    @Nonnull
+    public synchronized Configuration parseConfiguration(Resource source) throws IOException, SAXException, JAXBException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+        try (InputStream in = source.getInputStream()) {
+            Document document = documentBuilder.parse(in);
+            document = preprocessor.preprocess(document);
+            Jmxtrans jmxtrans = (Jmxtrans) unmarshaller.unmarshal(document);
+
+            ModifiableConfiguration newConfiguration = new ModifiableConfiguration();
+
+            parse(jmxtrans, newConfiguration);
+
+            return new StandardConfiguration(newConfiguration);
+        }
+    }
+
+    private void parse(@Nonnull Jmxtrans jmxtrans, @Nonnull ModifiableConfiguration configuration) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         if (jmxtrans.getQueries() != null) {
             parse(jmxtrans.getQueries(), configuration);
         }
@@ -105,9 +118,9 @@ public class XmlConfigParser implements ConfigParser {
         }
     }
 
-    private void parse(@Nonnull Jmxtrans.Queries queries, @Nonnull TemporaryConfiguration configuration) {
+    private void parse(@Nonnull Jmxtrans.Queries queries, @Nonnull ModifiableConfiguration configuration) {
         if (queries.getCollectIntervalInSeconds() != null) {
-            configuration.queryPeriod = new Interval(queries.getCollectIntervalInSeconds(), SECONDS);
+            configuration.setQueryPeriod(new Interval(queries.getCollectIntervalInSeconds(), SECONDS));
         }
         for (QueryType query : queries.getQuery()) {
             Query.Builder queryBuilder = Query.builder()
@@ -123,13 +136,13 @@ public class XmlConfigParser implements ConfigParser {
                 }
                 queryBuilder.addAttribute(attributeBuilder.build());
             }
-            configuration.queries.add(queryBuilder.build());
+            configuration.getQueries().add(queryBuilder.build());
         }
     }
 
-    private void parse(@Nonnull Jmxtrans.Invocations invocations, @Nonnull TemporaryConfiguration configuration) {
+    private void parse(@Nonnull Jmxtrans.Invocations invocations, @Nonnull ModifiableConfiguration configuration) {
         if (invocations.getCollectIntervalInSeconds() != null) {
-            configuration.invocationPeriod = new Interval(invocations.getCollectIntervalInSeconds(), SECONDS);
+            configuration.setInvocationPeriod(new Interval(invocations.getCollectIntervalInSeconds(), SECONDS));
         }
         for (InvocationType invocation : invocations.getInvocation()) {
             List<String> params = new ArrayList<>();
@@ -138,7 +151,7 @@ public class XmlConfigParser implements ConfigParser {
                 params.add(parameter.getValue());
                 signature.add(parameter.getType());
             }
-            configuration.invocations.add(
+            configuration.getInvocations().add(
                     new Invocation(
                             invocation.getObjectName(),
                             invocation.getOperationName(),
@@ -148,13 +161,13 @@ public class XmlConfigParser implements ConfigParser {
         }
     }
 
-    private void parse(@Nonnull Jmxtrans.OutputWriters outputWriters, @Nonnull TemporaryConfiguration configuration) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+    private void parse(@Nonnull Jmxtrans.OutputWriters outputWriters, @Nonnull ModifiableConfiguration configuration) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
         for (OutputWriterType outputWriter : outputWriters.getOutputWriter()) {
             Map<String, String> settings = new HashMap<>();
             for (Map.Entry<QName, String> attribute : outputWriter.getOtherAttributes().entrySet()) {
                 settings.put(attribute.getKey().getLocalPart(), attribute.getValue());
             }
-            configuration.outputWriters.add(instantiateOutputWriter(outputWriter.getClazz(), settings));
+            configuration.getOutputWriters().add(instantiateOutputWriter(outputWriter.getClazz(), settings));
         }
     }
 
@@ -174,24 +187,6 @@ public class XmlConfigParser implements ConfigParser {
             throw new JmxtransConfigurationException(
                     format("Could not load class %s, this can happen if you use non standard outputwriters and did not" +
                             " add the appropriate jar on the classpath", outputWriterClass), e);
-        }
-    }
-
-    @Override
-    @Nonnull
-    public synchronized Configuration parseConfiguration() throws IOException, SAXException, JAXBException, IllegalAccessException, ClassNotFoundException, InstantiationException {
-        try (InputStream in = source.getInputStream()) {
-            Document document = documentBuilder.parse(in);
-            document = preprocessor.preprocess(document);
-            Jmxtrans jmxtrans = (Jmxtrans) unmarshaller.unmarshal(document);
-
-            TemporaryConfiguration newConfiguration = new TemporaryConfiguration();
-
-            parse(jmxtrans, newConfiguration);
-
-            return configuration.replaceWith(newConfiguration);
-        } finally {
-            documentBuilder.reset();
         }
     }
 
@@ -226,47 +221,4 @@ public class XmlConfigParser implements ConfigParser {
     }
 
 
-    private static final class TemporaryConfiguration implements Configuration {
-
-        @Nonnull
-        private final Collection<Query> queries = new ArrayList<>();
-        private Interval queryPeriod;
-        @Nonnull
-        private final Collection<OutputWriter> outputWriters = new ArrayList<>();
-        @Nonnull
-        private final Collection<Invocation> invocations = new ArrayList<>();
-        private Interval invocationPeriod;
-
-        @Nonnull
-        @Override
-        public Iterable<Query> getQueries() {
-            return queries;
-        }
-
-        @Nonnull
-        @Override
-        public Interval getQueryPeriod() {
-            if (queryPeriod == null) return DefaultConfiguration.getInstance().getQueryPeriod();
-            return queryPeriod;
-        }
-
-        @Nonnull
-        @Override
-        public Iterable<OutputWriter> getOutputWriters() {
-            return outputWriters;
-        }
-
-        @Nonnull
-        @Override
-        public Iterable<Invocation> getInvocations() {
-            return invocations;
-        }
-
-        @Nonnull
-        @Override
-        public Interval getInvocationPeriod() {
-            if (invocationPeriod == null) return DefaultConfiguration.getInstance().getInvocationPeriod();
-            return invocationPeriod;
-        }
-    }
 }

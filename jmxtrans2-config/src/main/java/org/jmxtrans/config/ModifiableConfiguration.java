@@ -28,68 +28,59 @@ import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.utils.time.Interval;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-import java.util.concurrent.CopyOnWriteArrayList;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.util.ArrayList;
+import java.util.Collection;
 
-@ThreadSafe // TODO: synchronization is overly aggressive
-public class StandardConfiguration implements Configuration {
+@NotThreadSafe
+final class ModifiableConfiguration implements Configuration {
 
     @Nonnull
-    private final CopyOnWriteArrayList<Query> queries = new CopyOnWriteArrayList<>();
+    private final Collection<Query> queries = new ArrayList<>();
+    private Interval queryPeriod;
     @Nonnull
-    private volatile Interval queryPeriod;
+    private final Collection<OutputWriter> outputWriters = new ArrayList<>();
     @Nonnull
-    private final CopyOnWriteArrayList<OutputWriter> outputWriters = new CopyOnWriteArrayList<>();
-    @Nonnull
-    private final CopyOnWriteArrayList<Invocation> invocations = new CopyOnWriteArrayList<>();
-    @Nonnull
-    private volatile Interval invocationPeriod;
+    private final Collection<Invocation> invocations = new ArrayList<>();
+    private Interval invocationPeriod;
 
-    public StandardConfiguration(Configuration configuration) {
-        queries.clear();
-        for (Query query : configuration.getQueries()) {
-            queries.add(query);
-        }
-        queryPeriod = configuration.getQueryPeriod();
-        outputWriters.clear();
-        for (OutputWriter outputWriter : configuration.getOutputWriters()) {
-            outputWriters.add(outputWriter);
-        }
-        invocations.clear();
-        for (Invocation invocation : configuration.getInvocations()) {
-            invocations.add(invocation);
-        }
-        invocationPeriod = configuration.getInvocationPeriod();
-    }
-
+    @Nonnull
     @Override
-    @Nonnull
-    public synchronized Iterable<Query> getQueries() {
+    public Collection<Query> getQueries() {
         return queries;
     }
 
-    @Override
     @Nonnull
-    public synchronized Interval getQueryPeriod() {
+    @Override
+    public Interval getQueryPeriod() {
+        if (queryPeriod == null) return DefaultConfiguration.getInstance().getQueryPeriod();
         return queryPeriod;
     }
 
-    @Override
+    public void setQueryPeriod(@Nonnull Interval queryPeriod) {
+        this.queryPeriod = queryPeriod;
+    }
+
     @Nonnull
-    public synchronized Iterable<OutputWriter> getOutputWriters() {
+    @Override
+    public Collection<OutputWriter> getOutputWriters() {
         return outputWriters;
     }
 
-    @Override
     @Nonnull
-    public synchronized Iterable<Invocation> getInvocations() {
+    @Override
+    public Collection<Invocation> getInvocations() {
         return invocations;
     }
 
-    @Override
     @Nonnull
-    public synchronized Interval getInvocationPeriod() {
+    @Override
+    public Interval getInvocationPeriod() {
+        if (invocationPeriod == null) return DefaultConfiguration.getInstance().getInvocationPeriod();
         return invocationPeriod;
     }
 
+    public void setInvocationPeriod(@Nonnull Interval invocationPeriod) {
+        this.invocationPeriod = invocationPeriod;
+    }
 }

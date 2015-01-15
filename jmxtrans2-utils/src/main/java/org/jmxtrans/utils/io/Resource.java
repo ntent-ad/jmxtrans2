@@ -42,6 +42,11 @@ public class Resource {
     }
 
     @Nonnull
+    public String getPath() {
+        return path;
+    }
+
+    @Nonnull
     public InputStream getInputStream() throws IOException {
         if (path.toLowerCase().startsWith("classpath:")) {
             return getClasspathInputStream();

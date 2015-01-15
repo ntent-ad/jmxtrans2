@@ -55,25 +55,22 @@ public class XmlConfigParserTest {
     @Test(expected = UnmarshalException.class)
     public void invalidConfigurationThrowsException() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         Resource resource = new Resource("classpath:org/jmxtrans/config/invalid-configuration.xml");
-        parser.setSource(resource);
-        parser.parseConfiguration();
+        parser.parseConfiguration(resource);
     }
 
     @Test
     public void queriesAreParsed() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException {
         Resource resource = new Resource("classpath:org/jmxtrans/config/simple-configuration.xml");
-        parser.setSource(resource);
-        Configuration configuration = parser.parseConfiguration();
+        Configuration configuration = parser.parseConfiguration(resource);
         assertThat(configuration).isNotNull();
-        assertThat(configuration.getQueries()).hasSize(1);
+        assertThat(configuration.getQueries()).hasSize(3);
         assertThat(configuration.getQueryPeriod()).isEqualTo(new Interval(10, SECONDS));
     }
 
     @Test
     public void invocationsAreParsed() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException, MalformedObjectNameException {
         Resource resource = new Resource("classpath:org/jmxtrans/config/simple-configuration.xml");
-        parser.setSource(resource);
-        Configuration configuration = parser.parseConfiguration();
+        Configuration configuration = parser.parseConfiguration(resource);
         assertThat(configuration).isNotNull();
         assertThat(configuration.getInvocationPeriod()).isEqualTo(new Interval(20, SECONDS));
         assertThat(configuration.getInvocations()).hasSize(2);
@@ -96,8 +93,7 @@ public class XmlConfigParserTest {
     @Test
     public void outputWritersAreParsed() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         Resource resource = new Resource("classpath:org/jmxtrans/config/simple-configuration.xml");
-        parser.setSource(resource);
-        Configuration configuration = parser.parseConfiguration();
+        Configuration configuration = parser.parseConfiguration(resource);
         assertThat(configuration).isNotNull();
         assertThat(configuration.getOutputWriters()).hasSize(2);
     }

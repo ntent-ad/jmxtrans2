@@ -22,25 +22,25 @@
  */
 package org.jmxtrans.spring;
 
-import org.jmxtrans.embedded.EmbeddedJmxTrans;
-import org.jmxtrans.embedded.EmbeddedJmxTransException;
-import org.jmxtrans.embedded.config.Config;
-import org.jmxtrans.embedded.config.ConfigurationParser;
+import org.jmxtrans.config.JmxTransBuilder;
+import org.jmxtrans.scheduler.NaiveScheduler;
+import org.jmxtrans.utils.io.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.StringUtils;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.singleton;
+
 /**
- * {@link org.jmxtrans.embedded.EmbeddedJmxTrans} factory for Spring Framework integration.
+ * {@link org.jmxtrans.spring.SpringEmbeddedJmxTrans} factory for Spring Framework integration.
  * <p/>
  * Default {@linkplain #configurationUrls} :
  * <ul>
@@ -50,6 +50,7 @@ import java.util.List;
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
+@NotThreadSafe
 public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTrans>, BeanNameAware {
 
     private final static String DEFAULT_CONFIGURATION_URL = "classpath:org.jmxtrans.json, classpath:org/jmxtrans/embedded/config/jmxtrans-internals.json";
@@ -58,13 +59,13 @@ public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTra
 
     private List<String> configurationUrls;
 
-    private SpringEmbeddedJmxTrans embeddedJmxTrans;
-
-    private ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
 
     private boolean ignoreConfigurationNotFound = false;
 
     private String beanName = "jmxtrans";
+
+    private SpringEmbeddedJmxTrans embeddedJmxTrans;
 
     @Autowired
     public EmbeddedJmxTransFactory(ResourceLoader resourceLoader) {
@@ -79,42 +80,18 @@ public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTra
             if (configurationUrls == null) {
                 configurationUrls = Collections.singletonList(DEFAULT_CONFIGURATION_URL);
             }
-            ConfigurationParser parser = new ConfigurationParser();
-            Config config = new Config();
-            SpringEmbeddedJmxTrans newJmxTrans = new SpringEmbeddedJmxTrans();
-            newJmxTrans.setObjectName("org.jmxtrans.embedded:type=EmbeddedJmxTrans,name=" + beanName);
 
-            for (String delimitedConfigurationUrl : configurationUrls) {
-                String[] tokens = StringUtils.commaDelimitedListToStringArray(delimitedConfigurationUrl);
-                tokens = StringUtils.trimArrayElements(tokens);
-                for (String configurationUrl : tokens) {
-                    configurationUrl = configurationUrl.trim();
-                    logger.debug("Load configuration {}", configurationUrl);
-                    Resource configuration = resourceLoader.getResource(configurationUrl);
-                    if (configuration.exists()) {
-                        try {
-                            parser.loadConfiguration(configuration.getInputStream(), config);
-                        } catch (Exception e) {
-                            throw new EmbeddedJmxTransException("Exception loading configuration " + configuration, e);
-                        }
-                    } else if (ignoreConfigurationNotFound) {
-                        logger.debug("Ignore missing configuration file {}", configuration);
-                    } else {
-                        throw new EmbeddedJmxTransException("Configuration file " + configuration + " not found");
-                    }
-                }
-            }
-            config.configure(newJmxTrans);
-            embeddedJmxTrans = newJmxTrans;
+            NaiveScheduler scheduler = new JmxTransBuilder(ignoreConfigurationNotFound, singleton(new Resource(configurationUrls.get(0)))).build();
+
+            embeddedJmxTrans = new SpringEmbeddedJmxTrans(scheduler);
             logger.info("Created EmbeddedJmxTrans with configuration {})", configurationUrls);
-            embeddedJmxTrans.start();
         }
         return embeddedJmxTrans;
     }
 
     @Override
     public Class<?> getObjectType() {
-        return EmbeddedJmxTrans.class;
+        return SpringEmbeddedJmxTrans.class;
     }
 
     @Override
@@ -127,14 +104,14 @@ public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTra
      */
     public void setConfigurationUrl(String configurationUrl) {
         if (this.configurationUrls == null) {
-            this.configurationUrls = new ArrayList<String>();
+            this.configurationUrls = new ArrayList<>();
         }
         this.configurationUrls.add(configurationUrl);
     }
 
     public void setConfigurationUrls(List<String> configurationUrls) {
         if (this.configurationUrls == null) {
-            this.configurationUrls = new ArrayList<String>();
+            this.configurationUrls = new ArrayList<>();
         }
         this.configurationUrls.addAll(configurationUrls);
     }
