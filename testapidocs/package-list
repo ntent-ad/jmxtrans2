@@ -1,11 +1,7 @@
 org.jmxtrans.agent
 org.jmxtrans.config
-org.jmxtrans.embedded
-org.jmxtrans.embedded.config
-org.jmxtrans.embedded.output
-org.jmxtrans.embedded.spring
-org.jmxtrans.embedded.util.json
-org.jmxtrans.embedded.util.pool
+org.jmxtrans.log
+org.jmxtrans.log.slf4j
 org.jmxtrans.naming
 org.jmxtrans.output
 org.jmxtrans.output.writers
@@ -13,6 +9,10 @@ org.jmxtrans.output.writers.utils
 org.jmxtrans.query
 org.jmxtrans.query.embedded
 org.jmxtrans.results
+org.jmxtrans.scheduler
+org.jmxtrans.servlet
+org.jmxtrans.spring
+org.jmxtrans.standalone.cli
 org.jmxtrans.utils
 org.jmxtrans.utils.circuitbreaker
 org.jmxtrans.utils.collections
