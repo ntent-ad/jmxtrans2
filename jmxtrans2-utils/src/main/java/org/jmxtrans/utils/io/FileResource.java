@@ -23,16 +23,28 @@
 package org.jmxtrans.utils.io;
 
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by gehel on 17/01/15.
- */
-public interface Resource {
-    @Nonnull
-    String getPath();
+public class FileResource implements Resource {
+
+    @Nonnull private final File file;
+
+    public FileResource(@Nonnull File file) {
+        this.file = file;
+    }
 
     @Nonnull
-    InputStream getInputStream() throws IOException;
+    @Override
+    public String getPath() {
+        return file.getAbsolutePath();
+    }
+
+    @Nonnull
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return new FileInputStream(file);
+    }
 }

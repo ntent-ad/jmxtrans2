@@ -23,31 +23,14 @@
     THE SOFTWARE.
 
 -->
-<jmxtrans xmlns="http://jmxtrans.org/config/2.0"
-        collectIntervalInSeconds="10">
+<jmxtrans xmlns="http://jmxtrans.org/config/2.0">
 
     <queries>
         <query objectName="java.lang:type=MemoryPool,name=PS Eden Space" resultAlias="eden" />
-        <query objectName="java.lang:type=MemoryPool,name=PS Perm Gen" resultAlias="permgen">
-            <queryAttribute name="CollectionUsageThresholdCount"/>
-        </query>
-        <query objectName="java.lang:type=MemoryPool,name=PS Perm Gen" resultAlias="permgen">
-            <queryAttribute name="PeakUsage" resultAlias="peak">
-                <key>used</key>
-            </queryAttribute>
-        </query>
     </queries>
-
-    <invocations>
-        <invocation objectName="java.lang:type=Memory" operationName="gc" resultAlias="jvm.gc"/>
-        <invocation objectName="java.lang:type=Threading" operationName="getThreadCpuTime" resultAlias="jvm.thread.cpu">
-            <parameter value="1" type="long"/>
-        </invocation>
-    </invocations>
 
     <outputWriters>
         <outputWriter class="org.jmxtrans.config.DummyOutputWriter"/>
-        <outputWriter class="org.jmxtrans.output.DevNullOutputWriter" unkownSetting="unused-value"/>
     </outputWriters>
 
 </jmxtrans>

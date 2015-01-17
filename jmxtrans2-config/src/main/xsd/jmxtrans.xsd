@@ -30,22 +30,26 @@
         elementFormDefault="qualified">
 
     <xs:element name="jmxtrans">
+        <xs:annotation>
+            <xs:documentation>
+                Defines the configuration elements for JmxTrans.
+            </xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:all>
-                <xs:element name="queries" minOccurs="0" maxOccurs="1">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="query" type="queryType" minOccurs="1" maxOccurs="unbounded"/>
-                        </xs:sequence>
-                        <xs:attribute name="collectIntervalInSeconds" type="xs:int"/>
-                    </xs:complexType>
-                </xs:element>
+                <xs:element name="queries" minOccurs="0" maxOccurs="1" type="queriesType"/>
                 <xs:element name="invocations" minOccurs="0" maxOccurs="1">
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="invocation" type="invocationType" minOccurs="1" maxOccurs="unbounded"/>
                         </xs:sequence>
-                        <xs:attribute name="collectIntervalInSeconds" type="xs:int"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="servers" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="server" type="serverType" minOccurs="1" maxOccurs="unbounded"/>
+                        </xs:sequence>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="outputWriters" minOccurs="0" maxOccurs="1">
@@ -57,8 +61,42 @@
                     </xs:complexType>
                 </xs:element>
             </xs:all>
+            <xs:attribute name="collectIntervalInSeconds" type="xs:int">
+                <xs:annotation>
+                    <xs:documentation>
+                        Interval between metric collection. At the moment this is not configurable by server or by
+                        query.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
+
+    <xs:complexType name="queriesType">
+        <xs:annotation>
+            <xs:documentation>
+                Defines a list of JMX queries. If queries are defined outside of a server element, they are assumed to
+                refer to the JVM running JMXTrans. In the case of JMXTrans running as an agent or embedded, this is
+                probably what you want. In the case of JMXTrans standalone, you might want to do define JMX queries
+                monitoring JMXTrans itself.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="query" type="queryType" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="serverType">
+        <xs:sequence>
+            <xs:element name="queries" minOccurs="0" maxOccurs="1" type="queriesType"/>
+        </xs:sequence>
+        <xs:attribute name="jmxUrl" type="xs:anyURI"/>
+        <xs:attribute name="host" type="xs:string"/>
+        <xs:attribute name="port" type="xs:int"/>
+        <xs:attribute name="username" type="xs:string"/>
+        <xs:attribute name="password" type="xs:string"/>
+        <xs:attribute name="protocolProviderPackages" type="xs:string"/>
+    </xs:complexType>
 
     <xs:complexType name="queryType">
         <xs:sequence>

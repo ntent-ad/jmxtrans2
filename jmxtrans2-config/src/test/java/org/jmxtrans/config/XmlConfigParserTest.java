@@ -23,8 +23,10 @@
 package org.jmxtrans.config;
 
 import org.jmxtrans.query.Invocation;
+import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.io.StandardResource;
 import org.jmxtrans.utils.time.Interval;
 import org.jmxtrans.utils.time.SystemClock;
 import org.junit.Before;
@@ -54,25 +56,38 @@ public class XmlConfigParserTest {
 
     @Test(expected = UnmarshalException.class)
     public void invalidConfigurationThrowsException() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-        Resource resource = new Resource("classpath:org/jmxtrans/config/invalid-configuration.xml");
+        Resource resource = new StandardResource("classpath:org/jmxtrans/config/invalid-configuration.xml");
         parser.parseConfiguration(resource);
     }
 
     @Test
     public void queriesAreParsed() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException {
-        Resource resource = new Resource("classpath:org/jmxtrans/config/simple-configuration.xml");
+        Resource resource = new StandardResource("classpath:org/jmxtrans/config/simple-configuration.xml");
         Configuration configuration = parser.parseConfiguration(resource);
         assertThat(configuration).isNotNull();
-        assertThat(configuration.getQueries()).hasSize(3);
-        assertThat(configuration.getQueryPeriod()).isEqualTo(new Interval(10, SECONDS));
+        assertThat(configuration.getServers()).hasSize(1);
+        Server server = configuration.getServers().iterator().next();
+        assertThat(server.getQueries()).hasSize(3);
+        assertThat(configuration.getPeriod()).isEqualTo(new Interval(10, SECONDS));
+    }
+
+    @Test
+    public void serversAreParsed() throws Exception {
+        Resource resource = new StandardResource("classpath:org/jmxtrans/config/with-servers.xml");
+        Configuration configuration = parser.parseConfiguration(resource);
+        assertThat(configuration).isNotNull();
+        assertThat(configuration.getServers()).hasSize(1);
+
+        Server server = configuration.getServers().iterator().next();
+        assertThat(server.getHost()).isEqualTo("host.test.net");
+        assertThat(server.getQueries()).hasSize(1);
     }
 
     @Test
     public void invocationsAreParsed() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException, MalformedObjectNameException {
-        Resource resource = new Resource("classpath:org/jmxtrans/config/simple-configuration.xml");
+        Resource resource = new StandardResource("classpath:org/jmxtrans/config/simple-configuration.xml");
         Configuration configuration = parser.parseConfiguration(resource);
         assertThat(configuration).isNotNull();
-        assertThat(configuration.getInvocationPeriod()).isEqualTo(new Interval(20, SECONDS));
         assertThat(configuration.getInvocations()).hasSize(2);
 
         Iterator<Invocation> invocationIterator = configuration.getInvocations().iterator();
@@ -92,9 +107,17 @@ public class XmlConfigParserTest {
 
     @Test
     public void outputWritersAreParsed() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-        Resource resource = new Resource("classpath:org/jmxtrans/config/simple-configuration.xml");
+        Resource resource = new StandardResource("classpath:org/jmxtrans/config/simple-configuration.xml");
         Configuration configuration = parser.parseConfiguration(resource);
         assertThat(configuration).isNotNull();
         assertThat(configuration.getOutputWriters()).hasSize(2);
+    }
+
+    @Test
+    public void defaultCollectIntervalIfNotConfigured() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException {
+        Resource resource = new StandardResource("classpath:org/jmxtrans/config/no-collection-interval.xml");
+        Configuration configuration = parser.parseConfiguration(resource);
+        assertThat(configuration.getPeriod()).isNotNull();
+        assertThat(configuration.getPeriod()).isEqualTo(new Interval(60, SECONDS));
     }
 }

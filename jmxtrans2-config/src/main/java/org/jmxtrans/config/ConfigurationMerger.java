@@ -24,7 +24,7 @@ package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.Server;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -45,18 +45,17 @@ public class ConfigurationMerger {
         configurationsWithDefault.add(DefaultConfiguration.getInstance());
         configurationsWithDefault.addAll(configurations);
         for (Configuration configuration : configurationsWithDefault) {
-            appendQueries(result, configuration.getQueries());
+            appendServers(result, configuration.getServers());
             appendInvocations(result, configuration.getInvocations());
             appendOutputWriters(result, configuration.getOutputWriters());
-            result.setQueryPeriod(configuration.getQueryPeriod());
-            result.setInvocationPeriod(configuration.getInvocationPeriod());
+            result.setPeriod(configuration.getPeriod());
         }
         return result;
     }
 
-    private void appendQueries(@Nonnull ModifiableConfiguration configuration, @Nonnull Iterable<Query> queries) {
-        for (Query query : queries) {
-            configuration.getQueries().add(query);
+    private void appendServers(@Nonnull ModifiableConfiguration configuration, @Nonnull Iterable<Server> servers) {
+        for (Server server : servers) {
+            configuration.getServers().add(server);
         }
     }
 

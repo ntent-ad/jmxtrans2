@@ -27,6 +27,7 @@ import org.jmxtrans.config.JmxTransException;
 import org.jmxtrans.scheduler.NaiveScheduler;
 import org.jmxtrans.utils.VisibleForTesting;
 import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.io.StandardResource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -136,7 +137,7 @@ public class JmxTransLoaderListener implements ServletContextListener {
         for (String configuration : CONFIG_SPLIT.split(configurations)) {
             String trimmed = configuration.trim();
             if (!trimmed.isEmpty()) {
-                results.add(new Resource(trimmed));
+                results.add(new StandardResource(trimmed));
             }
         }
         return results;

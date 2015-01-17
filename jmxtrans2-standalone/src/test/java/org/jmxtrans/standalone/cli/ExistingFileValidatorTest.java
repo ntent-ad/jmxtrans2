@@ -20,19 +20,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.standalone.cli;
 
-import javax.annotation.Nonnull;
+import com.beust.jcommander.ParameterException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
-/**
- * Created by gehel on 17/01/15.
- */
-public interface Resource {
-    @Nonnull
-    String getPath();
+public class ExistingFileValidatorTest {
 
-    @Nonnull
-    InputStream getInputStream() throws IOException;
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
+
+    @Test
+    public void validationPassIfFileExists() throws IOException {
+        File existingFile = testFolder.newFile();
+        new ExistingFileValidator().validate("", existingFile);
+    }
+
+    @Test(expected = ParameterException.class)
+    public void validationFailsIfFileDoesNotExist() throws IOException {
+        File nonExistingFile = testFolder.newFile();
+        nonExistingFile.delete();
+        new ExistingFileValidator().validate("", nonExistingFile);
+    }
+
+    @Test(expected = ParameterException.class)
+    public void validationFailsIfFileIsADirectory() throws IOException {
+        File nonExistingFile = testFolder.newFolder();
+        nonExistingFile.delete();
+        new ExistingFileValidator().validate("", nonExistingFile);
+    }
+
 }

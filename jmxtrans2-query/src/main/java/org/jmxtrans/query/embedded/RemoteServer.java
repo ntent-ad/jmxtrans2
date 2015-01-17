@@ -28,12 +28,17 @@ import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
 import static javax.management.remote.JMXConnectorFactory.PROTOCOL_PROVIDER_PACKAGES;
 import static javax.naming.Context.SECURITY_CREDENTIALS;
 import static javax.naming.Context.SECURITY_PRINCIPAL;
+import static org.jmxtrans.utils.Preconditions2.checkNotEmpty;
 
 public class RemoteServer implements Server {
 
@@ -85,6 +90,7 @@ public class RemoteServer implements Server {
 
     @Override
     public MBeanServerConnection getServerConnection() throws Exception {
+        // FIXME: closing of JMXConnector is not done
         return JMXConnectorFactory.connect(url, this.getEnvironment()).getMBeanServerConnection();
     }
 
@@ -93,5 +99,84 @@ public class RemoteServer implements Server {
         return queries;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
 
+    public static class Builder {
+        private static final String FRONT = "service:jmx:rmi:///jndi/rmi://";
+        private static final String BACK = "/jmxrmi";
+
+        private JMXServiceURL url;
+        private String host;
+        private Integer port;
+        private String username;
+        private String password;
+        private String protocolProviderPackages;
+        private final Collection<Query> queries = new ArrayList<>();
+
+        @Nonnull
+        public Builder withUrl(@Nullable String url) throws MalformedURLException {
+            if (url == null) {
+                this.url = null;
+            } else {
+                this.url = new JMXServiceURL(url);
+            }
+            return this;
+        }
+
+        @Nonnull
+        public Builder withHost(@Nullable String host) {
+            this.host = host;
+            return this;
+        }
+
+        @Nonnull
+        public Builder withPort(@Nullable Integer port) {
+            this.port = port;
+            return this;
+        }
+
+        @Nonnull
+        public Builder withUsername(@Nullable String username) {
+            this.username = username;
+            return this;
+        }
+
+        @Nonnull
+        public Builder withPassword(@Nullable String password) {
+            this.password = password;
+            return this;
+        }
+
+        @Nonnull
+        public Builder withProtocolProviderPackages(@Nullable String protocolProviderPackages) {
+            this.protocolProviderPackages = protocolProviderPackages;
+            return this;
+        }
+
+        @Nonnull
+        public Builder withQueries(@Nonnull Collection<Query> queries) {
+            this.queries.clear();
+            this.queries.addAll(queries);
+            return this;
+        }
+
+        @Nonnull
+        public RemoteServer build() throws MalformedURLException {
+            return new RemoteServer(
+                    computeUrl(),
+                    username,
+                    password,
+                    protocolProviderPackages,
+                    queries
+            );
+        }
+
+        @Nonnull
+        private JMXServiceURL computeUrl() throws MalformedURLException {
+            if (url != null) return url;
+            return new JMXServiceURL(null, checkNotEmpty(host), requireNonNull(port, "port has to be specified"));
+        }
+    }
 }

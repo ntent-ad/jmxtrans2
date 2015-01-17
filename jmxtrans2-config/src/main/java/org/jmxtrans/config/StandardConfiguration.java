@@ -24,36 +24,31 @@ package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.InProcessServer;
-import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.utils.time.Interval;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @ThreadSafe // TODO: synchronization is overly aggressive
 public class StandardConfiguration implements Configuration {
 
     @Nonnull
-    private final CopyOnWriteArrayList<Query> queries = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<Server> servers = new CopyOnWriteArrayList<>();
     @Nonnull
-    private volatile Interval queryPeriod;
+    private volatile Interval period;
     @Nonnull
     private final CopyOnWriteArrayList<OutputWriter> outputWriters = new CopyOnWriteArrayList<>();
     @Nonnull
     private final CopyOnWriteArrayList<Invocation> invocations = new CopyOnWriteArrayList<>();
-    @Nonnull
-    private volatile Interval invocationPeriod;
 
     public StandardConfiguration(Configuration configuration) {
-        queries.clear();
-        for (Query query : configuration.getQueries()) {
-            queries.add(query);
+        servers.clear();
+        for (Server server : configuration.getServers()) {
+            servers.add(server);
         }
-        queryPeriod = configuration.getQueryPeriod();
+        period = configuration.getPeriod();
         outputWriters.clear();
         for (OutputWriter outputWriter : configuration.getOutputWriters()) {
             outputWriters.add(outputWriter);
@@ -62,25 +57,18 @@ public class StandardConfiguration implements Configuration {
         for (Invocation invocation : configuration.getInvocations()) {
             invocations.add(invocation);
         }
-        invocationPeriod = configuration.getInvocationPeriod();
-    }
-
-    @Override
-    @Nonnull
-    public synchronized Iterable<Query> getQueries() {
-        return queries;
     }
 
     @Nonnull
     @Override
     public Iterable<Server> getServers() {
-        return Collections.<Server>singletonList(new InProcessServer(queries));
+        return servers;
     }
 
     @Override
     @Nonnull
-    public synchronized Interval getQueryPeriod() {
-        return queryPeriod;
+    public synchronized Interval getPeriod() {
+        return period;
     }
 
     @Override
@@ -94,11 +82,4 @@ public class StandardConfiguration implements Configuration {
     public synchronized Iterable<Invocation> getInvocations() {
         return invocations;
     }
-
-    @Override
-    @Nonnull
-    public synchronized Interval getInvocationPeriod() {
-        return invocationPeriod;
-    }
-
 }

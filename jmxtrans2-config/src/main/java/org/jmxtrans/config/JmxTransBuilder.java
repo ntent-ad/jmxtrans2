@@ -82,7 +82,7 @@ public class JmxTransBuilder {
                 queryTimer,
                 new QueryGenerator(
                         clock,
-                        configuration.getQueryPeriod(),
+                        configuration.getPeriod(),
                         configuration.getServers(),
                         new QueryProcessor(
                                 clock,

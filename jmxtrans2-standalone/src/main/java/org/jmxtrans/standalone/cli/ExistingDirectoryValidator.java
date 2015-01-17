@@ -20,19 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.standalone.cli;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.InputStream;
+import com.beust.jcommander.IValueValidator;
+import com.beust.jcommander.ParameterException;
 
-/**
- * Created by gehel on 17/01/15.
- */
-public interface Resource {
-    @Nonnull
-    String getPath();
+import java.io.File;
 
-    @Nonnull
-    InputStream getInputStream() throws IOException;
+import static java.lang.String.format;
+
+public class ExistingDirectoryValidator implements IValueValidator<File> {
+    @Override
+    public void validate(String name, File value) throws ParameterException {
+        if (!value.exists()) {
+            throw new ParameterException(format("Parameter [%s] is a non existing directory [%s]", name, value.getAbsolutePath()));
+        }
+        if (!value.isDirectory()) {
+            throw new ParameterException(format("Parameter [%s] is a not a directory [%s]", name, value.getAbsolutePath()));
+        }
+    }
 }

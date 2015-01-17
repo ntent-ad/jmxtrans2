@@ -20,19 +20,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.standalone;
 
-import javax.annotation.Nonnull;
+import com.beust.jcommander.JCommander;
+import org.jmxtrans.config.JmxTransBuilder;
+import org.jmxtrans.standalone.cli.JmxTransParameters;
+import org.jmxtrans.utils.io.FileResource;
+import org.jmxtrans.utils.io.Resource;
+import org.xml.sax.SAXException;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by gehel on 17/01/15.
- */
-public interface Resource {
-    @Nonnull
-    String getPath();
+public class JmxTransformer {
 
-    @Nonnull
-    InputStream getInputStream() throws IOException;
+    public static void main(String[] args) throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException {
+        JmxTransParameters parameters = new JmxTransParameters();
+        new JCommander(parameters, args);
+
+        List<Resource> configurations = new ArrayList<>();
+        for (File configFile : parameters.getConfigFiles()) {
+            configurations.add(new FileResource(configFile));
+        }
+
+        new JmxTransBuilder(
+                parameters.ignoreParsingErrors(),
+                configurations).build().start();
+
+    }
+
 }

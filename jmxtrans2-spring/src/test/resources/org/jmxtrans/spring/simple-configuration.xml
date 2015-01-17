@@ -23,9 +23,10 @@
     THE SOFTWARE.
 
 -->
-<jmxtrans xmlns="http://jmxtrans.org/config/2.0">
+<jmxtrans xmlns="http://jmxtrans.org/config/2.0"
+        collectIntervalInSeconds="10">
 
-    <queries collectIntervalInSeconds="10">
+    <queries>
         <query objectName="java.lang:type=MemoryPool,name=PS Eden Space" resultAlias="eden" />
         <query objectName="java.lang:type=MemoryPool,name=PS Perm Gen" resultAlias="permgen">
             <queryAttribute name="CollectionUsageThresholdCount"/>
@@ -37,7 +38,7 @@
         </query>
     </queries>
 
-    <invocations collectIntervalInSeconds="20">
+    <invocations>
         <invocation objectName="java.lang:type=Memory" operationName="gc" resultAlias="jvm.gc"/>
         <invocation objectName="java.lang:type=Threading" operationName="getThreadCpuTime" resultAlias="jvm.thread.cpu">
             <parameter value="1" type="long"/>

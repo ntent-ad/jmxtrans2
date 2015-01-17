@@ -25,14 +25,21 @@ package org.jmxtrans.config;
 import org.jmxtrans.config.jaxb.InvocationType;
 import org.jmxtrans.config.jaxb.Jmxtrans;
 import org.jmxtrans.config.jaxb.OutputWriterType;
+import org.jmxtrans.config.jaxb.QueriesType;
 import org.jmxtrans.config.jaxb.QueryType;
+import org.jmxtrans.config.jaxb.ServerType;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.output.OutputWriterFactory;
 import org.jmxtrans.query.Invocation;
+import org.jmxtrans.query.embedded.InProcessServer;
 import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.query.embedded.QueryAttribute;
+import org.jmxtrans.query.embedded.RemoteServer;
 import org.jmxtrans.utils.circuitbreaker.CircuitBreakerProxy;
 import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.io.StandardResource;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.Interval;
 import org.w3c.dom.Document;
@@ -52,7 +59,10 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +73,8 @@ import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 @ThreadSafe
 public class XmlConfigParser implements ConfigParser {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     public static final String JMXTRANS_XSD_PATH = "classpath:jmxtrans.xsd";
 
@@ -107,8 +119,18 @@ public class XmlConfigParser implements ConfigParser {
     }
 
     private void parse(@Nonnull Jmxtrans jmxtrans, @Nonnull ModifiableConfiguration configuration) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+        if (jmxtrans.getCollectIntervalInSeconds() != null) {
+            configuration.setPeriod(new Interval(jmxtrans.getCollectIntervalInSeconds(), SECONDS));
+        }
         if (jmxtrans.getQueries() != null) {
-            parse(jmxtrans.getQueries(), configuration);
+            configuration.addServer(new InProcessServer(parse(jmxtrans.getQueries())));
+        }
+        if (jmxtrans.getServers() != null) {
+            try {
+                parse(jmxtrans.getServers(), configuration);
+            } catch (MalformedURLException e) {
+                logger.error("JMXUrl is not valid", e);
+            }
         }
         if (jmxtrans.getInvocations() != null) {
             parse(jmxtrans.getInvocations(), configuration);
@@ -118,10 +140,27 @@ public class XmlConfigParser implements ConfigParser {
         }
     }
 
-    private void parse(@Nonnull Jmxtrans.Queries queries, @Nonnull ModifiableConfiguration configuration) {
-        if (queries.getCollectIntervalInSeconds() != null) {
-            configuration.setQueryPeriod(new Interval(queries.getCollectIntervalInSeconds(), SECONDS));
+    private void parse(Jmxtrans.Servers servers, ModifiableConfiguration configuration) throws MalformedURLException {
+        for (ServerType server : servers.getServer()) {
+
+            Collection<Query> queries = Collections.emptyList();
+            if (server.getQueries() != null) {
+                queries = parse(server.getQueries());
+            }
+            configuration.addServer(RemoteServer.builder()
+                    .withUrl(server.getJmxUrl())
+                    .withHost(server.getHost())
+                    .withPort(server.getPort())
+                    .withUsername(server.getUsername())
+                    .withPassword(server.getPassword())
+                    .withProtocolProviderPackages(server.getProtocolProviderPackages())
+                    .withQueries(queries)
+                    .build());
         }
+    }
+
+    private List<Query> parse(@Nonnull QueriesType queries) {
+        List<Query> result = new ArrayList<>();
         for (QueryType query : queries.getQuery()) {
             Query.Builder queryBuilder = Query.builder()
                     .withObjectName(query.getObjectName())
@@ -136,14 +175,12 @@ public class XmlConfigParser implements ConfigParser {
                 }
                 queryBuilder.addAttribute(attributeBuilder.build());
             }
-            configuration.getQueries().add(queryBuilder.build());
+            result.add(queryBuilder.build());
         }
+        return result;
     }
 
     private void parse(@Nonnull Jmxtrans.Invocations invocations, @Nonnull ModifiableConfiguration configuration) {
-        if (invocations.getCollectIntervalInSeconds() != null) {
-            configuration.setInvocationPeriod(new Interval(invocations.getCollectIntervalInSeconds(), SECONDS));
-        }
         for (InvocationType invocation : invocations.getInvocation()) {
             List<String> params = new ArrayList<>();
             List<String> signature = new ArrayList<>();
@@ -213,7 +250,7 @@ public class XmlConfigParser implements ConfigParser {
 
     @Nonnull
     private static Schema loadSchema() throws SAXException, IOException {
-        Resource xsd = new Resource(JMXTRANS_XSD_PATH);
+        Resource xsd = new StandardResource(JMXTRANS_XSD_PATH);
         SchemaFactory schemaFactory = SchemaFactory.newInstance(W3C_XML_SCHEMA_NS_URI);
         try (InputStream in = xsd.getInputStream()) {
             return schemaFactory.newSchema(new StreamSource(in));

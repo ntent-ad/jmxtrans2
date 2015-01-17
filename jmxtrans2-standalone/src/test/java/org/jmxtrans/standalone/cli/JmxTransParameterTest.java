@@ -20,19 +20,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.standalone.cli;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.InputStream;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-/**
- * Created by gehel on 17/01/15.
- */
-public interface Resource {
-    @Nonnull
-    String getPath();
+public class JmxTransParameterTest {
 
-    @Nonnull
-    InputStream getInputStream() throws IOException;
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
+
+    @Test(expected = ParameterException.class)
+    public void failOnNonExistingConfigFile() {
+        String[] arguments = new String[] {
+                "-configFile", "non-existing-file"
+        };
+        new JCommander(new JmxTransParameters(), arguments);
+    }
 }

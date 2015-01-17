@@ -23,9 +23,10 @@
     THE SOFTWARE.
 
 -->
-<jmxtrans xmlns="http://jmxtrans.org/config/2.0">
+<jmxtrans xmlns="http://jmxtrans.org/config/2.0"
+          collectIntervalInSeconds="1">
 
-    <queries collectIntervalInSeconds="1">
+    <queries>
         <query objectName="org.jmxtrans:type=Counter,name=myCounter" resultAlias="counter">
             <queryAttribute name="Value" />
         </query>

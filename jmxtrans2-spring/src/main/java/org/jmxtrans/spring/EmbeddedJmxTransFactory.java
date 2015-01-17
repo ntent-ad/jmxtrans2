@@ -25,6 +25,7 @@ package org.jmxtrans.spring;
 import org.jmxtrans.config.JmxTransBuilder;
 import org.jmxtrans.scheduler.NaiveScheduler;
 import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.io.StandardResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
@@ -36,8 +37,6 @@ import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static java.util.Collections.singleton;
 
 /**
  * {@link org.jmxtrans.spring.SpringEmbeddedJmxTrans} factory for Spring Framework integration.
@@ -81,7 +80,8 @@ public class EmbeddedJmxTransFactory implements FactoryBean<SpringEmbeddedJmxTra
                 configurationUrls = Collections.singletonList(DEFAULT_CONFIGURATION_URL);
             }
 
-            NaiveScheduler scheduler = new JmxTransBuilder(ignoreConfigurationNotFound, singleton(new Resource(configurationUrls.get(0)))).build();
+            NaiveScheduler scheduler = new JmxTransBuilder(ignoreConfigurationNotFound,
+                    Collections.<Resource>singletonList(new StandardResource(configurationUrls.get(0)))).build();
 
             embeddedJmxTrans = new SpringEmbeddedJmxTrans(scheduler);
             logger.info("Created EmbeddedJmxTrans with configuration {})", configurationUrls);

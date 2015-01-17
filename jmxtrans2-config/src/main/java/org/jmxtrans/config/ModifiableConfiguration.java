@@ -24,8 +24,6 @@ package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.InProcessServer;
-import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.utils.time.Interval;
 
@@ -33,41 +31,32 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 @NotThreadSafe
 final class ModifiableConfiguration implements Configuration {
 
-    @Nonnull
-    private final Collection<Query> queries = new ArrayList<>();
-    private Interval queryPeriod;
+    private Interval period;
     @Nonnull
     private final Collection<OutputWriter> outputWriters = new ArrayList<>();
     @Nonnull
     private final Collection<Invocation> invocations = new ArrayList<>();
-    private Interval invocationPeriod;
+    private final Collection<Server> servers = new ArrayList<>();
 
     @Nonnull
     @Override
-    public Collection<Query> getQueries() {
-        return queries;
+    public Collection<Server> getServers() {
+        return servers;
     }
 
     @Nonnull
     @Override
-    public Iterable<Server> getServers() {
-        return Collections.<Server>singletonList(new InProcessServer(queries));
+    public Interval getPeriod() {
+        if (period == null) return DefaultConfiguration.getInstance().getPeriod();
+        return period;
     }
 
-    @Nonnull
-    @Override
-    public Interval getQueryPeriod() {
-        if (queryPeriod == null) return DefaultConfiguration.getInstance().getQueryPeriod();
-        return queryPeriod;
-    }
-
-    public void setQueryPeriod(@Nonnull Interval queryPeriod) {
-        this.queryPeriod = queryPeriod;
+    public void setPeriod(@Nonnull Interval period) {
+        this.period = period;
     }
 
     @Nonnull
@@ -82,14 +71,7 @@ final class ModifiableConfiguration implements Configuration {
         return invocations;
     }
 
-    @Nonnull
-    @Override
-    public Interval getInvocationPeriod() {
-        if (invocationPeriod == null) return DefaultConfiguration.getInstance().getInvocationPeriod();
-        return invocationPeriod;
-    }
-
-    public void setInvocationPeriod(@Nonnull Interval invocationPeriod) {
-        this.invocationPeriod = invocationPeriod;
+    public void addServer(@Nonnull Server server) {
+        servers.add(server);
     }
 }

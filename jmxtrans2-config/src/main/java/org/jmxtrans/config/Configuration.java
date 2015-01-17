@@ -24,7 +24,6 @@ package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.utils.time.Interval;
 
@@ -35,21 +34,14 @@ import javax.annotation.concurrent.ThreadSafe;
 public interface Configuration {
 
     @Nonnull
-    Iterable<Query> getQueries();
-
-    @Nonnull
     Iterable<Server> getServers();
 
     @Nonnull
-    Interval getQueryPeriod();
+    Interval getPeriod();
 
     @Nonnull
     Iterable<OutputWriter> getOutputWriters();
 
     @Nonnull
     Iterable<Invocation> getInvocations();
-
-    @Nonnull
-    Interval getInvocationPeriod();
-
 }

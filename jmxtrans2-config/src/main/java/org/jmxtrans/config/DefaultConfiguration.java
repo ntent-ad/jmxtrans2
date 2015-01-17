@@ -24,16 +24,12 @@ package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.InProcessServer;
-import org.jmxtrans.query.embedded.Query;
 import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.utils.time.Interval;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
-
-import java.util.Collections;
 
 import static java.util.Collections.emptyList;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -49,19 +45,13 @@ public class DefaultConfiguration implements Configuration {
 
     @Nonnull
     @Override
-    public Iterable<Query> getQueries() {
+    public Iterable<Server> getServers() {
         return emptyList();
     }
 
     @Nonnull
     @Override
-    public Iterable<Server> getServers() {
-        return Collections.<Server>singletonList(new InProcessServer(getQueries()));
-    }
-
-    @Nonnull
-    @Override
-    public Interval getQueryPeriod() {
+    public Interval getPeriod() {
         return new Interval(60, SECONDS);
     }
 
@@ -75,12 +65,6 @@ public class DefaultConfiguration implements Configuration {
     @Override
     public Iterable<Invocation> getInvocations() {
         return emptyList();
-    }
-
-    @Nonnull
-    @Override
-    public Interval getInvocationPeriod() {
-        return new Interval(60, SECONDS);
     }
 
     public static Configuration getInstance() {

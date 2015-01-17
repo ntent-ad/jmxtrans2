@@ -20,19 +20,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.standalone.cli;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.InputStream;
+import com.beust.jcommander.Parameter;
 
-/**
- * Created by gehel on 17/01/15.
- */
-public interface Resource {
-    @Nonnull
-    String getPath();
+import java.io.File;
+import java.util.List;
 
-    @Nonnull
-    InputStream getInputStream() throws IOException;
+public class JmxTransParameters {
+
+    @Parameter(
+            names = { "--configFiles", "-c"},
+            description = "List of configuration files.",
+            validateValueWith = ExistingFileValidator.class)
+    private List<File> configFiles;
+
+    @Parameter(
+            names = { "--configDir", "-d"},
+            description = "List of configuration directories, all files in those directories will be loaded.",
+            validateValueWith = ExistingDirectoryValidator.class)
+    private List<File> configDirs;
+
+    @Parameter(
+            names = { "--ignoreParsingErrors", "-i"},
+            description = "Start JmxTrans even if errors are found in configuration files.")
+    private boolean ignoreParsingErrors = false;
+
+    public List<File> getConfigFiles() {
+        return configFiles;
+    }
+
+    public List<File> getConfigDirs() {
+        return configDirs;
+    }
+
+    public boolean ignoreParsingErrors() {
+        return ignoreParsingErrors;
+    }
 }
