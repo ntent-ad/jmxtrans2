@@ -36,8 +36,10 @@ import javax.annotation.PreDestroy;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -108,7 +110,7 @@ public class Query implements QueryMBean {
         metrics = new QueryMetrics(clock);
     }
 
-    public Iterable<QueryResult> collectMetrics(@Nonnull MBeanServer mbeanServer) {
+    public Iterable<QueryResult> collectMetrics(@Nonnull MBeanServerConnection mbeanServer, @Nonnull ResultNameStrategy resultNameStrategy) throws IOException {
         try (NanoChronometer chrono = metrics.collectionDurationChronometer()) {
             Collection results = new ArrayList();
             /*
@@ -127,7 +129,7 @@ public class Query implements QueryMBean {
                     for (Attribute jmxAttribute : jmxAttributes.asList()) {
                         QueryAttribute queryAttribute = this.attributesByName.get(jmxAttribute.getName());
                         Object value = jmxAttribute.getValue();
-                        int count = queryAttribute.collectMetrics(matchingObjectName, value, epochInMillis, results, this, new ResultNameStrategy());
+                        int count = queryAttribute.collectMetrics(matchingObjectName, value, epochInMillis, results, this, resultNameStrategy);
                         metrics.incrementCollected(count);
                     }
                 } catch (Exception e) {

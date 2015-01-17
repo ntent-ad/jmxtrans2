@@ -771,6 +771,7 @@
                         <avoidCallsTo>
                             <param>org.jmxtrans.log</param>
                         </avoidCallsTo>
+                        <verbose>true</verbose>
                         <coverageThreshold>${verify.coverage.threshold}</coverageThreshold>
                         <mutationThreshold>${verify.mutation.threshold}</mutationThreshold>
                         <historyInputFile>${project.basedir}/pitest-history.xml</historyInputFile>

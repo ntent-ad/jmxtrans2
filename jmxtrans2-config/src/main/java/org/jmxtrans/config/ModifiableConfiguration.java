@@ -24,13 +24,16 @@ package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Invocation;
+import org.jmxtrans.query.embedded.InProcessServer;
 import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.utils.time.Interval;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 @NotThreadSafe
 final class ModifiableConfiguration implements Configuration {
@@ -48,6 +51,12 @@ final class ModifiableConfiguration implements Configuration {
     @Override
     public Collection<Query> getQueries() {
         return queries;
+    }
+
+    @Nonnull
+    @Override
+    public Iterable<Server> getServers() {
+        return Collections.<Server>singletonList(new InProcessServer(queries));
     }
 
     @Nonnull

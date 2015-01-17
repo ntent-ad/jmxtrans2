@@ -23,6 +23,7 @@
 package org.jmxtrans.scheduler;
 
 import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.utils.time.Interval;
 import org.jmxtrans.utils.time.ManualClock;
 import org.junit.Before;
@@ -35,6 +36,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.mockito.Matchers.any;
@@ -42,12 +44,14 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QueryGeneratorTest {
 
     private ManualClock clock = new ManualClock();
     private Interval queryPeriod = new Interval(10, SECONDS);
+    @Mock private Server server;
     @Mock private Query query;
     @Mock private QueryProcessor queryProcessor;
     @Mock private ScheduledExecutorService queryTimer;
@@ -56,13 +60,14 @@ public class QueryGeneratorTest {
     @Before
     public void createQueryGenerator() {
         clock.setTime(1, SECONDS);
-        queryGenerator = new QueryGenerator(clock, queryPeriod, singleton(query), queryProcessor, queryTimer);
+        when(server.getQueries()).thenReturn(singleton(query));
+        queryGenerator = new QueryGenerator(clock, queryPeriod, singletonList(server), queryProcessor, queryTimer);
     }
 
     @Test
     public void queryAreEnqueued() {
         queryGenerator.run();
-        verify(queryProcessor).process(11000, query);
+        verify(queryProcessor).process(11000, server, query);
     }
 
     @Test

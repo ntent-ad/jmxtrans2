@@ -24,11 +24,14 @@ package org.jmxtrans.config;
 
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.Invocation;
+import org.jmxtrans.query.embedded.InProcessServer;
 import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.utils.time.Interval;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @ThreadSafe // TODO: synchronization is overly aggressive
@@ -66,6 +69,12 @@ public class StandardConfiguration implements Configuration {
     @Nonnull
     public synchronized Iterable<Query> getQueries() {
         return queries;
+    }
+
+    @Nonnull
+    @Override
+    public Iterable<Server> getServers() {
+        return Collections.<Server>singletonList(new InProcessServer(queries));
     }
 
     @Override

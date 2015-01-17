@@ -23,7 +23,10 @@
 package org.jmxtrans.scheduler;
 
 import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.query.embedded.InProcessServer;
 import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.ResultNameStrategy;
+import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.Interval;
@@ -34,10 +37,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.annotation.Nonnull;
-import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
@@ -65,7 +68,7 @@ public class FullSchedulingTest {
 
     @Test
     public void queriesAreFullyProcessed() throws InterruptedException, IOException {
-        when(query.collectMetrics(any(MBeanServer.class)))
+        when(query.collectMetrics(any(MBeanServerConnection.class), any(ResultNameStrategy.class)))
                 .thenReturn(results);
 
         long shutdownTimerMillis = 1000;
@@ -81,16 +84,15 @@ public class FullSchedulingTest {
                 new QueryGenerator(
                         clock,
                         queryPeriod,
-                        singleton(query),
+                        Collections.<Server>singleton(new InProcessServer(singleton(query))),
                         new QueryProcessor(
                                 clock,
-                                ManagementFactory.getPlatformMBeanServer(),
                                 singleton(outputWriter),
                                 queryExecutor,
                                 new ResultProcessor(
                                         clock,
                                         resultExecutor
-                                )
+                                ), new ResultNameStrategy()
                         ),
                         queryTimer
                 ),

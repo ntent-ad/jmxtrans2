@@ -26,68 +26,72 @@ import org.jmxtrans.log.Logger;
 import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.output.OutputWriter;
 import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.ResultNameStrategy;
+import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-import javax.management.MBeanServer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 
 public class QueryProcessor {
 
     @Nonnull private final Clock clock;
-    @Nonnull private final MBeanServer mBeanServer;
     @Nonnull private final Iterable<OutputWriter> outputWriters;
     @Nonnull private final Executor queryExecutor;
     @Nonnull private final ResultProcessor resultProcessor;
+    @Nonnull private final ResultNameStrategy resultNameStrategy;
 
     public QueryProcessor(
             @Nonnull Clock clock,
-            @Nonnull MBeanServer mBeanServer,
             @Nonnull Iterable<OutputWriter> outputWriters,
             @Nonnull Executor queryExecutor,
-            @Nonnull ResultProcessor resultProcessor) {
+            @Nonnull ResultProcessor resultProcessor,
+            @Nonnull ResultNameStrategy resultNameStrategy) {
         this.clock = clock;
-        this.mBeanServer = mBeanServer;
         this.outputWriters = outputWriters;
         this.queryExecutor = queryExecutor;
         this.resultProcessor = resultProcessor;
+        this.resultNameStrategy = resultNameStrategy;
     }
 
     @Nonnull
-    public void process(long deadline, @Nonnull Query query) {
-        queryExecutor.execute(new Processor(clock, deadline, mBeanServer, query, outputWriters, resultProcessor));
+    public void process(long deadline, @Nonnull Server server, @Nonnull Query query) {
+        queryExecutor.execute(new Processor(clock, deadline, server, query, outputWriters, resultProcessor, resultNameStrategy));
     }
 
     @ThreadSafe
     private static class Processor extends DeadlineRunnable {
         @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
         @Nonnull private final Query query;
-        @Nonnull private final MBeanServer mBeanServer;
+        @Nonnull private final Server server;
         @Nonnull private final Iterable<OutputWriter> outputWriters;
         @Nonnull private final ResultProcessor resultProcessor;
+        @Nonnull private final ResultNameStrategy resultNameStrategy;
 
         public Processor(
                 @Nonnull Clock clock,
                 long deadline,
-                @Nonnull MBeanServer mBeanServer,
+                @Nonnull Server server,
                 @Nonnull Query query,
                 @Nonnull Iterable<OutputWriter> outputWriters,
-                @Nonnull ResultProcessor resultProcessor) {
+                @Nonnull ResultProcessor resultProcessor,
+                @Nonnull ResultNameStrategy resultNameStrategy) {
             super(clock, deadline);
             this.query = query;
-            this.mBeanServer = mBeanServer;
+            this.server = server;
             this.outputWriters = outputWriters;
             this.resultProcessor = resultProcessor;
+            this.resultNameStrategy = resultNameStrategy;
         }
 
         @Override
         protected void doRun() {
             try {
                 logger.debug("Collecting metrics for " + query);
-                Iterable<QueryResult> results = query.collectMetrics(mBeanServer);
+                Iterable<QueryResult> results = query.collectMetrics(server.getServerConnection(), resultNameStrategy);
                 for (OutputWriter outputWriter : outputWriters) {
                     try {
                         resultProcessor.writeResults(getDeadline(), results, outputWriter);

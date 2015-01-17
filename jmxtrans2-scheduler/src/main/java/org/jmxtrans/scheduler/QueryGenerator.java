@@ -25,6 +25,7 @@ package org.jmxtrans.scheduler;
 import org.jmxtrans.log.Logger;
 import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.Server;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.Interval;
 
@@ -41,7 +42,7 @@ public class QueryGenerator implements Runnable {
     @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
     @Nonnull private final Clock clock;
     @Nonnull private final Interval queryPeriod;
-    @Nonnull private final Iterable<Query> queries;
+    @Nonnull private final Iterable<Server> servers;
     @Nonnull private final QueryProcessor queryProcessor;
     @Nonnull private final ScheduledExecutorService queryTimer;
     private volatile boolean running = false;
@@ -49,11 +50,12 @@ public class QueryGenerator implements Runnable {
     public QueryGenerator(
             @Nonnull Clock clock,
             @Nonnull Interval queryPeriod,
-            @Nonnull Iterable<Query> queries,
-            @Nonnull QueryProcessor queryProcessor, ScheduledExecutorService queryTimer) {
+            @Nonnull Iterable<Server> servers,
+            @Nonnull QueryProcessor queryProcessor,
+            @Nonnull ScheduledExecutorService queryTimer) {
         this.clock = clock;
         this.queryPeriod = queryPeriod;
-        this.queries = queries;
+        this.servers = servers;
         this.queryProcessor = queryProcessor;
         this.queryTimer = queryTimer;
     }
@@ -61,12 +63,14 @@ public class QueryGenerator implements Runnable {
     @Override
     public void run() {
             long deadline = clock.currentTimeMillis() + queryPeriod.getDuration(MILLISECONDS);
-        for (final Query query : queries) {
-            try {
-                logger.debug("Enquing query " + query);
-                queryProcessor.process(deadline, query);
-            } catch (RejectedExecutionException e) {
-                logger.warn("Could not enqueue query " + query, e);
+        for (Server server : servers) {
+            for (final Query query : server.getQueries()) {
+                try {
+                    logger.debug("Enquing query " + query);
+                    queryProcessor.process(deadline, server, query);
+                } catch (RejectedExecutionException e) {
+                    logger.warn("Could not enqueue query " + query, e);
+                }
             }
         }
 

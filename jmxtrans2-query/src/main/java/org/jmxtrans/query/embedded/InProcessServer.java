@@ -20,36 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.config;
+package org.jmxtrans.query.embedded;
 
-import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.Query;
-import org.jmxtrans.query.embedded.Server;
-import org.jmxtrans.utils.time.Interval;
+import javax.management.MBeanServerConnection;
+import java.lang.management.ManagementFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+public class InProcessServer implements Server {
+    private final Iterable<Query> queries;
 
-@ThreadSafe
-public interface Configuration {
+    public InProcessServer(Iterable<Query> queries) {
+        this.queries = queries;
+    }
 
-    @Nonnull
-    Iterable<Query> getQueries();
+    @Override
+    public String getHost() {
+        return null;
+    }
 
-    @Nonnull
-    Iterable<Server> getServers();
+    @Override
+    public MBeanServerConnection getServerConnection() throws Exception {
+        return ManagementFactory.getPlatformMBeanServer();
+    }
 
-    @Nonnull
-    Interval getQueryPeriod();
-
-    @Nonnull
-    Iterable<OutputWriter> getOutputWriters();
-
-    @Nonnull
-    Iterable<Invocation> getInvocations();
-
-    @Nonnull
-    Interval getInvocationPeriod();
-
+    @Override
+    public Iterable<Query> getQueries() {
+        return queries;
+    }
 }

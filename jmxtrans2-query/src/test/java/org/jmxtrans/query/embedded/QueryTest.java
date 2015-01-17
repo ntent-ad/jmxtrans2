@@ -61,14 +61,30 @@ public class QueryTest {
 
     @Test
     public void basic_jmx_attribute_return_simple_result() throws Exception {
-        Iterable<QueryResult> results = Query.builder().withObjectName("test:type=MemoryPool,name=PS Eden Space")
+        Iterable<QueryResult> results = Query.builder()
+                .withObjectName("test:type=MemoryPool,name=PS Eden Space")
                 .addAttribute("CollectionUsageThreshold")
                 .build()
-                .collectMetrics(mbeanServer);
+                .collectMetrics(mbeanServer, new ResultNameStrategy());
         assertThat(results).hasSize(1);
 
         QueryResult result = results.iterator().next();
         assertThat(result.getValue()).isInstanceOf(Number.class);
+    }
+
+    @Test
+    public void attributesAreAvailableInNamingStrategy() throws Exception {
+        Iterable<QueryResult> results = Query.builder()
+                .withObjectName("test:type=*,name=PS Eden Space")
+                .withResultAlias("memory.%type%")
+                .addAttribute("CollectionUsageThreshold")
+                .build()
+                .collectMetrics(mbeanServer, new ResultNameStrategy());
+        assertThat(results).hasSize(1);
+
+        QueryResult result = results.iterator().next();
+        assertThat(result.getValue()).isInstanceOf(Number.class);
+        assertThat(result.getName()).isEqualTo("memory.MemoryPool.CollectionUsageThreshold");
     }
 
     @Test
@@ -79,7 +95,7 @@ public class QueryTest {
                     .withKeys(asList("committed", "init", "max", "used"))
                     .build())
                 .build();
-        Iterable<QueryResult> results = query.collectMetrics(mbeanServer);
+        Iterable<QueryResult> results = query.collectMetrics(mbeanServer, new ResultNameStrategy());
         assertThat(results).hasSize(4);
 
         Iterator<QueryResult> queryResultIterator = results.iterator();

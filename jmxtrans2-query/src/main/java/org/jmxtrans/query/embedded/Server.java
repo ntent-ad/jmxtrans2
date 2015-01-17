@@ -20,36 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.config;
+package org.jmxtrans.query.embedded;
 
-import org.jmxtrans.output.OutputWriter;
-import org.jmxtrans.query.Invocation;
-import org.jmxtrans.query.embedded.Query;
-import org.jmxtrans.query.embedded.Server;
-import org.jmxtrans.utils.time.Interval;
+import javax.management.MBeanServerConnection;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+public interface Server {
+    String getHost();
 
-@ThreadSafe
-public interface Configuration {
+    MBeanServerConnection getServerConnection() throws Exception;
 
-    @Nonnull
     Iterable<Query> getQueries();
-
-    @Nonnull
-    Iterable<Server> getServers();
-
-    @Nonnull
-    Interval getQueryPeriod();
-
-    @Nonnull
-    Iterable<OutputWriter> getOutputWriters();
-
-    @Nonnull
-    Iterable<Invocation> getInvocations();
-
-    @Nonnull
-    Interval getInvocationPeriod();
-
 }

@@ -24,6 +24,7 @@ package org.jmxtrans.config;
 
 import org.jmxtrans.log.Logger;
 import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.query.embedded.ResultNameStrategy;
 import org.jmxtrans.scheduler.JmxTransThreadFactory;
 import org.jmxtrans.scheduler.NaiveScheduler;
 import org.jmxtrans.scheduler.QueryGenerator;
@@ -40,7 +41,6 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -83,16 +83,16 @@ public class JmxTransBuilder {
                 new QueryGenerator(
                         clock,
                         configuration.getQueryPeriod(),
-                        configuration.getQueries(),
+                        configuration.getServers(),
                         new QueryProcessor(
                                 clock,
-                                ManagementFactory.getPlatformMBeanServer(),
                                 configuration.getOutputWriters(),
                                 queryExecutor,
                                 new ResultProcessor(
                                         clock,
                                         resultExecutor
-                                )
+                                ),
+                                new ResultNameStrategy()
                         ),
                         queryTimer
                 ),

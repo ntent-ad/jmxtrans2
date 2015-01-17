@@ -23,7 +23,9 @@
 package org.jmxtrans.scheduler;
 
 import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.query.embedded.InProcessServer;
 import org.jmxtrans.query.embedded.Query;
+import org.jmxtrans.query.embedded.ResultNameStrategy;
 import org.jmxtrans.results.QueryResult;
 import org.jmxtrans.utils.time.ManualClock;
 import org.junit.Before;
@@ -33,7 +35,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.management.MBeanServer;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.Executor;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
@@ -57,15 +61,15 @@ public class QueryProcessorTest {
     private QueryProcessor queryProcessor;
 
     @Before
-    public void createQueryProcessor() {
-        queryProcessor = new QueryProcessor(clock, mBeanServer, singleton(outputWriter), queryExecutor, resultProcessor);
+    public void createQueryProcessor() throws IOException {
+        queryProcessor = new QueryProcessor(clock, singleton(outputWriter), queryExecutor, resultProcessor, new ResultNameStrategy());
 
-        when(query.collectMetrics(any(MBeanServer.class))).thenReturn(results);
+        when(query.collectMetrics(any(MBeanServer.class), any(ResultNameStrategy.class))).thenReturn(results);
     }
 
     @Test
     public void queryAreProcessed() {
-        queryProcessor.process(1, query);
+        queryProcessor.process(1, new InProcessServer(Collections.<Query>emptyList()), query);
         verify(resultProcessor).writeResults(1, results, outputWriter);
     }
 }

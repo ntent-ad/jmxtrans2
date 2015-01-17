@@ -146,13 +146,7 @@ public class Query {
                 Object attributeValue = mbeanServer.getAttribute(on, attribute);
 
                 processAttributeValues(on, attributeValue, resultQueue);
-            } catch (AttributeNotFoundException e) {
-                logCollectingException(on, e);
-            } catch (MBeanException e) {
-                logCollectingException(on, e);
-            } catch (ReflectionException e) {
-                logCollectingException(on, e);
-            } catch (InstanceNotFoundException e) {
+            } catch (AttributeNotFoundException | MBeanException | ReflectionException | InstanceNotFoundException e) {
                 logCollectingException(on, e);
             }
         }
