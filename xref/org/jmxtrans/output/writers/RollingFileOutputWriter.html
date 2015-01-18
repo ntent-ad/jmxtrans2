@@ -30,9 +30,9 @@
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> */</em>
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">package</strong> org.jmxtrans.output.writers;
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.output.AbstractOutputWriter;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.output.OutputWriterFactory;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.results.QueryResult;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.output.AbstractOutputWriter;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.output.OutputWriterFactory;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.results.QueryResult;
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.io.IoUtils;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> javax.annotation.Nonnull;
@@ -59,7 +59,7 @@
 <a class="jxr_linenumber" name="L51" href="#L51">51</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.jmxtrans.utils.ConfigurationUtils.getString;
 <a class="jxr_linenumber" name="L52" href="#L52">52</a>  
 <a class="jxr_linenumber" name="L53" href="#L53">53</a>  @NotThreadSafe
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/jmxtrans/output/writers/RollingFileOutputWriter.html">RollingFileOutputWriter</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../org/jmxtrans/output/AbstractOutputWriter.html">AbstractOutputWriter</a> {
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/jmxtrans/output/writers/RollingFileOutputWriter.html">RollingFileOutputWriter</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../org/jmxtrans/core/output/AbstractOutputWriter.html">AbstractOutputWriter</a> {
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>  
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger LOGGER = Logger.getLogger(IoUtils.<strong class="jxr_keyword">class</strong>.getName());
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  
@@ -187,7 +187,7 @@
 <a class="jxr_linenumber" name="L179" href="#L179">179</a>     }
 <a class="jxr_linenumber" name="L180" href="#L180">180</a> 
 <a class="jxr_linenumber" name="L181" href="#L181">181</a>     @Override
-<a class="jxr_linenumber" name="L182" href="#L182">182</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> write(@Nonnull <a href="../../../../org/jmxtrans/results/QueryResult.html">QueryResult</a> result) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">synchronized</strong> <strong class="jxr_keyword">void</strong> write(@Nonnull <a href="../../../../org/jmxtrans/core/results/QueryResult.html">QueryResult</a> result) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L183" href="#L183">183</a>         <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L184" href="#L184">184</a>             getTemporaryFileWriter().write(<span class="jxr_string">"["</span>+ dateFormat.format(Calendar.getInstance().getTime()) +<span class="jxr_string">"] "</span>+ result.getName() + <span class="jxr_string">" "</span> + result.getValue() + <span class="jxr_string">"\n"</span>);
 <a class="jxr_linenumber" name="L185" href="#L185">185</a>         } <strong class="jxr_keyword">catch</strong> (IOException e) {
@@ -222,7 +222,7 @@
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>         }
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>     }
 <a class="jxr_linenumber" name="L216" href="#L216">216</a> 
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/jmxtrans/output/DevNullOutputWriter.html">Factory</a> <strong class="jxr_keyword">implements</strong> OutputWriterFactory&lt;RollingFileOutputWriter&gt; {
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/jmxtrans/core/output/DevNullOutputWriter.html">Factory</a> <strong class="jxr_keyword">implements</strong> OutputWriterFactory&lt;RollingFileOutputWriter&gt; {
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">static</strong> String SETTING_FILE_NAME = <span class="jxr_string">"fileName"</span>;
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">static</strong> String SETTING_FILE_NAME_DEFAULT_VALUE = <span class="jxr_string">"jmxtrans-agent.data"</span>;
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>         <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">static</strong> String SETTING_MAX_FILE_SIZE = <span class="jxr_string">"maxFileSize"</span>;

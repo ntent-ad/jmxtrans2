@@ -88,6 +88,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.scheduler.QueryGenerator.java">org/jmxtrans/core/scheduler/QueryGenerator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.utils.net.SocketOutputStream.java">org/jmxtrans/utils/net/SocketOutputStream.java</a>
                 </td>
                 <td>
@@ -102,7 +116,35 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.scheduler.JmxTransThreadFactory.java">org/jmxtrans/scheduler/JmxTransThreadFactory.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.StandardConfiguration.java">org/jmxtrans/core/config/StandardConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.JmxtransConfigurationException.java">org/jmxtrans/core/config/JmxtransConfigurationException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.output.DevNullOutputWriter.java">org/jmxtrans/core/output/DevNullOutputWriter.java</a>
                 </td>
                 <td>
                   0
@@ -158,7 +200,35 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.naming.ExpressionLanguageEngine.java">org/jmxtrans/naming/ExpressionLanguageEngine.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.output.OutputWriterFactory.java">org/jmxtrans/core/output/OutputWriterFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.naming.ResultNameStrategyImpl.java">org/jmxtrans/core/naming/ResultNameStrategyImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.output.AbstractOutputWriter.java">org/jmxtrans/core/output/AbstractOutputWriter.java</a>
                 </td>
                 <td>
                   0
@@ -214,34 +284,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.naming.ExpressionLanguageEngineImpl.java">org/jmxtrans/naming/ExpressionLanguageEngineImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.scheduler.DeadlineRunnable.java">org/jmxtrans/scheduler/DeadlineRunnable.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.utils.concurrent.DiscardingBlockingQueueMBean.java">org/jmxtrans/utils/concurrent/DiscardingBlockingQueueMBean.java</a>
                 </td>
                 <td>
@@ -256,7 +298,35 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.scheduler.QueryProcessor.java">org/jmxtrans/core/scheduler/QueryProcessor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.utils.PropertyPlaceholderResolver.java">org/jmxtrans/utils/PropertyPlaceholderResolver.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.embedded.Server.java">org/jmxtrans/core/query/embedded/Server.java</a>
                 </td>
                 <td>
                   0
@@ -298,6 +368,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.Query.java">org/jmxtrans/core/query/Query.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.utils.GitRepositoryState.java">org/jmxtrans/utils/GitRepositoryState.java</a>
                 </td>
                 <td>
@@ -326,7 +410,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.output.OutputWriter.java">org/jmxtrans/output/OutputWriter.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.embedded.Query.java">org/jmxtrans/core/query/embedded/Query.java</a>
                 </td>
                 <td>
                   0
@@ -410,21 +494,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.embedded.QueryAttribute.java">org/jmxtrans/query/embedded/QueryAttribute.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.embedded.QueryMBean.java">org/jmxtrans/query/embedded/QueryMBean.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.results.QueryResult.java">org/jmxtrans/core/results/QueryResult.java</a>
                 </td>
                 <td>
                   0
@@ -452,6 +522,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.JmxTransException.java">org/jmxtrans/core/config/JmxTransException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.standalone.cli.ExistingFileValidator.java">org/jmxtrans/standalone/cli/ExistingFileValidator.java</a>
                 </td>
                 <td>
@@ -466,7 +550,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.Invocation.java">org/jmxtrans/query/Invocation.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.results.QueryResultComparator.java">org/jmxtrans/core/results/QueryResultComparator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.embedded.QueryMetrics.java">org/jmxtrans/core/query/embedded/QueryMetrics.java</a>
                 </td>
                 <td>
                   0
@@ -494,20 +592,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.scheduler.ResultProcessor.java">org/jmxtrans/scheduler/ResultProcessor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.utils.io.StandardResource.java">org/jmxtrans/utils/io/StandardResource.java</a>
                 </td>
                 <td>
@@ -522,7 +606,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.naming.ResultNameStrategyImpl.java">org/jmxtrans/naming/ResultNameStrategyImpl.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.PropertyPlaceholderResolverXmlPreprocessor.java">org/jmxtrans/core/config/PropertyPlaceholderResolverXmlPreprocessor.java</a>
                 </td>
                 <td>
                   0
@@ -536,7 +620,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.embedded.QueryMetrics.java">org/jmxtrans/query/embedded/QueryMetrics.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.Invocation.java">org/jmxtrans/core/query/Invocation.java</a>
                 </td>
                 <td>
                   0
@@ -550,7 +634,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.PropertyPlaceholderResolverXmlPreprocessor.java">org/jmxtrans/config/PropertyPlaceholderResolverXmlPreprocessor.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.embedded.QueryAttribute.java">org/jmxtrans/core/query/embedded/QueryAttribute.java</a>
                 </td>
                 <td>
                   0
@@ -564,7 +648,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.embedded.Server.java">org/jmxtrans/query/embedded/Server.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.ConfigParser.java">org/jmxtrans/core/config/ConfigParser.java</a>
                 </td>
                 <td>
                   0
@@ -578,7 +662,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.output.AbstractOutputWriter.java">org/jmxtrans/output/AbstractOutputWriter.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.scheduler.DeadlineRunnable.java">org/jmxtrans/core/scheduler/DeadlineRunnable.java</a>
                 </td>
                 <td>
                   0
@@ -634,35 +718,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.JmxTransException.java">org/jmxtrans/config/JmxTransException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.embedded.ResultNameStrategy.java">org/jmxtrans/query/embedded/ResultNameStrategy.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.embedded.Query.java">org/jmxtrans/query/embedded/Query.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.embedded.RemoteServer.java">org/jmxtrans/core/query/embedded/RemoteServer.java</a>
                 </td>
                 <td>
                   0
@@ -704,21 +760,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.Configuration.java">org/jmxtrans/config/Configuration.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.scheduler.QueryGenerator.java">org/jmxtrans/scheduler/QueryGenerator.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.ConfigurationMerger.java">org/jmxtrans/core/config/ConfigurationMerger.java</a>
                 </td>
                 <td>
                   0
@@ -760,7 +802,49 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.embedded.ResultNameStrategy.java">org/jmxtrans/core/query/embedded/ResultNameStrategy.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.DefaultConfiguration.java">org/jmxtrans/core/config/DefaultConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.output.writers.RollingFileOutputWriter.java">org/jmxtrans/output/writers/RollingFileOutputWriter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.scheduler.NaiveScheduler.java">org/jmxtrans/core/scheduler/NaiveScheduler.java</a>
                 </td>
                 <td>
                   0
@@ -788,20 +872,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.StandardConfiguration.java">org/jmxtrans/config/StandardConfiguration.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.utils.io.IoUtils.java">org/jmxtrans/utils/io/IoUtils.java</a>
                 </td>
                 <td>
@@ -816,21 +886,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.results.QueryResult.java">org/jmxtrans/results/QueryResult.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.results.QueryResultComparator.java">org/jmxtrans/results/QueryResultComparator.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.output.OutputWriter.java">org/jmxtrans/core/output/OutputWriter.java</a>
                 </td>
                 <td>
                   0
@@ -886,7 +942,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.Query.java">org/jmxtrans/query/Query.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.naming.ExpressionLanguageEngineImpl.java">org/jmxtrans/core/naming/ExpressionLanguageEngineImpl.java</a>
                 </td>
                 <td>
                   0
@@ -914,7 +970,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.ModifiableConfiguration.java">org/jmxtrans/config/ModifiableConfiguration.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.XmlConfigParser.java">org/jmxtrans/core/config/XmlConfigParser.java</a>
                 </td>
                 <td>
                   0
@@ -928,63 +984,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.ConfigParser.java">org/jmxtrans/config/ConfigParser.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.JmxtransConfigurationException.java">org/jmxtrans/config/JmxtransConfigurationException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.ResultNameStrategy.java">org/jmxtrans/query/ResultNameStrategy.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.ConfigurationMerger.java">org/jmxtrans/config/ConfigurationMerger.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.scheduler.QueryProcessor.java">org/jmxtrans/scheduler/QueryProcessor.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.JmxTransBuilder.java">org/jmxtrans/core/config/JmxTransBuilder.java</a>
                 </td>
                 <td>
                   0
@@ -1026,21 +1026,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.DefaultConfiguration.java">org/jmxtrans/config/DefaultConfiguration.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.embedded.RemoteServer.java">org/jmxtrans/query/embedded/RemoteServer.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.naming.ExpressionLanguageEngine.java">org/jmxtrans/core/naming/ExpressionLanguageEngine.java</a>
                 </td>
                 <td>
                   0
@@ -1068,21 +1054,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.output.OutputWriterFactory.java">org/jmxtrans/output/OutputWriterFactory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.JmxTransBuilder.java">org/jmxtrans/config/JmxTransBuilder.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.embedded.QueryMBean.java">org/jmxtrans/core/query/embedded/QueryMBean.java</a>
                 </td>
                 <td>
                   0
@@ -1124,20 +1096,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.scheduler.NaiveScheduler.java">org/jmxtrans/scheduler/NaiveScheduler.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.output.writers.utils.ForwardingQueue.java">org/jmxtrans/output/writers/utils/ForwardingQueue.java</a>
                 </td>
                 <td>
@@ -1152,7 +1110,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.utils.time.Clock.java">org/jmxtrans/utils/time/Clock.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.scheduler.ResultProcessor.java">org/jmxtrans/core/scheduler/ResultProcessor.java</a>
                 </td>
                 <td>
                   0
@@ -1166,7 +1124,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.config.XmlConfigParser.java">org/jmxtrans/config/XmlConfigParser.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.scheduler.JmxTransThreadFactory.java">org/jmxtrans/core/scheduler/JmxTransThreadFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.utils.time.Clock.java">org/jmxtrans/utils/time/Clock.java</a>
                 </td>
                 <td>
                   0
@@ -1222,7 +1194,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.output.DevNullOutputWriter.java">org/jmxtrans/output/DevNullOutputWriter.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.ModifiableConfiguration.java">org/jmxtrans/core/config/ModifiableConfiguration.java</a>
                 </td>
                 <td>
                   0
@@ -1236,7 +1208,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.query.embedded.InProcessServer.java">org/jmxtrans/query/embedded/InProcessServer.java</a>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.ResultNameStrategy.java">org/jmxtrans/core/query/ResultNameStrategy.java</a>
                 </td>
                 <td>
                   0
@@ -1321,6 +1293,34 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.output.writers.utils.ForwardingCollection.java">org/jmxtrans/output/writers/utils/ForwardingCollection.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.query.embedded.InProcessServer.java">org/jmxtrans/core/query/embedded/InProcessServer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.Configuration.java">org/jmxtrans/core/config/Configuration.java</a>
                 </td>
                 <td>
                   0
