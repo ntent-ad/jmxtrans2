@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<rss version="0.91">
+  <channel>
+    <title>JMXTrans - core - Checkstyle report</title>
+    <link>http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core</link>
+    <description>JMXTrans - core - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2014 - 2015 JMXTrans Team</copyright>
+    <item>
+      <title>File: 36,
+             Errors: 0,
+             Warnings: 0,
+             Infos: 0
+      </title>
+            <link>http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html</link>
+      <description>
+        <p>Click <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.scheduler.QueryGenerator.java">org/jmxtrans/core/scheduler/QueryGenerator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.config.StandardConfiguration.java">org/jmxtrans/core/config/StandardConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.config.JmxtransConfigurationException.java">org/jmxtrans/core/config/JmxtransConfigurationException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.output.DevNullOutputWriter.java">org/jmxtrans/core/output/DevNullOutputWriter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.embedded.RemoteServer.java">org/jmxtrans/core/query/embedded/RemoteServer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.naming.ResultNameStrategyImpl.java">org/jmxtrans/core/naming/ResultNameStrategyImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.output.AbstractOutputWriter.java">org/jmxtrans/core/output/AbstractOutputWriter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.output.OutputWriterFactory.java">org/jmxtrans/core/output/OutputWriterFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.config.ConfigurationMerger.java">org/jmxtrans/core/config/ConfigurationMerger.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.embedded.ResultNameStrategy.java">org/jmxtrans/core/query/embedded/ResultNameStrategy.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.config.DefaultConfiguration.java">org/jmxtrans/core/config/DefaultConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.scheduler.NaiveScheduler.java">org/jmxtrans/core/scheduler/NaiveScheduler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.scheduler.QueryProcessor.java">org/jmxtrans/core/scheduler/QueryProcessor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.embedded.Server.java">org/jmxtrans/core/query/embedded/Server.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.output.OutputWriter.java">org/jmxtrans/core/output/OutputWriter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.naming.ExpressionLanguageEngineImpl.java">org/jmxtrans/core/naming/ExpressionLanguageEngineImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.config.XmlConfigParser.java">org/jmxtrans/core/config/XmlConfigParser.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.config.JmxTransBuilder.java">org/jmxtrans/core/config/JmxTransBuilder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.Query.java">org/jmxtrans/core/query/Query.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.embedded.Query.java">org/jmxtrans/core/query/embedded/Query.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.naming.ExpressionLanguageEngine.java">org/jmxtrans/core/naming/ExpressionLanguageEngine.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.embedded.QueryMBean.java">org/jmxtrans/core/query/embedded/QueryMBean.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.results.QueryResult.java">org/jmxtrans/core/results/QueryResult.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.scheduler.ResultProcessor.java">org/jmxtrans/core/scheduler/ResultProcessor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.scheduler.JmxTransThreadFactory.java">org/jmxtrans/core/scheduler/JmxTransThreadFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.results.QueryResultComparator.java">org/jmxtrans/core/results/QueryResultComparator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.embedded.QueryMetrics.java">org/jmxtrans/core/query/embedded/QueryMetrics.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.config.PropertyPlaceholderResolverXmlPreprocessor.java">org/jmxtrans/core/config/PropertyPlaceholderResolverXmlPreprocessor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.config.ModifiableConfiguration.java">org/jmxtrans/core/config/ModifiableConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.Invocation.java">org/jmxtrans/core/query/Invocation.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.config.ConfigParser.java">org/jmxtrans/core/config/ConfigParser.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.ResultNameStrategy.java">org/jmxtrans/core/query/ResultNameStrategy.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.embedded.QueryAttribute.java">org/jmxtrans/core/query/embedded/QueryAttribute.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.scheduler.DeadlineRunnable.java">org/jmxtrans/core/scheduler/DeadlineRunnable.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.query.embedded.InProcessServer.java">org/jmxtrans/core/query/embedded/InProcessServer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core/checkstyle.html#org.jmxtrans.core.config.Configuration.java">org/jmxtrans/core/config/Configuration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+
