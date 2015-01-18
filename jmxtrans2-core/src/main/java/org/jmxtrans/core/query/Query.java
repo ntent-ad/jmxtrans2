@@ -23,8 +23,12 @@
 package org.jmxtrans.core.query;
 
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.utils.collections.ArrayUtils;
 import org.jmxtrans.utils.collections.Iterables2;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.SystemClock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,18 +46,17 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
+ * @deprecated use @link{org.jmxtrans.core.query.embedded.Query} instead.
  */
 @Immutable
 @ThreadSafe
+@Deprecated
 public class Query {
 
     @Nonnull
-    private final Logger logger = Logger.getLogger(getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     @Nonnull
     private final ResultNameStrategy resultNameStrategy;
@@ -82,6 +85,9 @@ public class Query {
      */
     @Nullable
     private final String type;
+
+    @Nonnull
+    private final Clock clock = new SystemClock();
 
     /**
      * @see #Query(String, String, String, Integer, String, String, ResultNameStrategy)
@@ -162,12 +168,12 @@ public class Query {
         }
 
         if (attributeValue instanceof CompositeData && key == null) {
-            logger.warning("Ignore compositeData without key specified for '" + on + "'#" + attribute + ": " + attributeValue);
+            logger.warn("Ignore compositeData without key specified for '" + on + "'#" + attribute + ": " + attributeValue);
             return;
         }
 
         if (!(attributeValue instanceof CompositeData) && key != null) {
-            logger.warning("Ignore NON compositeData for specified key for '" + on + "'#" + attribute + "#" + key + ": " + attributeValue);
+            logger.warn("Ignore NON compositeData for specified key for '" + on + "'#" + attribute + "#" + key + ": " + attributeValue);
             return;
         }
 
@@ -186,14 +192,14 @@ public class Query {
             if (position == null) {
                 int idx = 0;
                 for (Object entry : iterable) {
-                    addResult(new QueryResult(resultName + "_" + idx++, type, entry, System.currentTimeMillis()), resultQueue);
+                    addResult(new QueryResult(resultName + "_" + idx++, type, entry, clock.currentTimeMillis()), resultQueue);
                 }
             } else {
                 value = Iterables2.get(iterable, position);
-                addResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
+                addResult(new QueryResult(resultName, type, value, clock.currentTimeMillis()), resultQueue);
             }
         } else {
-            addResult(new QueryResult(resultName, type, value, System.currentTimeMillis()), resultQueue);
+            addResult(new QueryResult(resultName, type, value, clock.currentTimeMillis()), resultQueue);
         }
     }
 
@@ -207,7 +213,7 @@ public class Query {
     }
 
     private void logCollectingException(ObjectName on, Exception e) {
-        logger.log(Level.WARNING, "Exception collecting " + on + "#" + attribute + (key == null ? "" : "#" + key), e);
+        logger.warn("Exception collecting " + on + "#" + attribute + (key == null ? "" : "#" + key), e);
     }
 
     @Override

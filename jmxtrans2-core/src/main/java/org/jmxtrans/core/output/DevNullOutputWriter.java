@@ -30,16 +30,9 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
 @Immutable
 @ThreadSafe
 public class DevNullOutputWriter extends AbstractOutputWriter {
-
-    protected DevNullOutputWriter(String logLevel) {
-        super(logLevel);
-    }
 
     @Override
     public void write(QueryResult result) throws IOException {
@@ -49,7 +42,7 @@ public class DevNullOutputWriter extends AbstractOutputWriter {
         @Nonnull
         @Override
         public DevNullOutputWriter create(Map<String, String> settings) {
-            return new DevNullOutputWriter(getLogLevel(settings));
+            return new DevNullOutputWriter();
         }
     }
 }

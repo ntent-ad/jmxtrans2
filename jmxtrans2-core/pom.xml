@@ -41,10 +41,9 @@
 
     <properties>
         <verify.cobertura.branchRate>0</verify.cobertura.branchRate>
-        <verify.cobertura.lineRate>0</verify.cobertura.lineRate>
+        <verify.cobertura.lineRate>42</verify.cobertura.lineRate>
         <verify.cobertura.packageBranchRate>26</verify.cobertura.packageBranchRate>
         <verify.cobertura.packageLineRate>52</verify.cobertura.packageLineRate>
-        <verify.coverage.threshold>80</verify.coverage.threshold>
         <verify.mutation.threshold>58</verify.mutation.threshold>
     </properties>
 
@@ -89,10 +88,6 @@
             <plugin>
                 <groupId>de.andrena.tools.macker</groupId>
                 <artifactId>macker-maven-plugin</artifactId>
-                <configuration>
-                    <!-- need to fix a few issues before enforcing those rules -->
-                    <failOnError>false</failOnError>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

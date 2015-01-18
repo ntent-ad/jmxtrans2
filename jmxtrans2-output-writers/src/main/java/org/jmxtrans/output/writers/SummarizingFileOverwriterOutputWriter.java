@@ -22,7 +22,6 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.AbstractOutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 
 import javax.annotation.Nonnull;
@@ -35,8 +34,8 @@ import java.util.Map;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public class SummarizingFileOverwriterOutputWriter extends PerMinuteSummarizerOutputWriter {
-    public SummarizingFileOverwriterOutputWriter(String logLevel, FileOverwriterOutputWriter fileOverwriterOutputWriter) {
-        super(logLevel, fileOverwriterOutputWriter);
+    public SummarizingFileOverwriterOutputWriter(FileOverwriterOutputWriter fileOverwriterOutputWriter) {
+        super(fileOverwriterOutputWriter);
     }
 
     public static final class Factory implements OutputWriterFactory<SummarizingFileOverwriterOutputWriter> {
@@ -45,7 +44,6 @@ public class SummarizingFileOverwriterOutputWriter extends PerMinuteSummarizerOu
         public SummarizingFileOverwriterOutputWriter create(@Nonnull Map<String, String> settings) {
             FileOverwriterOutputWriter.Factory builder = new FileOverwriterOutputWriter.Factory();
             return new SummarizingFileOverwriterOutputWriter(
-                    AbstractOutputWriter.getLogLevel(settings),
                     builder.create(settings));
         }
     }

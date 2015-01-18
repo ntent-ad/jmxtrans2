@@ -86,6 +86,10 @@
                     <path>${project.artifactId}</path>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>de.andrena.tools.macker</groupId>
+                <artifactId>macker-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 

@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.core.query;
 
+import org.jmxtrans.utils.time.SystemClock;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,13 +36,13 @@ public class InvocationTest {
                 "getThreadCpuTime",
                 new Object[] { 1 },
                 new String[] {},
-                "jvm.thread.cpu");
+                "jvm.thread.cpu", new SystemClock());
         Invocation secondInvocation = new Invocation(
                 "java.lang:type=Memory",
                 "getThreadCpuTime",
                 new Object[] { 1 },
                 new String[] {},
-                "jvm.thread.cpu");
+                "jvm.thread.cpu", new SystemClock());
         assertThat(firstInvocation).isEqualTo(secondInvocation);
     }
 

@@ -43,7 +43,7 @@ public class PerMinuteSummarizerOutputWriterTest {
     @Before
     public void before(){
         OutputWriter devNullOutputWriter = new DevNullOutputWriter.Factory().create(Collections.<String, String>emptyMap());
-        writer = new PerMinuteSummarizerOutputWriter("INFO", devNullOutputWriter);
+        writer = new PerMinuteSummarizerOutputWriter(devNullOutputWriter);
     }
     @Test
     public void testPerMinute_60s_elapse() throws Exception {

@@ -25,29 +25,36 @@ package org.jmxtrans.output.writers;
 import org.jmxtrans.core.output.AbstractOutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.utils.io.IoUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
-
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.logging.Level;
 
-import static org.jmxtrans.utils.ConfigurationUtils.getString;
 import static org.jmxtrans.utils.ConfigurationUtils.getBoolean;
+import static org.jmxtrans.utils.ConfigurationUtils.getString;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 @NotThreadSafe
 public class FileOverwriterOutputWriter extends AbstractOutputWriter {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
     protected Writer temporaryFileWriter;
     protected File temporaryFile;
@@ -56,15 +63,13 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
     private final DateFormat dateFormat;
 
     protected FileOverwriterOutputWriter(
-            @Nonnull String logLevel,
             @Nonnull File file,
             boolean showTimeStamp,
             @Nonnull DateFormat dateFormat) {
-        super(logLevel);
         this.dateFormat = dateFormat;
         this.file = file;
         this.showTimeStamp = showTimeStamp;
-        logger.log(getInfoLevel(), "FileOverwriterOutputWriter configured with file " + file.getAbsolutePath());
+        logger.info("FileOverwriterOutputWriter configured with file " + file.getAbsolutePath());
     }
 
     @Nonnull
@@ -72,8 +77,8 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
         if (temporaryFile == null) {
             temporaryFile = File.createTempFile("jmxtrans-agent-", ".data");
             temporaryFile.deleteOnExit();
-            if (logger.isLoggable(getDebugLevel()))
-                logger.log(getDebugLevel(), "Created temporary file " + temporaryFile.getAbsolutePath());
+            if (logger.isDebugEnabled())
+                logger.debug("Created temporary file " + temporaryFile.getAbsolutePath());
 
             temporaryFileWriter = null;
         }
@@ -121,10 +126,10 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
         try {
             IoUtils.closeQuietly(getTemporaryFileWriter());
         } catch (IOException e) {
-            logger.log(Level.WARNING, "Could not get temporary file to delete", e);
+            logger.warn("Could not get temporary file to delete", e);
         }
         if (temporaryFile != null && !temporaryFile.delete()) {
-            logger.log(Level.WARNING, "Could not delete temporary file [" + temporaryFile.getAbsolutePath() + "].");
+            logger.warn("Could not delete temporary file [" + temporaryFile.getAbsolutePath() + "].");
         }
         temporaryFile = null;
 
@@ -134,8 +139,8 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
     public synchronized void postCollect() throws IOException {
         try {
             getTemporaryFileWriter().close();
-            if (logger.isLoggable(getDebugLevel()))
-                logger.log(getDebugLevel(), "Overwrite " + file.getAbsolutePath() + " by " + temporaryFile.getAbsolutePath());
+            if (logger.isDebugEnabled())
+                logger.debug("Overwrite " + file.getAbsolutePath() + " by " + temporaryFile.getAbsolutePath());
             RollingFileOutputWriter.replaceFile(temporaryFile, file);
         } finally {
             temporaryFileWriter = null;
@@ -150,7 +155,6 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
 
         @Override
         public FileOverwriterOutputWriter create(@Nonnull Map<String, String> settings) {
-            String logLevel = AbstractOutputWriter.getLogLevel(settings);
             File file = new File(getString(settings, SETTING_FILE_NAME, SETTING_FILE_NAME_DEFAULT_VALUE));
             boolean showTimeStamp = getBoolean(settings, SETTING_SHOW_TIMESTAMP, SETTING_SHOW_TIMESTAMP_DEFAULT);
 
@@ -158,7 +162,7 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
             dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-            return new FileOverwriterOutputWriter(logLevel, file, showTimeStamp, dateFormat);
+            return new FileOverwriterOutputWriter(file, showTimeStamp, dateFormat);
         }
     }
 }

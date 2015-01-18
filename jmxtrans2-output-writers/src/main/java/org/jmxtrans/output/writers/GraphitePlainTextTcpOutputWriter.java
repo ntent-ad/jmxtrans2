@@ -25,6 +25,10 @@ package org.jmxtrans.output.writers;
 import org.jmxtrans.core.output.AbstractOutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.SystemClock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -39,7 +43,6 @@ import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 import static org.jmxtrans.utils.ConfigurationUtils.getInt;
 import static org.jmxtrans.utils.ConfigurationUtils.getString;
@@ -50,24 +53,25 @@ import static org.jmxtrans.utils.ConfigurationUtils.getString;
 @NotThreadSafe
 public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
 
-    private final static Charset UTF_8 = Charset.forName("UTF-8");
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+
+    @Nonnull private final static Charset UTF_8 = Charset.forName("UTF-8");
     protected String metricPathPrefix;
     private Socket socket;
     private Writer writer;
     private final int socketConnectTimeoutInMillis;
-    private final InetSocketAddress serverAddress;
+    @Nonnull private final InetSocketAddress serverAddress;
+    @Nonnull private final Clock clock = new SystemClock();
 
     protected GraphitePlainTextTcpOutputWriter(
-            String logLevel,
             String metricPathPrefix,
             int socketConnectTimeoutInMillis,
             @Nonnull InetSocketAddress serverAddress) {
-        super(logLevel);
         this.metricPathPrefix = metricPathPrefix;
         this.socketConnectTimeoutInMillis = socketConnectTimeoutInMillis;
         this.serverAddress = serverAddress;
 
-        logger.log(getInfoLevel(), "GraphitePlainTextTcpOutputWriter is configured with " + serverAddress + ", metricPathPrefix=" + metricPathPrefix +
+        logger.info("GraphitePlainTextTcpOutputWriter is configured with " + serverAddress + ", metricPathPrefix=" + metricPathPrefix +
                 ", socketConnectTimeoutInMillis=" + socketConnectTimeoutInMillis);
     }
 
@@ -93,15 +97,13 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
 
     @Override
     public void write(@Nonnull QueryResult result) throws IOException {
-        String msg = buildMetricPathPrefix() + result.getName() + " " + result.getValue() + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        String msg = buildMetricPathPrefix() + result.getName() + " " + result.getValue() + " " + TimeUnit.SECONDS.convert(clock.currentTimeMillis(), TimeUnit.MILLISECONDS);
         try {
             ensureGraphiteConnection();
-            if (logger.isLoggable(getTraceLevel())) {
-                logger.log(getTraceLevel(), "Send '" + msg + "' to " + serverAddress);
-            }
+            logger.debug("Send '" + msg + "' to " + serverAddress);
             writer.write(msg + "\n");
         } catch (IOException e) {
-            logger.log(Level.WARNING, "Exception sending '" + msg + "' to " + serverAddress, e);
+            logger.warn("Exception sending '" + msg + "' to " + serverAddress, e);
             releaseGraphiteConnection();
             throw e;
         }
@@ -112,7 +114,7 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
             try {
                 writer.close();
             } catch (IOException e) {
-                logger.log(Level.WARNING, "Exception closing writer for socket " + socket, e);
+                logger.warn("Exception closing writer for socket " + socket, e);
             }
             writer = null;
         }
@@ -120,7 +122,7 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
             try {
                 socket.close();
             } catch (IOException e) {
-                logger.log(Level.WARNING, "Exception closing socket " + socket, e);
+                logger.warn("Exception closing socket " + socket, e);
             }
             socket = null;
         }
@@ -194,7 +196,6 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
                     getInt(settings, SETTING_PORT, SETTING_PORT_DEFAULT_VALUE));
 
             return new GraphitePlainTextTcpOutputWriter(
-                    AbstractOutputWriter.getLogLevel(settings),
                     metricPathPrefix,
                     socketConnectTimeoutInMillis,
                     graphiteAddress);

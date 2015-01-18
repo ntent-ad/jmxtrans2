@@ -93,7 +93,7 @@ public class XmlConfigParserTest {
         Iterator<Invocation> invocationIterator = configuration.getInvocations().iterator();
 
         Invocation gc = invocationIterator.next();
-        assertThat(gc).isEqualTo(new Invocation("java.lang:type=Memory", "gc", new Object[0], new String[0], "jvm.gc"));
+        assertThat(gc).isEqualTo(new Invocation("java.lang:type=Memory", "gc", new Object[0], new String[0], "jvm.gc", new SystemClock()));
 
         Invocation threadCpuTime = invocationIterator.next();
         assertThat(threadCpuTime).isEqualTo(new Invocation(
@@ -101,7 +101,7 @@ public class XmlConfigParserTest {
                 "getThreadCpuTime",
                 new Object[] { "1" },
                 new String[] { "long" },
-                "jvm.thread.cpu"
+                "jvm.thread.cpu", new SystemClock()
         ));
     }
 

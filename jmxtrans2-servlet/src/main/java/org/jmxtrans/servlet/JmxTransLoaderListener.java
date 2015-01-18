@@ -23,7 +23,6 @@
 package org.jmxtrans.servlet;
 
 import org.jmxtrans.core.config.JmxTransBuilder;
-import org.jmxtrans.core.config.JmxTransException;
 import org.jmxtrans.core.scheduler.NaiveScheduler;
 import org.jmxtrans.utils.VisibleForTesting;
 import org.jmxtrans.utils.io.Resource;
@@ -88,7 +87,6 @@ public class JmxTransLoaderListener implements ServletContextListener {
         } catch (Exception e) {
             String message = "Exception starting jmxtrans for application '" + sce.getServletContext().getContextPath() + "'";
             sce.getServletContext().log(message, e);
-            throw new JmxTransException(message, e);
         }
     }
 
@@ -99,7 +97,7 @@ public class JmxTransLoaderListener implements ServletContextListener {
         try {
             scheduler.stop();
         } catch (Exception e) {
-            throw new JmxTransException("Exception stopping JmxTrans", e);
+            sce.getServletContext().log("Could not stop JmxTrans.", e);
         }
     }
 

@@ -45,14 +45,14 @@ public class RemoteServer implements Server {
     @Nonnull private final JMXServiceURL url;
     @Nullable private final String username;
     @Nullable private final String password;
-    @Nonnull private final String protocolProviderPackages;
+    @Nullable private final String protocolProviderPackages;
     @Nonnull private final Iterable<Query> queries;
 
-    public RemoteServer(
+    private RemoteServer(
             @Nonnull JMXServiceURL url,
             @Nullable String username,
             @Nullable String password,
-            @Nonnull String protocolProviderPackages,
+            @Nullable String protocolProviderPackages,
             @Nonnull Iterable<Query> queries) {
         this.url = url;
         this.username = username;
@@ -61,22 +61,33 @@ public class RemoteServer implements Server {
         this.queries = queries;
     }
 
+    @Nullable
     @Override
     public String getHost() {
         return url.getHost();
     }
 
+    @Nonnull
     private Map<String, ?> getEnvironment() {
         if (protocolProviderPackages != null && protocolProviderPackages.contains("weblogic")) {
-            Map<String, String> environment = new HashMap<>();
-            if ((username != null) && (password != null)) {
-                environment.put(PROTOCOL_PROVIDER_PACKAGES, protocolProviderPackages);
-                environment.put(SECURITY_PRINCIPAL, username);
-                environment.put(SECURITY_CREDENTIALS, password);
-            }
-            return environment;
+            return getWebLogicEnvironment();
         }
+        return getNonWebLogicEnvironment();
+    }
 
+    @Nonnull
+    private Map<String, ?> getWebLogicEnvironment() {
+        Map<String, String> environment = new HashMap<>();
+        if ((username != null) && (password != null)) {
+            environment.put(PROTOCOL_PROVIDER_PACKAGES, protocolProviderPackages);
+            environment.put(SECURITY_PRINCIPAL, username);
+            environment.put(SECURITY_CREDENTIALS, password);
+        }
+        return environment;
+    }
+
+    @Nonnull
+    private Map<String, ?> getNonWebLogicEnvironment() {
         Map<String, String[]> environment = new HashMap<>();
         if ((username != null) && (password != null)) {
             String[] credentials = new String[] {
@@ -94,26 +105,25 @@ public class RemoteServer implements Server {
         return JMXConnectorFactory.connect(url, this.getEnvironment()).getMBeanServerConnection();
     }
 
+    @Nonnull
     @Override
     public Iterable<Query> getQueries() {
         return queries;
     }
 
+    @Nonnull
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        private static final String FRONT = "service:jmx:rmi:///jndi/rmi://";
-        private static final String BACK = "/jmxrmi";
-
-        private JMXServiceURL url;
-        private String host;
-        private Integer port;
-        private String username;
-        private String password;
-        private String protocolProviderPackages;
-        private final Collection<Query> queries = new ArrayList<>();
+        @Nullable private JMXServiceURL url;
+        @Nullable private String host;
+        @Nullable private Integer port;
+        @Nullable private String username;
+        @Nullable private String password;
+        @Nullable private String protocolProviderPackages;
+        @Nonnull private final Collection<Query> queries = new ArrayList<>();
 
         @Nonnull
         public Builder withUrl(@Nullable String url) throws MalformedURLException {

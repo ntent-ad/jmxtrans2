@@ -94,6 +94,8 @@ public class Query implements QueryMBean {
     @Nullable
     private MBeanServer mbeanServer;
 
+    @Nonnull private final Clock clock;
+
     private Query(@Nonnull ObjectName objectName,
                   @Nullable String resultAlias,
                   @Nonnull List<QueryAttribute> attributes,
@@ -108,6 +110,7 @@ public class Query implements QueryMBean {
         this.attributeNames = attributesByName.keySet().toArray(new String[0]);
         this.queryMbeanObjectName = queryMbeanObjectName;
         metrics = new QueryMetrics(clock);
+        this.clock = clock;
     }
 
     public Iterable<QueryResult> collectMetrics(@Nonnull MBeanServerConnection mbeanServer, @Nonnull ResultNameStrategy resultNameStrategy) throws IOException {
@@ -122,7 +125,7 @@ public class Query implements QueryMBean {
             logger.debug(format("Query %s returned %s", objectName, matchingObjectNames));
 
             for (ObjectName matchingObjectName : matchingObjectNames) {
-                long epochInMillis = System.currentTimeMillis();
+                long epochInMillis = clock.currentTimeMillis();
                 try {
                     AttributeList jmxAttributes = mbeanServer.getAttributes(matchingObjectName, this.attributeNames);
                     logger.debug(format("Query %s returned %s", matchingObjectName, jmxAttributes));
@@ -225,34 +228,28 @@ public class Query implements QueryMBean {
         return queryMbeanObjectName.getCanonicalName();
     }
 
+    public void setMbeanServer(@Nonnull MBeanServer mbeanServer) {
+        this.mbeanServer = mbeanServer;
+    }
+
     @Nonnull
     public static Builder builder() {
         return new Builder();
     }
 
-    public void setMbeanServer(@Nonnull MBeanServer mbeanServer) {
-        this.mbeanServer = mbeanServer;
-    }
-
     public static final class Builder {
-        @Nonnull
-        private static final AtomicInteger queryIdSequence = new AtomicInteger();
+        @Nonnull private static final AtomicInteger queryIdSequence = new AtomicInteger();
 
-        @Nullable
-        private ObjectName objectName;
-        @Nullable
-        private String resultAlias;
-        @Nonnull
-        private final List<QueryAttribute> attributes = new ArrayList<>();
-        @Nonnull
-        private final SystemClock clock;
+        @Nullable private ObjectName objectName;
+        @Nullable private String resultAlias;
+        @Nonnull private final List<QueryAttribute> attributes = new ArrayList<>();
+        @Nonnull private final Clock clock;
 
         private Builder() {
             this.clock = new SystemClock();
         }
 
-        @Nonnull
-        public Builder withObjectName(@Nonnull String objectName) {
+        @Nonnull public Builder withObjectName(@Nonnull String objectName) {
             try {
                 withObjectName(new ObjectName(objectName));
                 return this;

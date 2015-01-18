@@ -22,13 +22,11 @@
  */
 package org.jmxtrans.core.output;
 
-import org.jmxtrans.core.output.AbstractOutputWriter;
 import org.jmxtrans.core.results.QueryResult;
 import org.junit.Test;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
-import java.util.logging.Level;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,47 +34,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AbstractOutputWriterTest {
 
     @Test
-    public void loggersAreInitializedCorrectlyAtTraceAndFinestLevels() {
-        DummyOutputWriter traceOutputWriter = new DummyOutputWriter("trace");
-        assertThat(traceOutputWriter.getTraceLevel()).isEqualTo(Level.INFO);
-        assertThat(traceOutputWriter.getDebugLevel()).isEqualTo(Level.INFO);
-        assertThat(traceOutputWriter.getInfoLevel()).isEqualTo(Level.INFO);
-
-        DummyOutputWriter finestOutputWriter = new DummyOutputWriter("finest");
-        assertThat(finestOutputWriter.getTraceLevel()).isEqualTo(Level.INFO);
-        assertThat(finestOutputWriter.getDebugLevel()).isEqualTo(Level.INFO);
-        assertThat(finestOutputWriter.getInfoLevel()).isEqualTo(Level.INFO);
-    }
-
-    @Test
-    public void loggersAreInitializedCorrectlyAtDebugAndFinerAndFineLevels() {
-        DummyOutputWriter debugOutputWriter = new DummyOutputWriter("debug");
-        assertThat(debugOutputWriter.getTraceLevel()).isEqualTo(Level.FINE);
-        assertThat(debugOutputWriter.getDebugLevel()).isEqualTo(Level.INFO);
-        assertThat(debugOutputWriter.getInfoLevel()).isEqualTo(Level.INFO);
-
-        DummyOutputWriter finerOutputWriter = new DummyOutputWriter("finer");
-        assertThat(finerOutputWriter.getTraceLevel()).isEqualTo(Level.FINE);
-        assertThat(finerOutputWriter.getDebugLevel()).isEqualTo(Level.INFO);
-        assertThat(finerOutputWriter.getInfoLevel()).isEqualTo(Level.INFO);
-
-        DummyOutputWriter fineOutputWriter = new DummyOutputWriter("fine");
-        assertThat(fineOutputWriter.getTraceLevel()).isEqualTo(Level.FINE);
-        assertThat(fineOutputWriter.getDebugLevel()).isEqualTo(Level.INFO);
-        assertThat(fineOutputWriter.getInfoLevel()).isEqualTo(Level.INFO);
-    }
-
-    @Test
-    public void loggersAreInitializedCorrectlyAtWarnLevel() {
-        DummyOutputWriter warnOutputWriter = new DummyOutputWriter("warn");
-        assertThat(warnOutputWriter.getTraceLevel()).isEqualTo(Level.FINE);
-        assertThat(warnOutputWriter.getDebugLevel()).isEqualTo(Level.FINE);
-        assertThat(warnOutputWriter.getInfoLevel()).isEqualTo(Level.FINE);
-    }
-
-    @Test
     public void resultsAreDispatched() throws IOException {
-        DummyOutputWriter outputWriter = new DummyOutputWriter("warn");
+        DummyOutputWriter outputWriter = new DummyOutputWriter();
         QueryResult result = new QueryResult("name", "value", 0);
 
         outputWriter.write(singleton(result));
@@ -88,9 +47,6 @@ public class AbstractOutputWriterTest {
 
     private static final class DummyOutputWriter extends AbstractOutputWriter {
         private QueryResult result;
-        protected DummyOutputWriter(@Nonnull String logLevel) {
-            super(logLevel);
-        }
 
         @Override
         public void write(@Nonnull QueryResult result) throws IOException {

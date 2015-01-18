@@ -24,6 +24,8 @@ package org.jmxtrans.output.writers;
 
 import org.jmxtrans.core.output.AbstractOutputWriter;
 import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.output.writers.utils.EvictingQueue;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.core.results.QueryResultComparator;
@@ -47,11 +49,12 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 @NotThreadSafe
 public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implements OutputWriter {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+
     protected final OutputWriter delegate;
     protected final Map<String, Queue<QueryResult>> previousQueryResultsByMetricName = new HashMap<String, Queue<QueryResult>>();
 
-    public PerMinuteSummarizerOutputWriter(@Nonnull String logLevel, @Nonnull OutputWriter delegate) {
-        super(logLevel);
+    public PerMinuteSummarizerOutputWriter(@Nonnull OutputWriter delegate) {
         this.delegate = delegate;
     }
 
@@ -64,17 +67,14 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
 
             storeQueryResult(result);
             QueryResult newCurrentResult = perMinute(result, previousResult);
-            if (logger.isLoggable(getDebugLevel()))
-                logger.log(getDebugLevel(), "Metric " + result.getName() + " is a counter " +
-                        "current=" + result + ", " +
-                        "previous=" + previousResult + ", " +
-                        "newCurrent.value=" + newCurrentResult.getValue());
+            logger.debug("Metric " + result.getName() + " is a counter " +
+                    "current=" + result + ", " +
+                    "previous=" + previousResult + ", " +
+                    "newCurrent.value=" + newCurrentResult.getValue());
 
             delegate.write(newCurrentResult);
-
         } else {
-            if (logger.isLoggable(getTraceLevel()))
-                logger.log(getTraceLevel(), "Metric " + result.getName() + " is a NOT a counter");
+            logger.debug("Metric " + result.getName() + " is a NOT a counter");
             delegate.write(result);
         }
     }
@@ -85,7 +85,7 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
 
         Queue<QueryResult> queue = previousQueryResultsByMetricName.get(currentResult.getName());
         if (queue == null) {
-            queue = new EvictingQueue<QueryResult>(3);
+            queue = new EvictingQueue<>(3);
             previousQueryResultsByMetricName.put(currentResult.getName(), queue);
         }
         queue.add(currentResult);
@@ -121,21 +121,18 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
     public QueryResult perMinute(@Nonnull QueryResult currentResult, @Nullable QueryResult previousResult) {
 
         if (!(currentResult.getValue() instanceof Number)) {
-            if (logger.isLoggable(getInfoLevel()))
-                logger.log(getInfoLevel(), "Current value is not a number, cannot calculate derivative " + currentResult);
+            logger.info("Current value is not a number, cannot calculate derivative " + currentResult);
 
             return currentResult;
         }
 
         if (previousResult == null) {
-            if (logger.isLoggable(getTraceLevel()))
-                logger.log(getTraceLevel(), "No previous value found for metric '" + currentResult.getName() + "'");
+            logger.debug("No previous value found for metric '" + currentResult.getName() + "'");
 
             return new QueryResult(currentResult.getName(), "gauge", currentResult.getValue(), currentResult.getEpoch(MILLISECONDS));
         }
         if (!(previousResult.getValue() instanceof Number)) {
-            if (logger.isLoggable(getInfoLevel()))
-                logger.log(getInfoLevel(), "previous value is not a number, cannot calculate derivative " + previousResult);
+            logger.info("previous value is not a number, cannot calculate derivative " + previousResult);
 
             return currentResult;
         }
@@ -146,8 +143,7 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
         Number previousValue = (Number) previousResult.getValue();
 
         if (((Comparable) currentValue).compareTo(previousValue) < 0) {
-            if (logger.isLoggable(getTraceLevel()))
-                logger.log(getTraceLevel(), "Previous value is greater than current value for metric '" + currentResult.getName() + "', ignore it");
+            logger.debug("Previous value is greater than current value for metric '" + currentResult.getName() + "', ignore it");
 
             return new QueryResult(currentResult.getName(), "gauge", currentResult.getValue(), currentResult.getEpoch(MILLISECONDS));
         }
@@ -162,8 +158,7 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
         } else if (currentValue instanceof Double) {
             valueDelta = new BigDecimal(currentValue.doubleValue() - previousValue.doubleValue());
         } else {
-            if (logger.isLoggable(getInfoLevel()))
-                logger.log(getInfoLevel(), "unsupported value type '" + currentValue.getClass() + ", cannot calculate perMinute " + currentResult);
+            logger.info("unsupported value type '" + currentValue.getClass() + ", cannot calculate perMinute " + currentResult);
 
             return currentResult;
         }
@@ -182,8 +177,7 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
         } else if (currentValue instanceof Double) {
             newCurrentValue = perMinute.doubleValue();
         } else {
-            if (logger.isLoggable(getInfoLevel()))
-                logger.log(getInfoLevel(), "Illegal state " + previousResult);
+            logger.info("Illegal state " + previousResult);
 
             return currentResult;
         }

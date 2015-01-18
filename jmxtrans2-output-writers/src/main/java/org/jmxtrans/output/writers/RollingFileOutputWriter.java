@@ -25,6 +25,8 @@ package org.jmxtrans.output.writers;
 import org.jmxtrans.core.output.AbstractOutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.utils.io.IoUtils;
 
 import javax.annotation.Nonnull;
@@ -43,8 +45,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.jmxtrans.utils.ConfigurationUtils.getInt;
 import static org.jmxtrans.utils.ConfigurationUtils.getLong;
@@ -53,7 +53,7 @@ import static org.jmxtrans.utils.ConfigurationUtils.getString;
 @NotThreadSafe
 public class RollingFileOutputWriter extends AbstractOutputWriter {
 
-    private static final Logger LOGGER = Logger.getLogger(IoUtils.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(RollingFileOutputWriter.class.getName());
 
     private final DateFormat dateFormat;
     
@@ -64,18 +64,15 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
     protected final int maxBackupIndex;
 
     protected RollingFileOutputWriter(
-            @Nonnull String logLevel,
             @Nonnull File file,
             @Nonnull long maxFileSize,
             @Nonnull int maxBackupIndex,
             @Nonnull DateFormat dateFormat) {
-        super(logLevel);
-
         this.dateFormat = dateFormat;
         this.file = file;
         this.maxFileSize = maxFileSize;
         this.maxBackupIndex = maxBackupIndex;
-        logger.log(getInfoLevel(), "RollingFileOutputWriter configured with file " + file.getAbsolutePath());
+        LOGGER.info("RollingFileOutputWriter configured with file " + file.getAbsolutePath());
     }
 
     public static void appendToFile(@Nonnull File source, @Nonnull File destination, long maxFileSize, int maxBackupIndex) throws IOException {
@@ -119,7 +116,7 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
         }
 
         if (!destination.delete()) {
-            LOGGER.log(Level.WARNING, "Could not delete file [" + destination.getAbsolutePath() + "].");
+            LOGGER.warn("Could not delete file [" + destination.getAbsolutePath() + "].");
         }
     }
 
@@ -166,8 +163,8 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
         if (temporaryFile == null) {
             temporaryFile = File.createTempFile("jmxtrans-agent-", ".data");
             temporaryFile.deleteOnExit();
-            if (logger.isLoggable(getDebugLevel()))
-                logger.log(getDebugLevel(), "Created temporary file " + temporaryFile.getAbsolutePath());
+            if (LOGGER.isDebugEnabled())
+                LOGGER.debug("Created temporary file " + temporaryFile.getAbsolutePath());
 
             temporaryFileWriter = null;
         }
@@ -195,7 +192,7 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
         }
         if (temporaryFile != null) {
             if (!temporaryFile.delete()) {
-                logger.log(Level.WARNING, "Could not delete temporary file [" + temporaryFile.getAbsolutePath() + "].");
+                LOGGER.warn("Could not delete temporary file [" + temporaryFile.getAbsolutePath() + "].");
             }
         }
         temporaryFile = null;
@@ -206,8 +203,8 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
     public synchronized void postCollect() throws IOException {
         try {
             getTemporaryFileWriter().close();
-            if (logger.isLoggable(getDebugLevel()))
-                logger.log(getDebugLevel(), "Overwrite " + file.getAbsolutePath() + " by " + temporaryFile.getAbsolutePath());
+            if (LOGGER.isDebugEnabled())
+                LOGGER.debug("Overwrite " + file.getAbsolutePath() + " by " + temporaryFile.getAbsolutePath());
             appendToFile(temporaryFile, file, maxFileSize, maxBackupIndex);
         } finally {
             temporaryFileWriter = null;
@@ -236,7 +233,7 @@ public class RollingFileOutputWriter extends AbstractOutputWriter {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-            return new RollingFileOutputWriter(AbstractOutputWriter.getLogLevel(settings), file, maxFileSize, maxBackupIndex, dateFormat);
+            return new RollingFileOutputWriter(file, maxFileSize, maxBackupIndex, dateFormat);
         }
     }
 }

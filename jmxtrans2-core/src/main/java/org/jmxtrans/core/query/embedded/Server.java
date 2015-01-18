@@ -22,12 +22,17 @@
  */
 package org.jmxtrans.core.query.embedded;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.management.MBeanServerConnection;
 
 public interface Server {
+    @Nullable
     String getHost();
 
+    @Nonnull
     MBeanServerConnection getServerConnection() throws Exception;
 
+    @Nonnull
     Iterable<Query> getQueries();
 }

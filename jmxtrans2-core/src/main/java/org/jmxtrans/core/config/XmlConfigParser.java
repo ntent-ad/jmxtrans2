@@ -42,6 +42,7 @@ import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.io.StandardResource;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.Interval;
+import org.jmxtrans.utils.time.SystemClock;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -194,7 +195,7 @@ public class XmlConfigParser implements ConfigParser {
                             invocation.getOperationName(),
                             params.toArray(),
                             signature.toArray(new String[0]),
-                            invocation.getResultAlias()));
+                            invocation.getResultAlias(), new SystemClock()));
         }
     }
 

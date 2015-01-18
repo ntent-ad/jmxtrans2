@@ -22,8 +22,6 @@
  */
 package org.jmxtrans.core.output;
 
-import org.jmxtrans.core.output.DevNullOutputWriter;
-import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.results.QueryResult;
 import org.junit.Test;
 
@@ -32,16 +30,13 @@ import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singleton;
-import static java.util.Collections.singletonMap;
-import static java.util.logging.Level.INFO;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jmxtrans.core.output.AbstractOutputWriter.SETTING_LOG_LEVEL;
 
 public class DevNullOutputWriterTest {
 
     @Test
     public void writingResultsDoesNothing() throws IOException {
-        OutputWriter outputWriter = new DevNullOutputWriter("warn");
+        OutputWriter outputWriter = new DevNullOutputWriter();
         QueryResult result = new QueryResult("name", "value", 0);
 
         outputWriter.write(singleton(result));
@@ -53,15 +48,6 @@ public class DevNullOutputWriterTest {
         OutputWriter outputWriter = new DevNullOutputWriter.Factory().create(settings);
 
         assertThat(outputWriter).isNotNull();
-    }
-
-    @Test
-    public void logLevelsAreInitializedThroughFactory() {
-        Map<String, String> settings = singletonMap(SETTING_LOG_LEVEL, "trace");
-        DevNullOutputWriter outputWriter = new DevNullOutputWriter.Factory().create(settings);
-
-        assertThat(outputWriter).isNotNull();
-        assertThat(outputWriter.getDebugLevel()).isEqualTo(INFO);
     }
 
 }

@@ -40,10 +40,6 @@ import java.util.concurrent.TimeUnit;
 @ThreadSafe
 public class ConsoleOutputWriter extends AbstractOutputWriter {
 
-    protected ConsoleOutputWriter(String logLevel) {
-        super(logLevel);
-    }
-
     @Override
     public void write(@Nonnull QueryResult result) throws IOException {
         System.out.println(result.getName() + " " + result.getValue() + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS));
@@ -53,7 +49,7 @@ public class ConsoleOutputWriter extends AbstractOutputWriter {
         @Override
         @Nonnull
         public ConsoleOutputWriter create(@Nonnull Map<String, String> settings) {
-            return new ConsoleOutputWriter(AbstractOutputWriter.getLogLevel(settings));
+            return new ConsoleOutputWriter();
         }
     }
 }

@@ -23,6 +23,10 @@
 package org.jmxtrans.core.query;
 
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.SystemClock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -34,8 +38,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static java.util.Objects.hash;
 
@@ -47,7 +49,7 @@ import static java.util.Objects.hash;
 public class Invocation {
 
     @Nonnull
-    private final Logger logger = Logger.getLogger(getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
     @Nonnull
     public final ObjectName objectName;
     @Nonnull
@@ -58,8 +60,16 @@ public class Invocation {
     private final Object[] params;
     @Nonnull
     private final String[] signature;
+    @Nonnull
+    private final Clock clock;
 
-    public Invocation(@Nonnull String objectName, @Nonnull String operationName, @Nonnull Object[] params, @Nonnull String[] signature, @Nonnull String resultAlias) {
+    public Invocation(
+            @Nonnull String objectName,
+            @Nonnull String operationName,
+            @Nonnull Object[] params,
+            @Nonnull String[] signature,
+            @Nonnull String resultAlias,
+            @Nonnull SystemClock clock) {
         try {
             this.objectName = new ObjectName(objectName);
         } catch (MalformedObjectNameException e) {
@@ -69,6 +79,7 @@ public class Invocation {
         this.params = params.clone();
         this.signature = signature.clone();
         this.resultAlias = resultAlias;
+        this.clock = clock;
     }
 
     public void invoke(@Nonnull MBeanServer mbeanServer, @Nonnull BlockingQueue<QueryResult> resultQueue) {
@@ -76,9 +87,9 @@ public class Invocation {
         for (ObjectName on : objectNames) {
             try {
                 Object result = mbeanServer.invoke(on, operationName, params, signature);
-                resultQueue.add(new QueryResult(resultAlias, result, System.currentTimeMillis()));
+                resultQueue.add(new QueryResult(resultAlias, result, clock.currentTimeMillis()));
             } catch (Exception e) {
-                logger.log(Level.WARNING, "Exception invoking " + on + "#" + operationName + "(" + Arrays.toString(params) + ")", e);
+                logger.warn("Exception invoking " + on + "#" + operationName + "(" + Arrays.toString(params) + ")", e);
             }
         }
     }

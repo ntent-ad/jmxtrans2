@@ -22,7 +22,6 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.AbstractOutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 
 import javax.annotation.Nonnull;
@@ -35,15 +34,15 @@ import java.util.Map;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 public class SummarizingConsoleOutputWriter extends PerMinuteSummarizerOutputWriter {
-    public SummarizingConsoleOutputWriter(String logLevel) {
-        super(logLevel, new ConsoleOutputWriter(logLevel));
+    public SummarizingConsoleOutputWriter() {
+        super(new ConsoleOutputWriter());
     }
 
     public static final class Factory implements OutputWriterFactory<SummarizingConsoleOutputWriter> {
         @Override
         @Nonnull
         public SummarizingConsoleOutputWriter create(@Nonnull Map<String, String> settings) {
-            return new SummarizingConsoleOutputWriter(AbstractOutputWriter.getLogLevel(settings));
+            return new SummarizingConsoleOutputWriter();
         }
     }
 
