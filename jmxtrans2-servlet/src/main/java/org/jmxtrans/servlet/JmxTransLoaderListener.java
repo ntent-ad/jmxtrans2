@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.servlet;
 
-import org.jmxtrans.config.JmxTransBuilder;
-import org.jmxtrans.config.JmxTransException;
-import org.jmxtrans.scheduler.NaiveScheduler;
+import org.jmxtrans.core.config.JmxTransBuilder;
+import org.jmxtrans.core.config.JmxTransException;
+import org.jmxtrans.core.scheduler.NaiveScheduler;
 import org.jmxtrans.utils.VisibleForTesting;
 import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.io.StandardResource;

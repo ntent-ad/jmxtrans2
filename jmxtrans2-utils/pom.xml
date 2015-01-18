@@ -33,18 +33,13 @@
 
     <artifactId>jmxtrans2-utils</artifactId>
     <name>JMXTrans - utils</name>
+    <description>
+        Utilities which have no direct connections with JmxTrans. All classes found in this module could potentially be
+        reused by other projects. Some duplicate functionality already found in standard libraries like Guava, but as we
+        want to keep external dependencies to a bare minimum, we have to reimplement them.
+    </description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>annotations</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <optional>true</optional>
-        </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-log</artifactId>
@@ -52,16 +47,6 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -85,19 +70,6 @@
             <plugin>
                 <groupId>de.andrena.tools.macker</groupId>
                 <artifactId>macker-maven-plugin</artifactId>
-                <version>1.0.2</version>
-                <configuration>
-                    <rulesDirectory>${project.basedir}/src/etc</rulesDirectory>
-                    <rule>macker-rules.xml</rule>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>macker</goal>
-                        </goals>
-                        <phase>verify</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

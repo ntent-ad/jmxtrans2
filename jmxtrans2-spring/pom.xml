@@ -45,17 +45,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-scheduler</artifactId>
+            <artifactId>jmxtrans2-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
@@ -76,16 +67,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

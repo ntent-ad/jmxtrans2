@@ -23,7 +23,7 @@
 package org.jmxtrans.standalone;
 
 import com.beust.jcommander.JCommander;
-import org.jmxtrans.config.JmxTransBuilder;
+import org.jmxtrans.core.config.JmxTransBuilder;
 import org.jmxtrans.standalone.cli.JmxTransParameters;
 import org.jmxtrans.utils.io.FileResource;
 import org.jmxtrans.utils.io.Resource;

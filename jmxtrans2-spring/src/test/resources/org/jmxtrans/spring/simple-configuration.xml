@@ -46,7 +46,7 @@
     </invocations>
 
     <outputWriters>
-        <outputWriter class="org.jmxtrans.output.DevNullOutputWriter"/>
+        <outputWriter class="org.jmxtrans.core.output.DevNullOutputWriter"/>
     </outputWriters>
 
 </jmxtrans>

@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.agent;
 
-import org.jmxtrans.config.JmxTransBuilder;
+import org.jmxtrans.core.config.JmxTransBuilder;
 import org.jmxtrans.log.Logger;
 import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.utils.io.Resource;

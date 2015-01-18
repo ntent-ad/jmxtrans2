@@ -33,6 +33,11 @@
 
     <artifactId>jmxtrans2-output-writers</artifactId>
     <name>JMXTrans - output writers</name>
+    <description>
+        Implementation of OutputWriters for a number of backends. Those are kept outside of jmxtrans-core as they do
+        bring additional dependencies in some cases and we want to strongly enforce that no code in jmxtrans-core
+        depends on specific OutputWriter.
+    </description>
 
     <properties>
         <verify.cobertura.packageBranchRate>21</verify.cobertura.packageBranchRate>
@@ -46,21 +51,12 @@
     <dependencies>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
-            <artifactId>annotations</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-output</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jmxtrans.jmxtrans2</groupId>
-            <artifactId>jmxtrans2-results</artifactId>
+            <artifactId>jmxtrans2-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
@@ -69,16 +65,6 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

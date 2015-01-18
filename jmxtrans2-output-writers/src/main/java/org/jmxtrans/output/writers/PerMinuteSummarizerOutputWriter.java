@@ -22,11 +22,11 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.output.AbstractOutputWriter;
-import org.jmxtrans.output.OutputWriter;
+import org.jmxtrans.core.output.AbstractOutputWriter;
+import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.output.writers.utils.EvictingQueue;
-import org.jmxtrans.results.QueryResult;
-import org.jmxtrans.results.QueryResultComparator;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.core.results.QueryResultComparator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

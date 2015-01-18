@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.output.AbstractOutputWriter;
-import org.jmxtrans.output.OutputWriterFactory;
-import org.jmxtrans.results.QueryResult;
+import org.jmxtrans.core.output.AbstractOutputWriter;
+import org.jmxtrans.core.output.OutputWriterFactory;
+import org.jmxtrans.core.results.QueryResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
