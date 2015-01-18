@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2014 - 2015 JMXTrans Team</copyright>
     <item>
-      <title>File: 92,
+      <title>File: 91,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -509,20 +509,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.utils.collections.Iterables2.java">org/jmxtrans/utils/collections/Iterables2.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://www.jmxtrans.org/jmxtrans2/checkstyle.html#org.jmxtrans.core.config.JmxTransException.java">org/jmxtrans/core/config/JmxTransException.java</a>
                 </td>
                 <td>
                   0
