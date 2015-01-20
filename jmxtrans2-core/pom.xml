@@ -33,11 +33,9 @@
 
     <artifactId>jmxtrans2-core</artifactId>
     <name>JMXTrans - core</name>
-    <description>
-        Core functionality of JmxTrans is found here. Integration with specific runtime environment is kept outside this
+    <description>Core functionality of JmxTrans is found here. Integration with specific runtime environment is kept outside this
         module (agent, spring, standalone, ...), but if you just want some code to help you easily query JMX beans, this
-        is what you need.
-    </description>
+        is what you need.</description>
 
     <properties>
         <verify.cobertura.branchRate>0</verify.cobertura.branchRate>

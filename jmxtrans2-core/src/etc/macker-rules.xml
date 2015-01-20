@@ -67,6 +67,23 @@
             </deny>
         </access-rule>
         <access-rule>
+            <message>Naming package should ony depend on query package.</message>
+            <deny>
+                <from class="org.jmxtrans.core.naming.**"/>
+                <to>
+                    <include class="org.jmxtrans.**"/>
+                </to>
+                <allow>
+                    <to>
+                        <include class="org.jmxtrans.core.naming.**"/>
+                        <include class="org.jmxtrans.core.query.**"/>
+                        <include class="org.jmxtrans.log.**"/>
+                        <include class="org.jmxtrans.utils.**"/>
+                    </to>
+                </allow>
+            </deny>
+        </access-rule>
+        <access-rule>
             <message>Output should only depend on QueryResults</message>
             <deny>
                 <from class="org.jmxtrans.core.output.**"/>

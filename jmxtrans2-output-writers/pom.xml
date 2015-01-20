@@ -33,11 +33,9 @@
 
     <artifactId>jmxtrans2-output-writers</artifactId>
     <name>JMXTrans - output writers</name>
-    <description>
-        Implementation of OutputWriters for a number of backends. Those are kept outside of jmxtrans-core as they do
+    <description>Implementation of OutputWriters for a number of backends. Those are kept outside of jmxtrans-core as they do
         bring additional dependencies in some cases and we want to strongly enforce that no code in jmxtrans-core
-        depends on specific OutputWriter.
-    </description>
+        depends on specific OutputWriter.</description>
 
     <properties>
         <verify.cobertura.packageBranchRate>21</verify.cobertura.packageBranchRate>
