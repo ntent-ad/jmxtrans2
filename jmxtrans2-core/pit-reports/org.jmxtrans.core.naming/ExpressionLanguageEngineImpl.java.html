@@ -1,0 +1,3868 @@
+<html>
+<head>
+<style type='text/css'>
+html, body, div, span, p, blockquote, pre {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+
+body{
+	line-height: 1;
+	color: black;
+	background: white;
+	margin-left: 20px;
+}
+
+.src { 
+border: 1px solid #dddddd;
+padding-top: 10px;
+padding-right: 5px;
+padding-left: 5px;
+}
+
+
+.covered {background-color: #ddffdd}
+.uncovered {background-color: #ffdddd}
+.killed {background-color: #aaffaa}
+.survived {background-color: #ffaaaa}
+.uncertain {background-color: #dde7ef}
+.run_error {background-color: #dde7ef}
+.na {background-color: #eeeeee}
+.timed_out {background-color: #dde7ef}
+.non_viable {background-color: #aaffaa}
+.memory_error {background-color: #dde7ef}
+.not_started {background-color: #dde7ef; color : red}
+.no_coverage {background-color: #ffaaaa}
+
+
+.pop {outline:none; }
+.pop strong {line-height:30px;}
+.pop {text-decoration:none;}
+.pop span { z-index:10;display:none; padding:14px 20px; margin-top:-30px; margin-left:28px; width:800px; line-height:16px; word-wrap:break-word; }
+.pop:hover span{ display:inline; position:absolute; color:#111; border:1px solid #DCA; background:#fffAF0;}
+
+.pop span { border-radius:4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -moz-box-shadow: 5px 5px 8px #CCC; -webkit-box-shadow: 5px 5px 8px #CCC; box-shadow: 5px 5px 8px #CCC; }
+</style>
+
+</head>
+<body>
+
+
+<h1>ExpressionLanguageEngineImpl.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_1'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_2'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * The MIT License</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_3'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * Copyright (c) 2014 JMXTrans Team</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_4'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_5'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * Permission is hereby granted, free of charge, to any person obtaining a copy</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_6'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * of this software and associated documentation files (the &#34;Software&#34;), to deal</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_7'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * in the Software without restriction, including without limitation the rights</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_8'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_9'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * copies of the Software, and to permit persons to whom the Software is</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_10'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * furnished to do so, subject to the following conditions:</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_11'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_12'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * The above copyright notice and this permission notice shall be included in</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_13'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * all copies or substantial portions of the Software.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_14'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_15'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * THE SOFTWARE IS PROVIDED &#34;AS IS&#34;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_16'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_17'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_18'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_19'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_20'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_21'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * THE SOFTWARE.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_22'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_23'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package org.jmxtrans.core.naming;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_24'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_25'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.log.Logger;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_26'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.log.LoggerFactory;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_27'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.utils.StringUtils2;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_28'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_29'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import javax.annotation.Nonnull;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_30'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import javax.management.ObjectName;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_31'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.net.InetAddress;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_32'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.HashMap;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_33'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Map;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_34'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.concurrent.Callable;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_35'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_36'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_37'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @author &#60;a href=&#34;mailto:cleclerc@cloudbees.com&#34;&#62;Cyrille Le Clerc&#60;/a&#62;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_38'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_39'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class ExpressionLanguageEngineImpl implements ExpressionLanguageEngine {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_40'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    protected final Logger logger = LoggerFactory.getLogger(getClass().getName());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_41'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_42'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public ExpressionLanguageEngineImpl() {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_43'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        try {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_44'/>
+44
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_44'>1</a>
+<span>
+1. <init> : removed call to java/net/InetAddress::getLocalHost &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            InetAddress localHost = InetAddress.getLocalHost();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_45'/>
+45
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_45'>1</a>
+<span>
+1. <init> : removed call to java/net/InetAddress::getHostName &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            String hostName = localHost.getHostName();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_46'/>
+46
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_46'>1</a>
+<span>
+1. <init> : removed call to org/jmxtrans/utils/StringUtils2::reverseTokens &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            String reversedHostName = StringUtils2.reverseTokens(hostName, &#34;.&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_47'/>
+47
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_47'>1</a>
+<span>
+1. <init> : removed call to java/net/InetAddress::getCanonicalHostName &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            String canonicalHostName = localHost.getCanonicalHostName();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_48'/>
+48
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_48'>1</a>
+<span>
+1. <init> : removed call to org/jmxtrans/utils/StringUtils2::reverseTokens &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            String reversedCanonicalHostName = StringUtils2.reverseTokens(canonicalHostName, &#34;.&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_49'/>
+49
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_49'>1</a>
+<span>
+1. <init> : removed call to java/net/InetAddress::getHostAddress &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            String hostAddress = localHost.getHostAddress();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_50'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_51'/>
+51
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_51'>1</a>
+<span>
+1. <init> : removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            registerExpressionEvaluator(&#34;hostname&#34;, hostName);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_52'/>
+52
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_52'>1</a>
+<span>
+1. <init> : removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            registerExpressionEvaluator(&#34;reversed_hostname&#34;, reversedHostName);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_53'/>
+53
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_53'>2</a>
+<span>
+1. <init> : removed call to java/lang/String::replaceAll &rarr; SURVIVED<br/>
+2. <init> : removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            registerExpressionEvaluator(&#34;escaped_hostname&#34;, hostName.replaceAll(&#34;\\.&#34;, &#34;_&#34;));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_54'/>
+54
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_54'>1</a>
+<span>
+1. <init> : removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            registerExpressionEvaluator(&#34;canonical_hostname&#34;, canonicalHostName);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_55'/>
+55
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_55'>1</a>
+<span>
+1. <init> : removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            registerExpressionEvaluator(&#34;reversed_canonical_hostname&#34;, reversedCanonicalHostName);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_56'/>
+56
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_56'>2</a>
+<span>
+1. <init> : removed call to java/lang/String::replaceAll &rarr; SURVIVED<br/>
+2. <init> : removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            registerExpressionEvaluator(&#34;escaped_canonical_hostname&#34;, canonicalHostName.replaceAll(&#34;\\.&#34;, &#34;_&#34;));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_57'/>
+57
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_57'>1</a>
+<span>
+1. <init> : removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            registerExpressionEvaluator(&#34;hostaddress&#34;, hostAddress);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_58'/>
+58
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_58'>2</a>
+<span>
+1. <init> : removed call to java/lang/String::replaceAll &rarr; SURVIVED<br/>
+2. <init> : removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            registerExpressionEvaluator(&#34;escaped_hostaddress&#34;, hostAddress.replaceAll(&#34;\\.&#34;, &#34;_&#34;));</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_59'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>        } catch (Exception e) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_60'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>            logger.warn(&#34;Exception resolving localhost, expressions like #hostname#, #canonical_hostname# or #hostaddress# will not be available&#34;, e);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_61'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_62'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_63'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_64'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_65'/>
+65
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_65'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Function based evaluators for expressions like &#39;#hostname#&#39; or &#39;#hostname_canonical#&#39;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_66'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_67'/>
+67
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_67'>1</a>
+<span>
+1. <init> : removed call to java/util/HashMap::&#60;init&#62; &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    @Nonnull</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_68'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private Map&#60;String, Callable&#60;String&#62;&#62; expressionEvaluators = new HashMap&#60;String, Callable&#60;String&#62;&#62;();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_69'/>
+69
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_69'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_70'/>
+70
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_70'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_71'/>
+71
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_71'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Replace all the &#39;#&#39; based keywords (e.g. &#60;code&#62;#hostname#&#60;/code&#62;) by their value.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_72'/>
+72
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_72'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_73'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * @param expression the expression to resolve (e.g. &#60;code&#62;&#34;servers.#hostname#.&#34;&#60;/code&#62;)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_74'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * @return the resolved expression (e.g. &#60;code&#62;&#34;servers.tomcat5&#34;&#60;/code&#62;)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_75'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_76'/>
+76
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_76'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Nonnull</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_77'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public String resolveExpression(@Nonnull String expression) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_78'/>
+78
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_78'>2</a>
+<span>
+1. resolveExpression : removed call to java/lang/String::length &rarr; SURVIVED<br/>
+2. resolveExpression : removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        StringBuilder result = new StringBuilder(expression.length());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_79'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_80'/>
+80
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_80'>1</a>
+<span>
+1. resolveExpression : Substituted 0 with 1 &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        int position = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_81'/>
+81
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_81'>5</a>
+<span>
+1. resolveExpression : changed conditional boundary &rarr; KILLED<br/>
+2. resolveExpression : negated conditional &rarr; KILLED<br/>
+3. resolveExpression : removed call to java/lang/String::length &rarr; KILLED<br/>
+4. resolveExpression : removed conditional &rarr; KILLED<br/>
+5. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        while (position &#60; expression.length()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_82'/>
+82
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_82'>1</a>
+<span>
+1. resolveExpression : removed call to java/lang/String::charAt &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            char c = expression.charAt(position);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_83'/>
+83
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_83'>4</a>
+<span>
+1. resolveExpression : removed conditional &rarr; SURVIVED<br/>
+2. resolveExpression : Substituted 35 with 36 &rarr; KILLED<br/>
+3. resolveExpression : negated conditional &rarr; KILLED<br/>
+4. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            if (c == &#39;#&#39;) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_84'/>
+84
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_84'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                int beginningSeparatorPosition = position;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_85'/>
+85
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_85'>4</a>
+<span>
+1. resolveExpression : Substituted 35 with 36 &rarr; KILLED<br/>
+2. resolveExpression : Substituted 1 with 0 &rarr; KILLED<br/>
+3. resolveExpression : Replaced integer addition with subtraction &rarr; KILLED<br/>
+4. resolveExpression : removed call to java/lang/String::indexOf &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                int endingSeparatorPosition = expression.indexOf(&#39;#&#39;, beginningSeparatorPosition + 1);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_86'/>
+86
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_86'>4</a>
+<span>
+1. resolveExpression : Substituted -1 with 0 &rarr; SURVIVED<br/>
+2. resolveExpression : removed conditional &rarr; SURVIVED<br/>
+3. resolveExpression : negated conditional &rarr; KILLED<br/>
+4. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                if (endingSeparatorPosition == -1) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_87'/>
+87
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_87'>7</a>
+<span>
+1. resolveExpression : removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; NO_COVERAGE<br/>
+2. resolveExpression : removed call to java/lang/IllegalStateException::&#60;init&#62; &rarr; NO_COVERAGE<br/>
+3. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+4. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+5. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+6. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+7. resolveExpression : removed call to java/lang/StringBuilder::toString &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>                    throw new IllegalStateException(&#34;Invalid expression &#39;&#34; + expression + &#34;&#39;, no ending &#39;#&#39; after beginning &#39;#&#39; at position &#34; + beginningSeparatorPosition);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_88'/>
+88
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_88'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_89'/>
+89
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_89'>3</a>
+<span>
+1. resolveExpression : Substituted 1 with 0 &rarr; KILLED<br/>
+2. resolveExpression : Replaced integer addition with subtraction &rarr; KILLED<br/>
+3. resolveExpression : removed call to java/lang/String::substring &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                String key = expression.substring(beginningSeparatorPosition + 1, endingSeparatorPosition);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_90'/>
+90
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_90'>1</a>
+<span>
+1. resolveExpression : removed call to java/util/Map::get &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                Callable&#60;String&#62; expressionProcessor = expressionEvaluators.get(key);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_91'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                String value;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_92'/>
+92
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_92'>3</a>
+<span>
+1. resolveExpression : removed conditional &rarr; SURVIVED<br/>
+2. resolveExpression : negated conditional &rarr; KILLED<br/>
+3. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                if (expressionProcessor == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_93'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                    value = &#34;#unsupported_expression#&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_94'/>
+94
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_94'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                    logger.info(&#34;Unsupported expression &#39;&#34; + key + &#34;&#39;&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_95'/>
+95
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_95'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_96'/>
+96
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_96'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                    try {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_97'/>
+97
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_97'>1</a>
+<span>
+1. resolveExpression : removed call to java/util/concurrent/Callable::call &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                        value = expressionProcessor.call();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_98'/>
+98
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_98'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                    } catch (Exception e) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_99'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                        value = &#34;#expression_error#&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_100'/>
+100
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_100'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                        logger.warn(&#34;Error evaluating expression &#39;&#34; + key + &#34;&#39;&#34;, e);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_101'/>
+101
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_101'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_102'/>
+102
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_102'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_103'/>
+103
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_103'>2</a>
+<span>
+1. resolveExpression : Substituted 0 with 1 &rarr; KILLED<br/>
+2. resolveExpression : removed call to org/jmxtrans/utils/StringUtils2::appendEscapedNonAlphaNumericChars &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                StringUtils2.appendEscapedNonAlphaNumericChars(value, false, result);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_104'/>
+104
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_104'>2</a>
+<span>
+1. resolveExpression : Substituted 1 with 0 &rarr; KILLED<br/>
+2. resolveExpression : Replaced integer addition with subtraction &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                position = endingSeparatorPosition + 1;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_105'/>
+105
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_105'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_106'/>
+106
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_106'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_107'/>
+107
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_107'>1</a>
+<span>
+1. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>                result.append(c);</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_108'/>
+108
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_108'>1</a>
+<span>
+1. resolveExpression : Changed increment from 1 to -1 &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>                position++;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_109'/>
+109
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_109'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_110'/>
+110
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_110'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_111'/>
+111
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_111'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        if (logger.isDebugEnabled()) logger.debug(&#34;resolveExpression(&#34; + expression + &#34;): &#34; + result);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_112'/>
+112
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_112'>2</a>
+<span>
+1. resolveExpression : removed call to java/lang/StringBuilder::toString &rarr; KILLED<br/>
+2. resolveExpression : mutated return of Object value for org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::resolveExpression to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return result.toString();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_113'/>
+113
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_113'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_114'/>
+114
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_114'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_115'/>
+115
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_115'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_116'/>
+116
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_116'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Nonnull</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_117'/>
+117
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_117'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public String resolveExpression(@Nonnull String expression, @Nonnull ObjectName exactObjectName) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_118'/>
+118
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_118'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_119'/>
+119
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_119'>2</a>
+<span>
+1. resolveExpression : removed call to java/lang/String::length &rarr; SURVIVED<br/>
+2. resolveExpression : removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        StringBuilder result = new StringBuilder(expression.length());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_120'/>
+120
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_120'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_121'/>
+121
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_121'>1</a>
+<span>
+1. resolveExpression : Substituted 0 with 1 &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        int position = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_122'/>
+122
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_122'>5</a>
+<span>
+1. resolveExpression : changed conditional boundary &rarr; KILLED<br/>
+2. resolveExpression : negated conditional &rarr; KILLED<br/>
+3. resolveExpression : removed call to java/lang/String::length &rarr; KILLED<br/>
+4. resolveExpression : removed conditional &rarr; KILLED<br/>
+5. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        while (position &#60; expression.length()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_123'/>
+123
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_123'>1</a>
+<span>
+1. resolveExpression : removed call to java/lang/String::charAt &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            char c = expression.charAt(position);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_124'/>
+124
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_124'>4</a>
+<span>
+1. resolveExpression : Substituted 37 with 38 &rarr; KILLED<br/>
+2. resolveExpression : negated conditional &rarr; KILLED<br/>
+3. resolveExpression : removed conditional &rarr; KILLED<br/>
+4. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            if (c == &#39;%&#39;) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_125'/>
+125
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_125'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                int beginningSeparatorPosition = position;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_126'/>
+126
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_126'>4</a>
+<span>
+1. resolveExpression : Substituted 37 with 38 &rarr; KILLED<br/>
+2. resolveExpression : Substituted 1 with 0 &rarr; KILLED<br/>
+3. resolveExpression : Replaced integer addition with subtraction &rarr; KILLED<br/>
+4. resolveExpression : removed call to java/lang/String::indexOf &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                int endingSeparatorPosition = expression.indexOf(&#39;%&#39;, beginningSeparatorPosition + 1);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_127'/>
+127
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_127'>4</a>
+<span>
+1. resolveExpression : Substituted -1 with 0 &rarr; SURVIVED<br/>
+2. resolveExpression : removed conditional &rarr; SURVIVED<br/>
+3. resolveExpression : negated conditional &rarr; KILLED<br/>
+4. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                if (endingSeparatorPosition == -1) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_128'/>
+128
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_128'>7</a>
+<span>
+1. resolveExpression : removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; NO_COVERAGE<br/>
+2. resolveExpression : removed call to java/lang/IllegalStateException::&#60;init&#62; &rarr; NO_COVERAGE<br/>
+3. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+4. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+5. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+6. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+7. resolveExpression : removed call to java/lang/StringBuilder::toString &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>                    throw new IllegalStateException(&#34;Invalid expression &#39;&#34; + expression + &#34;&#39;, no ending &#39;%&#39; after beginning &#39;%&#39; at position &#34; + beginningSeparatorPosition);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_129'/>
+129
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_129'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_130'/>
+130
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_130'>3</a>
+<span>
+1. resolveExpression : Substituted 1 with 0 &rarr; KILLED<br/>
+2. resolveExpression : Replaced integer addition with subtraction &rarr; KILLED<br/>
+3. resolveExpression : removed call to java/lang/String::substring &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                String key = expression.substring(beginningSeparatorPosition + 1, endingSeparatorPosition);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_131'/>
+131
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_131'>1</a>
+<span>
+1. resolveExpression : removed call to javax/management/ObjectName::getKeyProperty &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                String value = exactObjectName.getKeyProperty(key);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_132'/>
+132
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_132'>3</a>
+<span>
+1. resolveExpression : removed conditional &rarr; SURVIVED<br/>
+2. resolveExpression : negated conditional &rarr; KILLED<br/>
+3. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                if (value == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_133'/>
+133
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_133'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                    value = &#34;null&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_134'/>
+134
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_134'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_135'/>
+135
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_135'>1</a>
+<span>
+1. resolveExpression : removed call to org/jmxtrans/utils/StringUtils2::appendEscapedNonAlphaNumericChars &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                StringUtils2.appendEscapedNonAlphaNumericChars(value, result);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_136'/>
+136
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_136'>2</a>
+<span>
+1. resolveExpression : Substituted 1 with 0 &rarr; KILLED<br/>
+2. resolveExpression : Replaced integer addition with subtraction &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                position = endingSeparatorPosition + 1;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_137'/>
+137
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_137'>4</a>
+<span>
+1. resolveExpression : Substituted 35 with 36 &rarr; KILLED<br/>
+2. resolveExpression : negated conditional &rarr; KILLED<br/>
+3. resolveExpression : removed conditional &rarr; KILLED<br/>
+4. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            } else if (c == &#39;#&#39;) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_138'/>
+138
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_138'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                int beginningSeparatorPosition = position;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_139'/>
+139
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_139'>4</a>
+<span>
+1. resolveExpression : Substituted 35 with 36 &rarr; KILLED<br/>
+2. resolveExpression : Substituted 1 with 0 &rarr; KILLED<br/>
+3. resolveExpression : Replaced integer addition with subtraction &rarr; KILLED<br/>
+4. resolveExpression : removed call to java/lang/String::indexOf &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                int endingSeparatorPosition = expression.indexOf(&#39;#&#39;, beginningSeparatorPosition + 1);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_140'/>
+140
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_140'>4</a>
+<span>
+1. resolveExpression : Substituted -1 with 0 &rarr; SURVIVED<br/>
+2. resolveExpression : removed conditional &rarr; SURVIVED<br/>
+3. resolveExpression : negated conditional &rarr; KILLED<br/>
+4. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                if (endingSeparatorPosition == -1) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_141'/>
+141
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_141'>7</a>
+<span>
+1. resolveExpression : removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; NO_COVERAGE<br/>
+2. resolveExpression : removed call to java/lang/IllegalStateException::&#60;init&#62; &rarr; NO_COVERAGE<br/>
+3. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+4. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+5. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+6. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+7. resolveExpression : removed call to java/lang/StringBuilder::toString &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>                    throw new IllegalStateException(&#34;Invalid expression &#39;&#34; + expression + &#34;&#39;, no ending &#39;#&#39; after beginning &#39;#&#39; at position &#34; + beginningSeparatorPosition);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_142'/>
+142
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_142'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_143'/>
+143
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_143'>3</a>
+<span>
+1. resolveExpression : Substituted 1 with 0 &rarr; KILLED<br/>
+2. resolveExpression : Replaced integer addition with subtraction &rarr; KILLED<br/>
+3. resolveExpression : removed call to java/lang/String::substring &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                String key = expression.substring(beginningSeparatorPosition + 1, endingSeparatorPosition);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_144'/>
+144
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_144'>1</a>
+<span>
+1. resolveExpression : removed call to java/util/Map::get &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                Callable&#60;String&#62; expressionProcessor = expressionEvaluators.get(key);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_145'/>
+145
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_145'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                String value;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_146'/>
+146
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_146'>3</a>
+<span>
+1. resolveExpression : removed conditional &rarr; SURVIVED<br/>
+2. resolveExpression : negated conditional &rarr; KILLED<br/>
+3. resolveExpression : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                if (expressionProcessor == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_147'/>
+147
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_147'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                    value = &#34;#unsupported_expression#&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_148'/>
+148
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_148'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                    logger.info(&#34;Unsupported expression &#39;&#34; + key + &#34;&#39;&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_149'/>
+149
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_149'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_150'/>
+150
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_150'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                    try {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_151'/>
+151
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_151'>1</a>
+<span>
+1. resolveExpression : removed call to java/util/concurrent/Callable::call &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                        value = expressionProcessor.call();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_152'/>
+152
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_152'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                    } catch (Exception e) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_153'/>
+153
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_153'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                        value = &#34;#expression_error#&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_154'/>
+154
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_154'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                        logger.warn(&#34;Error evaluating expression &#39;&#34; + key + &#34;&#39;&#34;, e);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_155'/>
+155
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_155'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_156'/>
+156
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_156'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_157'/>
+157
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_157'>2</a>
+<span>
+1. resolveExpression : Substituted 0 with 1 &rarr; SURVIVED<br/>
+2. resolveExpression : removed call to org/jmxtrans/utils/StringUtils2::appendEscapedNonAlphaNumericChars &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                StringUtils2.appendEscapedNonAlphaNumericChars(value, false, result);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_158'/>
+158
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_158'>2</a>
+<span>
+1. resolveExpression : Substituted 1 with 0 &rarr; KILLED<br/>
+2. resolveExpression : Replaced integer addition with subtraction &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                position = endingSeparatorPosition + 1;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_159'/>
+159
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_159'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_160'/>
+160
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_160'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_161'/>
+161
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_161'>1</a>
+<span>
+1. resolveExpression : removed call to java/lang/StringBuilder::append &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                result.append(c);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_162'/>
+162
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_162'>1</a>
+<span>
+1. resolveExpression : Changed increment from 1 to -1 &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                position++;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_163'/>
+163
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_163'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_164'/>
+164
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_164'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_165'/>
+165
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_165'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        if (logger.isDebugEnabled())</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_166'/>
+166
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_166'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>            logger.debug(&#34;resolveExpression(&#34; + expression + &#34;, &#34; + exactObjectName + &#34;): &#34; + result);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_167'/>
+167
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_167'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_168'/>
+168
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_168'>2</a>
+<span>
+1. resolveExpression : removed call to java/lang/StringBuilder::toString &rarr; KILLED<br/>
+2. resolveExpression : mutated return of Object value for org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::resolveExpression to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return result.toString();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_169'/>
+169
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_169'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_170'/>
+170
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_170'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_171'/>
+171
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_171'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_172'/>
+172
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_172'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Registers an expression evaluator with a static value.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_173'/>
+173
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_173'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_174'/>
+174
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_174'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public void registerExpressionEvaluator(String expression, Callable&#60;String&#62; evaluator) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_175'/>
+175
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_175'>1</a>
+<span>
+1. registerExpressionEvaluator : removed call to java/util/Map::put &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>        expressionEvaluators.put(expression, evaluator);</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_176'/>
+176
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_176'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_177'/>
+177
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_177'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_178'/>
+178
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_178'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_179'/>
+179
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_179'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Registers an expression evaluator with a static value.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_180'/>
+180
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_180'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_181'/>
+181
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_181'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public void registerExpressionEvaluator(String expression, String value) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_182'/>
+182
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_182'>2</a>
+<span>
+1. registerExpressionEvaluator : removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl$StaticEvaluator::&#60;init&#62; &rarr; KILLED<br/>
+2. registerExpressionEvaluator : removed call to java/util/Map::put &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        expressionEvaluators.put(expression, new StaticEvaluator(value));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_183'/>
+183
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_183'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_184'/>
+184
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_184'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_185'/>
+185
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_185'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Nonnull</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_186'/>
+186
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_186'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public Map&#60;String, Callable&#60;String&#62;&#62; getExpressionEvaluators() {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_187'/>
+187
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_187'>1</a>
+<span>
+1. getExpressionEvaluators : mutated return of Object value for org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::getExpressionEvaluators to ( if (x != null) null else throw new RuntimeException ) &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>        return expressionEvaluators;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_188'/>
+188
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_188'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_189'/>
+189
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_189'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_190'/>
+190
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_190'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public static class StaticEvaluator implements Callable&#60;String&#62; {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_191'/>
+191
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_191'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        final String value;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_192'/>
+192
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_192'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_193'/>
+193
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_193'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        public StaticEvaluator(String value) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_194'/>
+194
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_194'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            this.value = value;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_195'/>
+195
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_195'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_196'/>
+196
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_196'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_197'/>
+197
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_197'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        @Override</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_198'/>
+198
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_198'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        public String call() throws Exception {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_199'/>
+199
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_199'>1</a>
+<span>
+1. call : mutated return of Object value for org/jmxtrans/core/naming/ExpressionLanguageEngineImpl$StaticEvaluator::call to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            return value;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_200'/>
+200
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_200'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_201'/>
+201
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_201'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_202'/>
+202
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_202'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        @Override</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_203'/>
+203
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_203'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        public String toString() {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_204'/>
+204
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_204'>9</a>
+<span>
+1. toString : removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; NO_COVERAGE<br/>
+2. toString : Substituted 39 with 40 &rarr; NO_COVERAGE<br/>
+3. toString : Substituted 125 with 126 &rarr; NO_COVERAGE<br/>
+4. toString : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+5. toString : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+6. toString : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+7. toString : removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE<br/>
+8. toString : removed call to java/lang/StringBuilder::toString &rarr; NO_COVERAGE<br/>
+9. toString : mutated return of Object value for org/jmxtrans/core/naming/ExpressionLanguageEngineImpl$StaticEvaluator::toString to ( if (x != null) null else throw new RuntimeException ) &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>            return &#34;StaticStringCallable{&#34; +</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_205'/>
+205
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_205'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                    &#34;value=&#39;&#34; + value + &#39;\&#39;&#39; +</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_206'/>
+206
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_206'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                    &#39;}&#39;;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_207'/>
+207
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_207'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_208'/>
+208
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_208'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_209'/>
+209
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_209'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_44'>44</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_44'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to java/net/InetAddress::getLocalHost &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_45'>45</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_45'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to java/net/InetAddress::getHostName &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_46'>46</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_46'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/utils/StringUtils2::reverseTokens &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_47'>47</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_47'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to java/net/InetAddress::getCanonicalHostName &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_48'>48</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_48'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/utils/StringUtils2::reverseTokens &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_49'>49</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_49'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to java/net/InetAddress::getHostAddress &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_51'>51</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_51'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_52'>52</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_52'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_53'>53</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_53'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to java/lang/String::replaceAll &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_54'>54</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_54'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_55'>55</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_55'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_56'>56</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_56'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to java/lang/String::replaceAll &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_57'>57</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_57'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_58'>58</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_58'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to java/lang/String::replaceAll &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::registerExpressionEvaluator &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_67'>67</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_67'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/util/HashMap::&#60;init&#62; &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_78'>78</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_78'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/String::length &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_80'>80</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_80'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 0 with 1 &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_81'>81</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_81'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/String::length &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_82'>82</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_82'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/String::charAt &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_83'>83</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_83'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 35 with 36 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_85'>85</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_85'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 35 with 36 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 1 with 0 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/String::indexOf &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_86'>86</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_86'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> Substituted -1 with 0 &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_87'>87</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_87'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/IllegalStateException::&#60;init&#62; &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::toString &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_89'>89</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_89'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 1 with 0 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/String::substring &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_90'>90</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_90'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/util/Map::get &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_92'>92</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_92'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_97'>97</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_97'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/util/concurrent/Callable::call &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_103'>103</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_103'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 0 with 1 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to org/jmxtrans/utils/StringUtils2::appendEscapedNonAlphaNumericChars &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_104'>104</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_104'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 1 with 0 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_107'>107</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_107'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_108'>108</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_108'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> Changed increment from 1 to -1 &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_112'>112</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_112'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/StringBuilder::toString &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> mutated return of Object value for org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::resolveExpression to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_119'>119</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_119'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/String::length &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_121'>121</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_121'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 0 with 1 &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_122'>122</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_122'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> changed conditional boundary &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/String::length &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_123'>123</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_123'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/String::charAt &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_124'>124</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_124'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 37 with 38 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_126'>126</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_126'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 37 with 38 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 1 with 0 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/String::indexOf &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_127'>127</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_127'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> Substituted -1 with 0 &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_128'>128</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_128'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/IllegalStateException::&#60;init&#62; &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::toString &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_130'>130</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_130'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 1 with 0 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/String::substring &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_131'>131</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_131'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to javax/management/ObjectName::getKeyProperty &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_132'>132</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_132'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_135'>135</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_135'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to org/jmxtrans/utils/StringUtils2::appendEscapedNonAlphaNumericChars &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_136'>136</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_136'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 1 with 0 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_137'>137</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_137'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 35 with 36 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_139'>139</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_139'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 35 with 36 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 1 with 0 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/String::indexOf &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_140'>140</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_140'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> Substituted -1 with 0 &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_141'>141</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_141'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/IllegalStateException::&#60;init&#62; &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::toString &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_143'>143</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_143'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 1 with 0 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/String::substring &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_144'>144</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_144'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/util/Map::get &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_146'>146</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_146'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> negated conditional &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_151'>151</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_151'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/util/concurrent/Callable::call &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_157'>157</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_157'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>none</span></span> Substituted 0 with 1 &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to org/jmxtrans/utils/StringUtils2::appendEscapedNonAlphaNumericChars &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_158'>158</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_158'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Substituted 1 with 0 &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Replaced integer addition with subtraction &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_161'>161</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_161'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/StringBuilder::append &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_162'>162</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_162'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> Changed increment from 1 to -1 &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_168'>168</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_168'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/lang/StringBuilder::toString &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>resolveExpression<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> mutated return of Object value for org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::resolveExpression to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_175'>175</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_175'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>registerExpressionEvaluator<br/><b>Killed by : </b>none</span></span> removed call to java/util/Map::put &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_182'>182</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_182'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>registerExpressionEvaluator<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to org/jmxtrans/core/naming/ExpressionLanguageEngineImpl$StaticEvaluator::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>registerExpressionEvaluator<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> removed call to java/util/Map::put &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_187'>187</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_187'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getExpressionEvaluators<br/><b>Killed by : </b>none</span></span> mutated return of Object value for org/jmxtrans/core/naming/ExpressionLanguageEngineImpl::getExpressionEvaluators to ( if (x != null) null else throw new RuntimeException ) &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_199'>199</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_199'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>call<br/><b>Killed by : </b>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest</span></span> mutated return of Object value for org/jmxtrans/core/naming/ExpressionLanguageEngineImpl$StaticEvaluator::call to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@5e9dfde4_204'>204</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@5e9dfde4_204'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>none</span></span> Substituted 39 with 40 &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>none</span></span> Substituted 125 with 126 &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::append &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>8.<span><b>8</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::toString &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>9.<span><b>9</b><br/><b>Location : </b>toString<br/><b>Killed by : </b>none</span></span> mutated return of Object value for org/jmxtrans/core/naming/ExpressionLanguageEngineImpl$StaticEvaluator::toString to ( if (x != null) null else throw new RuntimeException ) &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>INCREMENTS_MUTATOR</li>
+<li class='mutator'>CONDITIONALS_BOUNDARY_MUTATOR</li>
+<li class='mutator'>RETURN_VALS_MUTATOR</li>
+<li class='mutator'>VOID_METHOD_CALL_MUTATOR</li>
+<li class='mutator'>INVERT_NEGS_MUTATOR</li>
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_IF_MUTATOR</li>
+<li class='mutator'>MATH_MUTATOR</li>
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_ELSE_MUTATOR</li>
+<li class='mutator'>NON_VOID_METHOD_CALL_MUTATOR</li>
+<li class='mutator'>NEGATE_CONDITIONALS_MUTATOR</li>
+<li class='mutator'>INLINE_CONSTANT_MUTATOR</li>
+<li class='mutator'>CONSTRUCTOR_CALL_MUTATOR</li>
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_ELSE_MUTATOR</li>
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_IF_MUTATOR</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>org.jmxtrans.core.naming.ResultNameStrategyTest.org.jmxtrans.core.naming.ResultNameStrategyTest (3 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='http://pitest.org'>PIT</a> 1.1.3
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+org.jmxtrans.core.config
+org.jmxtrans.core.config.jaxb
+org.jmxtrans.core.naming
+org.jmxtrans.core.output
+org.jmxtrans.core.query
+org.jmxtrans.core.query.embedded
+org.jmxtrans.core.results
+org.jmxtrans.core.scheduler
