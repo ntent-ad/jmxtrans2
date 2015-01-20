@@ -33,18 +33,16 @@
 
     <artifactId>jmxtrans2-core</artifactId>
     <name>JMXTrans - core</name>
-    <description>
-        Core functionality of JmxTrans is found here. Integration with specific runtime environment is kept outside this
+    <description>Core functionality of JmxTrans is found here. Integration with specific runtime environment is kept outside this
         module (agent, spring, standalone, ...), but if you just want some code to help you easily query JMX beans, this
-        is what you need.
-    </description>
+        is what you need.</description>
 
     <properties>
-        <verify.cobertura.branchRate>0</verify.cobertura.branchRate>
-        <verify.cobertura.lineRate>42</verify.cobertura.lineRate>
-        <verify.cobertura.packageBranchRate>26</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>52</verify.cobertura.packageLineRate>
+        <verify.branchRate>0.0</verify.branchRate>
+        <verify.lineRate>0.42</verify.lineRate>
         <verify.mutation.threshold>58</verify.mutation.threshold>
+        <verify.packageBranchRate>0.26</verify.packageBranchRate>
+        <verify.packageLineRate>0.52</verify.packageLineRate>
     </properties>
 
     <dependencies>
@@ -91,18 +89,6 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <configuration>
-                    <check combine.children="append"></check>
-                    <instrumentation>
-                        <excludes>
-                            <exclude>org/jmxtrans/core/config/jaxb/**/*.class</exclude>
-                        </excludes>
-                    </instrumentation>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxb2-maven-plugin</artifactId>
                 <version>1.6</version>
                 <configuration>
@@ -116,6 +102,19 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <rules combine.children="append">
+                        <instrumentation>
+                            <excludes>
+                                <exclude>org/jmxtrans/core/config/jaxb/**/*.class</exclude>
+                            </excludes>
+                        </instrumentation>
+                    </rules>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.pitest</groupId>

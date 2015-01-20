@@ -35,12 +35,12 @@
     <name>JMXTrans - agent</name>
 
     <properties>
-        <verify.cobertura.packageBranchRate>0</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>0</verify.cobertura.packageLineRate>
-        <verify.cobertura.totalBranchRate>0</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>0</verify.cobertura.totalLineRate>
         <verify.coverage.threshold>0</verify.coverage.threshold>
         <verify.mutation.threshold>0</verify.mutation.threshold>
+        <verify.packageBranchRate>0.0</verify.packageBranchRate>
+        <verify.packageLineRate>0.0</verify.packageLineRate>
+        <verify.totalBranchRate>0.0</verify.totalBranchRate>
+        <verify.totalLineRate>0.0</verify.totalLineRate>
     </properties>
 
     <dependencies>

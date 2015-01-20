@@ -33,19 +33,17 @@
 
     <artifactId>jmxtrans2-output-writers</artifactId>
     <name>JMXTrans - output writers</name>
-    <description>
-        Implementation of OutputWriters for a number of backends. Those are kept outside of jmxtrans-core as they do
+    <description>Implementation of OutputWriters for a number of backends. Those are kept outside of jmxtrans-core as they do
         bring additional dependencies in some cases and we want to strongly enforce that no code in jmxtrans-core
-        depends on specific OutputWriter.
-    </description>
+        depends on specific OutputWriter.</description>
 
     <properties>
-        <verify.cobertura.packageBranchRate>21</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>18</verify.cobertura.packageLineRate>
-        <verify.cobertura.totalBranchRate>20</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>20</verify.cobertura.totalLineRate>
         <verify.coverage.threshold>52</verify.coverage.threshold>
         <verify.mutation.threshold>19</verify.mutation.threshold>
+        <verify.packageBranchRate>0.21</verify.packageBranchRate>
+        <verify.packageLineRate>0.18</verify.packageLineRate>
+        <verify.totalBranchRate>0.20</verify.totalBranchRate>
+        <verify.totalLineRate>0.20</verify.totalLineRate>
     </properties>
 
     <dependencies>
