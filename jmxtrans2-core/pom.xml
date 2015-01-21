@@ -104,19 +104,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <configuration>
-                    <rules combine.children="append">
-                        <instrumentation>
-                            <excludes>
-                                <exclude>org/jmxtrans/core/config/jaxb/**/*.class</exclude>
-                            </excludes>
-                        </instrumentation>
-                    </rules>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <configuration>
