@@ -98,7 +98,7 @@
 
     <properties>
         <github.global.server>github</github.global.server>
-        <jacoco.execution.data.file>${project.build.directory}/code-coverage/jacoco.exec</jacoco.execution.data.file>
+        <jacoco.execution.data.file>${project.build.directory}/jacoco.exec</jacoco.execution.data.file>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <slf4j.version>1.7.10</slf4j.version>
@@ -678,9 +678,6 @@
                                 <goal>check</goal>
                             </goals>
                             <phase>test</phase>
-                            <configuration>
-                                <dataFile>${jacoco.execution.data.file}</dataFile>
-                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
