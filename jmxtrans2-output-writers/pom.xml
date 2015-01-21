@@ -42,8 +42,8 @@
         <verify.mutation.threshold>19</verify.mutation.threshold>
         <verify.packageBranchRate>0.21</verify.packageBranchRate>
         <verify.packageLineRate>0.18</verify.packageLineRate>
-        <verify.totalBranchRate>0.20</verify.totalBranchRate>
-        <verify.totalLineRate>0.20</verify.totalLineRate>
+        <verify.bundleBranchRate>0.20</verify.bundleBranchRate>
+        <verify.bundleLineRate>0.20</verify.bundleLineRate>
     </properties>
 
     <dependencies>

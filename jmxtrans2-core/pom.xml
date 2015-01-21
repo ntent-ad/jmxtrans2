@@ -38,8 +38,8 @@
         is what you need.</description>
 
     <properties>
-        <verify.branchRate>0.0</verify.branchRate>
-        <verify.lineRate>0.42</verify.lineRate>
+        <verify.classBranchRate>0.0</verify.classBranchRate>
+        <verify.classLineRate>0.42</verify.classLineRate>
         <verify.mutation.threshold>58</verify.mutation.threshold>
         <verify.packageBranchRate>0.26</verify.packageBranchRate>
         <verify.packageLineRate>0.52</verify.packageLineRate>
