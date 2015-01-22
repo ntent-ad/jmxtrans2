@@ -31,20 +31,9 @@ import java.io.IOException;
 import java.util.Map;
 
 public class DummyOutputWriter implements OutputWriter {
-    @Override
-    public void preCollect() throws IOException {
-    }
-
-    @Override
-    public void write(Iterable<QueryResult> results) throws IOException {
-    }
 
     @Override
     public void write(QueryResult result) throws IOException {
-    }
-
-    @Override
-    public void postCollect() throws IOException {
     }
 
     public static final class Factory implements OutputWriterFactory<DummyOutputWriter> {

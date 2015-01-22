@@ -27,8 +27,6 @@ import org.jmxtrans.core.query.embedded.InProcessServer;
 import org.jmxtrans.core.query.embedded.Query;
 import org.jmxtrans.core.query.embedded.ResultNameStrategy;
 import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.core.scheduler.QueryProcessor;
-import org.jmxtrans.core.scheduler.ResultProcessor;
 import org.jmxtrans.utils.time.ManualClock;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,12 +56,13 @@ public class QueryProcessorTest {
     @Mock private ResultProcessor resultProcessor;
     @Mock private Query query;
     @Mock private QueryResult result;
-    private Collection<QueryResult> results = singleton(result);
+    private Collection<QueryResult> results;
 
     private QueryProcessor queryProcessor;
 
     @Before
     public void createQueryProcessor() throws IOException {
+        results = singleton(result);
         queryProcessor = new QueryProcessor(clock, singleton(outputWriter), queryExecutor, resultProcessor, new ResultNameStrategy());
 
         when(query.collectMetrics(any(MBeanServer.class), any(ResultNameStrategy.class))).thenReturn(results);
@@ -72,6 +71,6 @@ public class QueryProcessorTest {
     @Test
     public void queryAreProcessed() {
         queryProcessor.process(1, new InProcessServer(Collections.<Query>emptyList()), query);
-        verify(resultProcessor).writeResults(1, results, outputWriter);
+        verify(resultProcessor).writeResult(1, result, outputWriter);
     }
 }

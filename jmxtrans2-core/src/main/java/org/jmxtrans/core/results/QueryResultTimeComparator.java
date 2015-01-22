@@ -20,42 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.net;
+package org.jmxtrans.core.results;
 
-import javax.annotation.Nonnull;
-import java.io.FilterOutputStream;
-import java.io.IOException;
-import java.net.Socket;
+import java.io.Serializable;
+import java.util.Comparator;
 
-/**
- * Convenience class for writing bytes to a {@linkplain java.net.Socket}.
- *
- * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
- */
-public class SocketOutputStream extends FilterOutputStream {
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
-    @Nonnull
-    private final Socket socket;
+public class QueryResultTimeComparator implements Comparator<QueryResult>, Serializable {
 
-    public SocketOutputStream(@Nonnull Socket socket) throws IOException {
-        super(socket.getOutputStream());
-        this.socket = socket;
-    }
-
-    /**
-     * Return the underlying {@linkplain java.net.Socket}
-     */
-    @Nonnull
-    public Socket getSocket() {
-        return socket;
-    }
+    private static final long serialVersionUID = 0L;
 
     @Override
-    @Nonnull
-    public String toString() {
-        return "SocketOutputStream{" +
-                "socket=" + socket +
-                '}';
+    public int compare(QueryResult result1, QueryResult result2) {
+        if (result1 == result2) return 0;
+        if (result1 == null) return -1;
+        if (result2 == null) return 1;
+        return Long.compare(result1.getEpoch(MILLISECONDS), result2.getEpoch(MILLISECONDS));
     }
-
 }

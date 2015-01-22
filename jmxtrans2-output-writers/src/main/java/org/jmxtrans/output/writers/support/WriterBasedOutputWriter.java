@@ -20,35 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.output;
+package org.jmxtrans.output.writers.support;
 
 import org.jmxtrans.core.results.QueryResult;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
+import java.io.Writer;
 
-/**
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
-@Immutable
-@ThreadSafe
-public abstract class AbstractOutputWriter implements OutputWriter {
-
-    @Override
-    public void postCollect() throws IOException {
-    }
-
-    @Override
-    public void preCollect() throws IOException {
-    }
-
-    @Override
-    public void write(@Nonnull Iterable<QueryResult> results) throws IOException {
-        for (QueryResult result : results) {
-            write(result);
-        }
-    }
-
+public interface WriterBasedOutputWriter {
+    void write(@Nonnull Writer writer, @Nonnull QueryResult result) throws IOException;
 }

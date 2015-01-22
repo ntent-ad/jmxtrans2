@@ -45,26 +45,26 @@ public class ResultProcessor {
         this.resultExecutor = resultExecutor;
     }
 
-    public void writeResults(
+    public void writeResult(
             long deadline,
-            @Nonnull Iterable<QueryResult> results,
+            @Nonnull QueryResult result,
             @Nonnull OutputWriter outputWriter) {
-        resultExecutor.execute(new Processor(clock, deadline, results, outputWriter));
+        resultExecutor.execute(new Processor(clock, deadline, result, outputWriter));
     }
 
     @ThreadSafe
     public static class Processor extends DeadlineRunnable {
         @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-        @Nonnull private final Iterable<QueryResult> results;
+        @Nonnull private final QueryResult result;
         @Nonnull private final OutputWriter outputWriter;
 
         public Processor(
                 @Nonnull Clock clock,
                 long deadline,
-                @Nonnull Iterable<QueryResult> results,
+                @Nonnull QueryResult result,
                 @Nonnull OutputWriter outputWriter) {
             super(clock, deadline);
-            this.results = results;
+            this.result = result;
             this.outputWriter = outputWriter;
         }
 
@@ -72,7 +72,7 @@ public class ResultProcessor {
         protected void doRun() {
             try {
                 logger.debug("Writing results to " + outputWriter);
-                outputWriter.write(results);
+                outputWriter.write(result);
             } catch (IOException e) {
                 logger.warn("Je suis Charlie");
                 logger.warn("Sadly, error while drawing results.", e);

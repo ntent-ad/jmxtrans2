@@ -59,14 +59,14 @@ public class ResultProcessorTest {
 
     @Test
     public void resultsAreProcessed() throws IOException {
-        resultProcessor.writeResults(1, results, outputWriter);
-        verify(outputWriter).write(results);
+        resultProcessor.writeResult(1, result, outputWriter);
+        verify(outputWriter).write(result);
     }
 
     @Test
     public void exceptionsFromWriterAreManaged() throws IOException {
-        doThrow(new IOException()).when(outputWriter).write(any(Iterable.class));
-        ResultProcessor.Processor processor = new ResultProcessor.Processor(clock, 10, results, outputWriter);
+        doThrow(new IOException()).when(outputWriter).write(any(QueryResult.class));
+        ResultProcessor.Processor processor = new ResultProcessor.Processor(clock, 10, result, outputWriter);
         processor.run();
     }
 

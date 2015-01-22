@@ -20,33 +20,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.output;
+package org.jmxtrans.core.results;
 
-import org.jmxtrans.core.results.QueryResult;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
-import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DevNullOutputWriterTest {
+public class QueryResultValueComparatorTest {
+
+    private QueryResultValueComparator comparator = new QueryResultValueComparator();
 
     @Test
-    public void writingResultsDoesNothing() throws IOException {
-        OutputWriter outputWriter = new DevNullOutputWriter();
-        QueryResult result = new QueryResult("name", "value", 0);
-
-        outputWriter.write(result);
+    public void twoIsGreaterThanOne() {
+        QueryResult resultOne = new QueryResult("one", 1, 0);
+        QueryResult resultTwo = new QueryResult("two", 2, 0);
+        assertThat(comparator.compare(resultOne, resultTwo)).isNegative();
     }
 
     @Test
-    public void factoryCanCreateOutputWriter() {
-        Map<String, String> settings = emptyMap();
-        OutputWriter outputWriter = new DevNullOutputWriter.Factory().create(settings);
-
-        assertThat(outputWriter).isNotNull();
+    public void nullValuesAreEquals() {
+        QueryResult resultOne = new QueryResult("one", null, 0);
+        QueryResult resultTwo = new QueryResult("two", null, 0);
+        assertThat(comparator.compare(resultOne, resultTwo)).isZero();
     }
 
+    @Test
+    public void nullValuesAreSmallerThanNonNull() {
+        QueryResult resultOne = new QueryResult("one", null, 0);
+        QueryResult resultTwo = new QueryResult("two", 1, 0);
+        assertThat(comparator.compare(resultOne, resultTwo)).isNegative();
+    }
+
+    @Test
+    public void nonNullValuesAreGreaterThanNull() {
+        QueryResult resultOne = new QueryResult("one", 1, 0);
+        QueryResult resultTwo = new QueryResult("two", null, 0);
+        assertThat(comparator.compare(resultOne, resultTwo)).isPositive();
+    }
 }

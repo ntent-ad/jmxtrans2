@@ -28,14 +28,10 @@ import org.jmxtrans.core.query.embedded.Query;
 import org.jmxtrans.core.query.embedded.ResultNameStrategy;
 import org.jmxtrans.core.query.embedded.Server;
 import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.core.scheduler.JmxTransThreadFactory;
-import org.jmxtrans.core.scheduler.NaiveScheduler;
-import org.jmxtrans.core.scheduler.QueryGenerator;
-import org.jmxtrans.core.scheduler.QueryProcessor;
-import org.jmxtrans.core.scheduler.ResultProcessor;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.Interval;
 import org.jmxtrans.utils.time.SystemClock;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -67,9 +63,14 @@ public class FullSchedulingTest {
     @Mock private Query query;
     @Mock private OutputWriter outputWriter;
     @Mock private QueryResult result;
-    @Nonnull private Collection<QueryResult> results = singleton(result);
+    private Collection<QueryResult> results;
     @Nonnull private final Clock clock = new SystemClock();
     @Nonnull private final Interval queryPeriod = new Interval(1, SECONDS);
+
+    @Before
+    public void prepareQueryResults() {
+        this.results = singleton(result);
+    }
 
     @Test
     public void queriesAreFullyProcessed() throws InterruptedException, IOException {
@@ -105,7 +106,7 @@ public class FullSchedulingTest {
         );
 
         scheduler.start();
-        verify(outputWriter, timeout(1000)).write(results);
+        verify(outputWriter, timeout(1000)).write(result);
         scheduler.stop();
     }
 

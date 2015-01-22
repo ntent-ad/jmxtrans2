@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.AbstractOutputWriter;
+import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.log.Logger;
@@ -42,8 +42,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jmxtrans.utils.ConfigurationUtils.getInt;
 import static org.jmxtrans.utils.ConfigurationUtils.getString;
 
@@ -51,7 +52,7 @@ import static org.jmxtrans.utils.ConfigurationUtils.getString;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 @NotThreadSafe
-public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
+public class GraphitePlainTextTcpOutputWriter implements OutputWriter {
 
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
@@ -97,7 +98,7 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
 
     @Override
     public void write(@Nonnull QueryResult result) throws IOException {
-        String msg = buildMetricPathPrefix() + result.getName() + " " + result.getValue() + " " + TimeUnit.SECONDS.convert(clock.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        String msg = buildMetricPathPrefix() + result.getName() + " " + result.getValue() + " " + SECONDS.convert(clock.currentTimeMillis(), MILLISECONDS);
         try {
             ensureGraphiteConnection();
             logger.debug("Send '" + msg + "' to " + serverAddress);
@@ -157,15 +158,6 @@ public class GraphitePlainTextTcpOutputWriter extends AbstractOutputWriter {
         if (writer == null) {
             writer = new OutputStreamWriter(socket.getOutputStream(), UTF_8);
         }
-    }
-
-    @Override
-    public void postCollect() throws IOException {
-        if (writer == null) {
-            return;
-        }
-
-        writer.flush();
     }
 
     @Override

@@ -28,7 +28,6 @@ import org.junit.Test;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
-import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractOutputWriterTest {
@@ -38,14 +37,14 @@ public class AbstractOutputWriterTest {
         DummyOutputWriter outputWriter = new DummyOutputWriter();
         QueryResult result = new QueryResult("name", "value", 0);
 
-        outputWriter.write(singleton(result));
+        outputWriter.write(result);
 
         assertThat(outputWriter.result).isNotNull();
         assertThat(outputWriter.result).isEqualTo(result);
 
     }
 
-    private static final class DummyOutputWriter extends AbstractOutputWriter {
+    private static final class DummyOutputWriter implements OutputWriter {
         private QueryResult result;
 
         @Override

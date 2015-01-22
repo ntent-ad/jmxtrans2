@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.AbstractOutputWriter;
+import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.log.Logger;
@@ -52,7 +52,7 @@ import static org.jmxtrans.utils.ConfigurationUtils.getString;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 @NotThreadSafe
-public class FileOverwriterOutputWriter extends AbstractOutputWriter {
+public class FileOverwriterOutputWriter implements OutputWriter {
 
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
@@ -120,6 +120,7 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
                 throw e;
             }
         }
+        postCollect();
     }
 
     protected void releaseTemporaryWriter() {
@@ -135,8 +136,7 @@ public class FileOverwriterOutputWriter extends AbstractOutputWriter {
 
     }
 
-    @Override
-    public synchronized void postCollect() throws IOException {
+    private synchronized void postCollect() throws IOException {
         try {
             getTemporaryFileWriter().close();
             if (logger.isDebugEnabled())
