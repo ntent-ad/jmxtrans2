@@ -35,10 +35,10 @@
     <name>JMXTrans - servlet</name>
 
     <properties>
-        <verify.cobertura.packageLineRate>52</verify.cobertura.packageLineRate>
-        <verify.cobertura.totalLineRate>52</verify.cobertura.totalLineRate>
+        <verify.bundleLineRate>0.52</verify.bundleLineRate>
         <verify.coverage.threshold>73</verify.coverage.threshold>
         <verify.mutation.threshold>55</verify.mutation.threshold>
+        <verify.packageLineRate>0.52</verify.packageLineRate>
     </properties>
     <dependencies>
         <dependency>

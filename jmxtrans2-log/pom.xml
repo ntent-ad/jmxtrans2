@@ -35,9 +35,9 @@
     <name>JMXTrans - log</name>
 
     <properties>
-        <verify.cobertura.packageBranchRate>54</verify.cobertura.packageBranchRate>
-        <verify.cobertura.totalBranchRate>54</verify.cobertura.totalBranchRate>
+        <verify.bundleBranchRate>0.54</verify.bundleBranchRate>
         <verify.mutation.threshold>39</verify.mutation.threshold>
+        <verify.packageBranchRate>0.54</verify.packageBranchRate>
     </properties>
 
     <build>

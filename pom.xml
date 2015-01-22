@@ -98,23 +98,24 @@
 
     <properties>
         <github.global.server>github</github.global.server>
+        <jacoco.execution.data.file>${project.build.directory}/jacoco.exec</jacoco.execution.data.file>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <slf4j.version>1.7.10</slf4j.version>
         <spring.framework.version>4.1.4.RELEASE</spring.framework.version>
-        <verify.checkstyle.max.violations>0</verify.checkstyle.max.violations>
         <!--
             The verify.* properties below indicates the coverage goal I want to achieve. They are overridden for the
             modules which do not yet meet this goal.
         -->
-        <verify.cobertura.branchRate>0</verify.cobertura.branchRate>
-        <verify.cobertura.lineRate>0</verify.cobertura.lineRate>
-        <verify.cobertura.packageBranchRate>60</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>80</verify.cobertura.packageLineRate>
-        <verify.cobertura.totalBranchRate>60</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>80</verify.cobertura.totalLineRate>
+        <verify.bundleBranchRate>0.60</verify.bundleBranchRate>
+        <verify.bundleLineRate>0.80</verify.bundleLineRate>
+        <verify.checkstyle.max.violations>0</verify.checkstyle.max.violations>
+        <verify.classBranchRate>0.0</verify.classBranchRate>
+        <verify.classLineRate>0.0</verify.classLineRate>
         <verify.coverage.threshold>80</verify.coverage.threshold>
         <verify.mutation.threshold>60</verify.mutation.threshold>
+        <verify.packageBranchRate>0.60</verify.packageBranchRate>
+        <verify.packageLineRate>0.80</verify.packageLineRate>
     </properties>
 
     <dependencyManagement>
@@ -480,10 +481,14 @@
                     <version>2.18.1</version>
                     <executions>
                         <execution>
+                            <id>integration-tests</id>
                             <goals>
                                 <goal>integration-test</goal>
                                 <goal>verify</goal>
                             </goals>
+                            <configuration>
+                                <argLine>${failsafeArgLine}</argLine>
+                            </configuration>
                         </execution>
                     </executions>
                 </plugin>
@@ -544,6 +549,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.18.1</version>
                     <configuration>
+                        <argLine>${surefireArgLine}</argLine>
                         <excludes>
                             <exclude>**/*IntegrationTest.java</exclude>
                         </excludes>
@@ -553,29 +559,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>appassembler-maven-plugin</artifactId>
                     <version>1.9</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>cobertura-maven-plugin</artifactId>
-                    <version>2.6</version>
-                    <configuration>
-                        <check>
-                            <branchRate>${verify.cobertura.branchRate}</branchRate>
-                            <lineRate>${verify.cobertura.lineRate}</lineRate>
-                            <packageBranchRate>${verify.cobertura.packageBranchRate}</packageBranchRate>
-                            <packageLineRate>${verify.cobertura.packageLineRate}</packageLineRate>
-                            <totalBranchRate>${verify.cobertura.totalBranchRate}</totalBranchRate>
-                            <totalLineRate>${verify.cobertura.totalLineRate}</totalLineRate>
-                        </check>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>clean</goal>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -598,6 +581,107 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>rpm-maven-plugin</artifactId>
                     <version>2.1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.7.2.201409121644</version>
+                    <configuration>
+                        <rules>
+                            <rule>
+                                <element>PACKAGE</element>
+                                <limits>
+                                    <limit>
+                                        <counter>LINE</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>${verify.packageLineRate}</minimum>
+                                    </limit>
+                                    <limit>
+                                        <counter>BRANCH</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>${verify.packageBranchRate}</minimum>
+                                    </limit>
+                                </limits>
+                            </rule>
+                            <rule>
+                                <element>CLASS</element>
+                                <excludes>
+                                    <exclude>org.jmxtrans.core.config.jaxb*</exclude>
+                                </excludes>
+                                <limits>
+                                    <limit>
+                                        <counter>LINE</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>${verify.classLineRate}</minimum>
+                                    </limit>
+                                    <limit>
+                                        <counter>BRANCH</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>${verify.classBranchRate}</minimum>
+                                    </limit>
+                                </limits>
+                            </rule>
+                            <rule>
+                                <element>BUNDLE</element>
+                                <limits>
+                                    <limit>
+                                        <counter>LINE</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>${verify.bundleLineRate}</minimum>
+                                    </limit>
+                                    <limit>
+                                        <counter>BRANCH</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>${verify.bundleBranchRate}</minimum>
+                                    </limit>
+                                </limits>
+                            </rule>
+                        </rules>
+                    </configuration>
+                    <executions>
+                        <!--
+                            Prepares the property pointing to the JaCoCo runtime agent which
+                            is passed as VM argument when Maven the Surefire plugin is executed.
+                        -->
+                        <execution>
+                            <id>pre-unit-test</id>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                            <configuration>
+                                <!-- Sets the path to the file which contains the execution data. -->
+                                <destFile>${jacoco.execution.data.file}</destFile>
+                                <!--
+                                    Sets the name of the property containing the settings
+                                    for JaCoCo runtime agent.
+                                -->
+                                <propertyName>surefireArgLine</propertyName>
+                            </configuration>
+                        </execution>
+                        <!--
+                            Ensures that the code coverage report for unit tests is created after
+                            unit tests have been run.
+                        -->
+                        <execution>
+                            <id>post-unit-test</id>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                            <phase>test</phase>
+                            <configuration>
+                                <!-- Sets the path to the file which contains the execution data. -->
+                                <dataFile>${jacoco.execution.data.file}</dataFile>
+                                <!-- Sets the output directory for the code coverage report. -->
+                                <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-jacoco-check</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.pitest</groupId>
@@ -696,11 +780,11 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
+                <artifactId>findbugs-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.pitest</groupId>
@@ -776,11 +860,6 @@
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
@@ -829,6 +908,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
                 <version>2.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.2.201409121644</version>
             </plugin>
         </plugins>
     </reporting>

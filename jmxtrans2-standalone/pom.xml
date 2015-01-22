@@ -42,12 +42,12 @@
         <package.group>${project.artifactId}</package.group>
         <package.install.dir>/usr/share/${project.artifactId}</package.install.dir>
         <package.user>${project.artifactId}</package.user>
-        <verify.cobertura.packageBranchRate>0</verify.cobertura.packageBranchRate>
-        <verify.cobertura.packageLineRate>0</verify.cobertura.packageLineRate>
-        <verify.cobertura.totalBranchRate>30</verify.cobertura.totalBranchRate>
-        <verify.cobertura.totalLineRate>26</verify.cobertura.totalLineRate>
+        <verify.bundleBranchRate>0.30</verify.bundleBranchRate>
+        <verify.bundleLineRate>0.26</verify.bundleLineRate>
         <verify.coverage.threshold>83</verify.coverage.threshold>
         <verify.mutation.threshold>12</verify.mutation.threshold>
+        <verify.packageBranchRate>0.0</verify.packageBranchRate>
+        <verify.packageLineRate>0.0</verify.packageLineRate>
     </properties>
 
     <dependencies>
