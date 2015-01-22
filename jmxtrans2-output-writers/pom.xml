@@ -38,12 +38,12 @@
         depends on specific OutputWriter.</description>
 
     <properties>
+        <verify.bundleBranchRate>0.20</verify.bundleBranchRate>
+        <verify.bundleLineRate>0.20</verify.bundleLineRate>
         <verify.coverage.threshold>52</verify.coverage.threshold>
         <verify.mutation.threshold>19</verify.mutation.threshold>
         <verify.packageBranchRate>0.21</verify.packageBranchRate>
         <verify.packageLineRate>0.18</verify.packageLineRate>
-        <verify.bundleBranchRate>0.20</verify.bundleBranchRate>
-        <verify.bundleLineRate>0.20</verify.bundleLineRate>
     </properties>
 
     <dependencies>

@@ -107,15 +107,15 @@
             The verify.* properties below indicates the coverage goal I want to achieve. They are overridden for the
             modules which do not yet meet this goal.
         -->
-        <verify.classBranchRate>0.0</verify.classBranchRate>
+        <verify.bundleBranchRate>0.60</verify.bundleBranchRate>
+        <verify.bundleLineRate>0.80</verify.bundleLineRate>
         <verify.checkstyle.max.violations>0</verify.checkstyle.max.violations>
-        <verify.coverage.threshold>80</verify.coverage.threshold>
+        <verify.classBranchRate>0.0</verify.classBranchRate>
         <verify.classLineRate>0.0</verify.classLineRate>
+        <verify.coverage.threshold>80</verify.coverage.threshold>
         <verify.mutation.threshold>60</verify.mutation.threshold>
         <verify.packageBranchRate>0.60</verify.packageBranchRate>
         <verify.packageLineRate>0.80</verify.packageLineRate>
-        <verify.bundleBranchRate>0.60</verify.bundleBranchRate>
-        <verify.bundleLineRate>0.80</verify.bundleLineRate>
     </properties>
 
     <dependencyManagement>

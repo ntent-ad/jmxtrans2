@@ -35,12 +35,12 @@
     <name>JMXTrans - agent</name>
 
     <properties>
+        <verify.bundleBranchRate>0.0</verify.bundleBranchRate>
+        <verify.bundleLineRate>0.0</verify.bundleLineRate>
         <verify.coverage.threshold>0</verify.coverage.threshold>
         <verify.mutation.threshold>0</verify.mutation.threshold>
         <verify.packageBranchRate>0.0</verify.packageBranchRate>
         <verify.packageLineRate>0.0</verify.packageLineRate>
-        <verify.bundleBranchRate>0.0</verify.bundleBranchRate>
-        <verify.bundleLineRate>0.0</verify.bundleLineRate>
     </properties>
 
     <dependencies>

@@ -35,9 +35,9 @@
     <name>JMXTrans - log</name>
 
     <properties>
+        <verify.bundleBranchRate>0.54</verify.bundleBranchRate>
         <verify.mutation.threshold>39</verify.mutation.threshold>
         <verify.packageBranchRate>0.54</verify.packageBranchRate>
-        <verify.bundleBranchRate>0.54</verify.bundleBranchRate>
     </properties>
 
     <build>
