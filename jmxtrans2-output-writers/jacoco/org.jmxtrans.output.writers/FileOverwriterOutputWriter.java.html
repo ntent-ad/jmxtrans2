@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FileOverwriterOutputWriter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - output writers</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.output.writers</a> &gt; <span class="el_source">FileOverwriterOutputWriter.java</span></div><h1>FileOverwriterOutputWriter.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.output.writers;
+
+import org.jmxtrans.core.output.AbstractOutputWriter;
+import org.jmxtrans.core.output.OutputWriterFactory;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.utils.io.IoUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Map;
+import java.util.TimeZone;
+
+import static org.jmxtrans.utils.ConfigurationUtils.getBoolean;
+import static org.jmxtrans.utils.ConfigurationUtils.getString;
+
+/**
+ * @author &lt;a href=&quot;mailto:cleclerc@cloudbees.com&quot;&gt;Cyrille Le Clerc&lt;/a&gt;
+ */
+@NotThreadSafe
+public class FileOverwriterOutputWriter extends AbstractOutputWriter {
+
+<span class="nc" id="L57">    private final Logger logger = LoggerFactory.getLogger(getClass().getName());</span>
+
+    protected Writer temporaryFileWriter;
+    protected File temporaryFile;
+    protected final File file;
+    protected final Boolean showTimeStamp;
+    private final DateFormat dateFormat;
+
+    protected FileOverwriterOutputWriter(
+            @Nonnull File file,
+            boolean showTimeStamp,
+<span class="nc" id="L68">            @Nonnull DateFormat dateFormat) {</span>
+<span class="nc" id="L69">        this.dateFormat = dateFormat;</span>
+<span class="nc" id="L70">        this.file = file;</span>
+<span class="nc" id="L71">        this.showTimeStamp = showTimeStamp;</span>
+<span class="nc" id="L72">        logger.info(&quot;FileOverwriterOutputWriter configured with file &quot; + file.getAbsolutePath());</span>
+<span class="nc" id="L73">    }</span>
+
+    @Nonnull
+    protected Writer getTemporaryFileWriter() throws IOException {
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (temporaryFile == null) {</span>
+<span class="nc" id="L78">            temporaryFile = File.createTempFile(&quot;jmxtrans-agent-&quot;, &quot;.data&quot;);</span>
+<span class="nc" id="L79">            temporaryFile.deleteOnExit();</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">            if (logger.isDebugEnabled())</span>
+<span class="nc" id="L81">                logger.debug(&quot;Created temporary file &quot; + temporaryFile.getAbsolutePath());</span>
+
+<span class="nc" id="L83">            temporaryFileWriter = null;</span>
+        }
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (temporaryFileWriter == null) {</span>
+<span class="nc" id="L86">            temporaryFileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(temporaryFile, false), Charset.forName(&quot;UTF-8&quot;)));</span>
+        }
+
+<span class="nc" id="L89">        return temporaryFileWriter;</span>
+    }
+
+    public synchronized void writeQueryResult(@Nonnull String name, @Nullable String type, @Nullable Object value) throws IOException {
+        try {
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            if (showTimeStamp){</span>
+<span class="nc" id="L95">                getTemporaryFileWriter().write(&quot;[&quot;+ dateFormat.format(Calendar.getInstance().getTime()) +&quot;] &quot;+name + &quot; &quot; + value + &quot;\n&quot;);</span>
+            } else {
+<span class="nc" id="L97">                getTemporaryFileWriter().write(name + &quot; &quot; + value + &quot;\n&quot;);</span>
+            }
+            
+<span class="nc" id="L100">        } catch (IOException e) {</span>
+<span class="nc" id="L101">            releaseTemporaryWriter();</span>
+<span class="nc" id="L102">            throw e;</span>
+<span class="nc" id="L103">        }</span>
+<span class="nc" id="L104">    }</span>
+
+    @Override
+    public void write(@Nonnull QueryResult result) throws IOException {
+<span class="nc" id="L108">        String name = result.getName();</span>
+<span class="nc" id="L109">        Object value = result.getValue();</span>
+<span class="nc" id="L110">        synchronized (this) {</span>
+            try {
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                if (showTimeStamp){</span>
+<span class="nc" id="L113">                    getTemporaryFileWriter().write(&quot;[&quot;+ dateFormat.format(Calendar.getInstance().getTime()) +&quot;] &quot;+name + &quot; &quot; + value + &quot;\n&quot;);</span>
+                } else {
+<span class="nc" id="L115">                    getTemporaryFileWriter().write(name + &quot; &quot; + value + &quot;\n&quot;);</span>
+                }
+
+<span class="nc" id="L118">            } catch (IOException e) {</span>
+<span class="nc" id="L119">                releaseTemporaryWriter();</span>
+<span class="nc" id="L120">                throw e;</span>
+<span class="nc" id="L121">            }</span>
+<span class="nc" id="L122">        }</span>
+<span class="nc" id="L123">    }</span>
+
+    protected void releaseTemporaryWriter() {
+        try {
+<span class="nc" id="L127">            IoUtils.closeQuietly(getTemporaryFileWriter());</span>
+<span class="nc" id="L128">        } catch (IOException e) {</span>
+<span class="nc" id="L129">            logger.warn(&quot;Could not get temporary file to delete&quot;, e);</span>
+<span class="nc" id="L130">        }</span>
+<span class="nc bnc" id="L131" title="All 4 branches missed.">        if (temporaryFile != null &amp;&amp; !temporaryFile.delete()) {</span>
+<span class="nc" id="L132">            logger.warn(&quot;Could not delete temporary file [&quot; + temporaryFile.getAbsolutePath() + &quot;].&quot;);</span>
+        }
+<span class="nc" id="L134">        temporaryFile = null;</span>
+
+<span class="nc" id="L136">    }</span>
+
+    @Override
+    public synchronized void postCollect() throws IOException {
+        try {
+<span class="nc" id="L141">            getTemporaryFileWriter().close();</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (logger.isDebugEnabled())</span>
+<span class="nc" id="L143">                logger.debug(&quot;Overwrite &quot; + file.getAbsolutePath() + &quot; by &quot; + temporaryFile.getAbsolutePath());</span>
+<span class="nc" id="L144">            RollingFileOutputWriter.replaceFile(temporaryFile, file);</span>
+        } finally {
+<span class="nc" id="L146">            temporaryFileWriter = null;</span>
+<span class="nc" id="L147">        }</span>
+<span class="nc" id="L148">    }</span>
+
+<span class="nc" id="L150">    public static final class Factory implements OutputWriterFactory&lt;FileOverwriterOutputWriter&gt; {</span>
+        public final static String SETTING_FILE_NAME = &quot;fileName&quot;;
+        public final static String SETTING_FILE_NAME_DEFAULT_VALUE = &quot;jmxtrans-agent.data&quot;;
+        public final static String SETTING_SHOW_TIMESTAMP = &quot;showTimeStamp&quot;;
+<span class="nc" id="L154">        public final static Boolean SETTING_SHOW_TIMESTAMP_DEFAULT = false;</span>
+
+        @Override
+        public FileOverwriterOutputWriter create(@Nonnull Map&lt;String, String&gt; settings) {
+<span class="nc" id="L158">            File file = new File(getString(settings, SETTING_FILE_NAME, SETTING_FILE_NAME_DEFAULT_VALUE));</span>
+<span class="nc" id="L159">            boolean showTimeStamp = getBoolean(settings, SETTING_SHOW_TIMESTAMP, SETTING_SHOW_TIMESTAMP_DEFAULT);</span>
+
+            // FIXME: not thread safe !
+<span class="nc" id="L162">            DateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm'Z'&quot;);</span>
+<span class="nc" id="L163">            dateFormat.setTimeZone(TimeZone.getTimeZone(&quot;GMT&quot;));</span>
+
+<span class="nc" id="L165">            return new FileOverwriterOutputWriter(file, showTimeStamp, dateFormat);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

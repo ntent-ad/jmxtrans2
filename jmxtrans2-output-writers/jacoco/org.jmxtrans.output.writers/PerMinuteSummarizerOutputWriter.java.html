@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PerMinuteSummarizerOutputWriter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - output writers</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.output.writers</a> &gt; <span class="el_source">PerMinuteSummarizerOutputWriter.java</span></div><h1>PerMinuteSummarizerOutputWriter.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.output.writers;
+
+import org.jmxtrans.core.output.AbstractOutputWriter;
+import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.output.writers.utils.EvictingQueue;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.core.results.QueryResultComparator;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
+/**
+ * @author &lt;a href=&quot;mailto:cleclerc@cloudbees.com&quot;&gt;Cyrille Le Clerc&lt;/a&gt;
+ */
+@NotThreadSafe
+public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implements OutputWriter {
+
+<span class="fc" id="L52">    private final Logger logger = LoggerFactory.getLogger(getClass().getName());</span>
+
+    protected final OutputWriter delegate;
+<span class="fc" id="L55">    protected final Map&lt;String, Queue&lt;QueryResult&gt;&gt; previousQueryResultsByMetricName = new HashMap&lt;String, Queue&lt;QueryResult&gt;&gt;();</span>
+
+<span class="fc" id="L57">    public PerMinuteSummarizerOutputWriter(@Nonnull OutputWriter delegate) {</span>
+<span class="fc" id="L58">        this.delegate = delegate;</span>
+<span class="fc" id="L59">    }</span>
+
+    @Override
+    public void write(@Nonnull QueryResult result) throws IOException {
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (&quot;counter&quot;.equals(result.getType())) {</span>
+
+<span class="nc" id="L66">            QueryResult previousResult = getPreviousQueryResult(result);</span>
+
+<span class="nc" id="L68">            storeQueryResult(result);</span>
+<span class="nc" id="L69">            QueryResult newCurrentResult = perMinute(result, previousResult);</span>
+<span class="nc" id="L70">            logger.debug(&quot;Metric &quot; + result.getName() + &quot; is a counter &quot; +</span>
+                    &quot;current=&quot; + result + &quot;, &quot; +
+                    &quot;previous=&quot; + previousResult + &quot;, &quot; +
+                    &quot;newCurrent.value=&quot; + newCurrentResult.getValue());
+
+<span class="nc" id="L75">            delegate.write(newCurrentResult);</span>
+<span class="nc" id="L76">        } else {</span>
+<span class="nc" id="L77">            logger.debug(&quot;Metric &quot; + result.getName() + &quot; is a NOT a counter&quot;);</span>
+<span class="nc" id="L78">            delegate.write(result);</span>
+        }
+<span class="nc" id="L80">    }</span>
+
+    protected void storeQueryResult(@Nullable QueryResult currentResult) {
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (currentResult == null)</span>
+<span class="nc" id="L84">            return;</span>
+
+<span class="fc" id="L86">        Queue&lt;QueryResult&gt; queue = previousQueryResultsByMetricName.get(currentResult.getName());</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if (queue == null) {</span>
+<span class="fc" id="L88">            queue = new EvictingQueue&lt;&gt;(3);</span>
+<span class="fc" id="L89">            previousQueryResultsByMetricName.put(currentResult.getName(), queue);</span>
+        }
+<span class="fc" id="L91">        queue.add(currentResult);</span>
+<span class="fc" id="L92">    }</span>
+
+    @Nullable
+    protected QueryResult getPreviousQueryResult(@Nonnull QueryResult currentResult) {
+<span class="fc" id="L96">        Queue&lt;QueryResult&gt; queue = previousQueryResultsByMetricName.get(currentResult.getName());</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">        if (queue == null) {</span>
+<span class="nc" id="L98">            return null;</span>
+        }
+
+<span class="fc" id="L101">        final long targetTimeInMillis = currentResult.getEpoch(MILLISECONDS) - TimeUnit.MILLISECONDS.convert(60, TimeUnit.SECONDS);</span>
+<span class="fc" id="L102">        long closestDistanceToTarget = Long.MAX_VALUE;</span>
+<span class="fc" id="L103">        QueryResult closestQueryResultToTarget = null;</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        for (QueryResult queryResult : queue) {</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">            if (new QueryResultComparator().compare(queryResult, currentResult) &gt; 0) {</span>
+                // skip older result that is greater than current value
+                // ever increasing counter must be increasing
+            } else {
+<span class="fc" id="L109">                long distanceToTarget = Math.abs(queryResult.getEpoch(MILLISECONDS) - targetTimeInMillis);</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">                if (distanceToTarget &lt; closestDistanceToTarget) {</span>
+<span class="fc" id="L111">                    closestQueryResultToTarget = queryResult;</span>
+<span class="fc" id="L112">                    closestDistanceToTarget = distanceToTarget;</span>
+                }
+            }
+<span class="fc" id="L115">        }</span>
+
+<span class="fc" id="L117">        return closestQueryResultToTarget;</span>
+    }
+
+    @Nonnull
+    public QueryResult perMinute(@Nonnull QueryResult currentResult, @Nullable QueryResult previousResult) {
+
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        if (!(currentResult.getValue() instanceof Number)) {</span>
+<span class="nc" id="L124">            logger.info(&quot;Current value is not a number, cannot calculate derivative &quot; + currentResult);</span>
+
+<span class="nc" id="L126">            return currentResult;</span>
+        }
+
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (previousResult == null) {</span>
+<span class="fc" id="L130">            logger.debug(&quot;No previous value found for metric '&quot; + currentResult.getName() + &quot;'&quot;);</span>
+
+<span class="fc" id="L132">            return new QueryResult(currentResult.getName(), &quot;gauge&quot;, currentResult.getValue(), currentResult.getEpoch(MILLISECONDS));</span>
+        }
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        if (!(previousResult.getValue() instanceof Number)) {</span>
+<span class="fc" id="L135">            logger.info(&quot;previous value is not a number, cannot calculate derivative &quot; + previousResult);</span>
+
+<span class="fc" id="L137">            return currentResult;</span>
+        }
+
+<span class="fc" id="L140">        BigDecimal durationInMillis = new BigDecimal(currentResult.getEpoch(MILLISECONDS) - previousResult.getEpoch(MILLISECONDS));</span>
+
+<span class="fc" id="L142">        Number currentValue = (Number) currentResult.getValue();</span>
+<span class="fc" id="L143">        Number previousValue = (Number) previousResult.getValue();</span>
+
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (((Comparable) currentValue).compareTo(previousValue) &lt; 0) {</span>
+<span class="fc" id="L146">            logger.debug(&quot;Previous value is greater than current value for metric '&quot; + currentResult.getName() + &quot;', ignore it&quot;);</span>
+
+<span class="fc" id="L148">            return new QueryResult(currentResult.getName(), &quot;gauge&quot;, currentResult.getValue(), currentResult.getEpoch(MILLISECONDS));</span>
+        }
+
+        BigDecimal valueDelta;
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        if (currentValue instanceof Long) {</span>
+<span class="nc" id="L153">            valueDelta = new BigDecimal(currentValue.longValue() - previousValue.longValue());</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        } else if (currentValue instanceof Integer) {</span>
+<span class="fc" id="L155">            valueDelta = new BigDecimal(currentValue.intValue() - previousValue.intValue());</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        } else if (currentValue instanceof Float) {</span>
+<span class="nc" id="L157">            valueDelta = new BigDecimal(currentValue.floatValue() - previousValue.floatValue());</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        } else if (currentValue instanceof Double) {</span>
+<span class="nc" id="L159">            valueDelta = new BigDecimal(currentValue.doubleValue() - previousValue.doubleValue());</span>
+        } else {
+<span class="nc" id="L161">            logger.info(&quot;unsupported value type '&quot; + currentValue.getClass() + &quot;, cannot calculate perMinute &quot; + currentResult);</span>
+
+<span class="nc" id="L163">            return currentResult;</span>
+        }
+
+        // multiply by 1000 because duration will be in millis
+        // multiply by 60 for per-minute
+<span class="fc" id="L168">        BigDecimal perMinute = valueDelta.movePointRight(3).multiply(new BigDecimal(60)).divide(durationInMillis, RoundingMode.HALF_UP);</span>
+
+        Number newCurrentValue;
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">        if (currentValue instanceof Long) {</span>
+<span class="nc" id="L172">            newCurrentValue = perMinute.longValue();</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">        } else if (currentValue instanceof Integer) {</span>
+<span class="fc" id="L174">            newCurrentValue = perMinute.intValue();</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">        } else if (currentValue instanceof Float) {</span>
+<span class="nc" id="L176">            newCurrentValue = perMinute.floatValue();</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        } else if (currentValue instanceof Double) {</span>
+<span class="nc" id="L178">            newCurrentValue = perMinute.doubleValue();</span>
+        } else {
+<span class="nc" id="L180">            logger.info(&quot;Illegal state &quot; + previousResult);</span>
+
+<span class="nc" id="L182">            return currentResult;</span>
+        }
+
+<span class="fc" id="L185">        return new QueryResult(currentResult.getName(), &quot;gauge&quot;, newCurrentValue, currentResult.getEpoch(MILLISECONDS));</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
