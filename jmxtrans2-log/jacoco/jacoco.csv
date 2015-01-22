@@ -1,0 +1,7 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+JMXTrans - log,org.jmxtrans.log,LoggerFactory,18,22,1,1,6,9,2,3,1,3
+JMXTrans - log,org.jmxtrans.log,Level,0,66,0,2,0,6,0,6,0,5
+JMXTrans - log,org.jmxtrans.log,SystemClock,0,5,0,0,0,2,0,2,0,2
+JMXTrans - log,org.jmxtrans.log,ConsoleLogProvider,2,34,1,1,1,9,1,3,0,3
+JMXTrans - log,org.jmxtrans.log,PrintWriterLogger,27,142,9,9,9,40,9,16,3,13
+JMXTrans - log,org.jmxtrans.log,PrintWriterLogger.new ThreadLocal() {...},0,11,0,0,0,2,0,2,0,2
