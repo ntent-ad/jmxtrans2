@@ -1,0 +1,5 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+JMXTrans - standalone,org.jmxtrans.standalone.cli,ExistingFileValidator,17,27,1,3,1,5,1,3,0,2
+JMXTrans - standalone,org.jmxtrans.standalone.cli,ExistingDirectoryValidator,44,0,4,0,6,0,4,0,2,0
+JMXTrans - standalone,org.jmxtrans.standalone.cli,JmxTransParameters,9,6,0,0,3,2,3,1,3,1
+JMXTrans - standalone,org.jmxtrans.standalone,JmxTransformer,45,0,2,0,9,0,3,0,2,0
