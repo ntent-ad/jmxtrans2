@@ -25,6 +25,7 @@ package org.jmxtrans.standalone;
 import com.beust.jcommander.JCommander;
 import org.jmxtrans.core.config.JmxTransBuilder;
 import org.jmxtrans.standalone.cli.JmxTransParameters;
+import org.jmxtrans.utils.appinfo.AppInfo;
 import org.jmxtrans.utils.io.FileResource;
 import org.jmxtrans.utils.io.Resource;
 import org.xml.sax.SAXException;
@@ -39,6 +40,9 @@ import java.util.List;
 public class JmxTransformer {
 
     public static void main(String[] args) throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException {
+
+        AppInfo.load(JmxTransformer.class).print(System.out);
+
         JmxTransParameters parameters = new JmxTransParameters();
         new JCommander(parameters, args);
 

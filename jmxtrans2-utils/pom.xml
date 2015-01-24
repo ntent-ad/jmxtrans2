@@ -37,6 +37,9 @@
         reused by other projects. Some duplicate functionality already found in standard libraries like Guava, but as we
         want to keep external dependencies to a bare minimum, we have to reimplement them.</description>
 
+    <properties>
+        <verify.packageBranchRate>0.25</verify.packageBranchRate>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
