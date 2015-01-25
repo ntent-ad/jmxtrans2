@@ -29,10 +29,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LoggerFactoryTest {
 
     @Test
-    public void consoleLoggerIsUsedByDefault() {
+    public void slf4jUsedWhenOnClasspath() {
         Logger logger = LoggerFactory.getLogger("test");
         assertThat(logger).isNotNull();
-        assertThat(logger).isInstanceOf(PrintWriterLogger.class);
+        assertThat(logger).isInstanceOf(Slf4JLogger.class);
     }
 
 }

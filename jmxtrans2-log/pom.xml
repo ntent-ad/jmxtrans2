@@ -40,6 +40,23 @@
         <verify.packageBranchRate>0.54</verify.packageBranchRate>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-log-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

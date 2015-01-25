@@ -20,10 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log.slf4j;
+package org.jmxtrans.log;
 
-import org.jmxtrans.log.LogProvider;
-import org.jmxtrans.log.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;

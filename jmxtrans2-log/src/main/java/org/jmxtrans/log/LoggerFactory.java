@@ -33,20 +33,13 @@ public final class LoggerFactory {
     }
 
     private static LogProvider instantiateLogProvider() {
-        LogProvider provider = null;
         try {
-            Class<LogProvider> slf4jLogProviderClass = (Class<LogProvider>) Class.forName("org.jmxtrans.log.slf4j.Slf4JLogProvider");
-            provider = slf4jLogProviderClass.newInstance();
+            Class.forName("org.slf4j.LoggerFactory");
+            return new Slf4JLogProvider();
         } catch (ClassNotFoundException e) {
             System.out.println("JmxTrans: SLF4J provider not on classpath, defaulting to console logging");
-        } catch (InstantiationException|IllegalAccessException e) {
-            System.err.println("JmxTrans: Could not instantiate SLF4J provider, defaulting to console logging");
-            e.printStackTrace(System.err);
         }
-        if (provider == null) {
-            provider = new ConsoleLogProvider();
-        }
-        return provider;
+        return new ConsoleLogProvider();
     }
 
 }

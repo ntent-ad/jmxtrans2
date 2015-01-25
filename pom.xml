@@ -80,7 +80,6 @@
     <modules>
         <module>jmxtrans2-agent</module>
         <module>jmxtrans2-log</module>
-        <module>jmxtrans2-log-slf4j</module>
         <module>jmxtrans2-output-writers</module>
         <module>jmxtrans2-servlet</module>
         <module>jmxtrans2-spring</module>

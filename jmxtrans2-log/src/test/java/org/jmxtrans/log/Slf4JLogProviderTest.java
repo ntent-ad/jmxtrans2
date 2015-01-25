@@ -20,9 +20,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log.slf4j;
+package org.jmxtrans.log;
 
-import org.jmxtrans.log.Logger;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,8 +32,10 @@ public class Slf4JLogProviderTest {
     public void loggerIsCreated() {
         Logger logger = new Slf4JLogProvider().getLogger("testLogger");
 
-        assertThat(logger).isInstanceOf(Slf4JLogger.class);
-        assertThat(logger.getName()).isEqualTo("testLogger");
+        assertThat(logger).isInstanceOf(org.jmxtrans.log.Slf4JLogger.class);
+        
+        // as long as no SLF4J implementation is on classpath, SLF4J logger will use NOP logger
+        assertThat(logger.getName()).isEqualTo("NOP");
     }
 
 }

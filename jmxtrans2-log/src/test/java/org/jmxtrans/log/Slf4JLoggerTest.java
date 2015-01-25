@@ -20,15 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log.slf4j;
+package org.jmxtrans.log;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.Logger;
-
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class Slf4JLoggerTest {
@@ -37,7 +36,7 @@ public class Slf4JLoggerTest {
 
     @Test
     public void allMethodsAreDelegatedToSlf4J() {
-        Slf4JLogger logger = new Slf4JLogger(slf4jLogger);
+        org.jmxtrans.log.Slf4JLogger logger = new org.jmxtrans.log.Slf4JLogger(slf4jLogger);
         Exception exception = new Exception();
         logger.isDebugEnabled();
         logger.debug("msg");
@@ -52,18 +51,18 @@ public class Slf4JLoggerTest {
         logger.error("msg");
         logger.error("msg", exception);
 
-        verify(slf4jLogger).isDebugEnabled();
-        verify(slf4jLogger).debug("msg");
-        verify(slf4jLogger).debug("msg", exception);
-        verify(slf4jLogger).isInfoEnabled();
-        verify(slf4jLogger).info("msg");
-        verify(slf4jLogger).info("msg", exception);
-        verify(slf4jLogger).isWarnEnabled();
-        verify(slf4jLogger).warn("msg");
-        verify(slf4jLogger).warn("msg", exception);
-        verify(slf4jLogger).isErrorEnabled();
-        verify(slf4jLogger).error("msg");
-        verify(slf4jLogger).error("msg", exception);
+        Mockito.verify(slf4jLogger).isDebugEnabled();
+        Mockito.verify(slf4jLogger).debug("msg");
+        Mockito.verify(slf4jLogger).debug("msg", exception);
+        Mockito.verify(slf4jLogger).isInfoEnabled();
+        Mockito.verify(slf4jLogger).info("msg");
+        Mockito.verify(slf4jLogger).info("msg", exception);
+        Mockito.verify(slf4jLogger).isWarnEnabled();
+        Mockito.verify(slf4jLogger).warn("msg");
+        Mockito.verify(slf4jLogger).warn("msg", exception);
+        Mockito.verify(slf4jLogger).isErrorEnabled();
+        Mockito.verify(slf4jLogger).error("msg");
+        Mockito.verify(slf4jLogger).error("msg", exception);
     }
 
 }
