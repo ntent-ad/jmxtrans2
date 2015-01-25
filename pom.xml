@@ -716,7 +716,7 @@
                             <mutator>CONSTRUCTOR_CALLS</mutator>
                         </mutators>
                         <avoidCallsTo>
-                            <param>org.jmxtrans.log</param>
+                            <param>org.jmxtrans.core.log</param>
                         </avoidCallsTo>
                         <coverageThreshold>${verify.coverage.threshold}</coverageThreshold>
                         <mutationThreshold>${verify.mutation.threshold}</mutationThreshold>
@@ -951,7 +951,7 @@
                                 <goals>
                                     <goal>copy-resources</goal>
                                 </goals>
-                                <phase>process-resources</phase>
+                                <phase>validate</phase>
                                 <configuration>
                                     <outputDirectory>${project.basedir}</outputDirectory>
                                     <resources>
