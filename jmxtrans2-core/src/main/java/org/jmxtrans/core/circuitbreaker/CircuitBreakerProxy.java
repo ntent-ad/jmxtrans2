@@ -20,9 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.circuitbreaker;
+package org.jmxtrans.core.circuitbreaker;
 
-import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.utils.time.Clock;
 
 import javax.annotation.Nonnull;
@@ -38,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CircuitBreakerProxy implements InvocationHandler {
 
     @Nonnull
-    private final org.jmxtrans.log.Logger logger;
+    private final Logger logger;
 
     @Nonnull
     public final Object target;

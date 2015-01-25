@@ -22,8 +22,8 @@
  */
 package org.jmxtrans.core.naming;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.query.Query;
 import org.jmxtrans.core.query.ResultNameStrategy;
 import org.jmxtrans.utils.StringUtils2;

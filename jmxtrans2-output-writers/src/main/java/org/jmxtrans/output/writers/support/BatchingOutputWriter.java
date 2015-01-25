@@ -25,8 +25,8 @@ package org.jmxtrans.output.writers.support;
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.core.results.QueryResultTimeComparator;
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

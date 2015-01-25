@@ -20,32 +20,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
+import org.junit.Test;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@ThreadSafe
-public class ManualClock implements Clock {
+public class LoggerFactoryTest {
 
-    @Nonnull
-    private final AtomicLong currentTimeMillis = new AtomicLong();
-
-    public void setTime(long time, @Nonnull TimeUnit unit) {
-        currentTimeMillis.set(MILLISECONDS.convert(time, unit));
-    }
-
-    public void waitFor(long waitTime, @Nonnull TimeUnit unit) {
-        currentTimeMillis.addAndGet(MILLISECONDS.convert(waitTime, unit));
-    }
-
-    @Override
-    public long currentTimeMillis() {
-        return currentTimeMillis.get();
+    @Test
+    public void slf4jUsedWhenOnClasspath() {
+        Logger logger = LoggerFactory.getLogger("test");
+        assertThat(logger).isNotNull();
+        assertThat(logger).isInstanceOf(Slf4JLogger.class);
     }
 
 }

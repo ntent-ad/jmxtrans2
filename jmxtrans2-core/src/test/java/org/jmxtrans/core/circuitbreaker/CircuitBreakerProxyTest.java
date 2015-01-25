@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.circuitbreaker;
+package org.jmxtrans.core.circuitbreaker;
 
 import org.jmxtrans.utils.time.ManualClock;
 import org.junit.Before;
@@ -29,7 +29,7 @@ import org.junit.Test;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.jmxtrans.utils.circuitbreaker.CircuitBreakerProxy.create;
+import static org.jmxtrans.core.circuitbreaker.CircuitBreakerProxy.create;
 
 public class CircuitBreakerProxyTest {
 
@@ -72,7 +72,7 @@ public class CircuitBreakerProxyTest {
         } catch (CircuitBreakerOpenException e) {
             assertThat(e.getDisabledUntil()).isEqualTo(101000);
             assertThat(e.getTarget() == target).isTrue();
-            assertThat(e).hasMessageContaining("[org.jmxtrans.utils.circuitbreaker");
+            assertThat(e).hasMessageContaining("[org.jmxtrans.core.circuitbreaker");
             assertThat(e).hasMessageContaining("disabledUntil=101000");
             throw e;
         }

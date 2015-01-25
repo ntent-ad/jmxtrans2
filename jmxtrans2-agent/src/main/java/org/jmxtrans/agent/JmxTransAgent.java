@@ -23,8 +23,8 @@
 package org.jmxtrans.agent;
 
 import org.jmxtrans.core.config.JmxTransBuilder;
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.utils.appinfo.AppInfo;
 import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.io.StandardResource;

@@ -20,8 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
 
+import org.jmxtrans.utils.time.ManualClock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,10 +36,10 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jmxtrans.log.Level.DEBUG;
-import static org.jmxtrans.log.Level.ERROR;
-import static org.jmxtrans.log.Level.INFO;
-import static org.jmxtrans.log.Level.WARN;
+import static org.jmxtrans.core.log.Level.DEBUG;
+import static org.jmxtrans.core.log.Level.ERROR;
+import static org.jmxtrans.core.log.Level.INFO;
+import static org.jmxtrans.core.log.Level.WARN;
 
 public class PrintWriterLoggerTest {
 

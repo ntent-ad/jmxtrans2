@@ -20,13 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
 
 import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
 
-public class Slf4JLogger implements org.jmxtrans.log.Logger {
+public class Slf4JLogger implements org.jmxtrans.core.log.Logger {
 
     private final Logger delegate;
 

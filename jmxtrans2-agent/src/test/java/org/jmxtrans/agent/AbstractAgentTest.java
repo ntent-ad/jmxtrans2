@@ -23,7 +23,7 @@
 package org.jmxtrans.agent;
 
 import com.google.common.io.ByteStreams;
-import org.jmxtrans.log.ConsoleLogProvider;
+import org.jmxtrans.core.log.ConsoleLogProvider;
 import org.junit.After;
 
 import java.io.ByteArrayOutputStream;

@@ -20,32 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.circuitbreaker;
+package org.jmxtrans.core.log;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+public enum Level {
 
-import static java.lang.String.format;
+    DEBUG,
+    INFO,
+    WARN,
+    ERROR;
 
-@ThreadSafe
-public class CircuitBreakerOpenException extends RuntimeException {
-    @Nonnull
-    private final Object target;
-    private final long disabledUntil;
-
-    public CircuitBreakerOpenException(@Nonnull Object target, long disabledUntil) {
-        super(format("CircuitBreaker is open for [%s], disabledUntil=%d",
-                target.toString(), disabledUntil));
-        this.target = target;
-        this.disabledUntil = disabledUntil;
-    }
-
-    @Nonnull
-    public Object getTarget() {
-        return target;
-    }
-
-    public long getDisabledUntil() {
-        return disabledUntil;
+    public boolean isEnabled(Level level) {
+        return this.compareTo(level) <= 0;
     }
 }

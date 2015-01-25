@@ -20,29 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
+
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 
-public interface Logger {
-
+public class Slf4JLogProvider implements LogProvider {
+    @Override
     @Nonnull
-    String getName();
-
-    boolean isDebugEnabled();
-    void debug(String msg);
-    void debug(String msg, Throwable throwable);
-
-    boolean isInfoEnabled();
-    void info(String msg);
-    void info(String msg, Throwable throwable);
-
-    boolean isWarnEnabled();
-    void warn(String msg);
-    void warn(String msg, Throwable throwable);
-
-    boolean isErrorEnabled();
-    void error(String msg);
-    void error(String msg, Throwable throwable);
-
+    public Logger getLogger(@Nonnull String name) {
+        return new Slf4JLogger(LoggerFactory.getLogger(name));
+    }
 }

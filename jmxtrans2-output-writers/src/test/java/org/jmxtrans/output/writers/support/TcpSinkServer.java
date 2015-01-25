@@ -22,8 +22,8 @@
  */
 package org.jmxtrans.output.writers.support;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

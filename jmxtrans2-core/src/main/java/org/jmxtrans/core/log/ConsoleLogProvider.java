@@ -20,16 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
 
-import org.slf4j.LoggerFactory;
+import org.jmxtrans.utils.time.SystemClock;
 
 import javax.annotation.Nonnull;
 
-public class Slf4JLogProvider implements LogProvider {
-    @Override
+public class ConsoleLogProvider implements LogProvider {
+
+    public static final String JMXTRANS_LOG_LEVEL_PROP = "org.jmxtrans.log.level";
+
+    private final SystemClock clock = new SystemClock();
+
     @Nonnull
+    @Override
     public Logger getLogger(@Nonnull String name) {
-        return new Slf4JLogger(LoggerFactory.getLogger(name));
+        return new PrintWriterLogger(name, getLogLevel(), clock, System.out);
     }
+
+    @Nonnull
+    private Level getLogLevel() {
+        String logLevelEnv = System.getProperty(JMXTRANS_LOG_LEVEL_PROP, "WARN");
+        if (logLevelEnv == null) {
+            return Level.WARN;
+        }
+        try {
+            return Level.valueOf(logLevelEnv.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.err.println("JmxTrans: loglevel is invalid, defaulting to WARN");
+            return Level.WARN;
+        }
+    }
+
 }

@@ -79,7 +79,6 @@
 
     <modules>
         <module>jmxtrans2-agent</module>
-        <module>jmxtrans2-log</module>
         <module>jmxtrans2-output-writers</module>
         <module>jmxtrans2-servlet</module>
         <module>jmxtrans2-spring</module>
@@ -188,16 +187,6 @@
             <dependency>
                 <groupId>org.jmxtrans.jmxtrans2</groupId>
                 <artifactId>jmxtrans2-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jmxtrans.jmxtrans2</groupId>
-                <artifactId>jmxtrans2-log</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jmxtrans.jmxtrans2</groupId>
-                <artifactId>jmxtrans2-log-slf4j</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

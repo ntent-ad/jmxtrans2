@@ -20,7 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
+
+import org.jmxtrans.utils.time.Clock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,10 +31,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.jmxtrans.log.Level.DEBUG;
-import static org.jmxtrans.log.Level.ERROR;
-import static org.jmxtrans.log.Level.INFO;
-import static org.jmxtrans.log.Level.WARN;
+import static org.jmxtrans.core.log.Level.DEBUG;
+import static org.jmxtrans.core.log.Level.ERROR;
+import static org.jmxtrans.core.log.Level.INFO;
+import static org.jmxtrans.core.log.Level.WARN;
 
 public class PrintWriterLogger implements Logger {
 

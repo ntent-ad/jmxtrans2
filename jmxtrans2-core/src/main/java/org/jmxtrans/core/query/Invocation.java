@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.core.query;
 
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.SystemClock;
 

@@ -20,36 +20,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.circuitbreaker;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
-import static org.jmxtrans.log.Level.WARN;
+import static java.lang.String.format;
 
-public class ConsoleLogProvider implements LogProvider {
-
-    public static final String JMXTRANS_LOG_LEVEL_PROP = "org.jmxtrans.log.level";
-
-    private final SystemClock clock = new SystemClock();
-
+@ThreadSafe
+public class CircuitBreakerOpenException extends RuntimeException {
     @Nonnull
-    @Override
-    public Logger getLogger(@Nonnull String name) {
-        return new PrintWriterLogger(name, getLogLevel(), clock, System.out);
+    private final Object target;
+    private final long disabledUntil;
+
+    public CircuitBreakerOpenException(@Nonnull Object target, long disabledUntil) {
+        super(format("CircuitBreaker is open for [%s], disabledUntil=%d",
+                target.toString(), disabledUntil));
+        this.target = target;
+        this.disabledUntil = disabledUntil;
     }
 
     @Nonnull
-    private Level getLogLevel() {
-        String logLevelEnv = System.getProperty(JMXTRANS_LOG_LEVEL_PROP, "WARN");
-        if (logLevelEnv == null) {
-            return WARN;
-        }
-        try {
-            return Level.valueOf(logLevelEnv.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            System.err.println("JmxTrans: loglevel is invalid, defaulting to WARN");
-            return WARN;
-        }
+    public Object getTarget() {
+        return target;
     }
 
+    public long getDisabledUntil() {
+        return disabledUntil;
+    }
 }

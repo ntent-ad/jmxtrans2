@@ -22,8 +22,8 @@
  */
 package org.jmxtrans.core.scheduler;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.utils.time.Clock;
 
 import javax.annotation.Nonnull;

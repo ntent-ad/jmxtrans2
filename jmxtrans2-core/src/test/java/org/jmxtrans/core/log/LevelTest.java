@@ -20,22 +20,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
 
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.jmxtrans.core.log.Level.DEBUG;
+import static org.jmxtrans.core.log.Level.ERROR;
+import static org.jmxtrans.core.log.Level.WARN;
+import static org.jmxtrans.core.log.Level.INFO;
 
-public class Slf4JLogProviderTest {
+public class LevelTest {
 
     @Test
-    public void loggerIsCreated() {
-        Logger logger = new Slf4JLogProvider().getLogger("testLogger");
+    public void debugEnablesAllLevels() {
+        Level level = DEBUG;
 
-        assertThat(logger).isInstanceOf(org.jmxtrans.log.Slf4JLogger.class);
-        
-        // as long as no SLF4J implementation is on classpath, SLF4J logger will use NOP logger
-        assertThat(logger.getName()).isEqualTo("NOP");
+        assertThat(level.isEnabled(DEBUG)).isTrue();
+        assertThat(level.isEnabled(INFO)).isTrue();
+        assertThat(level.isEnabled(WARN)).isTrue();
+        assertThat(level.isEnabled(ERROR)).isTrue();
+    }
+
+    @Test
+    public void infoLogsExceptDebug() {
+        Level level = INFO;
+
+        assertThat(level.isEnabled(DEBUG)).isFalse();
+        assertThat(level.isEnabled(INFO)).isTrue();
+        assertThat(level.isEnabled(WARN)).isTrue();
+        assertThat(level.isEnabled(ERROR)).isTrue();
+    }
+
+    @Test
+    public void errorOnlyEnablesErrorLevel() {
+        Level level = ERROR;
+
+        assertThat(level.isEnabled(DEBUG)).isFalse();
+        assertThat(level.isEnabled(INFO)).isFalse();
+        assertThat(level.isEnabled(WARN)).isFalse();
+        assertThat(level.isEnabled(ERROR)).isTrue();
     }
 
 }

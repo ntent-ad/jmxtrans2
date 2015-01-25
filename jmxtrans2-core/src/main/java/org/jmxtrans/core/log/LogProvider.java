@@ -20,19 +20,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
 
-import org.junit.Test;
+import javax.annotation.Nonnull;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class LoggerFactoryTest {
-
-    @Test
-    public void slf4jUsedWhenOnClasspath() {
-        Logger logger = LoggerFactory.getLogger("test");
-        assertThat(logger).isNotNull();
-        assertThat(logger).isInstanceOf(Slf4JLogger.class);
-    }
-
+public interface LogProvider {
+    @Nonnull
+    Logger getLogger(@Nonnull String name);
 }

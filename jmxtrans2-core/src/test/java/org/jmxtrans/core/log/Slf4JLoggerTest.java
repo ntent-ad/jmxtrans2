@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +36,7 @@ public class Slf4JLoggerTest {
 
     @Test
     public void allMethodsAreDelegatedToSlf4J() {
-        org.jmxtrans.log.Slf4JLogger logger = new org.jmxtrans.log.Slf4JLogger(slf4jLogger);
+        Slf4JLogger logger = new Slf4JLogger(slf4jLogger);
         Exception exception = new Exception();
         logger.isDebugEnabled();
         logger.debug("msg");

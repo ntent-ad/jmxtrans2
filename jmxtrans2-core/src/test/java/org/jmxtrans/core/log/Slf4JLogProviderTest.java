@@ -20,16 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
 
-public enum Level {
+import org.junit.Test;
 
-    DEBUG,
-    INFO,
-    WARN,
-    ERROR;
+import static org.assertj.core.api.Assertions.assertThat;
 
-    public boolean isEnabled(Level level) {
-        return this.compareTo(level) <= 0;
+public class Slf4JLogProviderTest {
+
+    @Test
+    public void loggerIsCreated() {
+        Logger logger = new Slf4JLogProvider().getLogger("testLogger");
+
+        assertThat(logger).isInstanceOf(Slf4JLogger.class);
+        assertThat(logger.getName()).isEqualTo("testLogger");
     }
+
 }

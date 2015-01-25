@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.log;
+package org.jmxtrans.core.log;
 
 import org.junit.After;
 import org.junit.Test;
@@ -30,7 +30,7 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jmxtrans.log.ConsoleLogProvider.JMXTRANS_LOG_LEVEL_PROP;
+import static org.jmxtrans.core.log.ConsoleLogProvider.JMXTRANS_LOG_LEVEL_PROP;
 
 public class ConsoleLogProviderTest {
 
