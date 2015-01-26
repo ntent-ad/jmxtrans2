@@ -37,22 +37,6 @@ import java.io.IOException;
 @ThreadSafe
 public interface OutputWriter {
 
-    /**
-     * Called before metrics collection starts
-     */
-    void preCollect() throws IOException;
-
-    /**
-     * Write all the given {@linkplain org.jmxtrans.core.results.QueryResult} to the target system.
-     */
-    void write(@Nonnull Iterable<QueryResult> results) throws IOException;
-
     void write(@Nonnull QueryResult result) throws IOException;
-
-    /**
-     * <p>called after a serie of writes, typically at the end of a collection.</p>
-     * <p>Useful with batch writers.</p>
-     */
-    void postCollect() throws IOException;
 
 }

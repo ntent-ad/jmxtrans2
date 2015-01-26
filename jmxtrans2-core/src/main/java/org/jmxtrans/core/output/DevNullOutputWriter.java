@@ -32,7 +32,7 @@ import java.util.Map;
 
 @Immutable
 @ThreadSafe
-public class DevNullOutputWriter extends AbstractOutputWriter {
+public class DevNullOutputWriter implements OutputWriter {
 
     @Override
     public void write(QueryResult result) throws IOException {

@@ -22,41 +22,31 @@
  */
 package org.jmxtrans.core.results;
 
-import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.core.results.QueryResultComparator;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class QueryResultComparatorTest {
+public class QueryResultTimeComparatorTest {
 
-    private QueryResultComparator comparator = new QueryResultComparator();
+    private final QueryResultTimeComparator comparator = new QueryResultTimeComparator();
 
     @Test
-    public void twoIsGreaterThanOne() {
-        QueryResult resultOne = new QueryResult("one", 1, 0);
-        QueryResult resultTwo = new QueryResult("two", 2, 0);
-        assertThat(comparator.compare(resultOne, resultTwo)).isNegative();
+    public void twoNullResultsAreEquals() {
+        assertThat(comparator.compare(null, null)).isZero();
     }
 
     @Test
-    public void nullValuesAreEquals() {
-        QueryResult resultOne = new QueryResult("one", null, 0);
-        QueryResult resultTwo = new QueryResult("two", null, 0);
-        assertThat(comparator.compare(resultOne, resultTwo)).isZero();
+    public void nullResultIsSmaller() {
+        QueryResult result = new QueryResult("myResult", 1, 0);
+        assertThat(comparator.compare(null, result)).isNegative();
+        assertThat(comparator.compare(result, null)).isPositive();
     }
 
     @Test
-    public void nullValuesAreSmallerThanNonNull() {
-        QueryResult resultOne = new QueryResult("one", null, 0);
-        QueryResult resultTwo = new QueryResult("two", 1, 0);
-        assertThat(comparator.compare(resultOne, resultTwo)).isNegative();
+    public void comparisonIsDoneOnTimes() {
+        QueryResult result1 = new QueryResult("myResult", 1, 1);
+        QueryResult result2 = new QueryResult("myResult", 1, 2);
+        assertThat(comparator.compare(result1, result2)).isNegative();
     }
 
-    @Test
-    public void nonNullValuesAreGreaterThanNull() {
-        QueryResult resultOne = new QueryResult("one", 1, 0);
-        QueryResult resultTwo = new QueryResult("two", null, 0);
-        assertThat(comparator.compare(resultOne, resultTwo)).isPositive();
-    }
 }

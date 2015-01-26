@@ -142,6 +142,11 @@
                 <version>18.0</version>
             </dependency>
             <dependency>
+                <groupId>com.jayway.awaitility</groupId>
+                <artifactId>awaitility</artifactId>
+                <version>1.6.3</version>
+            </dependency>
+            <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>3.1.0</version>

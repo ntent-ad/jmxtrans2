@@ -20,44 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.net;
+package org.jmxtrans.core.results;
 
-import javax.annotation.Nonnull;
-import java.io.BufferedWriter;
-import java.io.FilterWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.nio.charset.Charset;
+import java.io.Serializable;
+import java.util.Comparator;
 
-/**
- * Convenience class for writing characters to a {@linkplain java.net.Socket}.
- *
- * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
- */
-public class SocketWriter extends FilterWriter {
+import static java.lang.String.format;
 
-    @Nonnull
-    private final Socket socket;
+public class QueryResultValueComparator implements Comparator<QueryResult>, Serializable {
 
-    public SocketWriter(@Nonnull Socket socket, @Nonnull Charset charset) throws IOException {
-        super(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset)));
-        this.socket = socket;
-    }
-
-    /**
-     * Return the underlying {@linkplain java.net.Socket}
-     */
-    @Nonnull
-    public Socket getSocket() {
-        return socket;
-    }
+    private static final long serialVersionUID = 0L;
 
     @Override
-    @Nonnull
-    public String toString() {
-        return "SocketWriter{" +
-                "socket=" + socket +
-                '}';
+    public int compare(QueryResult result1, QueryResult result2) {
+        Object value1 = result1.getValue();
+        Object value2 = result2.getValue();
+
+        if (value1 == value2) return 0;
+
+        if (value1 == null) return -1;
+
+        if (value2 == null) return 1;
+
+        if (value1 instanceof Comparable<?> && value2 instanceof Comparable<?>) {
+            return ((Comparable) value1).compareTo(value2);
+        }
+        throw new ClassCastException(format("Query results are not comparable [%s], [%s]", result1, result2));
     }
 }

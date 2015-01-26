@@ -20,31 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.results;
+package org.jmxtrans.output.writers.support;
 
-import java.io.Serializable;
-import java.util.Comparator;
+import org.jmxtrans.core.output.OutputWriter;
 
-import static java.lang.String.format;
+import javax.annotation.concurrent.ThreadSafe;
+import java.io.IOException;
 
-public class QueryResultComparator implements Comparator<QueryResult>, Serializable {
+/**
+ * While {@link BatchedOutputWriter#beforeBatch()},
+ * {@link org.jmxtrans.core.output.OutputWriter#write(org.jmxtrans.core.results.QueryResult)} and
+ * {@link BatchedOutputWriter#afterBatch()} are always called in sequence in the same thread when a batch operation
+ * occurs, there could be multiple batch being processed in parallel.
+ */
+@ThreadSafe
+public interface BatchedOutputWriter extends OutputWriter {
 
-    private static final long serialVersionUID = 0L;
-
-    @Override
-    public int compare(QueryResult result1, QueryResult result2) {
-        Object value1 = result1.getValue();
-        Object value2 = result2.getValue();
-
-        if (value1 == value2) return 0;
-
-        if (value1 == null) return -1;
-
-        if (value2 == null) return 1;
-
-        if (value1 instanceof Comparable<?> && value2 instanceof Comparable<?>) {
-            return ((Comparable) value1).compareTo(value2);
-        }
-        throw new ClassCastException(format("Query results are not comparable [%s], [%s]", result1, result2));
-    }
+    void beforeBatch() throws IOException;
+    void afterBatch() throws IOException;
 }

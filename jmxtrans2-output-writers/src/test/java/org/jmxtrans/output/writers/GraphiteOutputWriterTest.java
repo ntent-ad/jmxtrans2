@@ -20,33 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.output;
+package org.jmxtrans.output.writers;
 
 import org.jmxtrans.core.results.QueryResult;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Map;
+import java.io.StringWriter;
 
-import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DevNullOutputWriterTest {
+public class GraphiteOutputWriterTest {
 
     @Test
-    public void writingResultsDoesNothing() throws IOException {
-        OutputWriter outputWriter = new DevNullOutputWriter();
-        QueryResult result = new QueryResult("name", "value", 0);
+    public void metricsSendToGraphiteFollowCorrectFormat() throws IOException {
+        StringWriter writer = new StringWriter();
+        QueryResult result = new QueryResult("some.value", 2, 3000);
 
-        outputWriter.write(result);
+        new GraphiteOutputWriter().write(writer, result);
+
+        assertThat(writer.toString())
+                .startsWith("servers.")
+                .endsWith("some.value 2 3");
     }
-
-    @Test
-    public void factoryCanCreateOutputWriter() {
-        Map<String, String> settings = emptyMap();
-        OutputWriter outputWriter = new DevNullOutputWriter.Factory().create(settings);
-
-        assertThat(outputWriter).isNotNull();
-    }
-
 }

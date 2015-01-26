@@ -22,13 +22,12 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.AbstractOutputWriter;
 import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.core.results.QueryResultValueComparator;
 import org.jmxtrans.log.Logger;
 import org.jmxtrans.log.LoggerFactory;
 import org.jmxtrans.output.writers.utils.EvictingQueue;
-import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.core.results.QueryResultComparator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +46,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
 @NotThreadSafe
-public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implements OutputWriter {
+public class PerMinuteSummarizerOutputWriter implements OutputWriter {
 
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
@@ -102,7 +101,7 @@ public class PerMinuteSummarizerOutputWriter extends AbstractOutputWriter implem
         long closestDistanceToTarget = Long.MAX_VALUE;
         QueryResult closestQueryResultToTarget = null;
         for (QueryResult queryResult : queue) {
-            if (new QueryResultComparator().compare(queryResult, currentResult) > 0) {
+            if (new QueryResultValueComparator().compare(queryResult, currentResult) > 0) {
                 // skip older result that is greater than current value
                 // ever increasing counter must be increasing
             } else {

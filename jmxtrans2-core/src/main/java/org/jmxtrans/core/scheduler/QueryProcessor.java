@@ -93,10 +93,12 @@ public class QueryProcessor {
                 logger.debug("Collecting metrics for " + query);
                 Iterable<QueryResult> results = query.collectMetrics(server.getServerConnection(), resultNameStrategy);
                 for (OutputWriter outputWriter : outputWriters) {
-                    try {
-                        resultProcessor.writeResults(getDeadline(), results, outputWriter);
-                    } catch (RejectedExecutionException e) {
-                        logger.warn("Could not enqueue result to writers.", e);
+                    for (QueryResult result : results) {
+                        try {
+                            resultProcessor.writeResult(getDeadline(), result, outputWriter);
+                        } catch (RejectedExecutionException e) {
+                            logger.warn("Could not enqueue result to writers.", e);
+                        }
                     }
                 }
             } catch (Exception e) {

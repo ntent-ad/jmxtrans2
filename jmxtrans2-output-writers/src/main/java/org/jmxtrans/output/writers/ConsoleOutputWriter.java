@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.AbstractOutputWriter;
+import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 import org.jmxtrans.core.results.QueryResult;
 
@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Immutable
 @ThreadSafe
-public class ConsoleOutputWriter extends AbstractOutputWriter {
+public class ConsoleOutputWriter implements OutputWriter {
 
     @Override
     public void write(@Nonnull QueryResult result) throws IOException {
