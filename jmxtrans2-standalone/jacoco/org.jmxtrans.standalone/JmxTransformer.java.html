@@ -25,7 +25,6 @@ package org.jmxtrans.standalone;
 import com.beust.jcommander.JCommander;
 import org.jmxtrans.core.config.JmxTransBuilder;
 import org.jmxtrans.standalone.cli.JmxTransParameters;
-import org.jmxtrans.utils.appinfo.AppInfo;
 import org.jmxtrans.utils.io.FileResource;
 import org.jmxtrans.utils.io.Resource;
 import org.xml.sax.SAXException;
@@ -37,25 +36,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-<span class="nc" id="L40">public class JmxTransformer {</span>
+<span class="nc" id="L39">public class JmxTransformer {</span>
 
     public static void main(String[] args) throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException {
+<span class="nc" id="L42">        JmxTransParameters parameters = new JmxTransParameters();</span>
+<span class="nc" id="L43">        new JCommander(parameters, args);</span>
 
-<span class="nc" id="L44">        AppInfo.load(JmxTransformer.class).print(System.out);</span>
+<span class="nc" id="L45">        List&lt;Resource&gt; configurations = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        for (File configFile : parameters.getConfigFiles()) {</span>
+<span class="nc" id="L47">            configurations.add(new FileResource(configFile));</span>
+<span class="nc" id="L48">        }</span>
 
-<span class="nc" id="L46">        JmxTransParameters parameters = new JmxTransParameters();</span>
-<span class="nc" id="L47">        new JCommander(parameters, args);</span>
-
-<span class="nc" id="L49">        List&lt;Resource&gt; configurations = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        for (File configFile : parameters.getConfigFiles()) {</span>
-<span class="nc" id="L51">            configurations.add(new FileResource(configFile));</span>
-<span class="nc" id="L52">        }</span>
-
-<span class="nc" id="L54">        new JmxTransBuilder(</span>
+<span class="nc" id="L50">        new JmxTransBuilder(</span>
                 parameters.ignoreParsingErrors(),
                 configurations).build().start();
 
-<span class="nc" id="L58">    }</span>
+<span class="nc" id="L54">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
