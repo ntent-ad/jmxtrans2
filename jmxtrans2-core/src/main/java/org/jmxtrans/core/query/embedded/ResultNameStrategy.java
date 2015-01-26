@@ -22,8 +22,8 @@
  */
 package org.jmxtrans.core.query.embedded;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.utils.StringUtils2;
 
 import javax.annotation.Nonnull;

@@ -20,45 +20,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.scheduler;
+package org.jmxtrans.core.log;
 
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.SystemClock;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
 
-@ThreadSafe
-public abstract class DeadlineRunnable implements Runnable {
+public class ConsoleLogProvider implements LogProvider {
 
-    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-    @Nonnull private final Clock clock;
-    private final long deadline;
+    public static final String JMXTRANS_LOG_LEVEL_PROP = "org.jmxtrans.log.level";
 
-    public DeadlineRunnable(@Nonnull Clock clock, long deadline) {
-        this.clock = clock;
-        this.deadline = deadline;
-    }
-
-    @Override
-    public final void run() {
-        if (deadline < clock.currentTimeMillis()) {
-            // TODO: log and count
-            logger.warn("Deadline is passed, dropping job");
-            return;
-        }
-        doRun();
-    }
-
-    protected abstract void doRun();
+    private final SystemClock clock = new SystemClock();
 
     @Nonnull
-    protected Clock getClock() {
-        return clock;
+    @Override
+    public Logger getLogger(@Nonnull String name) {
+        return new PrintWriterLogger(name, getLogLevel(), clock, System.out);
     }
 
-    protected long getDeadline() {
-        return deadline;
+    @Nonnull
+    private Level getLogLevel() {
+        String logLevelEnv = System.getProperty(JMXTRANS_LOG_LEVEL_PROP, "WARN");
+        if (logLevelEnv == null) {
+            return Level.WARN;
+        }
+        try {
+            return Level.valueOf(logLevelEnv.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.err.println("JmxTrans: loglevel is invalid, defaulting to WARN");
+            return Level.WARN;
+        }
     }
+
 }

@@ -22,8 +22,8 @@
  */
 package org.jmxtrans.core.config;
 
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.query.embedded.ResultNameStrategy;
 import org.jmxtrans.core.scheduler.JmxTransThreadFactory;
 import org.jmxtrans.core.scheduler.NaiveScheduler;

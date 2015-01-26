@@ -37,7 +37,7 @@
                 </to>
                 <allow>
                     <from>
-                        <include class="org.jmxtrans.core.log.slf4j.**"/>
+                        <include class="org.jmxtrans.core.log.**"/>
                     </from>
                 </allow>
             </deny>
@@ -47,6 +47,11 @@
             <deny>
                 <from class="org.jmxtrans.**"/>
                 <to class="java.lang.System"/>
+                <allow>
+                    <from>
+                        <include class="org.jmxtrans.core.log.**" />
+                    </from>
+                </allow>
             </deny>
         </access-rule>
     </ruleset>
@@ -60,9 +65,9 @@
                     <include class="org.jmxtrans.core.config.**"/>
                 </to>
                 <allow>
-                    <to>
+                    <from>
                         <include class="org.jmxtrans.core.config.**"/>
-                    </to>
+                    </from>
                 </allow>
             </deny>
         </access-rule>
@@ -75,9 +80,9 @@
                 </to>
                 <allow>
                     <to>
+                        <include class="org.jmxtrans.core.log.**"/>
                         <include class="org.jmxtrans.core.naming.**"/>
                         <include class="org.jmxtrans.core.query.**"/>
-                        <include class="org.jmxtrans.log.**"/>
                         <include class="org.jmxtrans.utils.**"/>
                     </to>
                 </allow>
@@ -92,6 +97,7 @@
                 </to>
                 <allow>
                     <to>
+                        <include class="org.jmxtrans.core.log.**"/>
                         <include class="org.jmxtrans.core.output.**"/>
                         <include class="org.jmxtrans.core.results.**"/>
                         <include class="org.jmxtrans.utils.**"/>
@@ -108,9 +114,9 @@
                 </to>
                 <allow>
                     <to>
+                        <include class="org.jmxtrans.core.log.**"/>
                         <include class="org.jmxtrans.core.query.**"/>
                         <include class="org.jmxtrans.core.results.**"/>
-                        <include class="org.jmxtrans.log.**"/>
                         <include class="org.jmxtrans.utils.**"/>
                     </to>
                 </allow>

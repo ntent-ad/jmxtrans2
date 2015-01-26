@@ -23,8 +23,8 @@
 package org.jmxtrans.core.query;
 
 import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.utils.collections.ArrayUtils;
 import org.jmxtrans.utils.collections.Iterables2;
 import org.jmxtrans.utils.time.Clock;

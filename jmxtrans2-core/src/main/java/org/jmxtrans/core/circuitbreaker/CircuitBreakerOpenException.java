@@ -20,45 +20,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.scheduler;
-
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.utils.time.Clock;
+package org.jmxtrans.core.circuitbreaker;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import static java.lang.String.format;
+
 @ThreadSafe
-public abstract class DeadlineRunnable implements Runnable {
+public class CircuitBreakerOpenException extends RuntimeException {
+    @Nonnull
+    private final Object target;
+    private final long disabledUntil;
 
-    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-    @Nonnull private final Clock clock;
-    private final long deadline;
-
-    public DeadlineRunnable(@Nonnull Clock clock, long deadline) {
-        this.clock = clock;
-        this.deadline = deadline;
+    public CircuitBreakerOpenException(@Nonnull Object target, long disabledUntil) {
+        super(format("CircuitBreaker is open for [%s], disabledUntil=%d",
+                target.toString(), disabledUntil));
+        this.target = target;
+        this.disabledUntil = disabledUntil;
     }
-
-    @Override
-    public final void run() {
-        if (deadline < clock.currentTimeMillis()) {
-            // TODO: log and count
-            logger.warn("Deadline is passed, dropping job");
-            return;
-        }
-        doRun();
-    }
-
-    protected abstract void doRun();
 
     @Nonnull
-    protected Clock getClock() {
-        return clock;
+    public Object getTarget() {
+        return target;
     }
 
-    protected long getDeadline() {
-        return deadline;
+    public long getDisabledUntil() {
+        return disabledUntil;
     }
 }

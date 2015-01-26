@@ -20,45 +20,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.scheduler;
+package org.jmxtrans.core.log;
 
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.utils.time.Clock;
+import org.junit.Test;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@ThreadSafe
-public abstract class DeadlineRunnable implements Runnable {
+public class Slf4JLogProviderTest {
 
-    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-    @Nonnull private final Clock clock;
-    private final long deadline;
+    @Test
+    public void loggerIsCreated() {
+        Logger logger = new Slf4JLogProvider().getLogger("testLogger");
 
-    public DeadlineRunnable(@Nonnull Clock clock, long deadline) {
-        this.clock = clock;
-        this.deadline = deadline;
+        assertThat(logger).isInstanceOf(Slf4JLogger.class);
+        assertThat(logger.getName()).isEqualTo("testLogger");
     }
 
-    @Override
-    public final void run() {
-        if (deadline < clock.currentTimeMillis()) {
-            // TODO: log and count
-            logger.warn("Deadline is passed, dropping job");
-            return;
-        }
-        doRun();
-    }
-
-    protected abstract void doRun();
-
-    @Nonnull
-    protected Clock getClock() {
-        return clock;
-    }
-
-    protected long getDeadline() {
-        return deadline;
-    }
 }

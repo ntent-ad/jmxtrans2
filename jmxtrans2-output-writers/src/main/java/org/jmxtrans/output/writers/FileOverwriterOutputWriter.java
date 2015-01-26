@@ -25,9 +25,8 @@ package org.jmxtrans.output.writers;
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.log.Logger;
-import org.jmxtrans.log.LoggerFactory;
-import org.jmxtrans.utils.io.IoUtils;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -124,8 +123,7 @@ public class FileOverwriterOutputWriter implements OutputWriter {
     }
 
     protected void releaseTemporaryWriter() {
-        try {
-            IoUtils.closeQuietly(getTemporaryFileWriter());
+        try (Writer writer = getTemporaryFileWriter()) {
         } catch (IOException e) {
             logger.warn("Could not get temporary file to delete", e);
         }
