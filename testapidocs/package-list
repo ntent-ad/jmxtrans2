@@ -15,6 +15,7 @@ org.jmxtrans.servlet
 org.jmxtrans.spring
 org.jmxtrans.standalone.cli
 org.jmxtrans.utils
+org.jmxtrans.utils.appinfo
 org.jmxtrans.utils.circuitbreaker
 org.jmxtrans.utils.collections
 org.jmxtrans.utils.concurrent
