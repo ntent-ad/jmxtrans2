@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JmxTransLoaderListener.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - servlet</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.servlet</a> &gt; <span class="el_source">JmxTransLoaderListener.java</span></div><h1>JmxTransLoaderListener.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.servlet;
+
+import org.jmxtrans.core.config.JmxTransBuilder;
+import org.jmxtrans.core.scheduler.NaiveScheduler;
+import org.jmxtrans.utils.VisibleForTesting;
+import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.io.StandardResource;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
+
+/**
+ * Bootstrap listener to start up and shut down JmxTrans.
+ * &lt;p/&gt;
+ * {@code embedded-jmxtrans} configuration files are specified by a coma/line-break
+ * delimited list of jmxtrans json configuration file declared in the {@code web.xml}
+ * {@code &amp;lt;context-param&amp;gt;} element named &quot;{@value #CONFIG_LOCATION_PARAM}&quot;.
+ * &lt;p/&gt;
+ * Sample:
+ * &lt;code&gt;&lt;pre&gt;
+ * &amp;lt;web-app ...&amp;gt;
+ *   &amp;lt;context-param&amp;gt;
+ *     &amp;lt;param-name&amp;gt;org.jmxtrans.config&amp;lt;/param-name&amp;gt;
+ *     &amp;lt;param-value&amp;gt;
+ *       classpath:orgjmxtrans.json
+ *       classpath:org/jmxtrans/embedded/config/jmxtrans-internals-servlet-container.json
+ *       classpath:org/jmxtrans/embedded/config/tomcat-7.json
+ *       classpath:org/jmxtrans/embedded/config/jvm-sun-hotspot.json
+ *     &amp;lt;/param-value&amp;gt;
+ *   &amp;lt;/context-param&amp;gt;
+ *   &amp;lt;listener&amp;gt;
+ *     &amp;lt;listener-class&amp;gt;org.jmxtrans.embedded.servlet.EmbeddedJmxTransLoaderListener&amp;lt;/listener-class&amp;gt;
+ *   &amp;lt;/listener&amp;gt;
+ * &amp;lt;/web-app&amp;gt;
+ * &lt;/pre&gt;
+ * &lt;/code&gt;
+ *
+ * @author &lt;a href=&quot;mailto:cleclerc@xebia.fr&quot;&gt;Cyrille Le Clerc&lt;/a&gt;
+ */
+<span class="fc" id="L69">public class JmxTransLoaderListener implements ServletContextListener {</span>
+
+<span class="fc" id="L71">    private final Pattern CONFIG_SPLIT = Pattern.compile(&quot;[\n\r,]&quot;);</span>
+
+    /**
+     * Config param for the embedded-jmxtrans configuration urls.
+     */
+    public static final String CONFIG_LOCATION_PARAM = &quot;org.jmxtrans.config&quot;;
+    public static final String SYSTEM_CONFIG_LOCATION_PARAM = &quot;org.jmxtrans.system.config&quot;;
+    private NaiveScheduler scheduler;
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+<span class="nc" id="L82">        sce.getServletContext().log(&quot;Start embedded-jmxtrans ...&quot;);</span>
+
+        try {
+<span class="nc" id="L85">            scheduler = new JmxTransBuilder(false, getConfigurations(sce.getServletContext())).build();</span>
+<span class="nc" id="L86">            scheduler.start();</span>
+<span class="nc" id="L87">        } catch (Exception e) {</span>
+<span class="nc" id="L88">            String message = &quot;Exception starting jmxtrans for application '&quot; + sce.getServletContext().getContextPath() + &quot;'&quot;;</span>
+<span class="nc" id="L89">            sce.getServletContext().log(message, e);</span>
+<span class="nc" id="L90">        }</span>
+<span class="nc" id="L91">    }</span>
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+<span class="nc" id="L95">        sce.getServletContext().log(&quot;Stop embedded-jmxtrans ...&quot;);</span>
+
+        try {
+<span class="nc" id="L98">            scheduler.stop();</span>
+<span class="nc" id="L99">        } catch (Exception e) {</span>
+<span class="nc" id="L100">            sce.getServletContext().log(&quot;Could not stop JmxTrans.&quot;, e);</span>
+<span class="nc" id="L101">        }</span>
+<span class="nc" id="L102">    }</span>
+
+    @VisibleForTesting
+    List&lt;Resource&gt; getConfigurations(ServletContext servletContext) {
+<span class="fc" id="L106">        List&lt;Resource&gt; configurations = configureFromSystemProperty(servletContext);</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        if (!configurations.isEmpty()) return configurations;</span>
+
+<span class="fc" id="L109">        configurations = configureFromWebXmlParam(servletContext);</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (!configurations.isEmpty()) return configurations;</span>
+
+<span class="nc" id="L112">        return parseStringConfigurations(&quot;classpath:jmxtrans.json, classpath:org/jmxtrans/embedded/config/jmxtrans-internals-servlet-container.json&quot;);</span>
+    }
+
+    @Nonnull
+    private List&lt;Resource&gt; configureFromSystemProperty(ServletContext servletContext){
+<span class="fc" id="L117">        String configSystemProperty = servletContext.getInitParameter(SYSTEM_CONFIG_LOCATION_PARAM);</span>
+
+<span class="pc bpc" id="L119" title="1 of 4 branches missed.">        if (configSystemProperty == null || configSystemProperty.isEmpty()) return Collections.emptyList();</span>
+
+<span class="fc" id="L121">        String prop = System.getProperty(configSystemProperty);</span>
+<span class="fc" id="L122">        return parseStringConfigurations(prop);</span>
+    }
+
+    @Nonnull
+    private List&lt;Resource&gt; configureFromWebXmlParam(ServletContext servletContext){
+<span class="fc" id="L127">        return parseStringConfigurations(servletContext.getInitParameter(CONFIG_LOCATION_PARAM));</span>
+    }
+
+    @Nonnull
+    private List&lt;Resource&gt; parseStringConfigurations(@Nullable String configurations) {
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (configurations == null) return Collections.emptyList();</span>
+
+<span class="fc" id="L134">        List&lt;Resource&gt; results = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        for (String configuration : CONFIG_SPLIT.split(configurations)) {</span>
+<span class="fc" id="L136">            String trimmed = configuration.trim();</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">            if (!trimmed.isEmpty()) {</span>
+<span class="fc" id="L138">                results.add(new StandardResource(trimmed));</span>
+            }
+        }
+<span class="fc" id="L141">        return results;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
