@@ -36,8 +36,8 @@
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.config.jaxb.QueriesType;
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.config.jaxb.QueryType;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.config.jaxb.ServerType;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.log.Logger;
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.log.LoggerFactory;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.log.Logger;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.log.LoggerFactory;
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.output.OutputWriter;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.output.OutputWriterFactory;
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.query.Invocation;
@@ -45,7 +45,7 @@
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.query.embedded.Query;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.query.embedded.QueryAttribute;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.query.embedded.RemoteServer;
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.circuitbreaker.CircuitBreakerProxy;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.core.circuitbreaker.CircuitBreakerProxy;
 <a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.io.Resource;
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.io.StandardResource;
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> org.jmxtrans.utils.time.Clock;
@@ -83,14 +83,14 @@
 <a class="jxr_linenumber" name="L75" href="#L75">75</a>  @ThreadSafe
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../org/jmxtrans/core/config/XmlConfigParser.html">XmlConfigParser</a> <strong class="jxr_keyword">implements</strong> <a href="../../../../org/jmxtrans/core/config/ConfigParser.html">ConfigParser</a> {
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>  
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/jmxtrans/log/Logger.html">Logger</a> logger = LoggerFactory.getLogger(getClass().getName());
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/jmxtrans/core/log/Logger.html">Logger</a> logger = LoggerFactory.getLogger(getClass().getName());
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>  
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JMXTRANS_XSD_PATH = <span class="jxr_string">"classpath:jmxtrans.xsd"</span>;
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> MAX_FAILURES = 5;
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> DISABLE_DURATION_MILLIS = 60 * 1000;
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>  
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/jmxtrans/log/Clock.html">Clock</a> clock;
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/jmxtrans/utils/time/Clock.html">Clock</a> clock;
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a href="../../../../org/jmxtrans/core/config/PropertyPlaceholderResolverXmlPreprocessor.html">PropertyPlaceholderResolverXmlPreprocessor</a> preprocessor;
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> DocumentBuilder documentBuilder;
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> Unmarshaller unmarshaller;
@@ -99,7 +99,7 @@
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>              @Nonnull DocumentBuilder documentBuilder,
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>              @Nonnull Unmarshaller unmarshaller,
 <a class="jxr_linenumber" name="L93" href="#L93">93</a>              @Nonnull <a href="../../../../org/jmxtrans/core/config/PropertyPlaceholderResolverXmlPreprocessor.html">PropertyPlaceholderResolverXmlPreprocessor</a> preprocessor,
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>              @Nonnull <a href="../../../../org/jmxtrans/log/Clock.html">Clock</a> clock) {
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>              @Nonnull <a href="../../../../org/jmxtrans/utils/time/Clock.html">Clock</a> clock) {
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">this</strong>.documentBuilder = documentBuilder;
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>          <strong class="jxr_keyword">this</strong>.unmarshaller = unmarshaller;
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>          <strong class="jxr_keyword">this</strong>.preprocessor = preprocessor;
@@ -239,7 +239,7 @@
 <a class="jxr_linenumber" name="L231" href="#L231">231</a>     @Nonnull
 <a class="jxr_linenumber" name="L232" href="#L232">232</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../org/jmxtrans/core/config/XmlConfigParser.html">XmlConfigParser</a> newInstance(
 <a class="jxr_linenumber" name="L233" href="#L233">233</a>             @Nonnull <a href="../../../../org/jmxtrans/core/config/PropertyPlaceholderResolverXmlPreprocessor.html">PropertyPlaceholderResolverXmlPreprocessor</a> preprocessor,
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>             @Nonnull <a href="../../../../org/jmxtrans/log/Clock.html">Clock</a> clock) <strong class="jxr_keyword">throws</strong> JAXBException, ParserConfigurationException, SAXException, IOException {
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>             @Nonnull <a href="../../../../org/jmxtrans/utils/time/Clock.html">Clock</a> clock) <strong class="jxr_keyword">throws</strong> JAXBException, ParserConfigurationException, SAXException, IOException {
 <a class="jxr_linenumber" name="L235" href="#L235">235</a> 
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>         dbf.setNamespaceAware(<strong class="jxr_keyword">true</strong>);
