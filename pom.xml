@@ -610,6 +610,9 @@
                         <rules>
                             <rule>
                                 <element>PACKAGE</element>
+                                <excludes>
+                                    <exclude>org.jmxtrans.core.config.jaxb*</exclude>
+                                </excludes>
                                 <limits>
                                     <limit>
                                         <counter>LINE</counter>

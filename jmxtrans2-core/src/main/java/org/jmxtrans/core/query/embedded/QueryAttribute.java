@@ -26,6 +26,8 @@ import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.Preconditions2;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.SystemClock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,7 +48,7 @@ import static java.util.Objects.hash;
  * <p/>
  * Collected values are sent to a {@linkplain java.util.concurrent.BlockingQueue}
  * for later export to the target monitoring systems
- * (see {@link #collectMetrics(javax.management.ObjectName, Object, long, java.util.Collection, Query, ResultNameStrategy)}.
+ * (see {@link #collectMetrics(javax.management.ObjectName, Object, java.util.Collection, Query, ResultNameStrategy, int)}.
  *
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  * @author Jon Stevens
@@ -87,18 +89,27 @@ public class QueryAttribute {
      */
     @Nullable
     private final Set<String> keys;
+    
+    @Nonnull private final Clock clock;
 
     /**
      * @param name        name of the JMX attribute
      * @param type        type of the metric (e.g. "{@code counter}", "{@code gauge}", ...)
      * @param resultAlias name of the result that will be exported
      * @param keys        of the {@link javax.management.openmbean.CompositeData} to collect
+     * @param clock
      */
-    private QueryAttribute(@Nonnull String name, @Nullable String type, @Nullable String resultAlias, @Nullable Set<String> keys) {
+    private QueryAttribute(
+            @Nonnull String name,
+            @Nullable String type,
+            @Nullable String resultAlias,
+            @Nullable Set<String> keys,
+            @Nonnull Clock clock) {
         this.name = Preconditions2.checkNotEmpty(name);
         this.type = type;
         this.resultAlias = resultAlias;
         this.keys = keys;
+        this.clock = clock;
     }
 
     @Nonnull
@@ -120,33 +131,30 @@ public class QueryAttribute {
      * @param objectName    <code>objectName</code> on which the <code>attribute</code> was obtained.
      * @param value         value of the given attribute. A 'simple' value (String, Number, Date)
      *                      or a {@link javax.management.openmbean.CompositeData}
-     * @param epochInMillis time at which the metric was collected
      * @param results       queue to which the the computed result(s) must be added
      * @param query
      * @param resultNameStrategy
      * @return collected metrics count
      */
-    public int collectMetrics(
+    public void collectMetrics(
             @Nonnull ObjectName objectName,
             @Nonnull Object value,
-            long epochInMillis,
             @Nonnull Collection<QueryResult> results,
             @Nonnull Query query,
-            @Nonnull ResultNameStrategy resultNameStrategy) {
+            @Nonnull ResultNameStrategy resultNameStrategy,
+            int maxResults) {
         if (value instanceof CompositeData) {
             CompositeData compositeData = (CompositeData) value;
-            return collectCompositeData(objectName, epochInMillis, results, query, resultNameStrategy, compositeData);
+            collectCompositeData(objectName, results, query, resultNameStrategy, compositeData, maxResults);
         } else if (value instanceof Number || value instanceof String || value instanceof Date) {
-            return collectScalar(objectName, value, epochInMillis, results, query, resultNameStrategy);
+            collectScalar(objectName, value, results, query, resultNameStrategy);
         }
         logger.info(format("Ignore non CompositeData attribute value %s:%s:%s=%s", query, objectName, this, value));
-        return 0;
     }
 
-    private int collectScalar(
+    private void collectScalar(
             @Nonnull ObjectName objectName,
             @Nullable Object value,
-            long epochInMillis,
             @Nonnull Collection<QueryResult> results,
             @Nonnull Query query,
             @Nonnull ResultNameStrategy resultNameStrategy) {
@@ -154,20 +162,18 @@ public class QueryAttribute {
             logger.info(format("Ignore keys configured for 'simple' jmx attribute. %s:%s:%s", query, objectName, this));
         }
         String resultName = resultNameStrategy.getResultName(query, objectName, this);
-        QueryResult result = new QueryResult(resultName, getType(), value, epochInMillis);
+        QueryResult result = new QueryResult(resultName, getType(), value, clock.currentTimeMillis());
         logger.debug("Collect " + result);
         results.add(result);
-        return 1;
     }
 
-    private int collectCompositeData(
+    private void collectCompositeData(
             @Nonnull ObjectName objectName,
-            long epochInMillis,
             @Nonnull Collection<QueryResult> results,
             @Nonnull Query query,
             @Nonnull ResultNameStrategy resultNameStrategy,
-            @Nonnull CompositeData compositeData) {
-        int metricsCounter = 0;
+            @Nonnull CompositeData compositeData,
+            int maxResults) {
         String[] keysToCollect;
         if (keys == null) {
             keysToCollect = compositeData.getCompositeType().keySet().toArray(new String[0]);
@@ -179,15 +185,16 @@ public class QueryAttribute {
             String resultName = resultNameStrategy.getResultName(query, objectName, this, key);
             Object compositeValue = compositeData.get(key);
             if (compositeValue instanceof Number || compositeValue instanceof String || compositeValue instanceof Date) {
-                QueryResult result = new QueryResult(resultName, getType(), compositeValue, epochInMillis);
+                QueryResult result = new QueryResult(resultName, getType(), compositeValue, clock.currentTimeMillis());
                 logger.debug("Collect " + result);
                 results.add(result);
-                metricsCounter++;
+
+                // early return if we reach maxResults
+                if (results.size() >= maxResults) return;
             } else {
                 logger.debug(format("Skip non supported value %s:%s:%s:%s=%s", query, objectName, this, key, compositeValue));
             }
         }
-        return metricsCounter;
     }
 
     @Override
@@ -264,7 +271,7 @@ public class QueryAttribute {
 
         @Nonnull
         public QueryAttribute build() {
-            return new QueryAttribute(name, type, resultAlias, keys);
+            return new QueryAttribute(name, type, resultAlias, keys, new SystemClock());
         }
     }
 }

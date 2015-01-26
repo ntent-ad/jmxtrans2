@@ -92,8 +92,8 @@ public class QueryTest {
         Query query = Query.builder()
                 .withObjectName("test:type=MemoryPool,name=PS Perm Gen")
                 .addAttribute(QueryAttribute.builder("Usage")
-                    .withKeys(asList("committed", "init", "max", "used"))
-                    .build())
+                        .withKeys(asList("committed", "init", "max", "used"))
+                        .build())
                 .build();
         Iterable<QueryResult> results = query.collectMetrics(mbeanServer, new ResultNameStrategy());
         assertThat(results).hasSize(4);
@@ -105,6 +105,21 @@ public class QueryTest {
 
         QueryResult result2 = queryResultIterator.next();
         assertThat(result2.getValue()).isInstanceOf(Number.class);
+    }
+
+    @Test
+    public void maxResultsIsHonored() throws Exception {
+        Query query = Query.builder()
+                .withObjectName("test:type=MemoryPool,name=PS Perm Gen")
+                .withMaxResults(2)
+                .addAttribute(QueryAttribute.builder("Usage")
+                        .withKeys(asList("committed", "init", "max", "used"))
+                        .build())
+                .build();
+
+        Iterable<QueryResult> results = query.collectMetrics(mbeanServer, new ResultNameStrategy());
+
+        assertThat(results).hasSize(2);
     }
 
     @Test

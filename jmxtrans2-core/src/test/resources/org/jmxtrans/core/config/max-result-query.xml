@@ -28,26 +28,7 @@
 
     <queries>
         <query objectName="java.lang:type=MemoryPool,name=PS Eden Space" resultAlias="eden"/>
-        <query objectName="java.lang:type=MemoryPool,name=PS Perm Gen" resultAlias="permgen">
-            <queryAttribute name="CollectionUsageThresholdCount"/>
-        </query>
-        <query objectName="java.lang:type=MemoryPool,name=PS Perm Gen" resultAlias="permgen">
-            <queryAttribute name="PeakUsage" resultAlias="peak">
-                <key>used</key>
-            </queryAttribute>
-        </query>
+        <query objectName="java.lang:type=MemoryPool,name=PS Perm Gen" resultAlias="permgen" maxResults="10"/>
     </queries>
-
-    <invocations>
-        <invocation objectName="java.lang:type=Memory" operationName="gc" resultAlias="jvm.gc"/>
-        <invocation objectName="java.lang:type=Threading" operationName="getThreadCpuTime" resultAlias="jvm.thread.cpu">
-            <parameter value="1" type="long"/>
-        </invocation>
-    </invocations>
-
-    <outputWriters>
-        <outputWriter class="org.jmxtrans.core.config.DummyOutputWriter"/>
-        <outputWriter class="org.jmxtrans.core.output.DevNullOutputWriter" unkownSetting="unused-value"/>
-    </outputWriters>
 
 </jmxtrans>
