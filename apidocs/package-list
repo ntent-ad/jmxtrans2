@@ -1,14 +1,14 @@
 org.jmxtrans.agent
-org.jmxtrans.core.circuitbreaker
 org.jmxtrans.core.config
 org.jmxtrans.core.config.jaxb
-org.jmxtrans.core.log
 org.jmxtrans.core.naming
 org.jmxtrans.core.output
 org.jmxtrans.core.query
 org.jmxtrans.core.query.embedded
 org.jmxtrans.core.results
 org.jmxtrans.core.scheduler
+org.jmxtrans.log
+org.jmxtrans.log.slf4j
 org.jmxtrans.output.writers
 org.jmxtrans.output.writers.support
 org.jmxtrans.output.writers.utils
@@ -17,7 +17,7 @@ org.jmxtrans.spring
 org.jmxtrans.standalone
 org.jmxtrans.standalone.cli
 org.jmxtrans.utils
-org.jmxtrans.utils.appinfo
+org.jmxtrans.utils.circuitbreaker
 org.jmxtrans.utils.collections
 org.jmxtrans.utils.concurrent
 org.jmxtrans.utils.io
