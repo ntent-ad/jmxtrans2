@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RollingFileOutputWriter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - output writers</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.output.writers</a> &gt; <span class="el_source">RollingFileOutputWriter.java</span></div><h1>RollingFileOutputWriter.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.output.writers;
+
+import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.core.output.OutputWriterFactory;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.log.Logger;
+import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.utils.io.IoUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Map;
+import java.util.TimeZone;
+
+import static org.jmxtrans.utils.ConfigurationUtils.getInt;
+import static org.jmxtrans.utils.ConfigurationUtils.getLong;
+import static org.jmxtrans.utils.ConfigurationUtils.getString;
+
+@NotThreadSafe
+public class RollingFileOutputWriter implements OutputWriter {
+
+<span class="fc" id="L56">    private static final Logger LOGGER = LoggerFactory.getLogger(RollingFileOutputWriter.class.getName());</span>
+
+    private final DateFormat dateFormat;
+    
+    protected Writer temporaryFileWriter;
+    protected File temporaryFile;
+    protected final File file;
+    protected final long maxFileSize;
+    protected final int maxBackupIndex;
+
+    protected RollingFileOutputWriter(
+            @Nonnull File file,
+            @Nonnull long maxFileSize,
+            @Nonnull int maxBackupIndex,
+<span class="nc" id="L70">            @Nonnull DateFormat dateFormat) {</span>
+<span class="nc" id="L71">        this.dateFormat = dateFormat;</span>
+<span class="nc" id="L72">        this.file = file;</span>
+<span class="nc" id="L73">        this.maxFileSize = maxFileSize;</span>
+<span class="nc" id="L74">        this.maxBackupIndex = maxBackupIndex;</span>
+<span class="nc" id="L75">        LOGGER.info(&quot;RollingFileOutputWriter configured with file &quot; + file.getAbsolutePath());</span>
+<span class="nc" id="L76">    }</span>
+
+    public static void appendToFile(@Nonnull File source, @Nonnull File destination, long maxFileSize, int maxBackupIndex) throws IOException {
+<span class="nc" id="L79">        boolean destinationExists = validateDestinationFile(source, destination, maxFileSize, maxBackupIndex);</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (destinationExists) {</span>
+<span class="nc" id="L81">            IoUtils.doCopySmallFile(source, destination, true);</span>
+        } else {
+<span class="nc" id="L83">            boolean renamed = source.renameTo(destination);</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            if (!renamed) {</span>
+<span class="nc" id="L85">                IoUtils.doCopySmallFile(source, destination, false);</span>
+            }
+        }
+<span class="nc" id="L88">    }</span>
+
+    // visible for testing
+    static boolean validateDestinationFile(@Nonnull File source, @Nonnull File destination, long maxFileSize, int maxBackupIndex) throws IOException {
+<span class="nc bnc" id="L92" title="All 4 branches missed.">        if (!destination.exists() || destination.isDirectory()) return false;</span>
+<span class="nc" id="L93">        long totalLengthAfterAppending = destination.length() + source.length();</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (totalLengthAfterAppending &gt; maxFileSize) {</span>
+<span class="nc" id="L95">            rollFiles(destination, maxBackupIndex);</span>
+<span class="nc" id="L96">            return false; // File no longer exists because it was move to filename.1</span>
+        }
+
+<span class="nc" id="L99">        return true;</span>
+    }
+
+    // visible for testing
+    static void rollFiles(@Nonnull File destination, int maxBackupIndex) throws IOException {
+
+        // if maxBackup index == 10 then we will have file
+        // outputFile, outpuFile.1 outputFile.2 ... outputFile.10
+        // we only care if 9 and lower exists to move them up a number
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        for (int i = maxBackupIndex - 1; i &gt;= 0; i--) {</span>
+<span class="nc" id="L109">            String path = destination.getAbsolutePath();</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">            path=(i==0)?path:path + &quot;.&quot; + i;</span>
+<span class="nc" id="L111">            File f = new File(path);</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (!f.exists()) continue;</span>
+
+<span class="nc" id="L114">            File fNext = new File(destination + &quot;.&quot; + (i + 1));</span>
+<span class="nc" id="L115">            IoUtils.doCopySmallFile(f, fNext, false);</span>
+        }
+
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (!destination.delete()) {</span>
+<span class="nc" id="L119">            LOGGER.warn(&quot;Could not delete file [&quot; + destination.getAbsolutePath() + &quot;].&quot;);</span>
+        }
+<span class="nc" id="L121">    }</span>
+
+    /**
+     * Simple implementation without chunking if the source file is big.
+     *
+     * @param source
+     * @param destination
+     * @throws java.io.IOException
+     */
+    // visible for testing
+    public static void doCopySmallFile(@Nonnull File source, @Nonnull File destination) throws IOException {
+<span class="fc bfc" id="L132" title="All 4 branches covered.">        if (destination.exists() &amp;&amp; destination.isDirectory()) {</span>
+<span class="fc" id="L133">            throw new IOException(&quot;Can not copy file, destination is a directory: &quot; + destination.getAbsolutePath());</span>
+        }
+
+<span class="pc" id="L136">        try (</span>
+<span class="fc" id="L137">                FileInputStream fis = new FileInputStream(source);</span>
+<span class="fc" id="L138">                FileOutputStream fos = new FileOutputStream(destination, false);</span>
+<span class="fc" id="L139">                FileChannel input = fis.getChannel();</span>
+<span class="fc" id="L140">                FileChannel output = fos.getChannel();</span>
+        ) {
+<span class="fc" id="L142">            output.transferFrom(input, 0, input.size());</span>
+<span class="pc bpc" id="L143" title="24 of 32 branches missed.">        }</span>
+
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">        if (destination.length() != source.length()) {</span>
+<span class="nc" id="L146">            throw new IOException(&quot;Failed to copy content from '&quot; +</span>
+                    source + &quot;' (&quot; + source.length() + &quot;bytes) to '&quot; + destination + &quot;' (&quot; + destination.length() + &quot;)&quot;);
+        }
+<span class="fc" id="L149">    }</span>
+
+    public static void replaceFile(@Nonnull File source, @Nonnull File destination) throws IOException {
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (destination.exists()) {</span>
+            // try to delete destination, it might fail, but doCopySmallFile() can deal with it
+<span class="nc bnc" id="L154" title="All 2 branches missed.">            if (!destination.delete()) {</span>
+<span class="nc" id="L155">                LOGGER.info(&quot;Could not delete &quot; + destination.getAbsolutePath() + &quot;, replacing only the content&quot;);</span>
+            }
+        }
+<span class="nc" id="L158">        doCopySmallFile(source, destination);</span>
+<span class="nc" id="L159">    }</span>
+
+    @Nonnull
+    protected Writer getTemporaryFileWriter() throws IOException {
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (temporaryFile == null) {</span>
+<span class="nc" id="L164">            temporaryFile = File.createTempFile(&quot;jmxtrans-agent-&quot;, &quot;.data&quot;);</span>
+<span class="nc" id="L165">            temporaryFile.deleteOnExit();</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">            if (LOGGER.isDebugEnabled())</span>
+<span class="nc" id="L167">                LOGGER.debug(&quot;Created temporary file &quot; + temporaryFile.getAbsolutePath());</span>
+
+<span class="nc" id="L169">            temporaryFileWriter = null;</span>
+        }
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (temporaryFileWriter == null) {</span>
+<span class="nc" id="L172">            temporaryFileWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(temporaryFile, false), Charset.forName(&quot;UTF-8&quot;)));</span>
+        }
+
+<span class="nc" id="L175">        return temporaryFileWriter;</span>
+    }
+
+    @Override
+    public synchronized void write(@Nonnull QueryResult result) throws IOException {
+        try {
+<span class="nc" id="L181">            getTemporaryFileWriter().write(&quot;[&quot;+ dateFormat.format(Calendar.getInstance().getTime()) +&quot;] &quot;+ result.getName() + &quot; &quot; + result.getValue() + &quot;\n&quot;);</span>
+<span class="nc" id="L182">        } catch (IOException e) {</span>
+<span class="nc" id="L183">            releaseTemporaryWriter();</span>
+<span class="nc" id="L184">            throw e;</span>
+<span class="nc" id="L185">        }</span>
+<span class="nc" id="L186">        postCollect();</span>
+<span class="nc" id="L187">    }</span>
+
+    protected void releaseTemporaryWriter() {
+        try {
+<span class="nc" id="L191">            IoUtils.closeQuietly(getTemporaryFileWriter());</span>
+<span class="nc" id="L192">        } catch (IOException ignore) {</span>
+<span class="nc" id="L193">        }</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        if (temporaryFile != null) {</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            if (!temporaryFile.delete()) {</span>
+<span class="nc" id="L196">                LOGGER.warn(&quot;Could not delete temporary file [&quot; + temporaryFile.getAbsolutePath() + &quot;].&quot;);</span>
+            }
+        }
+<span class="nc" id="L199">        temporaryFile = null;</span>
+
+<span class="nc" id="L201">    }</span>
+
+    private synchronized void postCollect() throws IOException {
+        try {
+<span class="nc" id="L205">            getTemporaryFileWriter().close();</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">            if (LOGGER.isDebugEnabled())</span>
+<span class="nc" id="L207">                LOGGER.debug(&quot;Overwrite &quot; + file.getAbsolutePath() + &quot; by &quot; + temporaryFile.getAbsolutePath());</span>
+<span class="nc" id="L208">            appendToFile(temporaryFile, file, maxFileSize, maxBackupIndex);</span>
+        } finally {
+<span class="nc" id="L210">            temporaryFileWriter = null;</span>
+<span class="nc" id="L211">        }</span>
+<span class="nc" id="L212">    }</span>
+
+<span class="nc" id="L214">    public static final class Factory implements OutputWriterFactory&lt;RollingFileOutputWriter&gt; {</span>
+        public final static String SETTING_FILE_NAME = &quot;fileName&quot;;
+        public final static String SETTING_FILE_NAME_DEFAULT_VALUE = &quot;jmxtrans-agent.data&quot;;
+        public final static String SETTING_MAX_FILE_SIZE = &quot;maxFileSize&quot;;
+        public final static long SETTING_MAX_FILE_SIZE_DEFAULT_VALUE=10;
+        public final static String SETTING_MAX_BACKUP_INDEX = &quot;maxBackupIndex&quot;;
+        public final static int SETTING_MAX_BACKUP_INDEX_DEFAULT_VALUE = 5;
+
+        @Nonnull
+        @Override
+        public RollingFileOutputWriter create(@Nonnull Map&lt;String, String&gt; settings) {
+<span class="nc" id="L225">            File file = new File(getString(settings, SETTING_FILE_NAME, SETTING_FILE_NAME_DEFAULT_VALUE));</span>
+<span class="nc" id="L226">            long maxFileSize = getLong(settings, SETTING_MAX_FILE_SIZE, SETTING_MAX_FILE_SIZE_DEFAULT_VALUE);</span>
+<span class="nc" id="L227">            int maxBackupIndex = getInt(settings, SETTING_MAX_BACKUP_INDEX, SETTING_MAX_BACKUP_INDEX_DEFAULT_VALUE);</span>
+            // Performance related after 10mb the Filechanel output.transferTo() performs badly
+<span class="nc bnc" id="L229" title="All 4 branches missed.">            if (maxFileSize &gt; 10 || maxFileSize &lt; 0) maxFileSize = 10;</span>
+<span class="nc" id="L230">            maxFileSize = maxFileSize * 1000000; //converts to bytes.</span>
+
+            // FIXME: not thread safe !
+<span class="nc" id="L233">            DateFormat dateFormat = new SimpleDateFormat(&quot;yyyy-MM-dd'T'HH:mm'Z'&quot;);</span>
+<span class="nc" id="L234">            dateFormat.setTimeZone(TimeZone.getTimeZone(&quot;UTC&quot;));</span>
+
+<span class="nc" id="L236">            return new RollingFileOutputWriter(file, maxFileSize, maxBackupIndex, dateFormat);</span>
+        }
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
