@@ -27,7 +27,6 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 public class JmxTransAgentIT extends AbstractAgentTest {
 
@@ -40,7 +39,21 @@ public class JmxTransAgentIT extends AbstractAgentTest {
         System.out.println(getOut().toString("UTF-8"));
         System.err.println(getErr().toString("UTF-8"));
 
-        assertThat(getOut().toString("UTF-8")).contains("counter.Value 0");
-        assertThat(getOut().toString("UTF-8")).contains("counter.Value 1");
+        assertThat(getOut().toString("UTF-8"))
+                .contains("counter.Value 0")
+                .contains("counter.Value 1");
+    }
+
+    @Test
+    public void applicationInfoAreDisplayedAtStartup() throws IOException, InterruptedException {
+        startDummyApplication();
+
+        Thread.sleep(1000);
+
+        assertThat(getOut().toString("UTF-8"))
+                .contains("JMXTrans - agent")
+                .contains("version:")
+                .contains("last modified:")
+                .contains("build time:");
     }
 }

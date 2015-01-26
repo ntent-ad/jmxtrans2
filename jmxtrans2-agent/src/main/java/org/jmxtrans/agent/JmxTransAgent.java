@@ -25,9 +25,11 @@ package org.jmxtrans.agent;
 import org.jmxtrans.core.config.JmxTransBuilder;
 import org.jmxtrans.log.Logger;
 import org.jmxtrans.log.LoggerFactory;
+import org.jmxtrans.utils.appinfo.AppInfo;
 import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.io.StandardResource;
 
+import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.util.Collections;
 
@@ -37,7 +39,9 @@ import java.util.Collections;
 public class JmxTransAgent {
     private static final Logger logger = LoggerFactory.getLogger(JmxTransAgent.class.getName());
 
-    public static void premain(String configFile, Instrumentation inst) {
+    public static void premain(String configFile, Instrumentation inst) throws IOException {
+
+        AppInfo.load(JmxTransAgent.class).print(System.out);
 
         if (configFile == null || configFile.isEmpty()) {
             String msg = "JmxTransAgent configurationFile must be defined";
