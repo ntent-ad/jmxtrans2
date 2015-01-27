@@ -23,6 +23,7 @@
 package org.jmxtrans.core.config;
 
 import org.jmxtrans.core.query.Invocation;
+import org.jmxtrans.core.query.embedded.Query;
 import org.jmxtrans.core.query.embedded.Server;
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.jmxtrans.utils.io.Resource;
@@ -71,6 +72,22 @@ public class XmlConfigParserTest {
         assertThat(configuration.getPeriod()).isEqualTo(new Interval(10, SECONDS));
     }
 
+    @Test
+    public void maxResultIsSetForQueries() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException {
+        Resource resource = new StandardResource("classpath:org/jmxtrans/core/config/max-result-query.xml");
+        Configuration configuration = parser.parseConfiguration(resource);
+        assertThat(configuration).isNotNull();
+        assertThat(configuration.getServers()).hasSize(1);
+        Server server = configuration.getServers().iterator().next();
+        assertThat(server.getQueries()).hasSize(2);
+        Iterator<Query> queryIterator = server.getQueries().iterator();
+        Query query1 = queryIterator.next();
+        Query query2 = queryIterator.next();
+
+        assertThat(query1.getMaxResults()).isEqualTo(50);
+        assertThat(query2.getMaxResults()).isEqualTo(10);
+    }
+    
     @Test
     public void serversAreParsed() throws Exception {
         Resource resource = new StandardResource("classpath:org/jmxtrans/core/config/with-servers.xml");

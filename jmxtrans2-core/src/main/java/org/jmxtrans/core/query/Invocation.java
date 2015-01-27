@@ -26,7 +26,6 @@ import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
-import org.jmxtrans.utils.time.SystemClock;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -69,7 +68,7 @@ public class Invocation {
             @Nonnull Object[] params,
             @Nonnull String[] signature,
             @Nonnull String resultAlias,
-            @Nonnull SystemClock clock) {
+            @Nonnull Clock clock) {
         try {
             this.objectName = new ObjectName(objectName);
         } catch (MalformedObjectNameException e) {

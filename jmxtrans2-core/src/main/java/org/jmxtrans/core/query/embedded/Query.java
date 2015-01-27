@@ -94,15 +94,17 @@ public class Query implements QueryMBean {
     @Nullable
     private MBeanServer mbeanServer;
 
-    @Nonnull private final Clock clock;
-
+    private final int maxResults;
+    
     private Query(@Nonnull ObjectName objectName,
                   @Nullable String resultAlias,
                   @Nonnull List<QueryAttribute> attributes,
                   @Nonnull ObjectName queryMbeanObjectName,
+                  int maxResults,
                   @Nonnull Clock clock) {
         this.objectName = objectName;
         this.resultAlias = resultAlias;
+        this.maxResults = maxResults;
         this.attributesByName = new HashMap<>();
         for (QueryAttribute attribute : attributes) {
             attributesByName.put(attribute.getName(), attribute);
@@ -110,12 +112,11 @@ public class Query implements QueryMBean {
         this.attributeNames = attributesByName.keySet().toArray(new String[0]);
         this.queryMbeanObjectName = queryMbeanObjectName;
         metrics = new QueryMetrics(clock);
-        this.clock = clock;
     }
 
     public Iterable<QueryResult> collectMetrics(@Nonnull MBeanServerConnection mbeanServer, @Nonnull ResultNameStrategy resultNameStrategy) throws IOException {
+        Collection<QueryResult> results = new ArrayList<>();
         try (NanoChronometer chrono = metrics.collectionDurationChronometer()) {
-            Collection<QueryResult> results = new ArrayList<>();
             /*
              * Optimisation tip: no need to skip 'mbeanServer.queryNames()' if the ObjectName is not a pattern
              * (i.e. not '*' or '?' wildcard) because the mbeanserver internally performs the check.
@@ -125,22 +126,24 @@ public class Query implements QueryMBean {
             logger.debug(format("Query %s returned %s", objectName, matchingObjectNames));
 
             for (ObjectName matchingObjectName : matchingObjectNames) {
-                long epochInMillis = clock.currentTimeMillis();
                 try {
                     AttributeList jmxAttributes = mbeanServer.getAttributes(matchingObjectName, this.attributeNames);
                     logger.debug(format("Query %s returned %s", matchingObjectName, jmxAttributes));
                     for (Attribute jmxAttribute : jmxAttributes.asList()) {
-                        QueryAttribute queryAttribute = this.attributesByName.get(jmxAttribute.getName());
-                        Object value = jmxAttribute.getValue();
-                        int count = queryAttribute.collectMetrics(matchingObjectName, value, epochInMillis, results, this, resultNameStrategy);
-                        metrics.incrementCollected(count);
+                        attributesByName.get(jmxAttribute.getName()).collectMetrics(
+                                matchingObjectName, jmxAttribute.getValue(), results, this, resultNameStrategy, maxResults);
+
+                        // early return if we reach maxResults
+                        if (results.size() >= maxResults) return results;
                     }
                 } catch (Exception e) {
                     logger.warn(format("Exception processing query %s", this), e);
                 }
             }
-            metrics.incrementCollectionsCount();
             return results;
+        } finally {
+            metrics.incrementCollected(results.size());
+            metrics.incrementCollectionsCount();
         }
     }
 
@@ -178,6 +181,10 @@ public class Query implements QueryMBean {
     @Nonnull
     public ObjectName getQueryMbeanObjectName() {
         return queryMbeanObjectName;
+    }
+
+    public int getMaxResults() {
+        return maxResults;
     }
 
     @Override
@@ -244,6 +251,7 @@ public class Query implements QueryMBean {
         @Nullable private String resultAlias;
         @Nonnull private final List<QueryAttribute> attributes = new ArrayList<>();
         @Nonnull private final Clock clock;
+        private int maxResults = 50;
 
         private Builder() {
             this.clock = new SystemClock();
@@ -266,6 +274,11 @@ public class Query implements QueryMBean {
 
         public Builder withResultAlias(@Nullable String resultAlias) {
             this.resultAlias = resultAlias;
+            return this;
+        }
+        
+        public Builder withMaxResults(int maxResults) {
+            this.maxResults = maxResults;
             return this;
         }
 
@@ -295,6 +308,7 @@ public class Query implements QueryMBean {
                         resultAlias,
                         attributes,
                         new ObjectName("org.jmxtrans.embedded:Type=Query,id=" + queryIdSequence.incrementAndGet()),
+                        maxResults,
                         clock
                 );
             } catch (MalformedObjectNameException e) {

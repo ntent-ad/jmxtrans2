@@ -165,7 +165,8 @@ public class XmlConfigParser implements ConfigParser {
         for (QueryType query : queries.getQuery()) {
             Query.Builder queryBuilder = Query.builder()
                     .withObjectName(query.getObjectName())
-                    .withResultAlias(query.getResultAlias());
+                    .withResultAlias(query.getResultAlias())
+                    .withMaxResults(query.getMaxResults());
             for (QueryType.QueryAttribute attribute : query.getQueryAttribute()) {
                 QueryAttribute.Builder attributeBuilder = QueryAttribute
                         .builder(attribute.getName())
