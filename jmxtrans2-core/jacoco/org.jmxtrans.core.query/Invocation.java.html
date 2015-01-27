@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Invocation.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - core</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.core.query</a> &gt; <span class="el_source">Invocation.java</span></div><h1>Invocation.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.core.query;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.time.Clock;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+
+import static java.util.Objects.hash;
+
+/**
+ * @author &lt;a href=&quot;mailto:cleclerc@cloudbees.com&quot;&gt;Cyrille Le Clerc&lt;/a&gt;
+ */
+@Immutable
+@ThreadSafe
+public class Invocation {
+
+<span class="fc" id="L50">    @Nonnull</span>
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+    @Nonnull
+    public final ObjectName objectName;
+    @Nonnull
+    public final String operationName;
+    @Nonnull
+    public final String resultAlias;
+    @Nonnull
+    private final Object[] params;
+    @Nonnull
+    private final String[] signature;
+    @Nonnull
+    private final Clock clock;
+
+    public Invocation(
+            @Nonnull String objectName,
+            @Nonnull String operationName,
+            @Nonnull Object[] params,
+            @Nonnull String[] signature,
+            @Nonnull String resultAlias,
+<span class="fc" id="L71">            @Nonnull Clock clock) {</span>
+        try {
+<span class="fc" id="L73">            this.objectName = new ObjectName(objectName);</span>
+<span class="nc" id="L74">        } catch (MalformedObjectNameException e) {</span>
+<span class="nc" id="L75">            throw new IllegalArgumentException(&quot;Invalid objectName '&quot; + objectName + &quot;'&quot;, e);</span>
+<span class="fc" id="L76">        }</span>
+<span class="fc" id="L77">        this.operationName = operationName;</span>
+<span class="fc" id="L78">        this.params = params.clone();</span>
+<span class="fc" id="L79">        this.signature = signature.clone();</span>
+<span class="fc" id="L80">        this.resultAlias = resultAlias;</span>
+<span class="fc" id="L81">        this.clock = clock;</span>
+<span class="fc" id="L82">    }</span>
+
+    public void invoke(@Nonnull MBeanServer mbeanServer, @Nonnull BlockingQueue&lt;QueryResult&gt; resultQueue) {
+<span class="nc" id="L85">        Set&lt;ObjectName&gt; objectNames = mbeanServer.queryNames(objectName, null);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        for (ObjectName on : objectNames) {</span>
+            try {
+<span class="nc" id="L88">                Object result = mbeanServer.invoke(on, operationName, params, signature);</span>
+<span class="nc" id="L89">                resultQueue.add(new QueryResult(resultAlias, result, clock.currentTimeMillis()));</span>
+<span class="nc" id="L90">            } catch (Exception e) {</span>
+<span class="nc" id="L91">                logger.warn(&quot;Exception invoking &quot; + on + &quot;#&quot; + operationName + &quot;(&quot; + Arrays.toString(params) + &quot;)&quot;, e);</span>
+<span class="nc" id="L92">            }</span>
+<span class="nc" id="L93">        }</span>
+<span class="nc" id="L94">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L99" title="2 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+
+<span class="fc" id="L101">        Invocation that = (Invocation) o;</span>
+<span class="pc bpc" id="L102" title="5 of 10 branches missed.">        return Objects.equals(objectName, that.objectName)</span>
+                &amp;&amp; Objects.equals(operationName, that.operationName)
+                &amp;&amp; Objects.deepEquals(params, that.params)
+                &amp;&amp; Objects.deepEquals(signature, that.signature)
+                &amp;&amp; Objects.equals(resultAlias, that.resultAlias);
+
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L112">        return hash(objectName, operationName, params, signature, resultAlias);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L117">        return &quot;Invocation{&quot; +</span>
+                &quot;objectName=&quot; + objectName +
+                &quot;, operationName='&quot; + operationName + '\'' +
+                &quot;, resultAlias='&quot; + resultAlias + '\'' +
+                &quot;, params=&quot; + Arrays.toString(params) +
+                &quot;, signature=&quot; + Arrays.toString(signature) +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
