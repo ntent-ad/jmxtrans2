@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.core.results;
 
+import lombok.Getter;
 import org.jmxtrans.utils.Preconditions2;
 
 import javax.annotation.Nonnull;
@@ -41,13 +42,10 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 @Immutable
 @ThreadSafe
 public class QueryResult {
-    @Nonnull
-    private final String name;
+    @Nonnull @Getter private final String name;
     private final long epochInMillis;
-    @Nullable
-    private final Object value;
-    @Nullable
-    private final String type;
+    @Nullable @Getter private final Object value;
+    @Nullable @Getter private final String type;
 
     /**
      * @param name          plain name of the metric (variables (e.g. <code>%my-jmx-attr%</code>) must have been resolved).
@@ -71,23 +69,8 @@ public class QueryResult {
         this.type = type;
     }
 
-    @Nonnull
-    public String getName() {
-        return name;
-    }
-
-    @Nullable
-    public String getType() {
-        return type;
-    }
-
     public long getEpoch(TimeUnit timeUnit) {
         return timeUnit.convert(epochInMillis, MILLISECONDS);
-    }
-
-    @Nullable
-    public Object getValue() {
-        return value;
     }
 
     @Override

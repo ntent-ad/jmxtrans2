@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.core.query.embedded;
 
+import lombok.Getter;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.results.QueryResult;
@@ -61,8 +62,7 @@ public class QueryAttribute {
     /**
      * Name of the JMX Attribute to collect
      */
-    @Nonnull
-    private final String name;
+    @Nonnull @Getter private final String name;
     /**
      * Used to create the name of the {@link org.jmxtrans.core.results.QueryResult} that will be exported.
      * <p/>
@@ -70,16 +70,14 @@ public class QueryAttribute {
      *
      * @see org.jmxtrans.core.results.QueryResult#getName()
      */
-    @Nullable
-    private final String resultAlias;
+    @Nullable @Getter private final String resultAlias;
 
     /**
      * Attribute type like '{@code gauge}' or '{@code counter}'. Used by monitoring systems like Librato who require this information.
      *
      * @see org.jmxtrans.core.results.QueryResult#getName()
      */
-    @Nullable
-    private final String type;
+    @Nullable @Getter private final String type;
 
     /**
      * <code>null</code> if no 'key' as been defined in the config.
@@ -110,21 +108,6 @@ public class QueryAttribute {
         this.resultAlias = resultAlias;
         this.keys = keys;
         this.clock = clock;
-    }
-
-    @Nonnull
-    public String getName() {
-        return name;
-    }
-
-    @Nullable
-    public String getResultAlias() {
-        return resultAlias;
-    }
-
-    @Nullable
-    public String getType() {
-        return type;
     }
 
     /**
