@@ -28,6 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.jmxtrans.core.lifecycle.LifecycleAware;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 
@@ -46,6 +47,7 @@ public class NaiveScheduler {
     @Nonnull private volatile State state = State.NEW;
     @Nonnull private final ScheduledExecutorService queryTimer;
     @Nonnull private final QueryGenerator queryGenerator;
+    @Nonnull private final Iterable<LifecycleAware> lifecycleListeners;
     private final long shutdownTimeoutMillis;
 
     public NaiveScheduler(
@@ -53,21 +55,26 @@ public class NaiveScheduler {
             @Nonnull ExecutorService resultExecutor,
             @Nonnull ScheduledExecutorService queryTimer,
             @Nonnull QueryGenerator queryGenerator,
+            @Nonnull Iterable<LifecycleAware> lifecycleListeners,
             long shutdownTimeoutMillis) {
         this.queryTimer = queryTimer;
+        this.lifecycleListeners = lifecycleListeners;
         this.shutdownTimeoutMillis = shutdownTimeoutMillis;
         this.queryExecutor = queryExecutor;
         this.resultExecutor = resultExecutor;
         this.queryGenerator = queryGenerator;
     }
 
-    public void start() {
+    public void start() throws Exception {
         if (!state.equals(State.NEW)) {
             throw new IllegalStateException("Already started");
         }
         try {
             logger.debug("Starting scheduler");
             this.state = State.STARTING;
+            for (LifecycleAware lifecycleListener : lifecycleListeners) {
+                lifecycleListener.start();
+            }
             queryGenerator.start();
             this.state = State.RUNNING;
             logger.debug("Scheduler started");
@@ -77,7 +84,7 @@ public class NaiveScheduler {
         }
     }
 
-    public void stop() throws InterruptedException {
+    public void stop() throws Exception {
         if (!state.equals(State.STARTING) && !state.equals(State.RUNNING)) {
             throw new IllegalStateException("Not running");
         }
@@ -91,6 +98,9 @@ public class NaiveScheduler {
             queryTimer.awaitTermination(shutdownTimeoutMillis, MILLISECONDS);
             queryExecutor.awaitTermination(shutdownTimeoutMillis, MILLISECONDS);
             resultExecutor.awaitTermination(shutdownTimeoutMillis, MILLISECONDS);
+            for (LifecycleAware lifecycleListener : lifecycleListeners) {
+                lifecycleListener.stop();
+            }
             this.state = State.TERMINATED;
             logger.debug("Scheduler stopped");
         } catch (Exception e) {

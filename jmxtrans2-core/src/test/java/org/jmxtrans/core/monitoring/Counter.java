@@ -20,31 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.core.monitoring;
 
-import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.Test;
+import javax.annotation.Nonnull;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 
-import static com.jayway.awaitility.Awaitility.await;
-
-public class JmxTransAgentIT extends AbstractAgentTest {
-
-    @Test
-    public void agentIsStarting() throws IOException, InterruptedException {
-        startDummyApplication();
-        
-        await().until(stdOutContains("counter.Value 0"));
-        await().until(stdOutContains("counter.Value 1"));
+public class Counter implements CounterMBean, SelfNamedMBean {
+    
+    private final AtomicInteger value = new AtomicInteger();
+    
+    @Override
+    public int getValue() {
+        return value.getAndIncrement();
     }
 
-    @Test
-    public void applicationInfoAreDisplayedAtStartup() throws IOException, InterruptedException {
-        startDummyApplication();
-
-        await().until(stdOutContains("JMXTrans - agent"));
-        await().until(stdOutContains("version:"));
-        await().until(stdOutContains("last modified:"));
-        await().until(stdOutContains("build time:"));
+    @Nonnull
+    @Override
+    public ObjectName getObjectName() throws MalformedObjectNameException {
+        return new ObjectName("org.jmxtrans.counter", "name", "myCounter");
     }
 }

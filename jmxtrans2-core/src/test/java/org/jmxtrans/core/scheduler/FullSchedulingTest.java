@@ -22,7 +22,6 @@
  */
 package org.jmxtrans.core.scheduler;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -35,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.management.MBeanServerConnection;
 
+import org.jmxtrans.core.lifecycle.LifecycleAware;
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.query.embedded.InProcessServer;
 import org.jmxtrans.core.query.embedded.Query;
@@ -76,7 +76,7 @@ public class FullSchedulingTest {
     }
 
     @Test
-    public void queriesAreFullyProcessed() throws InterruptedException, IOException {
+    public void queriesAreFullyProcessed() throws Exception {
         when(query.collectMetrics(any(MBeanServerConnection.class), any(ResultNameStrategy.class)))
                 .thenReturn(results);
 
@@ -105,6 +105,7 @@ public class FullSchedulingTest {
                         ),
                         queryTimer
                 ),
+                Collections.<LifecycleAware>emptyList(),
                 shutdownTimerMillis
         );
 

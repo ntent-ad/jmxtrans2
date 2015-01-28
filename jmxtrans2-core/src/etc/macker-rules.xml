@@ -80,9 +80,11 @@
                 </to>
                 <allow>
                     <to>
-                        <include class="org.jmxtrans.core.log.**"/>
-                        <include class="org.jmxtrans.core.naming.**"/>
                         <include class="org.jmxtrans.core.query.**"/>
+                        <include class="org.jmxtrans.core.naming.**"/>
+                        <!-- common packages always allowed -->
+                        <include class="org.jmxtrans.core.log.**"/>
+                        <include class="org.jmxtrans.core.monitoring.**"/>
                         <include class="org.jmxtrans.utils.**"/>
                     </to>
                 </allow>
@@ -97,9 +99,11 @@
                 </to>
                 <allow>
                     <to>
-                        <include class="org.jmxtrans.core.log.**"/>
                         <include class="org.jmxtrans.core.output.**"/>
                         <include class="org.jmxtrans.core.results.**"/>
+                        <!-- common packages always allowed -->
+                        <include class="org.jmxtrans.core.log.**"/>
+                        <include class="org.jmxtrans.core.monitoring.**"/>
                         <include class="org.jmxtrans.utils.**"/>
                     </to>
                 </allow>
@@ -114,9 +118,11 @@
                 </to>
                 <allow>
                     <to>
-                        <include class="org.jmxtrans.core.log.**"/>
                         <include class="org.jmxtrans.core.query.**"/>
                         <include class="org.jmxtrans.core.results.**"/>
+                        <!-- common packages always allowed -->
+                        <include class="org.jmxtrans.core.log.**"/>
+                        <include class="org.jmxtrans.core.monitoring.**"/>
                         <include class="org.jmxtrans.utils.**"/>
                     </to>
                 </allow>

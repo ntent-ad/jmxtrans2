@@ -25,22 +25,32 @@ package org.jmxtrans.core.scheduler;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
+import org.jmxtrans.core.lifecycle.LifecycleAware;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import static java.util.Collections.singletonList;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class NaiveSchedulerTest {
 
     private NaiveScheduler scheduler;
     private ExecutorService queryExecutor;
     private ExecutorService resultExecutor;
     private ScheduledExecutorService queryTimer;
+    @Mock private LifecycleAware lifecycleListener;
 
     @Before
     public void createScheduler() {
@@ -48,22 +58,22 @@ public class NaiveSchedulerTest {
         resultExecutor = newSingleThreadExecutor();
         queryTimer = newSingleThreadScheduledExecutor();
         QueryGenerator queryGenerator = Mockito.mock(QueryGenerator.class);
-        scheduler = new NaiveScheduler(queryExecutor, resultExecutor, queryTimer, queryGenerator, 1);
+        scheduler = new NaiveScheduler(queryExecutor, resultExecutor, queryTimer, queryGenerator, singletonList(lifecycleListener), 1);
     }
 
     @Test(expected = IllegalStateException.class)
-    public void cannotStopServiceIfNotRunning() throws InterruptedException {
+    public void cannotStopServiceIfNotRunning() throws Exception {
         scheduler.stop();
     }
 
     @Test(expected = IllegalStateException.class)
-    public void cannotStartServiceTwice() throws InterruptedException {
+    public void cannotStartServiceTwice() throws Exception {
         scheduler.start();
         scheduler.start();
     }
 
     @Test
-    public void nothingIsRunningAfterStop() throws InterruptedException {
+    public void nothingIsRunningAfterStop() throws Exception {
         scheduler.start();
         scheduler.stop();
         assertThat(queryExecutor.isShutdown()).isTrue();
@@ -71,12 +81,25 @@ public class NaiveSchedulerTest {
         assertThat(queryTimer.isShutdown()).isTrue();
     }
 
+    @Test
+    public void lifecycleListenersAreNotifiedAtStartup() throws Exception {
+        scheduler.start();
+        verify(lifecycleListener).start();
+        verify(lifecycleListener, never()).stop();
+    }
+
+    @Test
+    public void lifecycleListenersAreNotifiedAtShutdown() throws Exception {
+        scheduler.start();
+        scheduler.stop();
+        verify(lifecycleListener).stop();
+    }
+
     @After
-    public void stopScheduler() {
+    public void stopScheduler() throws Exception {
         try {
             scheduler.stop();
-        } catch (InterruptedException ignore) {
-        } catch (IllegalStateException ignore) {
+        } catch (InterruptedException|IllegalStateException ignore) {
         }
     }
 

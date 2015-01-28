@@ -31,10 +31,18 @@ import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 public class DummyApp {
     public static final String MOCK_MBEAN_NAME = "org.jmxtrans:type=Counter,name=myCounter";
 
-    public static void main(String[] args) throws InterruptedException, MalformedObjectNameException, NotCompliantMBeanException, InstanceAlreadyExistsException, MBeanRegistrationException {
+    public static void main(String[] args) throws InterruptedException, MalformedObjectNameException, NotCompliantMBeanException, InstanceAlreadyExistsException, MBeanRegistrationException, InstanceNotFoundException {
 
         Counter mock = new Counter("myCounter");
-        getPlatformMBeanServer().registerMBean(mock, new ObjectName(MOCK_MBEAN_NAME));
+        ObjectName objectName = new ObjectName(MOCK_MBEAN_NAME);
+
+        MBeanServer mBeanServer = getPlatformMBeanServer();
+        
+        // platform MBean server is global, mBean registration might persist between tests
+        if (mBeanServer.isRegistered(objectName)) {
+            mBeanServer.unregisterMBean(objectName);
+        }
+        mBeanServer.registerMBean(mock, objectName);
 
         while (true) {
             System.out.println("hello, it is: " + new Date());

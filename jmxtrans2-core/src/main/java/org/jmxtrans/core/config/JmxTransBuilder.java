@@ -25,6 +25,7 @@ package org.jmxtrans.core.config;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
@@ -35,12 +36,17 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+import javax.management.MalformedObjectNameException;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.jmxtrans.core.lifecycle.LifecycleAware;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.monitoring.MBeanRegistry;
+import org.jmxtrans.core.monitoring.SelfNamedMBean;
 import org.jmxtrans.core.query.embedded.ResultNameStrategy;
+import org.jmxtrans.core.query.embedded.Server;
 import org.jmxtrans.core.scheduler.JmxTransThreadFactory;
 import org.jmxtrans.core.scheduler.NaiveScheduler;
 import org.jmxtrans.core.scheduler.QueryGenerator;
@@ -53,6 +59,8 @@ import org.jmxtrans.utils.time.SystemClock;
 
 import org.xml.sax.SAXException;
 
+import static java.lang.String.format;
+import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 import static java.util.Collections.singleton;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
@@ -78,6 +86,10 @@ public class JmxTransBuilder {
 
         Configuration configuration = loadConfiguration(clock);
 
+        MBeanRegistry mBeanRegistry = new MBeanRegistry(getPlatformMBeanServer());
+        
+        registerMBeans(configuration, mBeanRegistry);
+
         return new NaiveScheduler(
                 queryExecutor,
                 resultExecutor,
@@ -98,8 +110,21 @@ public class JmxTransBuilder {
                         ),
                         queryTimer
                 ),
+                Collections.<LifecycleAware>singletonList(mBeanRegistry),
                 shutdownTimerMillis
         );
+    }
+
+    private void registerMBeans(Configuration configuration, MBeanRegistry mBeanRegistry) {
+        for (Server server : configuration.getServers()) {
+            for (SelfNamedMBean query : server.getQueries()) {
+                try {
+                    mBeanRegistry.register(query);
+                } catch (MalformedObjectNameException e) {
+                    logger.warn(format("Could not register query [%s]", query), e);
+                }
+            }
+        }
     }
 
     private Configuration loadConfiguration(Clock clock) throws JAXBException, ParserConfigurationException, SAXException, IOException, IllegalAccessException, ClassNotFoundException, InstantiationException {
