@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.core.query.embedded;
 
+import lombok.Getter;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.management.MBeanServerConnection;
@@ -46,7 +48,7 @@ public class RemoteServer implements Server {
     @Nullable private final String username;
     @Nullable private final String password;
     @Nullable private final String protocolProviderPackages;
-    @Nonnull private final Iterable<Query> queries;
+    @Nonnull @Getter private final Iterable<Query> queries;
 
     private RemoteServer(
             @Nonnull JMXServiceURL url,
@@ -103,12 +105,6 @@ public class RemoteServer implements Server {
     public MBeanServerConnection getServerConnection() throws Exception {
         // FIXME: closing of JMXConnector is not done
         return JMXConnectorFactory.connect(url, this.getEnvironment()).getMBeanServerConnection();
-    }
-
-    @Nonnull
-    @Override
-    public Iterable<Query> getQueries() {
-        return queries;
     }
 
     @Nonnull

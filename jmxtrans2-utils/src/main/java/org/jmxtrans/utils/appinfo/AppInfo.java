@@ -22,6 +22,8 @@
  */
 package org.jmxtrans.utils.appinfo;
 
+import lombok.Getter;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -34,11 +36,11 @@ public class AppInfo<T> {
     @Nonnull private final GitRepositoryState repositoryState;
     @Nullable private final String groupId;
     @Nullable private final String artifactId;
-    @Nullable private final String version;
-    @Nullable private final String name;
+    @Nullable @Getter private final String version;
+    @Nullable @Getter private final String name;
     @Nullable private final String description;
     @Nullable private final String inceptionYear;
-    @Nullable private final String issueManagementUrl;
+    @Nullable @Getter private final String issueManagementUrl;
 
     public AppInfo(
             @Nonnull Properties properties,
@@ -54,24 +56,9 @@ public class AppInfo<T> {
         issueManagementUrl = properties.getProperty("project.issueManagement.url");
     }
 
-    @Nullable
-    public String getName() {
-        return name;
-    }
-
-    @Nullable
-    public String getVersion() {
-        return version;
-    }
-
     @Nonnull
     public String getFullVersion() {
         return getVersion() + " / " + repositoryState.getDescribe();
-    }
-
-    @Nullable
-    public String getIssueManagementUrl() {
-        return issueManagementUrl;
     }
 
     public void print(@Nonnull PrintStream out) {
@@ -88,7 +75,7 @@ public class AppInfo<T> {
         try (InputStream in = clazz.getResourceAsStream("app-info.properties")) {
             Properties properties = new Properties();
             properties.load(in);
-            return new AppInfo(
+            return new AppInfo<>(
                     properties,
                     GitRepositoryState.load()
             );

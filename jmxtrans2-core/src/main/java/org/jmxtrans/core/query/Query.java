@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.core.query;
 
+import lombok.Getter;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
@@ -61,30 +62,24 @@ public class Query {
     @Nonnull
     private final ResultNameStrategy resultNameStrategy;
 
-    @Nonnull
-    private final ObjectName objectName;
-    @Nonnull
-    private final String resultAlias;
+    @Nonnull @Getter private final ObjectName objectName;
+    @Nonnull @Getter private final String resultAlias;
     /**
      * The attribute to retrieve ({@link javax.management.MBeanServer#getAttribute(javax.management.ObjectName, String)})
      */
-    @Nonnull
-    private final String attribute;
+    @Nonnull @Getter private final String attribute;
     /**
      * If the MBean attribute value is a {@link javax.management.openmbean.CompositeData}, the key to lookup.
      */
-    @Nullable
-    private final String key;
+    @Nullable @Getter private final String key;
     /**
      * If the returned value is a {@link java.util.Collection}or an array, the position of the entry to lookup.
      */
-    @Nullable
-    private final Integer position;
+    @Nullable @Getter private final Integer position;
     /**
      * Attribute type like '{@code gauge}' or '{@code counter}'. Used by monitoring systems like Librato who require this information.
      */
-    @Nullable
-    private final String type;
+    @Nullable @Getter private final String type;
 
     @Nonnull
     private final Clock clock = new SystemClock();
@@ -224,36 +219,6 @@ public class Query {
                 ", attribute='" + attribute + '\'' +
                 ", key='" + key + '\'' +
                 '}';
-    }
-
-    @Nonnull
-    public ObjectName getObjectName() {
-        return objectName;
-    }
-
-    @Nonnull
-    public String getResultAlias() {
-        return resultAlias;
-    }
-
-    @Nonnull
-    public String getAttribute() {
-        return attribute;
-    }
-
-    @Nullable
-    public String getKey() {
-        return key;
-    }
-
-    @Nullable
-    public Integer getPosition() {
-        return position;
-    }
-
-    @Nullable
-    public String getType() {
-        return type;
     }
 
     @Override

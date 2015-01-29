@@ -52,7 +52,7 @@ public class JmxTransformer {
         }
 
         new JmxTransBuilder(
-                parameters.ignoreParsingErrors(),
+                parameters.isIgnoringParsingErrors(),
                 configurations).build().start();
 
     }

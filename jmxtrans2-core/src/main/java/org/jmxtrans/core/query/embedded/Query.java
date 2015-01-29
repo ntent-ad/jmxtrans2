@@ -22,6 +22,7 @@
  */
 package org.jmxtrans.core.query.embedded;
 
+import lombok.Getter;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.results.QueryResult;
@@ -66,11 +67,9 @@ public class Query implements QueryMBean {
     /**
      * ObjectName of the Query MBean(s) to monitor, can contain
      */
-    @Nonnull
-    private final ObjectName objectName;
+    @Nonnull @Getter private final ObjectName objectName;
 
-    @Nullable
-    private final String resultAlias;
+    @Nullable @Getter private final String resultAlias;
     /**
      * JMX attributes to collect. As an array for {@link javax.management.MBeanServer#getAttributes(javax.management.ObjectName, String[])}
      */
@@ -88,13 +87,12 @@ public class Query implements QueryMBean {
     /**
      * {@link javax.management.ObjectName} of this {@link QueryMBean}
      */
-    @Nonnull
-    private final ObjectName queryMbeanObjectName;
+    @Nonnull @Getter private final ObjectName queryMbeanObjectName;
 
     @Nullable
     private MBeanServer mbeanServer;
 
-    private final int maxResults;
+    @Getter private final int maxResults;
     
     private Query(@Nonnull ObjectName objectName,
                   @Nullable String resultAlias,
@@ -161,30 +159,9 @@ public class Query implements QueryMBean {
         }
     }
 
-    @Override
-    @Nonnull
-    public ObjectName getObjectName() {
-        return objectName;
-    }
-
     @Nonnull
     public Collection<QueryAttribute> getQueryAttributes() {
         return attributesByName.values();
-    }
-
-    @Override
-    @Nullable
-    public String getResultAlias() {
-        return resultAlias;
-    }
-
-    @Nonnull
-    public ObjectName getQueryMbeanObjectName() {
-        return queryMbeanObjectName;
-    }
-
-    public int getMaxResults() {
-        return maxResults;
     }
 
     @Override
