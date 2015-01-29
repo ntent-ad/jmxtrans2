@@ -27,6 +27,10 @@
 <module name="Checker">
 
     <module name="TreeWalker">
+        <module name="AvoidStarImport">
+            <property name="allowClassImports" value="false"/>
+            <property name="allowStaticMemberImports" value="false"/>
+        </module>
         <module name="EqualsHashCode"/>
         <module name="ImportOrder">
             <property name="groups" value="java.,javax.,org.jmxtrans."/>

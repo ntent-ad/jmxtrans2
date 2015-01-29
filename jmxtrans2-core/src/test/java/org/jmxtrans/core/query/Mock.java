@@ -25,7 +25,11 @@ package org.jmxtrans.core.query;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.management.openmbean.*;
+import javax.management.openmbean.CompositeData;
+import javax.management.openmbean.CompositeDataSupport;
+import javax.management.openmbean.CompositeType;
+import javax.management.openmbean.OpenType;
+import javax.management.openmbean.SimpleType;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>

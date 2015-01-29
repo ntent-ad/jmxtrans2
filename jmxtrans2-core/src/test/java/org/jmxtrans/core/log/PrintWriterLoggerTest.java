@@ -37,7 +37,10 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
 
-import static org.jmxtrans.core.log.Level.*;
+import static org.jmxtrans.core.log.Level.DEBUG;
+import static org.jmxtrans.core.log.Level.ERROR;
+import static org.jmxtrans.core.log.Level.INFO;
+import static org.jmxtrans.core.log.Level.WARN;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

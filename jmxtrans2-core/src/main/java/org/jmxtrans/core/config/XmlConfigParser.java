@@ -25,7 +25,12 @@ package org.jmxtrans.core.config;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -41,7 +46,12 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.jmxtrans.core.circuitbreaker.CircuitBreakerProxy;
-import org.jmxtrans.core.config.jaxb.*;
+import org.jmxtrans.core.config.jaxb.InvocationType;
+import org.jmxtrans.core.config.jaxb.Jmxtrans;
+import org.jmxtrans.core.config.jaxb.OutputWriterType;
+import org.jmxtrans.core.config.jaxb.QueriesType;
+import org.jmxtrans.core.config.jaxb.QueryType;
+import org.jmxtrans.core.config.jaxb.ServerType;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.output.OutputWriter;
