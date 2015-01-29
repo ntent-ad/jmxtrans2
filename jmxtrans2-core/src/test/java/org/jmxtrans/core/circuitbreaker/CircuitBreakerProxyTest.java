@@ -23,13 +23,16 @@
 package org.jmxtrans.core.circuitbreaker;
 
 import org.jmxtrans.utils.time.ManualClock;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+
+import static org.jmxtrans.core.circuitbreaker.CircuitBreakerProxy.create;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.jmxtrans.core.circuitbreaker.CircuitBreakerProxy.create;
 
 public class CircuitBreakerProxyTest {
 

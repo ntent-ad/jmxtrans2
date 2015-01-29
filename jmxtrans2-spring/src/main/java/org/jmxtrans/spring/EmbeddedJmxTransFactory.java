@@ -22,21 +22,23 @@
  */
 package org.jmxtrans.spring;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.jmxtrans.core.config.JmxTransBuilder;
 import org.jmxtrans.core.scheduler.NaiveScheduler;
 import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.io.StandardResource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
-
-import javax.annotation.concurrent.NotThreadSafe;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * {@link org.jmxtrans.spring.SpringEmbeddedJmxTrans} factory for Spring Framework integration.

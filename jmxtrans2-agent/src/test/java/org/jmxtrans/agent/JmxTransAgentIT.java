@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.agent;
 
-import org.junit.Test;
-
 import java.io.IOException;
+
+import org.junit.Test;
 
 import static com.jayway.awaitility.Awaitility.await;
 

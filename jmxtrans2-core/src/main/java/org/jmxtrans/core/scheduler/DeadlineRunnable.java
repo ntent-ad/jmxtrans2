@@ -22,13 +22,14 @@
  */
 package org.jmxtrans.core.scheduler;
 
-import lombok.Getter;
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.utils.time.Clock;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import lombok.Getter;
 
 import static lombok.AccessLevel.PROTECTED;
 

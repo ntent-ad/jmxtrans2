@@ -22,12 +22,14 @@
  */
 package org.jmxtrans.core.config;
 
-import org.jmxtrans.utils.io.Resource;
-import org.xml.sax.SAXException;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.xml.bind.JAXBException;
-import java.io.IOException;
+
+import org.jmxtrans.utils.io.Resource;
+
+import org.xml.sax.SAXException;
 
 public interface ConfigParser {
 

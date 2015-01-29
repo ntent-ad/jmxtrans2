@@ -22,11 +22,12 @@
  */
 package org.jmxtrans.output.writers.support;
 
-import org.jmxtrans.core.results.QueryResult;
-
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Writer;
+
+import javax.annotation.Nonnull;
+
+import org.jmxtrans.core.results.QueryResult;
 
 public interface WriterBasedOutputWriter {
     void write(@Nonnull Writer writer, @Nonnull QueryResult result) throws IOException;

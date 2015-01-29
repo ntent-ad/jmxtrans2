@@ -22,10 +22,11 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.OutputWriterFactory;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
+
+import org.jmxtrans.core.output.OutputWriterFactory;
 
 /**
  * Waiting for a configuration extension to combine the {@link PerMinuteSummarizerOutputWriter} with the

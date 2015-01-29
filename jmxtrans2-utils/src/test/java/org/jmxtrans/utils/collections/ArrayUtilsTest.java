@@ -22,13 +22,14 @@
  */
 package org.jmxtrans.utils.collections;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
 import org.junit.Test;
 
-import java.util.List;
+import static org.jmxtrans.utils.collections.ArrayUtils.transformToListIfIsArray;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jmxtrans.utils.collections.ArrayUtils.transformToListIfIsArray;
 
 public class ArrayUtilsTest {
 

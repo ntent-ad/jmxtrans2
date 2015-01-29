@@ -22,8 +22,9 @@
  */
 package org.jmxtrans.core.output;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 public interface OutputWriterFactory<T extends OutputWriter> {
 

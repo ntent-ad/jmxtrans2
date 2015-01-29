@@ -22,17 +22,14 @@
  */
 package org.jmxtrans.utils.io;
 
+import java.io.*;
+
 import org.jmxtrans.utils.DummyFiles;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

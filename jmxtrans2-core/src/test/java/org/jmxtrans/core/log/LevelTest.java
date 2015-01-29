@@ -24,11 +24,9 @@ package org.jmxtrans.core.log;
 
 import org.junit.Test;
 
+import static org.jmxtrans.core.log.Level.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jmxtrans.core.log.Level.DEBUG;
-import static org.jmxtrans.core.log.Level.ERROR;
-import static org.jmxtrans.core.log.Level.WARN;
-import static org.jmxtrans.core.log.Level.INFO;
 
 public class LevelTest {
 

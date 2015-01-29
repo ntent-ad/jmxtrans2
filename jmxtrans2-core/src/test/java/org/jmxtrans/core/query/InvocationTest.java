@@ -23,6 +23,7 @@
 package org.jmxtrans.core.query;
 
 import org.jmxtrans.utils.time.SystemClock;
+
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

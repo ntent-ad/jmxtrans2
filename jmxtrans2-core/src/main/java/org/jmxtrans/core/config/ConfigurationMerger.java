@@ -22,16 +22,17 @@
  */
 package org.jmxtrans.core.config;
 
-import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.query.Invocation;
-import org.jmxtrans.core.query.embedded.Server;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
+import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.core.query.Invocation;
+import org.jmxtrans.core.query.embedded.Server;
 
 // TODO : Very naive implementation, definitely needs to be improved !!!
 @ThreadSafe

@@ -22,9 +22,10 @@
  */
 package org.jmxtrans.output.writers.utils;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Iterator;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>

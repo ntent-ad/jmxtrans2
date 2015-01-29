@@ -22,14 +22,15 @@
  */
 package org.jmxtrans.core.config;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.query.Invocation;
 import org.jmxtrans.core.query.embedded.Server;
 import org.jmxtrans.utils.time.Interval;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @ThreadSafe // TODO: synchronization is overly aggressive
 public class StandardConfiguration implements Configuration {

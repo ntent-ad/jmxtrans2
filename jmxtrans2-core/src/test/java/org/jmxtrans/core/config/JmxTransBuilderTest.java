@@ -22,19 +22,19 @@
  */
 package org.jmxtrans.core.config;
 
-import org.jmxtrans.core.config.JmxTransBuilder;
-import org.jmxtrans.core.config.JmxtransConfigurationException;
-import org.jmxtrans.core.scheduler.NaiveScheduler;
-import org.jmxtrans.utils.io.Resource;
-import org.jmxtrans.utils.io.StandardResource;
-import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.jmxtrans.core.scheduler.NaiveScheduler;
+import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.io.StandardResource;
+
+import org.junit.Test;
+import org.xml.sax.SAXException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

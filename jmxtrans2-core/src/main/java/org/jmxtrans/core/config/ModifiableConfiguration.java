@@ -22,17 +22,19 @@
  */
 package org.jmxtrans.core.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.query.Invocation;
 import org.jmxtrans.core.query.embedded.Server;
 import org.jmxtrans.utils.time.Interval;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-import java.util.ArrayList;
-import java.util.Collection;
+import lombok.Getter;
+import lombok.Setter;
 
 @NotThreadSafe
 final class ModifiableConfiguration implements Configuration {

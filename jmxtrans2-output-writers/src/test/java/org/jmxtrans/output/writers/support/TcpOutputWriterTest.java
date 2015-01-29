@@ -22,18 +22,20 @@
  */
 package org.jmxtrans.output.writers.support;
 
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.Charset;
+
+import javax.annotation.Nonnull;
+
 import org.jmxtrans.core.results.QueryResult;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.charset.Charset;
 
 import static com.jayway.awaitility.Awaitility.await;
 

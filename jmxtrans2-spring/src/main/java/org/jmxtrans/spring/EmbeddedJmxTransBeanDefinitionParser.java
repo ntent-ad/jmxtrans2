@@ -22,6 +22,9 @@
  */
 package org.jmxtrans.spring;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -33,9 +36,6 @@ import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * {@link org.springframework.beans.factory.xml.BeanDefinitionParser} for an {@link org.jmxtrans.spring.EmbeddedJmxTransFactory}.

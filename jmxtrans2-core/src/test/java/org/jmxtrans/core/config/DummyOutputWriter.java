@@ -22,13 +22,14 @@
  */
 package org.jmxtrans.core.config;
 
+import java.io.IOException;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 import org.jmxtrans.core.results.QueryResult;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.Map;
 
 public class DummyOutputWriter implements OutputWriter {
 

@@ -22,10 +22,10 @@
  */
 package org.jmxtrans.core.results;
 
-import org.jmxtrans.core.results.QueryResult;
 import org.junit.Test;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class QueryResultTest {

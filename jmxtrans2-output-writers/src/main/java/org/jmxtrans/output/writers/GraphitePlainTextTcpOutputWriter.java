@@ -22,29 +22,27 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.output.OutputWriterFactory;
-import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.utils.time.Clock;
-import org.jmxtrans.utils.time.SystemClock;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.core.output.OutputWriterFactory;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.SystemClock;
+
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
+
 import static org.jmxtrans.utils.ConfigurationUtils.getInt;
 import static org.jmxtrans.utils.ConfigurationUtils.getString;
 

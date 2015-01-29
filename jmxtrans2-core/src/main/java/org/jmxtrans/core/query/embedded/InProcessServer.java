@@ -22,14 +22,17 @@
  */
 package org.jmxtrans.core.query.embedded;
 
-import lombok.Getter;
+import java.lang.management.ManagementFactory;
 
 import javax.annotation.Nonnull;
 import javax.management.MBeanServerConnection;
-import java.lang.management.ManagementFactory;
+
+import lombok.Getter;
 
 public class InProcessServer implements Server {
-    @Nonnull @Getter private final Iterable<Query> queries;
+    @Nonnull
+    @Getter
+    private final Iterable<Query> queries;
 
     public InProcessServer(@Nonnull Iterable<Query> queries) {
         this.queries = queries;

@@ -22,21 +22,22 @@
  */
 package org.jmxtrans.servlet;
 
-import org.jmxtrans.core.config.JmxTransBuilder;
-import org.jmxtrans.core.scheduler.NaiveScheduler;
-import org.jmxtrans.utils.VisibleForTesting;
-import org.jmxtrans.utils.io.Resource;
-import org.jmxtrans.utils.io.StandardResource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
+
+import org.jmxtrans.core.config.JmxTransBuilder;
+import org.jmxtrans.core.scheduler.NaiveScheduler;
+import org.jmxtrans.utils.VisibleForTesting;
+import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.io.StandardResource;
 
 /**
  * Bootstrap listener to start up and shut down JmxTrans.

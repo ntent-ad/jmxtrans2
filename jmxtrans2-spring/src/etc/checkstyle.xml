@@ -23,12 +23,20 @@
 
 -->
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
-		"http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 <module name="Checker">
 
-	<module name="TreeWalker">
-		<module name="UnusedImports"/>
-		<module name="RedundantModifier"/>
-		<module name="EqualsHashCode"/>
-	</module>
+    <module name="TreeWalker">
+        <module name="EqualsHashCode"/>
+        <module name="ImportOrder">
+            <property name="groups" value="java.,javax.,org.jmxtrans."/>
+            <property name="ordered" value="true"/>
+            <property name="separated" value="true"/>
+            <property name="option" value="bottom"/>
+            <property name="caseSensitive" value="true"/>
+        </module>
+        <module name="RedundantImport"/>
+        <module name="RedundantModifier"/>
+        <module name="UnusedImports"/>
+    </module>
 </module>

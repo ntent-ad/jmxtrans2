@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.core.query.embedded;
 
-import org.junit.Test;
-
 import java.net.MalformedURLException;
+
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

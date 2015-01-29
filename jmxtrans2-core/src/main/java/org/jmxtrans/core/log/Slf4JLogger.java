@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.core.log;
 
-import org.slf4j.Logger;
-
 import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
 
 public class Slf4JLogger implements org.jmxtrans.core.log.Logger {
 

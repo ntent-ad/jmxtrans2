@@ -22,17 +22,20 @@
  */
 package org.jmxtrans.core.query.embedded;
 
+import java.lang.management.ManagementFactory;
+import java.util.Iterator;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
 import org.jmxtrans.core.results.QueryResult;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import java.lang.management.ManagementFactory;
-import java.util.Iterator;
-
 import static java.util.Arrays.asList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

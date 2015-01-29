@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.core.log;
 
-import org.jmxtrans.utils.time.SystemClock;
-
 import javax.annotation.Nonnull;
+
+import org.jmxtrans.utils.time.SystemClock;
 
 public class ConsoleLogProvider implements LogProvider {
 

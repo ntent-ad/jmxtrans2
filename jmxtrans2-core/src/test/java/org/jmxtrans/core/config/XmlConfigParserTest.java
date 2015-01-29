@@ -22,6 +22,14 @@
  */
 package org.jmxtrans.core.config;
 
+import java.io.IOException;
+import java.util.Iterator;
+
+import javax.management.MalformedObjectNameException;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.UnmarshalException;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.jmxtrans.core.query.Invocation;
 import org.jmxtrans.core.query.embedded.Query;
 import org.jmxtrans.core.query.embedded.Server;
@@ -30,18 +38,13 @@ import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.io.StandardResource;
 import org.jmxtrans.utils.time.Interval;
 import org.jmxtrans.utils.time.SystemClock;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import javax.management.MalformedObjectNameException;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.UnmarshalException;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.util.Iterator;
-
 import static java.util.concurrent.TimeUnit.SECONDS;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class XmlConfigParserTest {

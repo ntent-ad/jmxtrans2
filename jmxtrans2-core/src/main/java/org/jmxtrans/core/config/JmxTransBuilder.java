@@ -22,34 +22,27 @@
  */
 package org.jmxtrans.core.config;
 
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.core.query.embedded.ResultNameStrategy;
-import org.jmxtrans.core.scheduler.JmxTransThreadFactory;
-import org.jmxtrans.core.scheduler.NaiveScheduler;
-import org.jmxtrans.core.scheduler.QueryGenerator;
-import org.jmxtrans.core.scheduler.QueryProcessor;
-import org.jmxtrans.core.scheduler.ResultProcessor;
-import org.jmxtrans.utils.PropertyPlaceholderResolver;
-import org.jmxtrans.utils.io.Resource;
-import org.jmxtrans.utils.time.Clock;
-import org.jmxtrans.utils.time.SystemClock;
-import org.xml.sax.SAXException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.*;
+import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
-import java.util.concurrent.TimeUnit;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.query.embedded.ResultNameStrategy;
+import org.jmxtrans.core.scheduler.*;
+import org.jmxtrans.utils.PropertyPlaceholderResolver;
+import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.SystemClock;
+
+import org.xml.sax.SAXException;
 
 import static java.util.Collections.singleton;
 import static java.util.concurrent.TimeUnit.MINUTES;

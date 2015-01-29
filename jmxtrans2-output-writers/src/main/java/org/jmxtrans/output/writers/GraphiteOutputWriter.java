@@ -22,16 +22,6 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.OutputWriterFactory;
-import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.output.writers.support.BatchingOutputWriter;
-import org.jmxtrans.output.writers.support.TcpOutputWriter;
-import org.jmxtrans.output.writers.support.WriterBasedOutputWriter;
-import org.jmxtrans.utils.VisibleForTesting;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.InetAddress;
@@ -40,7 +30,19 @@ import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
+
+import org.jmxtrans.core.output.OutputWriterFactory;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.output.writers.support.BatchingOutputWriter;
+import org.jmxtrans.output.writers.support.TcpOutputWriter;
+import org.jmxtrans.output.writers.support.WriterBasedOutputWriter;
+import org.jmxtrans.utils.VisibleForTesting;
+
 import static java.util.concurrent.TimeUnit.SECONDS;
+
 import static org.jmxtrans.utils.ConfigurationUtils.getInt;
 
 @ThreadSafe

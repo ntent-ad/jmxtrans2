@@ -22,9 +22,10 @@
  */
 package org.jmxtrans.utils.time;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.concurrent.atomic.AtomicLong;
 
 @ThreadSafe
 public class NanoChronometer implements AutoCloseable {

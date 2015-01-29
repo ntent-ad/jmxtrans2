@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.output.writers.utils;
 
-import org.junit.Test;
-
 import java.util.Arrays;
+
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

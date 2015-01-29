@@ -22,18 +22,17 @@
  */
 package org.jmxtrans.core.scheduler;
 
-import org.jmxtrans.core.scheduler.NaiveScheduler;
-import org.jmxtrans.core.scheduler.QueryGenerator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
-
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NaiveSchedulerTest {

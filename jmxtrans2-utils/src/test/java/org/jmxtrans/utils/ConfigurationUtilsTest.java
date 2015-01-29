@@ -22,10 +22,10 @@
  */
 package org.jmxtrans.utils;
 
+import java.util.Map;
+
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
-
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

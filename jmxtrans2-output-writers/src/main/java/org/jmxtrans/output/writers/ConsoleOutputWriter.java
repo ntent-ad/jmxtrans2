@@ -22,16 +22,17 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.output.OutputWriterFactory;
-import org.jmxtrans.core.results.QueryResult;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+
+import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.core.output.OutputWriterFactory;
+import org.jmxtrans.core.results.QueryResult;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>

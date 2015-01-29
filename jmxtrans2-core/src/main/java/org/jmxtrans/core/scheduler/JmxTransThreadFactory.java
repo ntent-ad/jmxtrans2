@@ -22,9 +22,10 @@
  */
 package org.jmxtrans.core.scheduler;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.Nonnull;
 
 import static java.util.concurrent.Executors.defaultThreadFactory;
 

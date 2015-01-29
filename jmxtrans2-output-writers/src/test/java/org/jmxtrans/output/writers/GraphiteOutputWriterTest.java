@@ -22,11 +22,12 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.results.QueryResult;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.io.StringWriter;
+
+import org.jmxtrans.core.results.QueryResult;
+
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -22,11 +22,13 @@
  */
 package org.jmxtrans.core.output;
 
-import org.jmxtrans.core.results.QueryResult;
-import org.junit.Test;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
+
+import org.jmxtrans.core.results.QueryResult;
+
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

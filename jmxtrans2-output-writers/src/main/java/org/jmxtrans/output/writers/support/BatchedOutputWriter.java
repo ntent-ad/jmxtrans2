@@ -22,10 +22,11 @@
  */
 package org.jmxtrans.output.writers.support;
 
-import org.jmxtrans.core.output.OutputWriter;
+import java.io.IOException;
 
 import javax.annotation.concurrent.ThreadSafe;
-import java.io.IOException;
+
+import org.jmxtrans.core.output.OutputWriter;
 
 /**
  * While {@link BatchedOutputWriter#beforeBatch()},

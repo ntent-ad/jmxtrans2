@@ -22,16 +22,16 @@
  */
 package org.jmxtrans.agent;
 
+import java.io.IOException;
+import java.lang.instrument.Instrumentation;
+import java.util.Collections;
+
 import org.jmxtrans.core.config.JmxTransBuilder;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.utils.appinfo.AppInfo;
 import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.io.StandardResource;
-
-import java.io.IOException;
-import java.lang.instrument.Instrumentation;
-import java.util.Collections;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>

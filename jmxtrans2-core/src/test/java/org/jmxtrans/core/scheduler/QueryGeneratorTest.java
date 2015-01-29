@@ -22,31 +22,29 @@
  */
 package org.jmxtrans.core.scheduler;
 
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.jmxtrans.core.query.embedded.Query;
 import org.jmxtrans.core.query.embedded.Server;
-import org.jmxtrans.core.scheduler.QueryGenerator;
-import org.jmxtrans.core.scheduler.QueryProcessor;
 import org.jmxtrans.utils.time.Interval;
 import org.jmxtrans.utils.time.ManualClock;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QueryGeneratorTest {

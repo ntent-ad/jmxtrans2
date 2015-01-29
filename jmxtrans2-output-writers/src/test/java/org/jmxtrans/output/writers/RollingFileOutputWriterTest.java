@@ -22,11 +22,12 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.utils.DummyFiles;
-import org.junit.Test;
-
 import java.io.File;
 import java.io.IOException;
+
+import org.jmxtrans.utils.DummyFiles;
+
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

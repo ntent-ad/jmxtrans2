@@ -22,11 +22,12 @@
  */
 package org.jmxtrans.core.output;
 
-import org.jmxtrans.core.results.QueryResult;
+import java.io.IOException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-import java.io.IOException;
+
+import org.jmxtrans.core.results.QueryResult;
 
 /**
  * By convention an {@link OutputWriter} must have a static inner class of type

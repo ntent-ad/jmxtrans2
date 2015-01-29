@@ -22,13 +22,13 @@
  */
 package org.jmxtrans.standalone.cli;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.beust.jcommander.ParameterException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import java.io.File;
-import java.io.IOException;
 
 public class ExistingFileValidatorTest {
 

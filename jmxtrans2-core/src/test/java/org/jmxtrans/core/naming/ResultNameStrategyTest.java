@@ -22,12 +22,10 @@
  */
 package org.jmxtrans.core.naming;
 
-import org.jmxtrans.core.naming.ExpressionLanguageEngineImpl;
-import org.jmxtrans.core.naming.ResultNameStrategyImpl;
+import javax.management.ObjectName;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import javax.management.ObjectName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

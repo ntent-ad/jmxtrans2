@@ -22,10 +22,10 @@
  */
 package org.jmxtrans.core.circuitbreaker;
 
-import lombok.Getter;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+
+import lombok.Getter;
 
 import static java.lang.String.format;
 

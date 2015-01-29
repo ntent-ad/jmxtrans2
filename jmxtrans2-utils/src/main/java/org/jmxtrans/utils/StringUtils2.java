@@ -22,9 +22,10 @@
  */
 package org.jmxtrans.utils;
 
+import java.util.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
 
 /**
  * Yet another {@code StringUtils} class.

@@ -22,10 +22,11 @@
  */
 package org.jmxtrans.utils.collections;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 public final class ArrayUtils {
 

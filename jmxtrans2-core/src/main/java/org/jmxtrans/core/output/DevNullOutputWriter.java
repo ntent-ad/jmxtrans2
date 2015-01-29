@@ -22,13 +22,14 @@
  */
 package org.jmxtrans.core.output;
 
-import org.jmxtrans.core.results.QueryResult;
+import java.io.IOException;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
-import java.io.IOException;
-import java.util.Map;
+
+import org.jmxtrans.core.results.QueryResult;
 
 @Immutable
 @ThreadSafe

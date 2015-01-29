@@ -22,9 +22,10 @@
  */
 package org.jmxtrans.utils.io;
 
-import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 @ThreadSafe
 public final class NullOutputStream extends OutputStream {

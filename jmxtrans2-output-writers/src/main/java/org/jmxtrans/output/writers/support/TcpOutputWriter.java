@@ -22,10 +22,6 @@
  */
 package org.jmxtrans.output.writers.support;
 
-import org.jmxtrans.core.results.QueryResult;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -34,6 +30,11 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+
+import org.jmxtrans.core.results.QueryResult;
 
 /**
  * Provide base functionality to write a TCP based OutputWriter.
