@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TcpOutputWriter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - output writers</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.output.writers.support</a> &gt; <span class="el_source">TcpOutputWriter.java</span></div><h1>TcpOutputWriter.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.output.writers.support;
+
+import org.jmxtrans.core.results.QueryResult;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.nio.charset.Charset;
+
+/**
+ * Provide base functionality to write a TCP based OutputWriter.
+ *
+ * To ensure optimal use of network resources, TcpOutputWriter is implemented as a
+ * {@link BatchedOutputWriter} and the socket writer is wrapped in a
+ * {@link java.io.BufferedWriter}. Socket is opened and connected when writing the first result and closed after the
+ * batch.
+ *
+ * In case of error on the TCP connection during the write of the batch, a new socket is created when writing the next
+ * result. Previous results might be lost. Implementation of this class may choose to flush the writer to improve
+ * predictability at the cost of performance.
+ *
+ * Note: At this point a TCP connection is created and closed for each batch. It would probably make sense to pool the
+ * connections instead.
+ */
+@ThreadSafe
+public class TcpOutputWriter&lt;T extends WriterBasedOutputWriter&gt; implements BatchedOutputWriter {
+
+<span class="fc" id="L56">    @Nonnull private final ThreadLocal&lt;BufferedWriter&gt; threadLocalWriter = new ThreadLocal&lt;&gt;();</span>
+<span class="fc" id="L57">    @Nonnull private final ThreadLocal&lt;Socket&gt; threadLocalSocket = new ThreadLocal&lt;&gt;();</span>
+    @Nonnull private final InetSocketAddress server;
+    @Nonnull private final Charset charset;
+    private final int socketTimeoutMillis;
+    @Nonnull private final T target;
+
+    public TcpOutputWriter(
+            @Nonnull InetSocketAddress server,
+            int socketTimeoutMillis,
+            @Nonnull Charset charset,
+<span class="fc" id="L67">            @Nonnull T target) {</span>
+<span class="fc" id="L68">        this.server = server;</span>
+<span class="fc" id="L69">        this.charset = charset;</span>
+<span class="fc" id="L70">        this.socketTimeoutMillis = socketTimeoutMillis;</span>
+<span class="fc" id="L71">        this.target = target;</span>
+<span class="fc" id="L72">    }</span>
+
+    @Override
+<span class="fc" id="L75">    public void beforeBatch() {}</span>
+
+    @Override
+    public void write(@Nonnull QueryResult result) throws IOException {
+<span class="fc" id="L79">        target.write(getWriter(), result);</span>
+<span class="fc" id="L80">    }</span>
+
+    @Nonnull
+    protected Writer getWriter() throws IOException {
+<span class="fc" id="L84">        ensureConnected();</span>
+<span class="fc" id="L85">        Writer writer = threadLocalWriter.get();</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (writer == null) {</span>
+<span class="nc" id="L87">            throw new IllegalStateException(&quot;Writer has not been initialized&quot;);</span>
+        }
+<span class="fc" id="L89">        return writer;</span>
+    }
+
+    private void ensureConnected() throws IOException {
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (!connectionHealthy()) {</span>
+<span class="fc" id="L94">            releaseSocket();</span>
+<span class="fc" id="L95">            connectToServer();</span>
+        }
+<span class="fc" id="L97">    }</span>
+
+    private boolean connectionHealthy() {
+        try {
+<span class="fc" id="L101">            Socket socket = threadLocalSocket.get();</span>
+<span class="pc bpc" id="L102" title="11 of 12 branches missed.">            return socket != null</span>
+                    &amp;&amp; socket.isConnected()
+                    &amp;&amp; socket.isBound()
+                    &amp;&amp; !socket.isClosed()
+                    &amp;&amp; !socket.isInputShutdown()
+                    &amp;&amp; !socket.isOutputShutdown();
+<span class="nc" id="L108">        } catch (Exception e) {</span>
+<span class="nc" id="L109">            return false;</span>
+        }
+    }
+
+    @Nonnull
+    private void connectToServer() throws IOException {
+        // create new InetSocketAddress to ensure name resolution is done again
+<span class="fc" id="L116">        SocketAddress serverAddress = new InetSocketAddress(server.getHostName(), server.getPort());</span>
+<span class="fc" id="L117">        Socket socket = new Socket();</span>
+<span class="fc" id="L118">        socket.setKeepAlive(false);</span>
+<span class="fc" id="L119">        socket.connect(serverAddress, socketTimeoutMillis);</span>
+<span class="fc" id="L120">        threadLocalWriter.set(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset)));</span>
+<span class="fc" id="L121">    }</span>
+
+    private void releaseSocket() throws IOException {
+<span class="pc" id="L124">        try (Socket socket = threadLocalSocket.get();</span>
+<span class="fc" id="L125">             BufferedWriter writer = threadLocalWriter.get()) {</span>
+<span class="fc" id="L126">            threadLocalWriter.remove();</span>
+<span class="fc" id="L127">            threadLocalSocket.remove();</span>
+<span class="pc bpc" id="L128" title="12 of 16 branches missed.">        }</span>
+<span class="fc" id="L129">    }</span>
+
+    @Override
+    public void afterBatch() throws IOException {
+<span class="fc" id="L133">        releaseSocket();</span>
+<span class="fc" id="L134">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
