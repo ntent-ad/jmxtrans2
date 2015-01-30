@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Query.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - core</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.core.query.embedded</a> &gt; <span class="el_source">Query.java</span></div><h1>Query.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.core.query.embedded;
+
+import lombok.Getter;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.NanoChronometer;
+import org.jmxtrans.utils.time.SystemClock;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.lang.String.format;
+import static java.util.Objects.hash;
+
+/**
+ * Describe a JMX query on which metrics are collected.
+ *
+ * @author &lt;a href=&quot;mailto:cleclerc@xebia.fr&quot;&gt;Cyrille Le Clerc&lt;/a&gt;
+ * @author Jon Stevens
+ */
+public class Query implements QueryMBean {
+
+<span class="fc" id="L64">    @Nonnull</span>
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+
+    /**
+     * ObjectName of the Query MBean(s) to monitor, can contain
+     */
+<span class="nc" id="L70">    @Nonnull @Getter private final ObjectName objectName;</span>
+
+<span class="fc" id="L72">    @Nullable @Getter private final String resultAlias;</span>
+    /**
+     * JMX attributes to collect. As an array for {@link javax.management.MBeanServer#getAttributes(javax.management.ObjectName, String[])}
+     */
+    @Nonnull
+    private final Map&lt;String, QueryAttribute&gt; attributesByName;
+    /**
+     * Copy of {@link #attributesByName}'s {@link java.util.Map#entrySet()} for performance optimization
+     */
+    @Nonnull
+    private final String[] attributeNames;
+
+    @Nonnull
+    private final QueryMetrics metrics;
+
+    /**
+     * {@link javax.management.ObjectName} of this {@link QueryMBean}
+     */
+<span class="nc" id="L90">    @Nonnull @Getter private final ObjectName queryMbeanObjectName;</span>
+
+    @Nullable
+    private MBeanServer mbeanServer;
+
+<span class="fc" id="L95">    @Getter private final int maxResults;</span>
+    
+    private Query(@Nonnull ObjectName objectName,
+                  @Nullable String resultAlias,
+                  @Nonnull List&lt;QueryAttribute&gt; attributes,
+                  @Nonnull ObjectName queryMbeanObjectName,
+                  int maxResults,
+<span class="fc" id="L102">                  @Nonnull Clock clock) {</span>
+<span class="fc" id="L103">        this.objectName = objectName;</span>
+<span class="fc" id="L104">        this.resultAlias = resultAlias;</span>
+<span class="fc" id="L105">        this.maxResults = maxResults;</span>
+<span class="fc" id="L106">        this.attributesByName = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        for (QueryAttribute attribute : attributes) {</span>
+<span class="fc" id="L108">            attributesByName.put(attribute.getName(), attribute);</span>
+<span class="fc" id="L109">        }</span>
+<span class="fc" id="L110">        this.attributeNames = attributesByName.keySet().toArray(new String[0]);</span>
+<span class="fc" id="L111">        this.queryMbeanObjectName = queryMbeanObjectName;</span>
+<span class="fc" id="L112">        metrics = new QueryMetrics(clock);</span>
+<span class="fc" id="L113">    }</span>
+
+    public Iterable&lt;QueryResult&gt; collectMetrics(@Nonnull MBeanServerConnection mbeanServer, @Nonnull ResultNameStrategy resultNameStrategy) throws IOException {
+<span class="fc" id="L116">        Collection&lt;QueryResult&gt; results = new ArrayList&lt;&gt;();</span>
+<span class="pc" id="L117">        try (NanoChronometer chrono = metrics.collectionDurationChronometer()) {</span>
+            /*
+             * Optimisation tip: no need to skip 'mbeanServer.queryNames()' if the ObjectName is not a pattern
+             * (i.e. not '*' or '?' wildcard) because the mbeanserver internally performs the check.
+             * Seen on com.sun.jmx.interceptor.DefaultMBeanServerInterceptor
+             */
+<span class="fc" id="L123">            Set&lt;ObjectName&gt; matchingObjectNames = mbeanServer.queryNames(this.objectName, null);</span>
+<span class="fc" id="L124">            logger.debug(format(&quot;Query %s returned %s&quot;, objectName, matchingObjectNames));</span>
+
+<span class="fc bfc" id="L126" title="All 2 branches covered.">            for (ObjectName matchingObjectName : matchingObjectNames) {</span>
+                try {
+<span class="fc" id="L128">                    AttributeList jmxAttributes = mbeanServer.getAttributes(matchingObjectName, this.attributeNames);</span>
+<span class="fc" id="L129">                    logger.debug(format(&quot;Query %s returned %s&quot;, matchingObjectName, jmxAttributes));</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">                    for (Attribute jmxAttribute : jmxAttributes.asList()) {</span>
+<span class="fc" id="L131">                        attributesByName.get(jmxAttribute.getName()).collectMetrics(</span>
+                                matchingObjectName, jmxAttribute.getValue(), results, this, resultNameStrategy, maxResults);
+
+                        // early return if we reach maxResults
+<span class="fc bfc" id="L135" title="All 2 branches covered.">                        if (results.size() &gt;= maxResults) return results;</span>
+<span class="fc" id="L136">                    }</span>
+<span class="nc" id="L137">                } catch (Exception e) {</span>
+<span class="nc" id="L138">                    logger.warn(format(&quot;Exception processing query %s&quot;, this), e);</span>
+<span class="fc" id="L139">                }</span>
+<span class="fc" id="L140">            }</span>
+<span class="fc" id="L141">            return results;</span>
+<span class="pc bpc" id="L142" title="8 of 12 branches missed.">        } finally {</span>
+<span class="pc" id="L143">            metrics.incrementCollected(results.size());</span>
+<span class="pc" id="L144">            metrics.incrementCollectionsCount();</span>
+        }
+    }
+
+    @PostConstruct
+    public void start() throws Exception {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (mbeanServer != null) {</span>
+<span class="nc" id="L151">            mbeanServer.registerMBean(this, queryMbeanObjectName);</span>
+        }
+<span class="nc" id="L153">    }</span>
+
+    @PreDestroy
+    public void stop() throws Exception {
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (mbeanServer != null) {</span>
+<span class="nc" id="L158">            mbeanServer.unregisterMBean(queryMbeanObjectName);</span>
+        }
+<span class="nc" id="L160">    }</span>
+
+    @Nonnull
+    public Collection&lt;QueryAttribute&gt; getQueryAttributes() {
+<span class="nc" id="L164">        return attributesByName.values();</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L170" title="2 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+
+<span class="fc" id="L172">        Query that = (Query) o;</span>
+
+<span class="pc bpc" id="L174" title="3 of 6 branches missed.">        return Objects.equals(attributesByName, that.attributesByName)</span>
+                &amp;&amp; Objects.equals(objectName, that.objectName)
+                &amp;&amp; Objects.equals(resultAlias, that.resultAlias);
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L181">        return hash(objectName, resultAlias, attributesByName);</span>
+    }
+
+    @Override
+    @Nonnull
+    public String toString() {
+<span class="fc" id="L187">        return &quot;Query{&quot; +</span>
+                &quot;objectName=&quot; + objectName +
+                &quot;, resultAlias='&quot; + resultAlias + '\'' +
+                &quot;, attributes=&quot; + attributesByName.values() +
+                '}';
+    }
+
+    @Override
+    public int getCollectedMetricsCount() {
+<span class="nc" id="L196">        return metrics.getCollectedCount();</span>
+    }
+
+    @Override
+    public long getCollectionDurationInNanos() {
+<span class="nc" id="L201">        return metrics.getCollectionDurationNano();</span>
+    }
+
+    @Override
+    public int getCollectionCount() {
+<span class="nc" id="L206">        return metrics.getCollectionsCount();</span>
+    }
+
+    @Override
+    @Nonnull
+    public String getId() {
+<span class="nc" id="L212">        return queryMbeanObjectName.getCanonicalName();</span>
+    }
+
+    public void setMbeanServer(@Nonnull MBeanServer mbeanServer) {
+<span class="nc" id="L216">        this.mbeanServer = mbeanServer;</span>
+<span class="nc" id="L217">    }</span>
+
+    @Nonnull
+    public static Builder builder() {
+<span class="fc" id="L221">        return new Builder();</span>
+    }
+
+    public static final class Builder {
+<span class="fc" id="L225">        @Nonnull private static final AtomicInteger queryIdSequence = new AtomicInteger();</span>
+
+        @Nullable private ObjectName objectName;
+        @Nullable private String resultAlias;
+<span class="fc" id="L229">        @Nonnull private final List&lt;QueryAttribute&gt; attributes = new ArrayList&lt;&gt;();</span>
+        @Nonnull private final Clock clock;
+<span class="fc" id="L231">        private int maxResults = 50;</span>
+
+<span class="fc" id="L233">        private Builder() {</span>
+<span class="fc" id="L234">            this.clock = new SystemClock();</span>
+<span class="fc" id="L235">        }</span>
+
+        @Nonnull public Builder withObjectName(@Nonnull String objectName) {
+            try {
+<span class="fc" id="L239">                withObjectName(new ObjectName(objectName));</span>
+<span class="fc" id="L240">                return this;</span>
+<span class="nc" id="L241">            } catch (MalformedObjectNameException e) {</span>
+<span class="nc" id="L242">                throw new RuntimeException(&quot;Object name [&quot; + objectName + &quot;] is not valid, cannot build query.&quot;);</span>
+            }
+        }
+
+        @Nonnull
+        public Builder withObjectName(@Nonnull ObjectName objectName) {
+<span class="fc" id="L248">            this.objectName = objectName;</span>
+<span class="fc" id="L249">            return this;</span>
+        }
+
+        public Builder withResultAlias(@Nullable String resultAlias) {
+<span class="fc" id="L253">            this.resultAlias = resultAlias;</span>
+<span class="fc" id="L254">            return this;</span>
+        }
+        
+        public Builder withMaxResults(int maxResults) {
+<span class="fc" id="L258">            this.maxResults = maxResults;</span>
+<span class="fc" id="L259">            return this;</span>
+        }
+
+        public Builder addAttribute(@Nonnull String attributeName) {
+<span class="fc" id="L263">            addAttribute(QueryAttribute.builder(attributeName).build());</span>
+<span class="fc" id="L264">            return this;</span>
+        }
+
+        public Builder addAttribute(@Nonnull QueryAttribute attribute) {
+<span class="fc" id="L268">            attributes.add(attribute);</span>
+<span class="fc" id="L269">            return this;</span>
+        }
+
+        public Builder addAttributes(@Nonnull Collection&lt;QueryAttribute&gt; attributes) {
+<span class="nc" id="L273">            this.attributes.addAll(attributes);</span>
+<span class="nc" id="L274">            return this;</span>
+        }
+
+        @Nonnull
+        public Query build() {
+            try {
+<span class="pc bpc" id="L280" title="1 of 2 branches missed.">                if (objectName == null) {</span>
+<span class="nc" id="L281">                    throw new RuntimeException(&quot;Cannot create query without an object name, please check your code&quot;);</span>
+                }
+<span class="fc" id="L283">                return new Query(</span>
+                        objectName,
+                        resultAlias,
+                        attributes,
+                        new ObjectName(&quot;org.jmxtrans.embedded:Type=Query,id=&quot; + queryIdSequence.incrementAndGet()),
+                        maxResults,
+                        clock
+                );
+<span class="nc" id="L291">            } catch (MalformedObjectNameException e) {</span>
+<span class="nc" id="L292">                throw new RuntimeException(&quot;Object name [&quot; + objectName + &quot;] is not valid, cannot expose MBean for this query.&quot;);</span>
+            }
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
