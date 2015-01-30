@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>StandardResource.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - utils</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.utils.io</a> &gt; <span class="el_source">StandardResource.java</span></div><h1>StandardResource.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.utils.io;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+@ThreadSafe
+public class StandardResource implements Resource {
+
+    @Nonnull
+    private final String path;
+
+<span class="fc" id="L40">    public StandardResource(@Nonnull String path) {</span>
+<span class="fc" id="L41">        this.path = path;</span>
+<span class="fc" id="L42">    }</span>
+
+    @Override
+    @Nonnull
+    public String getPath() {
+<span class="nc" id="L47">        return path;</span>
+    }
+
+    @Override
+    @Nonnull
+    public InputStream getInputStream() throws IOException {
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (path.toLowerCase().startsWith(&quot;classpath:&quot;)) {</span>
+<span class="fc" id="L54">            return getClasspathInputStream();</span>
+<span class="pc bpc" id="L55" title="2 of 6 branches missed.">        } else if (path.toLowerCase().startsWith(&quot;file://&quot;) ||</span>
+                path.toLowerCase().startsWith(&quot;http://&quot;) ||
+                path.toLowerCase().startsWith(&quot;https://&quot;)
+                ) {
+<span class="fc" id="L59">            return getURLInputStream();</span>
+        } else {
+<span class="fc" id="L61">            return getFileInputStream();</span>
+        }
+    }
+
+    @Nonnull
+    private InputStream getClasspathInputStream() throws IOException {
+<span class="fc" id="L67">        String classpathResourcePath = path.substring(&quot;classpath:&quot;.length());</span>
+<span class="fc" id="L68">        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(classpathResourcePath);</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (inputStream == null) {</span>
+<span class="fc" id="L70">            throw new IOException(String.format(&quot;Resource [%s] does not exist.&quot;, path));</span>
+        }
+<span class="fc" id="L72">        return inputStream;</span>
+    }
+
+    @Nonnull
+    private FileInputStream getFileInputStream() throws FileNotFoundException {
+<span class="fc" id="L77">        return new FileInputStream(new File(path));</span>
+    }
+
+    @Nonnull
+    private InputStream getURLInputStream() throws IOException {
+<span class="fc" id="L82">        URL url = new URL(path);</span>
+<span class="fc" id="L83">        return url.openStream();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
