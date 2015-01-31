@@ -41,7 +41,8 @@
         <verify.bundleLineRate>0.78</verify.bundleLineRate>
         <verify.classBranchRate>0.0</verify.classBranchRate>
         <verify.classLineRate>0.40</verify.classLineRate>
-        <verify.mutation.threshold>49</verify.mutation.threshold>
+        <verify.coverage.threshold>77</verify.coverage.threshold>
+        <verify.mutation.threshold>54</verify.mutation.threshold>
         <verify.packageBranchRate>0.26</verify.packageBranchRate>
         <verify.packageLineRate>0.47</verify.packageLineRate>
     </properties>

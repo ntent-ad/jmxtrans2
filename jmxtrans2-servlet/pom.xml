@@ -36,7 +36,7 @@
 
     <properties>
         <verify.bundleLineRate>0.52</verify.bundleLineRate>
-        <verify.coverage.threshold>73</verify.coverage.threshold>
+        <verify.coverage.threshold>55</verify.coverage.threshold>
         <verify.mutation.threshold>55</verify.mutation.threshold>
         <verify.packageLineRate>0.52</verify.packageLineRate>
     </properties>
