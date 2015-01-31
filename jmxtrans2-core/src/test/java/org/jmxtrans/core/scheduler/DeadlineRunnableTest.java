@@ -22,14 +22,15 @@
  */
 package org.jmxtrans.core.scheduler;
 
-import org.jmxtrans.core.scheduler.DeadlineRunnable;
-import org.jmxtrans.utils.time.Clock;
-import org.jmxtrans.utils.time.ManualClock;
-import org.junit.Test;
-
 import javax.annotation.Nonnull;
 
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.ManualClock;
+
+import org.junit.Test;
+
 import static java.util.concurrent.TimeUnit.SECONDS;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DeadlineRunnableTest {

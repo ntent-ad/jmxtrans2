@@ -22,20 +22,22 @@
  */
 package org.jmxtrans.core.query;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import org.jmxtrans.core.results.QueryResult;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import java.lang.management.ManagementFactory;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.annotation.Nullable;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import java.lang.management.ManagementFactory;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
+
+import org.jmxtrans.core.results.QueryResult;
+
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

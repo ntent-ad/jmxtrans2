@@ -22,11 +22,11 @@
  */
 package org.jmxtrans.standalone.cli;
 
-import com.beust.jcommander.Parameter;
-import lombok.Getter;
-
 import java.io.File;
 import java.util.List;
+
+import com.beust.jcommander.Parameter;
+import lombok.Getter;
 
 public class JmxTransParameters {
 

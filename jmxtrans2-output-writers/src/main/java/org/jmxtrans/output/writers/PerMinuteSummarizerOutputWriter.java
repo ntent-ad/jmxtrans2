@@ -22,16 +22,6 @@
  */
 package org.jmxtrans.output.writers;
 
-import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.core.results.QueryResultValueComparator;
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.output.writers.utils.EvictingQueue;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -39,6 +29,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.core.results.QueryResultValueComparator;
+import org.jmxtrans.output.writers.utils.EvictingQueue;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 

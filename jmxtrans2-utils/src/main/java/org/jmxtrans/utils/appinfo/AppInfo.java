@@ -22,14 +22,15 @@
  */
 package org.jmxtrans.utils.appinfo;
 
-import lombok.Getter;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Properties;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import lombok.Getter;
 
 public class AppInfo<T> {
 

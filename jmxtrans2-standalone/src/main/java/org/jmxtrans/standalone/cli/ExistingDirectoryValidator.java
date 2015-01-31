@@ -22,10 +22,10 @@
  */
 package org.jmxtrans.standalone.cli;
 
+import java.io.File;
+
 import com.beust.jcommander.IValueValidator;
 import com.beust.jcommander.ParameterException;
-
-import java.io.File;
 
 import static java.lang.String.format;
 

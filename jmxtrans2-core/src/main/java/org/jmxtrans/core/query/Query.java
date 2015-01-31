@@ -22,14 +22,10 @@
  */
 package org.jmxtrans.core.query;
 
-import lombok.Getter;
-import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.utils.collections.ArrayUtils;
-import org.jmxtrans.utils.collections.Iterables2;
-import org.jmxtrans.utils.time.Clock;
-import org.jmxtrans.utils.time.SystemClock;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,10 +39,16 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.openmbean.CompositeData;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.Set;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.collections.ArrayUtils;
+import org.jmxtrans.utils.collections.Iterables2;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.SystemClock;
+
+import lombok.Getter;
 
 /**
  * @deprecated use @link{org.jmxtrans.core.query.embedded.Query} instead.
@@ -62,7 +64,8 @@ public class Query {
     @Nonnull
     private final ResultNameStrategy resultNameStrategy;
 
-    @Nonnull @Getter private final ObjectName objectName;
+    @Nonnull @Getter
+    private final ObjectName objectName;
     @Nonnull @Getter private final String resultAlias;
     /**
      * The attribute to retrieve ({@link javax.management.MBeanServer#getAttribute(javax.management.ObjectName, String)})

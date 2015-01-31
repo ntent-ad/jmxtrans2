@@ -22,18 +22,19 @@
  */
 package org.jmxtrans.output.writers.support;
 
-import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.core.results.QueryResultTimeComparator;
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.annotation.Nonnull;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.core.results.QueryResultTimeComparator;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;

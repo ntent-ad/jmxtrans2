@@ -22,14 +22,15 @@
  */
 package org.jmxtrans.output.writers;
 
+import java.util.Collections;
+
 import org.jmxtrans.core.output.DevNullOutputWriter;
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.results.QueryResult;
+
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

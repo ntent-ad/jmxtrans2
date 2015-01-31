@@ -22,24 +22,24 @@
  */
 package org.jmxtrans.core.log;
 
-import org.jmxtrans.utils.time.ManualClock;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+
+import org.jmxtrans.utils.time.ManualClock;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import static java.lang.System.lineSeparator;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
+
+import static org.jmxtrans.core.log.Level.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.jmxtrans.core.log.Level.DEBUG;
-import static org.jmxtrans.core.log.Level.ERROR;
-import static org.jmxtrans.core.log.Level.INFO;
-import static org.jmxtrans.core.log.Level.WARN;
 
 public class PrintWriterLoggerTest {
 

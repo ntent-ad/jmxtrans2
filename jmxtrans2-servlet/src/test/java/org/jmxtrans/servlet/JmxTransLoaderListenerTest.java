@@ -22,21 +22,24 @@
  */
 package org.jmxtrans.servlet;
 
-import org.jmxtrans.utils.io.Resource;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.servlet.ServletContext;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javax.servlet.ServletContext;
+
+import org.jmxtrans.utils.io.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
 import static org.jmxtrans.servlet.JmxTransLoaderListener.CONFIG_LOCATION_PARAM;
 import static org.jmxtrans.servlet.JmxTransLoaderListener.SYSTEM_CONFIG_LOCATION_PARAM;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

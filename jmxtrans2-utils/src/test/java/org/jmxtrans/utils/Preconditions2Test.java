@@ -22,13 +22,14 @@
  */
 package org.jmxtrans.utils;
 
-import org.junit.Test;
-
 import java.util.Objects;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
 import static org.jmxtrans.utils.Preconditions2.checkArgument;
 import static org.jmxtrans.utils.Preconditions2.checkNotEmpty;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class Preconditions2Test {
 

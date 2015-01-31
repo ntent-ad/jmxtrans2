@@ -22,10 +22,10 @@
  */
 package org.jmxtrans.utils;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import static java.util.Objects.requireNonNull;
 

@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.utils.io;
 
-import org.junit.Test;
-
 import java.io.IOException;
+
+import org.junit.Test;
 
 public class NullOutputStreamTest {
 

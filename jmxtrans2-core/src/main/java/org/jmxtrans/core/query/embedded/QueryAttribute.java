@@ -22,7 +22,18 @@
  */
 package org.jmxtrans.core.query.embedded;
 
-import lombok.Getter;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.management.ObjectName;
+import javax.management.openmbean.CompositeData;
+
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.results.QueryResult;
@@ -30,16 +41,7 @@ import org.jmxtrans.utils.Preconditions2;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.SystemClock;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.management.ObjectName;
-import javax.management.openmbean.CompositeData;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import lombok.Getter;
 
 import static java.lang.String.format;
 import static java.util.Objects.hash;
@@ -62,7 +64,8 @@ public class QueryAttribute {
     /**
      * Name of the JMX Attribute to collect
      */
-    @Nonnull @Getter private final String name;
+    @Nonnull @Getter
+    private final String name;
     /**
      * Used to create the name of the {@link org.jmxtrans.core.results.QueryResult} that will be exported.
      * <p/>

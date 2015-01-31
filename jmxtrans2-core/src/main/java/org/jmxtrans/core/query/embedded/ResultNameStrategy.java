@@ -22,19 +22,16 @@
  */
 package org.jmxtrans.core.query.embedded;
 
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.utils.StringUtils2;
+import java.net.InetAddress;
+import java.util.*;
+import java.util.concurrent.Callable;
 
 import javax.annotation.Nonnull;
 import javax.management.ObjectName;
-import java.net.InetAddress;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.utils.StringUtils2;
 
 import static java.lang.String.format;
 

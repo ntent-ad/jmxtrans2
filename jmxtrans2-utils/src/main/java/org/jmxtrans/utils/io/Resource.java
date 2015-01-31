@@ -22,9 +22,10 @@
  */
 package org.jmxtrans.utils.io;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by gehel on 17/01/15.

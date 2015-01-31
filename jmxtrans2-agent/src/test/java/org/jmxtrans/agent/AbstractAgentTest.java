@@ -22,10 +22,6 @@
  */
 package org.jmxtrans.agent;
 
-import com.google.common.io.ByteStreams;
-import org.jmxtrans.core.log.ConsoleLogProvider;
-import org.junit.After;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Callable;
+
+import org.jmxtrans.core.log.ConsoleLogProvider;
+
+import com.google.common.io.ByteStreams;
+import org.junit.After;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

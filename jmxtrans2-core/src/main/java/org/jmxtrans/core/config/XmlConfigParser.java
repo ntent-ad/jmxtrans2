@@ -22,29 +22,10 @@
  */
 package org.jmxtrans.core.config;
 
-import org.jmxtrans.core.config.jaxb.InvocationType;
-import org.jmxtrans.core.config.jaxb.Jmxtrans;
-import org.jmxtrans.core.config.jaxb.OutputWriterType;
-import org.jmxtrans.core.config.jaxb.QueriesType;
-import org.jmxtrans.core.config.jaxb.QueryType;
-import org.jmxtrans.core.config.jaxb.ServerType;
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.output.OutputWriterFactory;
-import org.jmxtrans.core.query.Invocation;
-import org.jmxtrans.core.query.embedded.InProcessServer;
-import org.jmxtrans.core.query.embedded.Query;
-import org.jmxtrans.core.query.embedded.QueryAttribute;
-import org.jmxtrans.core.query.embedded.RemoteServer;
-import org.jmxtrans.core.circuitbreaker.CircuitBreakerProxy;
-import org.jmxtrans.utils.io.Resource;
-import org.jmxtrans.utils.io.StandardResource;
-import org.jmxtrans.utils.time.Clock;
-import org.jmxtrans.utils.time.Interval;
-import org.jmxtrans.utils.time.SystemClock;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.util.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -58,18 +39,30 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import org.jmxtrans.core.circuitbreaker.CircuitBreakerProxy;
+import org.jmxtrans.core.config.jaxb.*;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.core.output.OutputWriterFactory;
+import org.jmxtrans.core.query.Invocation;
+import org.jmxtrans.core.query.embedded.InProcessServer;
+import org.jmxtrans.core.query.embedded.Query;
+import org.jmxtrans.core.query.embedded.QueryAttribute;
+import org.jmxtrans.core.query.embedded.RemoteServer;
+import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.io.StandardResource;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.Interval;
+import org.jmxtrans.utils.time.SystemClock;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import static java.lang.String.format;
 import static java.util.concurrent.TimeUnit.SECONDS;
+
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 @ThreadSafe

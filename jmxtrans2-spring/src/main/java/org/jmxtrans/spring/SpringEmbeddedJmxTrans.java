@@ -23,6 +23,7 @@
 package org.jmxtrans.spring;
 
 import org.jmxtrans.core.scheduler.NaiveScheduler;
+
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 

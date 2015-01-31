@@ -435,10 +435,15 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>2.13</version>
+                    <!--
+                        FIXME: maven-checkstyle-plugin 2.13 has a bug which prevent ignoring generated sources
+                        (http://jira.codehaus.org/browse/MCHECKSTYLE-252) it should be fixed in 2.14.
+                    -->
+                    <version>2.12</version>
                     <configuration>
                         <configLocation>${project.basedir}/src/etc/checkstyle.xml</configLocation>
                         <consoleOutput>true</consoleOutput>
+                        <excludes>**/generated-sources/**/*</excludes>
                         <maxAllowedViolations>${verify.checkstyle.max.violations}</maxAllowedViolations>
                     </configuration>
                     <executions>
@@ -830,7 +835,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.13</version>
+                <version>2.12</version>
                 <configuration>
                     <configLocation>${project.basedir}/src/etc/checkstyle.xml</configLocation>
                 </configuration>

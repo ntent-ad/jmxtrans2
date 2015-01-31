@@ -25,6 +25,7 @@ package org.jmxtrans.utils.time;
 import org.junit.Test;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ManualClockTest {

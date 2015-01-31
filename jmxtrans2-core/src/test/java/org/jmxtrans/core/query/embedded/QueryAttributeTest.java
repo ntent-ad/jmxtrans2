@@ -22,12 +22,13 @@
  */
 package org.jmxtrans.core.query.embedded;
 
-import org.junit.Test;
-
 import java.util.Arrays;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+
 import static org.jmxtrans.core.query.embedded.QueryAttribute.builder;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class QueryAttributeTest {
 

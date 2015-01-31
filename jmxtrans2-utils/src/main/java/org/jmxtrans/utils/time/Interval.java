@@ -22,13 +22,14 @@
  */
 package org.jmxtrans.utils.time;
 
-import lombok.Getter;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+
+import lombok.Getter;
 
 import static java.util.Objects.hash;
 import static java.util.Objects.requireNonNull;
@@ -39,7 +40,8 @@ public class Interval {
 
     @Getter private final int value;
 
-    @Nonnull @Getter private final TimeUnit timeUnit;
+    @Nonnull @Getter
+    private final TimeUnit timeUnit;
 
     public Interval(int value, @Nonnull TimeUnit timeUnit) {
         this.value = value;

@@ -22,8 +22,9 @@
  */
 package org.jmxtrans.core.query;
 
-import javax.management.openmbean.CompositeData;
 import java.util.List;
+
+import javax.management.openmbean.CompositeData;
 
 /**
  * Mock {@link MockMBean}

@@ -22,11 +22,12 @@
  */
 package org.jmxtrans.utils.concurrent;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Basic {@linkplain java.util.concurrent.ThreadFactory} to redefine the name of the created thread.

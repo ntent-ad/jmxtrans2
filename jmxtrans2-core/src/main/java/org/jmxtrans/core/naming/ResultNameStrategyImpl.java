@@ -22,18 +22,19 @@
  */
 package org.jmxtrans.core.naming;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.management.ObjectName;
+
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.query.Query;
 import org.jmxtrans.core.query.ResultNameStrategy;
 import org.jmxtrans.utils.StringUtils2;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.management.ObjectName;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Build a {@linkplain org.jmxtrans.core.results.QueryResult#name} from a collected metric ({@linkplain org.jmxtrans.core.query.Query}).

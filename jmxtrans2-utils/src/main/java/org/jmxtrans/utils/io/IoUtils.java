@@ -22,14 +22,11 @@
  */
 package org.jmxtrans.utils.io;
 
-import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import javax.annotation.Nonnull;
 
 public final class IoUtils {
 

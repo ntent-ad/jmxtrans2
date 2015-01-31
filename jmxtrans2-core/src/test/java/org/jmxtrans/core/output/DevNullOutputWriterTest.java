@@ -22,13 +22,15 @@
  */
 package org.jmxtrans.core.output;
 
-import org.jmxtrans.core.results.QueryResult;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.Map;
 
+import org.jmxtrans.core.results.QueryResult;
+
+import org.junit.Test;
+
 import static java.util.Collections.emptyMap;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DevNullOutputWriterTest {

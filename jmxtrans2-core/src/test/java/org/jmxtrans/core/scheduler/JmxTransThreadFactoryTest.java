@@ -22,7 +22,6 @@
  */
 package org.jmxtrans.core.scheduler;
 
-import org.jmxtrans.core.scheduler.JmxTransThreadFactory;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

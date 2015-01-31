@@ -22,15 +22,17 @@
  */
 package org.jmxtrans.core.log;
 
-import lombok.Getter;
-import org.jmxtrans.utils.time.Clock;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.jmxtrans.utils.time.Clock;
+
+import lombok.Getter;
 
 import static org.jmxtrans.core.log.Level.DEBUG;
 import static org.jmxtrans.core.log.Level.ERROR;

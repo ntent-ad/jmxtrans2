@@ -22,10 +22,11 @@
  */
 package org.jmxtrans.utils;
 
+import java.io.Serializable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
-import java.io.Serializable;
 
 /**
  * Inspired by Spring Property placeholder mechanism.

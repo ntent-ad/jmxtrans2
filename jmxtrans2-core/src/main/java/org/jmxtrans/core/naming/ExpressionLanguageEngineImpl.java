@@ -22,16 +22,17 @@
  */
 package org.jmxtrans.core.naming;
 
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.utils.StringUtils2;
-
-import javax.annotation.Nonnull;
-import javax.management.ObjectName;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
+
+import javax.annotation.Nonnull;
+import javax.management.ObjectName;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.utils.StringUtils2;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>

@@ -22,12 +22,9 @@
  */
 package org.jmxtrans.agent;
 
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanRegistrationException;
-import javax.management.MalformedObjectNameException;
-import javax.management.NotCompliantMBeanException;
-import javax.management.ObjectName;
 import java.util.Date;
+
+import javax.management.*;
 
 import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 

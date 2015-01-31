@@ -22,6 +22,12 @@
  */
 package org.jmxtrans.core.scheduler;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.RejectedExecutionException;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.output.OutputWriter;
@@ -30,11 +36,6 @@ import org.jmxtrans.core.query.embedded.ResultNameStrategy;
 import org.jmxtrans.core.query.embedded.Server;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
-
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-import java.util.concurrent.Executor;
-import java.util.concurrent.RejectedExecutionException;
 
 public class QueryProcessor {
 

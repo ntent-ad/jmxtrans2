@@ -22,16 +22,16 @@
  */
 package org.jmxtrans.core.config;
 
-import org.jmxtrans.core.config.PropertyPlaceholderResolverXmlPreprocessor;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

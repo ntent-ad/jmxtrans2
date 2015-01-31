@@ -22,15 +22,15 @@
  */
 package org.jmxtrans.utils;
 
-import org.jmxtrans.utils.time.ManualClock;
-import org.jmxtrans.utils.time.NanoChronometer;
-import org.junit.Test;
-
 import java.util.concurrent.atomic.AtomicLong;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import org.jmxtrans.utils.time.ManualClock;
+import org.jmxtrans.utils.time.NanoChronometer;
+
+import org.junit.Test;
+
+import static java.util.concurrent.TimeUnit.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NanoChronometerTest {

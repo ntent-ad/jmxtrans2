@@ -22,12 +22,13 @@
  */
 package org.jmxtrans.core.query.embedded;
 
-import org.jmxtrans.utils.time.Clock;
-import org.jmxtrans.utils.time.NanoChronometer;
-
-import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+
+import javax.annotation.Nonnull;
+
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.NanoChronometer;
 
 public class QueryMetrics {
 

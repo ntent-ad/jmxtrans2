@@ -22,13 +22,15 @@
  */
 package org.jmxtrans.core.query.embedded;
 
-import lombok.Getter;
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.utils.time.Clock;
-import org.jmxtrans.utils.time.NanoChronometer;
-import org.jmxtrans.utils.time.SystemClock;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,15 +42,15 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.NanoChronometer;
+import org.jmxtrans.utils.time.SystemClock;
+
+import lombok.Getter;
 
 import static java.lang.String.format;
 import static java.util.Objects.hash;
@@ -67,7 +69,8 @@ public class Query implements QueryMBean {
     /**
      * ObjectName of the Query MBean(s) to monitor, can contain
      */
-    @Nonnull @Getter private final ObjectName objectName;
+    @Nonnull @Getter
+    private final ObjectName objectName;
 
     @Nullable @Getter private final String resultAlias;
     /**

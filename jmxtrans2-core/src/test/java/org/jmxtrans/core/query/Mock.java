@@ -22,9 +22,10 @@
  */
 package org.jmxtrans.core.query;
 
-import javax.management.openmbean.*;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.management.openmbean.*;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>

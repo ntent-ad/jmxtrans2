@@ -22,9 +22,9 @@
  */
 package org.jmxtrans.core.log;
 
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.Nonnull;
+
+import org.slf4j.LoggerFactory;
 
 public class Slf4JLogProvider implements LogProvider {
     @Override

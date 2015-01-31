@@ -22,7 +22,11 @@
  */
 package org.jmxtrans.core.query.embedded;
 
-import lombok.Getter;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,16 +34,15 @@ import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+
+import lombok.Getter;
 
 import static java.util.Objects.requireNonNull;
+
 import static javax.management.remote.JMXConnectorFactory.PROTOCOL_PROVIDER_PACKAGES;
 import static javax.naming.Context.SECURITY_CREDENTIALS;
 import static javax.naming.Context.SECURITY_PRINCIPAL;
+
 import static org.jmxtrans.utils.Preconditions2.checkNotEmpty;
 
 public class RemoteServer implements Server {
@@ -48,7 +51,8 @@ public class RemoteServer implements Server {
     @Nullable private final String username;
     @Nullable private final String password;
     @Nullable private final String protocolProviderPackages;
-    @Nonnull @Getter private final Iterable<Query> queries;
+    @Nonnull @Getter
+    private final Iterable<Query> queries;
 
     private RemoteServer(
             @Nonnull JMXServiceURL url,

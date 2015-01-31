@@ -22,20 +22,22 @@
  */
 package org.jmxtrans.standalone;
 
-import com.beust.jcommander.JCommander;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.jmxtrans.core.config.JmxTransBuilder;
 import org.jmxtrans.standalone.cli.JmxTransParameters;
 import org.jmxtrans.utils.appinfo.AppInfo;
 import org.jmxtrans.utils.io.FileResource;
 import org.jmxtrans.utils.io.Resource;
-import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.beust.jcommander.JCommander;
+import org.xml.sax.SAXException;
 
 public class JmxTransformer {
 

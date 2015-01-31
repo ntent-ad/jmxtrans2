@@ -22,10 +22,11 @@
  */
 package org.jmxtrans.output.writers.utils;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>

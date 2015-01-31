@@ -22,26 +22,29 @@
  */
 package org.jmxtrans.core.scheduler;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.concurrent.Executor;
+
+import javax.management.MBeanServer;
+
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.query.embedded.InProcessServer;
 import org.jmxtrans.core.query.embedded.Query;
 import org.jmxtrans.core.query.embedded.ResultNameStrategy;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.time.ManualClock;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.management.MBeanServer;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.concurrent.Executor;
+import static java.util.Collections.singleton;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
-import static java.util.Collections.singleton;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

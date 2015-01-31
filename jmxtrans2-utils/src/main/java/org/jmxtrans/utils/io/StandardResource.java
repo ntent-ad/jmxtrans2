@@ -22,14 +22,11 @@
  */
 package org.jmxtrans.utils.io;
 
+import java.io.*;
+import java.net.URL;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 @ThreadSafe
 public class StandardResource implements Resource {

@@ -22,15 +22,16 @@
  */
 package org.jmxtrans.core.log;
 
-import org.junit.After;
-import org.junit.Test;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.After;
+import org.junit.Test;
+
 import static org.jmxtrans.core.log.ConsoleLogProvider.JMXTRANS_LOG_LEVEL_PROP;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConsoleLogProviderTest {
 

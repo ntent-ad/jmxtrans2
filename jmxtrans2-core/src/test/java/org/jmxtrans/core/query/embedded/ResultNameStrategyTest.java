@@ -22,10 +22,10 @@
  */
 package org.jmxtrans.core.query.embedded;
 
+import javax.management.ObjectName;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import javax.management.ObjectName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

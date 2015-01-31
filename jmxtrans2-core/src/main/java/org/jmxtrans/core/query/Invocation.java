@@ -22,10 +22,10 @@
  */
 package org.jmxtrans.core.query;
 
-import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.utils.time.Clock;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -33,10 +33,11 @@ import javax.annotation.concurrent.ThreadSafe;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.BlockingQueue;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.time.Clock;
 
 import static java.util.Objects.hash;
 
