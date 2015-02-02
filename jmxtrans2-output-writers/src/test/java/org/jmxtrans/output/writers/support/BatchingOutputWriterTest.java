@@ -33,6 +33,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
@@ -47,9 +48,16 @@ public class BatchingOutputWriterTest {
 
     @Test
     public void resultsAreNotWrittenWhenBatchSizeIsNotReached() throws IOException {
+        int processedResultCount = 0;
         OutputWriter batchingOutputWriter = new BatchingOutputWriter(2, targetOutputWriter);
-        batchingOutputWriter.write(result);
-        batchingOutputWriter.write(result);
+        
+        processedResultCount = batchingOutputWriter.write(result);
+        
+        assertThat(processedResultCount).isZero();
+        
+        processedResultCount = batchingOutputWriter.write(result);
+        
+        assertThat(processedResultCount).isZero();
         verify(targetOutputWriter, never()).beforeBatch();
         verify(targetOutputWriter, never()).write(any(QueryResult.class));
         verify(targetOutputWriter, never()).afterBatch();
@@ -57,10 +65,12 @@ public class BatchingOutputWriterTest {
 
     @Test
     public void resultsAreBatchedAtAppropriateSize() throws IOException {
+        int processedResultCount = 0;
         OutputWriter batchingOutputWriter = new BatchingOutputWriter(2, targetOutputWriter);
         batchingOutputWriter.write(result);
         batchingOutputWriter.write(result);
-        batchingOutputWriter.write(result); // results are batched when the next result is received
+        processedResultCount = batchingOutputWriter.write(result); // results are batched when the next result is received
+        assertThat(processedResultCount).isEqualTo(2);
         verify(targetOutputWriter, times(2)).write(any(QueryResult.class));
     }
 

@@ -38,6 +38,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.jayway.awaitility.Awaitility.await;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TcpOutputWriterTest {
@@ -61,9 +62,10 @@ public class TcpOutputWriterTest {
                 new DummyWriter()
         );
         tcpOutputWriter.beforeBatch();
-        tcpOutputWriter.write(result);
+        int processedResultCount = tcpOutputWriter.write(result);
         tcpOutputWriter.afterBatch();
 
+        assertThat(processedResultCount).isEqualTo(1);
         await().until(server.hasReceived("test"));
     }
 

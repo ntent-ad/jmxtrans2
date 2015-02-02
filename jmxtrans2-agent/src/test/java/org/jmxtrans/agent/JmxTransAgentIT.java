@@ -33,7 +33,7 @@ public class JmxTransAgentIT extends AbstractAgentTest {
     @Test
     public void agentIsStarting() throws IOException, InterruptedException {
         startDummyApplication();
-        
+
         await().until(stdOutContains("counter.Value 0"));
         await().until(stdOutContains("counter.Value 1"));
     }

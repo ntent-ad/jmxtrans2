@@ -59,13 +59,13 @@ public class XmlConfigParserTest {
     }
 
     @Test(expected = UnmarshalException.class)
-    public void invalidConfigurationThrowsException() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public void invalidConfigurationThrowsException() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException, MalformedObjectNameException {
         Resource resource = new StandardResource("classpath:org/jmxtrans/core/config/invalid-configuration.xml");
         parser.parseConfiguration(resource);
     }
 
     @Test
-    public void queriesAreParsed() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException {
+    public void queriesAreParsed() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException, MalformedObjectNameException {
         Resource resource = new StandardResource("classpath:org/jmxtrans/core/config/simple-configuration.xml");
         Configuration configuration = parser.parseConfiguration(resource);
         assertThat(configuration).isNotNull();
@@ -76,7 +76,7 @@ public class XmlConfigParserTest {
     }
 
     @Test
-    public void maxResultIsSetForQueries() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException {
+    public void maxResultIsSetForQueries() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException, MalformedObjectNameException {
         Resource resource = new StandardResource("classpath:org/jmxtrans/core/config/max-result-query.xml");
         Configuration configuration = parser.parseConfiguration(resource);
         assertThat(configuration).isNotNull();
@@ -126,7 +126,7 @@ public class XmlConfigParserTest {
     }
 
     @Test
-    public void outputWritersAreParsed() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public void outputWritersAreParsed() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException, MalformedObjectNameException {
         Resource resource = new StandardResource("classpath:org/jmxtrans/core/config/simple-configuration.xml");
         Configuration configuration = parser.parseConfiguration(resource);
         assertThat(configuration).isNotNull();
@@ -134,7 +134,7 @@ public class XmlConfigParserTest {
     }
 
     @Test
-    public void defaultCollectIntervalIfNotConfigured() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException {
+    public void defaultCollectIntervalIfNotConfigured() throws IllegalAccessException, IOException, JAXBException, InstantiationException, SAXException, ClassNotFoundException, MalformedObjectNameException {
         Resource resource = new StandardResource("classpath:org/jmxtrans/core/config/no-collection-interval.xml");
         Configuration configuration = parser.parseConfiguration(resource);
         assertThat(configuration.getPeriod()).isNotNull();

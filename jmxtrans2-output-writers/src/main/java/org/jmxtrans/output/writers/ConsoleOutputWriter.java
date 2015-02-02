@@ -24,7 +24,6 @@ package org.jmxtrans.output.writers;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -34,6 +33,9 @@ import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 import org.jmxtrans.core.results.QueryResult;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
@@ -42,8 +44,9 @@ import org.jmxtrans.core.results.QueryResult;
 public class ConsoleOutputWriter implements OutputWriter {
 
     @Override
-    public void write(@Nonnull QueryResult result) throws IOException {
-        System.out.println(result.getName() + " " + result.getValue() + " " + TimeUnit.SECONDS.convert(System.currentTimeMillis(), TimeUnit.MILLISECONDS));
+    public int write(@Nonnull QueryResult result) throws IOException {
+        System.out.println(result.getName() + " " + result.getValue() + " " + SECONDS.convert(System.currentTimeMillis(), MILLISECONDS));
+        return 1;
     }
 
     public static final class Factory implements OutputWriterFactory<ConsoleOutputWriter> {

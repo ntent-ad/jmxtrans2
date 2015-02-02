@@ -57,9 +57,10 @@ public class BatchingOutputWriter<T extends BatchedOutputWriter> implements Outp
 
 
     @Override
-    public void write(@Nonnull QueryResult result) throws IOException {
+    public int write(@Nonnull QueryResult result) throws IOException {
         List<QueryResult> batch = enqueueAndGetBatch(result);
-        if (!batch.isEmpty()) processBatch(batch);
+        if (batch.isEmpty()) return 0;
+        return processBatch(batch);
     }
 
     // FIXME: There is a problem with synchronization here. All operations on the resultQueue are synchronized so using
@@ -77,17 +78,20 @@ public class BatchingOutputWriter<T extends BatchedOutputWriter> implements Outp
         return emptyList();
     }
 
-    private void processBatch(@Nonnull List<QueryResult> batch) throws IOException {
+    private int processBatch(@Nonnull List<QueryResult> batch) throws IOException {
         try {
+            int counter = 0;
             outputWriter.beforeBatch();
             sort(batch, batchOrder);
             for (QueryResult result : batch) {
                 try {
                     outputWriter.write(result);
+                    counter++;
                 } catch (IOException ioe) {
                     logger.warn(format("Error writing result [%s] to output writer [%s].", result, outputWriter), ioe);
                 }
             }
+            return counter;
         } finally {
             outputWriter.afterBatch();
         }

@@ -22,34 +22,9 @@
  */
 package org.jmxtrans.core.output;
 
-import java.io.IOException;
-import java.util.Map;
-
-import org.jmxtrans.core.results.QueryResult;
-
-import org.junit.Test;
-
-import static java.util.Collections.emptyMap;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class DevNullOutputWriterTest {
-
-    @Test
-    public void writingResultsDoesNothing() throws IOException {
-        OutputWriter outputWriter = new DevNullOutputWriter();
-        QueryResult result = new QueryResult("name", "value", 0);
-
-        int processedMetricCount = outputWriter.write(result);
-        assertThat(processedMetricCount).isZero();
-    }
-
-    @Test
-    public void factoryCanCreateOutputWriter() {
-        Map<String, String> settings = emptyMap();
-        OutputWriter outputWriter = new DevNullOutputWriter.Factory().create(settings);
-
-        assertThat(outputWriter).isNotNull();
-    }
-
+public interface MetricCollectingOutputWriterMBean {
+    
+    int getProcessedResultsCount();
+    
+    long getProcessingTimeMillis();
 }

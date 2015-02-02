@@ -38,6 +38,9 @@ import org.jmxtrans.core.results.QueryResult;
 @ThreadSafe
 public interface OutputWriter {
 
-    void write(@Nonnull QueryResult result) throws IOException;
+    /**
+     * @return the number of results actually processed
+     */
+    int write(@Nonnull QueryResult result) throws IOException;
 
 }

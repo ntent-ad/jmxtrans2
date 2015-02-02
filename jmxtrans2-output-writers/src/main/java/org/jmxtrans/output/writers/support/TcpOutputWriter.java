@@ -76,8 +76,9 @@ public class TcpOutputWriter<T extends WriterBasedOutputWriter> implements Batch
     public void beforeBatch() {}
 
     @Override
-    public void write(@Nonnull QueryResult result) throws IOException {
+    public int write(@Nonnull QueryResult result) throws IOException {
         target.write(getWriter(), result);
+        return 1;
     }
 
     @Nonnull

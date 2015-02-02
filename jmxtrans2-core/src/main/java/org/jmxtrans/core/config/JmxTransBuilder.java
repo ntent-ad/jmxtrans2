@@ -117,12 +117,21 @@ public class JmxTransBuilder {
 
     private void registerMBeans(Configuration configuration, MBeanRegistry mBeanRegistry) {
         for (Server server : configuration.getServers()) {
-            for (SelfNamedMBean query : server.getQueries()) {
-                try {
-                    mBeanRegistry.register(query);
-                } catch (MalformedObjectNameException e) {
-                    logger.warn(format("Could not register query [%s]", query), e);
-                }
+            registerMBeans(mBeanRegistry, server.getQueries());
+            registerMBeans(mBeanRegistry, configuration.getOutputWriters());
+        }
+    }
+
+    private void registerMBeans(MBeanRegistry mBeanRegistry, Iterable<? extends Object> objects) {
+        for (Object object : objects) {
+            
+            if (!(object instanceof SelfNamedMBean)) break;
+            
+            SelfNamedMBean selfNamedMBean = (SelfNamedMBean)object;
+            try {
+                mBeanRegistry.register(selfNamedMBean);
+            } catch (MalformedObjectNameException e) {
+                logger.warn(format("Could not register bean [%s]", selfNamedMBean), e);
             }
         }
     }

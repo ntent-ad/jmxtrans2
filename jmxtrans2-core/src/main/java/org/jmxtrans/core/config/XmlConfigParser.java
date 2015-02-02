@@ -34,6 +34,8 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -54,6 +56,7 @@ import org.jmxtrans.core.config.jaxb.QueryType;
 import org.jmxtrans.core.config.jaxb.ServerType;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.output.MetricCollectingOutputWriter;
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
 import org.jmxtrans.core.query.Invocation;
@@ -108,7 +111,7 @@ public class XmlConfigParser implements ConfigParser {
 
     @Override
     @Nonnull
-    public synchronized Configuration parseConfiguration(Resource source) throws IOException, SAXException, JAXBException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+    public synchronized Configuration parseConfiguration(Resource source) throws IOException, SAXException, JAXBException, IllegalAccessException, ClassNotFoundException, InstantiationException, MalformedObjectNameException {
         try (InputStream in = source.getInputStream()) {
             Document document = documentBuilder.parse(in);
             document = preprocessor.preprocess(document);
@@ -122,7 +125,7 @@ public class XmlConfigParser implements ConfigParser {
         }
     }
 
-    private void parse(@Nonnull Jmxtrans jmxtrans, @Nonnull ModifiableConfiguration configuration) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+    private void parse(@Nonnull Jmxtrans jmxtrans, @Nonnull ModifiableConfiguration configuration) throws IllegalAccessException, InstantiationException, ClassNotFoundException, MalformedObjectNameException {
         if (jmxtrans.getCollectIntervalInSeconds() != null) {
             configuration.setPeriod(new Interval(jmxtrans.getCollectIntervalInSeconds(), SECONDS));
         }
@@ -203,7 +206,7 @@ public class XmlConfigParser implements ConfigParser {
         }
     }
 
-    private void parse(@Nonnull Jmxtrans.OutputWriters outputWriters, @Nonnull ModifiableConfiguration configuration) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+    private void parse(@Nonnull Jmxtrans.OutputWriters outputWriters, @Nonnull ModifiableConfiguration configuration) throws IllegalAccessException, ClassNotFoundException, InstantiationException, MalformedObjectNameException {
         for (OutputWriterType outputWriter : outputWriters.getOutputWriter()) {
             Map<String, String> settings = new HashMap<>();
             for (Map.Entry<QName, String> attribute : outputWriter.getOtherAttributes().entrySet()) {
@@ -215,21 +218,33 @@ public class XmlConfigParser implements ConfigParser {
 
     @Nonnull
     private OutputWriter instantiateOutputWriter(@Nonnull String outputWriterClass, @Nonnull Map<String, String> settings)
-            throws InstantiationException, IllegalAccessException {
+            throws InstantiationException, IllegalAccessException, MalformedObjectNameException {
         try {
+            @SuppressWarnings("unchecked")
             Class<OutputWriterFactory<?>> builderClass = (Class<OutputWriterFactory<?>>) Class.forName(outputWriterClass + "$Factory");
             OutputWriterFactory<?> builder = builderClass.newInstance();
-            return CircuitBreakerProxy.create(
-                    clock,
-                    OutputWriter.class,
-                    builder.create(settings),
-                    MAX_FAILURES,
-                    DISABLE_DURATION_MILLIS);
+            return wrapInMetricCollectingOutputWriter(
+                    wrapInCircuitBreaker(
+                            builder.create(settings)));
         } catch (ClassNotFoundException e) {
             throw new JmxtransConfigurationException(
                     format("Could not load class %s, this can happen if you use non standard outputwriters and did not" +
                             " add the appropriate jar on the classpath", outputWriterClass), e);
         }
+    }
+
+    private OutputWriter wrapInMetricCollectingOutputWriter(OutputWriter outputWriter) throws MalformedObjectNameException {
+        ObjectName objectName = new ObjectName("org.jmxtrans.output", "name", outputWriter.toString());
+        return new MetricCollectingOutputWriter(clock, outputWriter, objectName);
+    }
+
+    private OutputWriter wrapInCircuitBreaker(OutputWriter target) {
+        return CircuitBreakerProxy.create(
+                clock,
+                OutputWriter.class,
+                target,
+                MAX_FAILURES,
+                DISABLE_DURATION_MILLIS);
     }
 
     @Nonnull
