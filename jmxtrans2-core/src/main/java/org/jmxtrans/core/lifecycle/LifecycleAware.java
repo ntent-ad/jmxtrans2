@@ -20,31 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.core.lifecycle;
 
-import java.io.IOException;
+import javax.annotation.concurrent.ThreadSafe;
 
-import org.junit.Test;
-
-import static com.jayway.awaitility.Awaitility.await;
-
-public class JmxTransAgentIT extends AbstractAgentTest {
-
-    @Test
-    public void agentIsStarting() throws IOException, InterruptedException {
-        startDummyApplication();
-        
-        await().until(stdOutContains("counter.Value 0"));
-        await().until(stdOutContains("counter.Value 1"));
-    }
-
-    @Test
-    public void applicationInfoAreDisplayedAtStartup() throws IOException, InterruptedException {
-        startDummyApplication();
-
-        await().until(stdOutContains("JMXTrans - agent"));
-        await().until(stdOutContains("version:"));
-        await().until(stdOutContains("last modified:"));
-        await().until(stdOutContains("build time:"));
-    }
+@ThreadSafe
+public interface LifecycleAware {
+    void start() throws Exception;
+    
+    void stop() throws Exception;
 }

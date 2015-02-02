@@ -34,17 +34,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.management.Attribute;
 import javax.management.AttributeList;
-import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.monitoring.SelfNamedMBean;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.NanoChronometer;
@@ -61,7 +59,7 @@ import static java.util.Objects.hash;
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  * @author Jon Stevens
  */
-public class Query implements QueryMBean {
+public class Query implements QueryMBean, SelfNamedMBean {
 
     @Nonnull
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
@@ -69,8 +67,7 @@ public class Query implements QueryMBean {
     /**
      * ObjectName of the Query MBean(s) to monitor, can contain
      */
-    @Nonnull @Getter
-    private final ObjectName objectName;
+    @Nonnull private final ObjectName objectName;
 
     @Nullable @Getter private final String resultAlias;
     /**
@@ -90,10 +87,7 @@ public class Query implements QueryMBean {
     /**
      * {@link javax.management.ObjectName} of this {@link QueryMBean}
      */
-    @Nonnull @Getter private final ObjectName queryMbeanObjectName;
-
-    @Nullable
-    private MBeanServer mbeanServer;
+    @Nonnull private final ObjectName queryMbeanObjectName;
 
     @Getter private final int maxResults;
     
@@ -102,7 +96,7 @@ public class Query implements QueryMBean {
                   @Nonnull List<QueryAttribute> attributes,
                   @Nonnull ObjectName queryMbeanObjectName,
                   int maxResults,
-                  @Nonnull Clock clock) {
+                  @Nonnull QueryMetrics metrics) {
         this.objectName = objectName;
         this.resultAlias = resultAlias;
         this.maxResults = maxResults;
@@ -112,7 +106,7 @@ public class Query implements QueryMBean {
         }
         this.attributeNames = attributesByName.keySet().toArray(new String[0]);
         this.queryMbeanObjectName = queryMbeanObjectName;
-        metrics = new QueryMetrics(clock);
+        this.metrics = metrics;
     }
 
     public Iterable<QueryResult> collectMetrics(@Nonnull MBeanServerConnection mbeanServer, @Nonnull ResultNameStrategy resultNameStrategy) throws IOException {
@@ -145,20 +139,6 @@ public class Query implements QueryMBean {
         } finally {
             metrics.incrementCollected(results.size());
             metrics.incrementCollectionsCount();
-        }
-    }
-
-    @PostConstruct
-    public void start() throws Exception {
-        if (mbeanServer != null) {
-            mbeanServer.registerMBean(this, queryMbeanObjectName);
-        }
-    }
-
-    @PreDestroy
-    public void stop() throws Exception {
-        if (mbeanServer != null) {
-            mbeanServer.unregisterMBean(queryMbeanObjectName);
         }
     }
 
@@ -209,14 +189,16 @@ public class Query implements QueryMBean {
         return metrics.getCollectionsCount();
     }
 
+    @Nonnull
+    @Override
+    public ObjectName getObjectName() {
+        return queryMbeanObjectName;
+    }
+
     @Override
     @Nonnull
     public String getId() {
         return queryMbeanObjectName.getCanonicalName();
-    }
-
-    public void setMbeanServer(@Nonnull MBeanServer mbeanServer) {
-        this.mbeanServer = mbeanServer;
     }
 
     @Nonnull
@@ -287,9 +269,9 @@ public class Query implements QueryMBean {
                         objectName,
                         resultAlias,
                         attributes,
-                        new ObjectName("org.jmxtrans.embedded:Type=Query,id=" + queryIdSequence.incrementAndGet()),
+                        new ObjectName("org.jmxtrans.query:Type=Query,id=" + queryIdSequence.incrementAndGet()),
                         maxResults,
-                        clock
+                        new QueryMetrics(clock)
                 );
             } catch (MalformedObjectNameException e) {
                 throw new RuntimeException("Object name [" + objectName + "] is not valid, cannot expose MBean for this query.");
