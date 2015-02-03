@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -76,17 +77,17 @@ public class JmxTransBuilder {
         this.configResources = configResources;
     }
 
-    public NaiveScheduler build() throws ParserConfigurationException, IOException, SAXException, JAXBException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public NaiveScheduler build() throws ParserConfigurationException, IOException, SAXException, JAXBException, IllegalAccessException, InstantiationException, ClassNotFoundException, MalformedObjectNameException {
         SystemClock clock = new SystemClock();
         long shutdownTimerMillis = 1000;
 
-        ExecutorService queryExecutor = createExecutorService("queries", 2, 1000, 1, MINUTES);
-        ExecutorService resultExecutor = createExecutorService("results", 2, 1000, 1, MINUTES);
-        ScheduledExecutorService queryTimer = createScheduledExecutorService("queryTimer");
+        MBeanRegistry mBeanRegistry = new MBeanRegistry(getPlatformMBeanServer());
+
+        ExecutorService queryExecutor = createExecutorService("queries", 2, 1000, 1, MINUTES, mBeanRegistry);
+        ExecutorService resultExecutor = createExecutorService("results", 2, 1000, 1, MINUTES, mBeanRegistry);
+        ScheduledExecutorService queryTimer = createScheduledExecutorService("queryTimer", mBeanRegistry);
 
         Configuration configuration = loadConfiguration(clock);
-
-        MBeanRegistry mBeanRegistry = new MBeanRegistry(getPlatformMBeanServer());
         
         registerMBeans(configuration, mBeanRegistry);
 
@@ -122,7 +123,7 @@ public class JmxTransBuilder {
         }
     }
 
-    private void registerMBeans(MBeanRegistry mBeanRegistry, Iterable<? extends Object> objects) {
+    private void registerMBeans(MBeanRegistry mBeanRegistry, Iterable<?> objects) {
         for (Object object : objects) {
             
             if (!(object instanceof SelfNamedMBean)) break;
@@ -176,8 +177,14 @@ public class JmxTransBuilder {
     }
 
     @Nonnull
-    private ScheduledExecutorService createScheduledExecutorService(@Nonnull String componentName) {
-        return new ScheduledThreadPoolExecutor(1, new JmxTransThreadFactory(componentName), new AbortPolicy());
+    private ScheduledExecutorService createScheduledExecutorService(
+            @Nonnull String componentName,
+            @Nonnull MBeanRegistry mBeanRegistry) throws MalformedObjectNameException {
+        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, new JmxTransThreadFactory(componentName), new AbortPolicy());
+        mBeanRegistry.register(
+                new ObjectName("org.jmxtrans.executors:type=ExecutorMetrics,name=" + componentName),
+                new ThreadPoolExecutorMetrics(executor));
+        return executor;
     }
 
     @Nonnull
@@ -186,12 +193,17 @@ public class JmxTransBuilder {
             int maxThreads,
             int maxQueueSize,
             int keepAliveTime,
-            @Nonnull TimeUnit unit) {
-        return new ThreadPoolExecutor(
+            @Nonnull TimeUnit unit,
+            @Nonnull MBeanRegistry mBeanRegistry) throws MalformedObjectNameException {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
                 1, maxThreads,
                 keepAliveTime, unit,
                 new ArrayBlockingQueue<Runnable>(maxQueueSize),
                 new JmxTransThreadFactory(componentName),
                 new AbortPolicy());
+        mBeanRegistry.register(
+                new ObjectName("org.jmxtrans.executors:type=ExecutorMetrics,name=" + componentName),
+                new ThreadPoolExecutorMetrics(executor));
+        return executor;
     }
 }
