@@ -23,7 +23,7 @@
 package org.jmxtrans.core.monitoring;
 
 import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.concurrent.ThreadSafe;
 import javax.management.InstanceAlreadyExistsException;
@@ -39,14 +39,13 @@ import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 
 import static java.lang.String.format;
-import static java.util.Collections.synchronizedMap;
 
 @ThreadSafe
 public class MBeanRegistry implements LifecycleAware {
     
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
     
-    private final Map<Object, ObjectName> mBeans = synchronizedMap(new WeakHashMap<Object, ObjectName>());
+    private final Map<Object, ObjectName> mBeans = new ConcurrentHashMap<>();
     
     private final MBeanServer mBeanServer;
 
@@ -54,12 +53,14 @@ public class MBeanRegistry implements LifecycleAware {
         this.mBeanServer = mBeanServer;
     }
 
-    public void register(SelfNamedMBean mBean) throws MalformedObjectNameException {
+    public <T extends SelfNamedMBean> SelfNamedMBean register(T mBean) throws MalformedObjectNameException {
         register(mBean.getObjectName(), mBean);
+        return mBean;
     }
     
-    public void register(ObjectName name, Object mBean) {
+    public <T> T register(ObjectName name, T mBean) {
         mBeans.put(mBean, name);
+        return mBean;
     }
     
     @Override

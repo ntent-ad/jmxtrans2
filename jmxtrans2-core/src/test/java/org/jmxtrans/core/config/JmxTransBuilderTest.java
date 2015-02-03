@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 
+import javax.management.MalformedObjectNameException;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -41,28 +42,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JmxTransBuilderTest {
 
     @Test
-    public void schedulerIsBuilt() throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException {
+    public void schedulerIsBuilt() throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException, MalformedObjectNameException {
         NaiveScheduler scheduler = new JmxTransBuilder(false,
                 Collections.<Resource>singletonList(new StandardResource(getConfigFile().getAbsolutePath()))).build();
         assertThat(scheduler).isNotNull();
     }
 
     @Test
-    public void parsingErrorsAreIgnoredIfSoConfigured() throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException {
+    public void parsingErrorsAreIgnoredIfSoConfigured() throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException, MalformedObjectNameException {
         NaiveScheduler scheduler = new JmxTransBuilder(true,
                 Collections.<Resource>singletonList(new StandardResource("non-existing.xml"))).build();
         assertThat(scheduler).isNotNull();
     }
 
     @Test(expected = JmxtransConfigurationException.class)
-    public void parsingErrorsAreRaisedIfSoConfigured() throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException {
+    public void parsingErrorsAreRaisedIfSoConfigured() throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException, MalformedObjectNameException {
         NaiveScheduler scheduler = new JmxTransBuilder(false,
                 Collections.<Resource>singletonList(new StandardResource("non-existing.xml"))).build();
         assertThat(scheduler).isNotNull();
     }
 
     @Test(expected = JmxtransConfigurationException.class)
-    public void parsingErrorsAreRaisedIfNoParserFound() throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException {
+    public void parsingErrorsAreRaisedIfNoParserFound() throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException, MalformedObjectNameException {
         NaiveScheduler scheduler = new JmxTransBuilder(false,
                 Collections.<Resource>singletonList(new StandardResource("non-parseable.txt"))).build();
         assertThat(scheduler).isNotNull();
