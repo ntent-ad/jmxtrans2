@@ -59,7 +59,7 @@ public class PerMinuteSummarizerOutputWriter implements OutputWriter {
     }
 
     @Override
-    public void write(@Nonnull QueryResult result) throws IOException {
+    public int write(@Nonnull QueryResult result) throws IOException {
 
         if ("counter".equals(result.getType())) {
 
@@ -77,6 +77,7 @@ public class PerMinuteSummarizerOutputWriter implements OutputWriter {
             logger.debug("Metric " + result.getName() + " is a NOT a counter");
             delegate.write(result);
         }
+        return 1;
     }
 
     protected void storeQueryResult(@Nullable QueryResult currentResult) {

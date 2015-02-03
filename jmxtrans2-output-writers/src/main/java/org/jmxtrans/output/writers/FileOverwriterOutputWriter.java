@@ -104,7 +104,8 @@ public class FileOverwriterOutputWriter implements OutputWriter {
     }
 
     @Override
-    public void write(@Nonnull QueryResult result) throws IOException {
+    public int write(@Nonnull QueryResult result) throws IOException {
+        int counter = 0;
         String name = result.getName();
         Object value = result.getValue();
         synchronized (this) {
@@ -114,13 +115,14 @@ public class FileOverwriterOutputWriter implements OutputWriter {
                 } else {
                     getTemporaryFileWriter().write(name + " " + value + "\n");
                 }
-
+                counter++;
             } catch (IOException e) {
                 releaseTemporaryWriter();
                 throw e;
             }
         }
         postCollect();
+        return counter;
     }
 
     protected void releaseTemporaryWriter() {

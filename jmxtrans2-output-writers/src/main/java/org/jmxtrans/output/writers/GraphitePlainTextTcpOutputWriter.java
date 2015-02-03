@@ -99,17 +99,20 @@ public class GraphitePlainTextTcpOutputWriter implements OutputWriter {
     }
 
     @Override
-    public void write(@Nonnull QueryResult result) throws IOException {
+    public int write(@Nonnull QueryResult result) throws IOException {
+        int counter = 0;
         String msg = buildMetricPathPrefix() + result.getName() + " " + result.getValue() + " " + SECONDS.convert(clock.currentTimeMillis(), MILLISECONDS);
         try {
             ensureGraphiteConnection();
             logger.debug("Send '" + msg + "' to " + serverAddress);
             writer.write(msg + "\n");
+            counter++;
         } catch (IOException e) {
             logger.warn("Exception sending '" + msg + "' to " + serverAddress, e);
             releaseGraphiteConnection();
             throw e;
         }
+        return counter;
     }
 
     private void releaseGraphiteConnection() {

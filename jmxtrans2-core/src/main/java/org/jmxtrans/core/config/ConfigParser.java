@@ -25,6 +25,7 @@ package org.jmxtrans.core.config;
 import java.io.IOException;
 
 import javax.annotation.Nonnull;
+import javax.management.MalformedObjectNameException;
 import javax.xml.bind.JAXBException;
 
 import org.jmxtrans.utils.io.Resource;
@@ -36,6 +37,6 @@ public interface ConfigParser {
     boolean supports(@Nonnull Resource resource);
 
     @Nonnull
-    Configuration parseConfiguration(Resource source) throws IOException, SAXException, JAXBException, IllegalAccessException, ClassNotFoundException, InstantiationException;
+    Configuration parseConfiguration(Resource source) throws IOException, SAXException, JAXBException, IllegalAccessException, ClassNotFoundException, InstantiationException, MalformedObjectNameException;
 
 }

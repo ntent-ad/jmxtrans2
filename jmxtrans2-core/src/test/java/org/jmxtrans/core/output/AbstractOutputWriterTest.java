@@ -50,8 +50,9 @@ public class AbstractOutputWriterTest {
         private QueryResult result;
 
         @Override
-        public void write(@Nonnull QueryResult result) throws IOException {
+        public int write(@Nonnull QueryResult result) throws IOException {
             this.result = result;
+            return 1;
         }
     }
 

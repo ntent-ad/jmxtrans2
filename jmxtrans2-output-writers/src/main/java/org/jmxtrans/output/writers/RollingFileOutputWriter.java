@@ -177,14 +177,17 @@ public class RollingFileOutputWriter implements OutputWriter {
     }
 
     @Override
-    public synchronized void write(@Nonnull QueryResult result) throws IOException {
+    public synchronized int write(@Nonnull QueryResult result) throws IOException {
+        int counter = 0;
         try {
             getTemporaryFileWriter().write("["+ dateFormat.format(Calendar.getInstance().getTime()) +"] "+ result.getName() + " " + result.getValue() + "\n");
+            counter++;
         } catch (IOException e) {
             releaseTemporaryWriter();
             throw e;
         }
         postCollect();
+        return counter;
     }
 
     protected void releaseTemporaryWriter() {
