@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GraphiteOutputWriter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - output writers</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.output.writers</a> &gt; <span class="el_source">GraphiteOutputWriter.java</span></div><h1>GraphiteOutputWriter.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.output.writers;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
+
+import org.jmxtrans.core.output.OutputWriterFactory;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.output.writers.support.BatchingOutputWriter;
+import org.jmxtrans.output.writers.support.TcpOutputWriter;
+import org.jmxtrans.output.writers.support.WriterBasedOutputWriter;
+import org.jmxtrans.utils.VisibleForTesting;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+import static org.jmxtrans.utils.ConfigurationUtils.getInt;
+
+@ThreadSafe
+public class GraphiteOutputWriter implements WriterBasedOutputWriter {
+
+    @Nullable private volatile String metricPathPrefix;
+
+    @VisibleForTesting
+<span class="fc" id="L54">    GraphiteOutputWriter() {}</span>
+
+    @Override
+    public void write(@Nonnull Writer writer, @Nonnull QueryResult result) throws IOException {
+<span class="fc" id="L58">        writer.write(</span>
+                buildMetricPathPrefix()
+                        + result.getName() + &quot; &quot;
+                        + result.getValue() + &quot; &quot;
+                        + result.getEpoch(SECONDS));
+<span class="fc" id="L63">    }</span>
+
+    @Nonnull
+    private String buildMetricPathPrefix() {
+        // {@link java.net.InetAddress#getLocalHost()} may not be known at JVM startup when the process is launched as a Linux service.
+        // FIXME: there is a 5 second cache on localhost name, it probably make sense to reload it periodically. Hostname can change.
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (metricPathPrefix != null) return metricPathPrefix;</span>
+
+<span class="fc" id="L71">        metricPathPrefix = &quot;servers.&quot; + getHostname() + &quot;.&quot;;</span>
+<span class="fc" id="L72">        return metricPathPrefix;</span>
+    }
+
+    @Nonnull
+    private String getHostname() {
+        try {
+<span class="fc" id="L78">            return InetAddress.getLocalHost().getHostName().replaceAll(&quot;\\.&quot;, &quot;_&quot;);</span>
+<span class="nc" id="L79">        } catch (UnknownHostException e) {</span>
+<span class="nc" id="L80">            return  &quot;#unknown#&quot;;</span>
+        }
+    }
+
+<span class="nc" id="L84">    public static class Factory implements OutputWriterFactory&lt;BatchingOutputWriter&lt;TcpOutputWriter&lt;GraphiteOutputWriter&gt;&gt;&gt; {</span>
+        @Nonnull
+        @Override
+        public BatchingOutputWriter&lt;TcpOutputWriter&lt;GraphiteOutputWriter&gt;&gt; create(@Nonnull Map&lt;String, String&gt; settings) {
+
+<span class="nc" id="L89">            String hostname = settings.get(&quot;hostname&quot;);</span>
+<span class="nc" id="L90">            int port = getInt(settings, &quot;port&quot;);</span>
+<span class="nc" id="L91">            int socketTimeoutMillis = getInt(settings, &quot;socketTimeoutMillis&quot;, 2000);</span>
+<span class="nc" id="L92">            int batchSize = getInt(settings, &quot;batchSite&quot;, 100);</span>
+
+<span class="nc" id="L94">            Charset charset = Charset.forName(&quot;UTF-8&quot;);</span>
+<span class="nc" id="L95">            InetSocketAddress server = new InetSocketAddress(hostname, port);</span>
+
+<span class="nc" id="L97">            return new BatchingOutputWriter(</span>
+                    batchSize,
+                    new TcpOutputWriter&lt;&gt;(
+                            server,
+                            socketTimeoutMillis,
+                            charset,
+                            new GraphiteOutputWriter())
+            );
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
