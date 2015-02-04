@@ -310,7 +310,10 @@
                 <plugin>
                     <groupId>com.github.github</groupId>
                     <artifactId>site-maven-plugin</artifactId>
-                    <version>0.11</version>
+                    <!--
+                        version 0.11 seem to have some problem to publish, let's wait until 0.12 to upgrade
+                    -->
+                    <version>0.10</version>
                     <configuration>
                         <message>Creating site for ${project.name} ${project.version}</message>
                     </configuration>
