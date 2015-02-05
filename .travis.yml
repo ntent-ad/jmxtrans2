@@ -3,9 +3,10 @@ sudo: false
 cache:
   directories:
   - $HOME/.m2
-install: mvn compile -DskipTests=true -Dmaven.javadoc.skip=true -Djacoco.skip=true -B -V
-before_script: "git clone -b travis `git config --get remote.origin.url` target/travis"
-script: mvn install -B -V
+before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
+install:
+  - mvn compile --settings target/travis/settings.xml -DskipTests=true -Dmaven.javadoc.skip=true -Djacoco.skip=true -B -V
+script: ./travis-script.sh
 after_success:
   - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && mvn site --settings target/travis/settings.xml -B -V
 branches:
@@ -15,6 +16,8 @@ branches:
 env:
   global:
     - secure: "h9NfI5aFT1H1UyZCj0u/Cbt0q1167OtTyGXo0AbE6lPxpttOkoFi0FkIvs/pppsXZGN6xp0pWKIMrcfMsK12nW8NH9r/hBekgVXYaJPmpnNSCephkgMoPNJFU5AByyWJo9qm5FFYlTEEwJS/1ZD9dREfbaTEgAN2tzBAjciC0PA="
+    - secure: "PCjrxGzv14/5X0/7UDHH80WWsYw/L7KbH8YEWDzCre+X8fW84AGKfXm4tNpDQFukEeGLZK43FmEDPhffTMx4+F3cbu9NDHL9jYLeEfkOG0DJAVMhF/hqmYnNoATAcPjMeAQredrGo3+3mniEkS1JHkjQu6Yr4eKT+c5BWjh4+bg="
+    - secure: "gM9ucMpv5+hy5drkm+RFNVbu7QKwB3XHzm/IEBDKSCu6wkvtRDMB644jYjOk6bQS6KSIid4HMazfGnncgISGg5O1d/k/UG9XFQVieHLR/8vVqgZKyzf5l7tMst5B8lDP6X/wCG611Y2CWWMKD/yi159QomBpVOeKohh8wOTlVCc="
 
 notifications:
   webhooks:
@@ -23,4 +26,3 @@ notifications:
     on_success: change
     on_failure: always
     on_start: false
-
