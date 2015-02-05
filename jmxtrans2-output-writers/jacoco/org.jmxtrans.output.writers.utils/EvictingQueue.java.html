@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>EvictingQueue.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - output writers</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.output.writers.utils</a> &gt; <span class="el_source">EvictingQueue.java</span></div><h1>EvictingQueue.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.output.writers.utils;
+
+import java.util.Collection;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.annotation.Nonnull;
+
+/**
+ * @author &lt;a href=&quot;mailto:cleclerc@cloudbees.com&quot;&gt;Cyrille Le Clerc&lt;/a&gt;
+ */
+public class EvictingQueue&lt;E&gt; extends ForwardingQueue&lt;E&gt; implements Queue&lt;E&gt; {
+
+    private LinkedBlockingQueue delegate;
+<span class="fc" id="L37">    private int maxRetry = 10;</span>
+
+<span class="fc" id="L39">    public EvictingQueue(int capacity) {</span>
+<span class="fc" id="L40">        delegate = new LinkedBlockingQueue(capacity);</span>
+<span class="fc" id="L41">    }</span>
+
+    public static &lt;E&gt; EvictingQueue&lt;E&gt; create(int maxCapacity) {
+<span class="fc" id="L44">        return new EvictingQueue&lt;E&gt;(maxCapacity);</span>
+    }
+
+    @Nonnull
+    @Override
+    protected Queue&lt;E&gt; delegate() {
+<span class="fc" id="L50">        return delegate;</span>
+    }
+
+    @Override
+    public boolean add(E e) {
+<span class="fc" id="L55">        return addEvictingIfNeeded(e);</span>
+    }
+
+    @Override
+    public boolean addAll(Collection&lt;? extends E&gt; c) {
+<span class="fc" id="L60">        return standardAddAll(c);</span>
+    }
+
+    @Override
+    public boolean offer(E e) {
+<span class="nc" id="L65">        return addEvictingIfNeeded(e);</span>
+    }
+
+    protected boolean addEvictingIfNeeded(E e) {
+
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        for (int i = 0; i &lt; maxRetry; i++) {</span>
+<span class="fc" id="L71">            boolean offered = delegate().offer(e);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            if (offered) {</span>
+<span class="fc" id="L73">                return true;</span>
+            }
+<span class="fc" id="L75">            delegate().poll();</span>
+        }
+
+<span class="nc" id="L78">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
