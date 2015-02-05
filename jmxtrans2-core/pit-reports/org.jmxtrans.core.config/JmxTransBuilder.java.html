@@ -1,0 +1,3566 @@
+<html>
+<head>
+<style type='text/css'>
+html, body, div, span, p, blockquote, pre {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+
+body{
+	line-height: 1;
+	color: black;
+	background: white;
+	margin-left: 20px;
+}
+
+.src { 
+border: 1px solid #dddddd;
+padding-top: 10px;
+padding-right: 5px;
+padding-left: 5px;
+}
+
+
+.covered {background-color: #ddffdd}
+.uncovered {background-color: #ffdddd}
+.killed {background-color: #aaffaa}
+.survived {background-color: #ffaaaa}
+.uncertain {background-color: #dde7ef}
+.run_error {background-color: #dde7ef}
+.na {background-color: #eeeeee}
+.timed_out {background-color: #dde7ef}
+.non_viable {background-color: #aaffaa}
+.memory_error {background-color: #dde7ef}
+.not_started {background-color: #dde7ef; color : red}
+.no_coverage {background-color: #ffaaaa}
+
+
+.pop {outline:none; }
+.pop strong {line-height:30px;}
+.pop {text-decoration:none;}
+.pop span { z-index:10;display:none; padding:14px 20px; margin-top:-30px; margin-left:28px; width:800px; line-height:16px; word-wrap:break-word; }
+.pop:hover span{ display:inline; position:absolute; color:#111; border:1px solid #DCA; background:#fffAF0;}
+
+.pop span { border-radius:4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -moz-box-shadow: 5px 5px 8px #CCC; -webkit-box-shadow: 5px 5px 8px #CCC; box-shadow: 5px 5px 8px #CCC; }
+</style>
+
+</head>
+<body>
+
+
+<h1>JmxTransBuilder.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_1'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_2'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * The MIT License</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_3'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * Copyright (c) 2014 JMXTrans Team</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_4'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_5'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * Permission is hereby granted, free of charge, to any person obtaining a copy</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_6'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * of this software and associated documentation files (the &#34;Software&#34;), to deal</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_7'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * in the Software without restriction, including without limitation the rights</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_8'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_9'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * copies of the Software, and to permit persons to whom the Software is</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_10'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * furnished to do so, subject to the following conditions:</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_11'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_12'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * The above copyright notice and this permission notice shall be included in</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_13'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * all copies or substantial portions of the Software.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_14'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_15'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * THE SOFTWARE IS PROVIDED &#34;AS IS&#34;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_16'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_17'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_18'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_19'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_20'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_21'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * THE SOFTWARE.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_22'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_23'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package org.jmxtrans.core.config;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_24'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_25'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.io.IOException;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_26'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.ArrayList;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_27'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Collection;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_28'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.Collections;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_29'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.concurrent.ArrayBlockingQueue;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_30'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.concurrent.ExecutorService;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_31'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.concurrent.ScheduledExecutorService;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_32'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.concurrent.ScheduledThreadPoolExecutor;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_33'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.concurrent.ThreadPoolExecutor;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_34'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_35'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.concurrent.TimeUnit;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_36'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_37'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import javax.annotation.Nonnull;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_38'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import javax.annotation.concurrent.ThreadSafe;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_39'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import javax.management.MalformedObjectNameException;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_40'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import javax.management.ObjectName;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_41'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import javax.xml.bind.JAXBException;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_42'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import javax.xml.parsers.ParserConfigurationException;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_43'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_44'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.lifecycle.LifecycleAware;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_45'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.log.Logger;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_46'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.log.LoggerFactory;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_47'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.monitoring.MBeanRegistry;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_48'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.monitoring.SelfNamedMBean;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_49'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.query.embedded.ResultNameStrategy;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_50'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.query.embedded.Server;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_51'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.scheduler.JmxTransThreadFactory;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_52'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.scheduler.NaiveScheduler;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_53'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.scheduler.QueryGenerator;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_54'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.scheduler.QueryProcessor;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_55'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.core.scheduler.ResultProcessor;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_56'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.utils.PropertyPlaceholderResolver;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_57'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.utils.io.Resource;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_58'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.utils.time.Clock;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_59'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.jmxtrans.utils.time.SystemClock;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_60'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_61'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.xml.sax.SAXException;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_62'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_63'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import static java.lang.String.format;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_64'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import static java.lang.management.ManagementFactory.getPlatformMBeanServer;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_65'/>
+65
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_65'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import static java.util.Collections.singleton;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_66'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import static java.util.concurrent.TimeUnit.MINUTES;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_67'/>
+67
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_67'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_68'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@ThreadSafe</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_69'/>
+69
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_69'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class JmxTransBuilder {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_70'/>
+70
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_70'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_71'/>
+71
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_71'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private final boolean ignoreParsingErrors;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_72'/>
+72
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_72'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Nonnull private final Iterable&#60;Resource&#62; configResources;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_73'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    private final Logger logger = LoggerFactory.getLogger(getClass().getName());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_74'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_75'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public JmxTransBuilder(boolean ignoreParsingErrors, @Nonnull Iterable&#60;Resource&#62; configResources) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_76'/>
+76
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_76'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.ignoreParsingErrors = ignoreParsingErrors;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_77'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.configResources = configResources;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_78'/>
+78
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_78'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_79'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_80'/>
+80
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_80'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public NaiveScheduler build() throws ParserConfigurationException, IOException, SAXException, JAXBException, IllegalAccessException, InstantiationException, ClassNotFoundException, MalformedObjectNameException {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_81'/>
+81
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_81'>1</a>
+<span>
+1. build : removed call to org/jmxtrans/utils/time/SystemClock::&#60;init&#62; &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        SystemClock clock = new SystemClock();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_82'/>
+82
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_82'>1</a>
+<span>
+1. build : Substituted 1000 with 1001 &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        long shutdownTimerMillis = 1000;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_83'/>
+83
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_83'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_84'/>
+84
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_84'>2</a>
+<span>
+1. build : removed call to java/lang/management/ManagementFactory::getPlatformMBeanServer &rarr; SURVIVED<br/>
+2. build : removed call to org/jmxtrans/core/monitoring/MBeanRegistry::&#60;init&#62; &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        MBeanRegistry mBeanRegistry = new MBeanRegistry(getPlatformMBeanServer());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_85'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_86'/>
+86
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_86'>4</a>
+<span>
+1. build : Substituted 2 with 3 &rarr; SURVIVED<br/>
+2. build : Substituted 1000 with 1001 &rarr; SURVIVED<br/>
+3. build : Substituted 1 with 0 &rarr; SURVIVED<br/>
+4. build : removed call to org/jmxtrans/core/config/JmxTransBuilder::createExecutorService &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        ExecutorService queryExecutor = createExecutorService(&#34;queries&#34;, 2, 1000, 1, MINUTES, mBeanRegistry);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_87'/>
+87
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_87'>4</a>
+<span>
+1. build : Substituted 2 with 3 &rarr; SURVIVED<br/>
+2. build : Substituted 1000 with 1001 &rarr; SURVIVED<br/>
+3. build : Substituted 1 with 0 &rarr; SURVIVED<br/>
+4. build : removed call to org/jmxtrans/core/config/JmxTransBuilder::createExecutorService &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        ExecutorService resultExecutor = createExecutorService(&#34;results&#34;, 2, 1000, 1, MINUTES, mBeanRegistry);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_88'/>
+88
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_88'>1</a>
+<span>
+1. build : removed call to org/jmxtrans/core/config/JmxTransBuilder::createScheduledExecutorService &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        ScheduledExecutorService queryTimer = createScheduledExecutorService(&#34;queryTimer&#34;, mBeanRegistry);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_89'/>
+89
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_89'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_90'/>
+90
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_90'>1</a>
+<span>
+1. build : removed call to org/jmxtrans/core/config/JmxTransBuilder::loadConfiguration &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        Configuration configuration = loadConfiguration(clock);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_91'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        </span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_92'/>
+92
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_92'>1</a>
+<span>
+1. build : removed call to org/jmxtrans/core/config/JmxTransBuilder::registerMBeans &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        registerMBeans(configuration, mBeanRegistry);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_93'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_94'/>
+94
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_94'>10</a>
+<span>
+1. build : removed call to org/jmxtrans/core/scheduler/ResultProcessor::&#60;init&#62; &rarr; SURVIVED<br/>
+2. build : removed call to org/jmxtrans/core/query/embedded/ResultNameStrategy::&#60;init&#62; &rarr; SURVIVED<br/>
+3. build : removed call to org/jmxtrans/core/scheduler/QueryProcessor::&#60;init&#62; &rarr; SURVIVED<br/>
+4. build : removed call to org/jmxtrans/core/scheduler/QueryGenerator::&#60;init&#62; &rarr; SURVIVED<br/>
+5. build : removed call to org/jmxtrans/core/config/Configuration::getPeriod &rarr; SURVIVED<br/>
+6. build : removed call to org/jmxtrans/core/config/Configuration::getServers &rarr; SURVIVED<br/>
+7. build : removed call to org/jmxtrans/core/config/Configuration::getOutputWriters &rarr; SURVIVED<br/>
+8. build : removed call to java/util/Collections::singletonList &rarr; SURVIVED<br/>
+9. build : removed call to org/jmxtrans/core/scheduler/NaiveScheduler::&#60;init&#62; &rarr; KILLED<br/>
+10. build : mutated return of Object value for org/jmxtrans/core/config/JmxTransBuilder::build to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        return new NaiveScheduler(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_95'/>
+95
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_95'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                queryExecutor,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_96'/>
+96
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_96'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                resultExecutor,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_97'/>
+97
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_97'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                queryTimer,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_98'/>
+98
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_98'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new QueryGenerator(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_99'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                        clock,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_100'/>
+100
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_100'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                        configuration.getPeriod(),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_101'/>
+101
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_101'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                        configuration.getServers(),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_102'/>
+102
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_102'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                        new QueryProcessor(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_103'/>
+103
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_103'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                clock,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_104'/>
+104
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_104'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                configuration.getOutputWriters(),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_105'/>
+105
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_105'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                queryExecutor,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_106'/>
+106
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_106'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                new ResultProcessor(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_107'/>
+107
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_107'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                        clock,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_108'/>
+108
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_108'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                        resultExecutor</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_109'/>
+109
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_109'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                ),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_110'/>
+110
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_110'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                                new ResultNameStrategy()</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_111'/>
+111
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_111'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                        ),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_112'/>
+112
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_112'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                        queryTimer</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_113'/>
+113
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_113'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                ),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_114'/>
+114
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_114'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                Collections.&#60;LifecycleAware&#62;singletonList(mBeanRegistry),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_115'/>
+115
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_115'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                shutdownTimerMillis</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_116'/>
+116
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_116'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        );</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_117'/>
+117
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_117'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_118'/>
+118
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_118'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_119'/>
+119
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_119'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private void registerMBeans(Configuration configuration, MBeanRegistry mBeanRegistry) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_120'/>
+120
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_120'>7</a>
+<span>
+1. registerMBeans : removed call to java/util/Iterator::hasNext &rarr; SURVIVED<br/>
+2. registerMBeans : removed conditional &rarr; SURVIVED<br/>
+3. registerMBeans : negated conditional &rarr; KILLED<br/>
+4. registerMBeans : removed call to org/jmxtrans/core/config/Configuration::getServers &rarr; KILLED<br/>
+5. registerMBeans : removed call to java/lang/Iterable::iterator &rarr; KILLED<br/>
+6. registerMBeans : removed call to java/util/Iterator::next &rarr; KILLED<br/>
+7. registerMBeans : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        for (Server server : configuration.getServers()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_121'/>
+121
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_121'>2</a>
+<span>
+1. registerMBeans : removed call to org/jmxtrans/core/config/JmxTransBuilder::registerMBeans &rarr; SURVIVED<br/>
+2. registerMBeans : removed call to org/jmxtrans/core/query/embedded/Server::getQueries &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            registerMBeans(mBeanRegistry, server.getQueries());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_122'/>
+122
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_122'>2</a>
+<span>
+1. registerMBeans : removed call to org/jmxtrans/core/config/JmxTransBuilder::registerMBeans &rarr; SURVIVED<br/>
+2. registerMBeans : removed call to org/jmxtrans/core/config/Configuration::getOutputWriters &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            registerMBeans(mBeanRegistry, configuration.getOutputWriters());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_123'/>
+123
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_123'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_124'/>
+124
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_124'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_125'/>
+125
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_125'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_126'/>
+126
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_126'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private void registerMBeans(MBeanRegistry mBeanRegistry, Iterable&#60;?&#62; objects) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_127'/>
+127
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_127'>6</a>
+<span>
+1. registerMBeans : negated conditional &rarr; SURVIVED<br/>
+2. registerMBeans : removed call to java/util/Iterator::hasNext &rarr; SURVIVED<br/>
+3. registerMBeans : removed call to java/util/Iterator::next &rarr; SURVIVED<br/>
+4. registerMBeans : removed conditional &rarr; SURVIVED<br/>
+5. registerMBeans : removed call to java/lang/Iterable::iterator &rarr; KILLED<br/>
+6. registerMBeans : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        for (Object object : objects) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_128'/>
+128
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_128'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            </span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_129'/>
+129
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_129'>3</a>
+<span>
+1. registerMBeans : negated conditional &rarr; SURVIVED<br/>
+2. registerMBeans : removed conditional &rarr; SURVIVED<br/>
+3. registerMBeans : removed conditional &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            if (!(object instanceof SelfNamedMBean)) break;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_130'/>
+130
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_130'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            </span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_131'/>
+131
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_131'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            SelfNamedMBean selfNamedMBean = (SelfNamedMBean)object;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_132'/>
+132
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_132'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            try {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_133'/>
+133
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_133'>1</a>
+<span>
+1. registerMBeans : removed call to org/jmxtrans/core/monitoring/MBeanRegistry::register &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                mBeanRegistry.register(selfNamedMBean);</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_134'/>
+134
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_134'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>            } catch (MalformedObjectNameException e) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_135'/>
+135
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_135'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>                logger.warn(format(&#34;Could not register bean [%s]&#34;, selfNamedMBean), e);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_136'/>
+136
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_136'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_137'/>
+137
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_137'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_138'/>
+138
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_138'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_139'/>
+139
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_139'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_140'/>
+140
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_140'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private Configuration loadConfiguration(Clock clock) throws JAXBException, ParserConfigurationException, SAXException, IOException, IllegalAccessException, ClassNotFoundException, InstantiationException {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_141'/>
+141
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_141'>1</a>
+<span>
+1. loadConfiguration : removed call to org/jmxtrans/core/config/JmxTransBuilder::getConfigParsers &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        Iterable&#60;ConfigParser&#62; parsers = getConfigParsers(clock);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_142'/>
+142
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_142'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_143'/>
+143
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_143'>1</a>
+<span>
+1. loadConfiguration : removed call to java/util/ArrayList::&#60;init&#62; &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        Collection&#60;Configuration&#62; configurations = new ArrayList&#60;&#62;();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_144'/>
+144
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_144'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_145'/>
+145
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_145'>6</a>
+<span>
+1. loadConfiguration : negated conditional &rarr; KILLED<br/>
+2. loadConfiguration : removed call to java/lang/Iterable::iterator &rarr; KILLED<br/>
+3. loadConfiguration : removed call to java/util/Iterator::hasNext &rarr; KILLED<br/>
+4. loadConfiguration : removed call to java/util/Iterator::next &rarr; KILLED<br/>
+5. loadConfiguration : removed conditional &rarr; KILLED<br/>
+6. loadConfiguration : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        for (Resource configResource : configResources) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_146'/>
+146
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_146'>1</a>
+<span>
+1. loadConfiguration : Substituted 0 with 1 &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            boolean parsed = false;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_147'/>
+147
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_147'>6</a>
+<span>
+1. loadConfiguration : negated conditional &rarr; KILLED<br/>
+2. loadConfiguration : removed call to java/lang/Iterable::iterator &rarr; KILLED<br/>
+3. loadConfiguration : removed call to java/util/Iterator::hasNext &rarr; KILLED<br/>
+4. loadConfiguration : removed call to java/util/Iterator::next &rarr; KILLED<br/>
+5. loadConfiguration : removed conditional &rarr; KILLED<br/>
+6. loadConfiguration : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            for (ConfigParser parser : parsers) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_148'/>
+148
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_148'>4</a>
+<span>
+1. loadConfiguration : removed conditional &rarr; SURVIVED<br/>
+2. loadConfiguration : negated conditional &rarr; KILLED<br/>
+3. loadConfiguration : removed call to org/jmxtrans/core/config/ConfigParser::supports &rarr; KILLED<br/>
+4. loadConfiguration : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                if (parser.supports(configResource)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_149'/>
+149
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_149'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                    try {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_150'/>
+150
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_150'>1</a>
+<span>
+1. loadConfiguration : removed call to org/jmxtrans/core/config/ConfigParser::parseConfiguration &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                        Configuration configuration = parser.parseConfiguration(configResource);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_151'/>
+151
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_151'>1</a>
+<span>
+1. loadConfiguration : removed call to java/util/Collection::add &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                        configurations.add(configuration);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_152'/>
+152
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_152'>1</a>
+<span>
+1. loadConfiguration : Substituted 1 with 0 &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                        parsed = true;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_153'/>
+153
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_153'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    } catch (Exception e) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_154'/>
+154
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_154'>5</a>
+<span>
+1. loadConfiguration : removed call to org/jmxtrans/utils/io/Resource::getPath &rarr; SURVIVED<br/>
+2. loadConfiguration : removed call to java/lang/StringBuilder::toString &rarr; SURVIVED<br/>
+3. loadConfiguration : removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED<br/>
+4. loadConfiguration : removed call to java/lang/StringBuilder::append &rarr; KILLED<br/>
+5. loadConfiguration : removed call to java/lang/StringBuilder::append &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                        String message = &#34;Could not parse configuration &#34; + configResource.getPath();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_155'/>
+155
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_155'>3</a>
+<span>
+1. loadConfiguration : removed conditional &rarr; SURVIVED<br/>
+2. loadConfiguration : negated conditional &rarr; KILLED<br/>
+3. loadConfiguration : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                        if (ignoreParsingErrors) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_156'/>
+156
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_156'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                            logger.info(message);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_157'/>
+157
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_157'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                        } else {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_158'/>
+158
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_158'>1</a>
+<span>
+1. loadConfiguration : removed call to org/jmxtrans/core/config/JmxtransConfigurationException::&#60;init&#62; &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                            throw new JmxtransConfigurationException(message, e);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_159'/>
+159
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_159'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_160'/>
+160
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_160'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_161'/>
+161
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_161'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_162'/>
+162
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_162'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_163'/>
+163
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_163'>6</a>
+<span>
+1. loadConfiguration : negated conditional &rarr; KILLED<br/>
+2. loadConfiguration : negated conditional &rarr; KILLED<br/>
+3. loadConfiguration : removed conditional &rarr; KILLED<br/>
+4. loadConfiguration : removed conditional &rarr; KILLED<br/>
+5. loadConfiguration : removed conditional &rarr; KILLED<br/>
+6. loadConfiguration : removed conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            if (!parsed &#38;&#38; !ignoreParsingErrors) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_164'/>
+164
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_164'>6</a>
+<span>
+1. loadConfiguration : removed call to org/jmxtrans/utils/io/Resource::getPath &rarr; SURVIVED<br/>
+2. loadConfiguration : removed call to java/lang/StringBuilder::toString &rarr; SURVIVED<br/>
+3. loadConfiguration : removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED<br/>
+4. loadConfiguration : removed call to org/jmxtrans/core/config/JmxtransConfigurationException::&#60;init&#62; &rarr; KILLED<br/>
+5. loadConfiguration : removed call to java/lang/StringBuilder::append &rarr; KILLED<br/>
+6. loadConfiguration : removed call to java/lang/StringBuilder::append &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>                throw new JmxtransConfigurationException(&#34;Found no parsers supporting config file &#34; + configResource.getPath());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_165'/>
+165
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_165'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_166'/>
+166
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_166'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_167'/>
+167
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_167'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_168'/>
+168
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_168'>3</a>
+<span>
+1. loadConfiguration : removed call to org/jmxtrans/core/config/ConfigurationMerger::&#60;init&#62; &rarr; KILLED<br/>
+2. loadConfiguration : removed call to org/jmxtrans/core/config/ConfigurationMerger::merge &rarr; KILLED<br/>
+3. loadConfiguration : mutated return of Object value for org/jmxtrans/core/config/JmxTransBuilder::loadConfiguration to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return new ConfigurationMerger().merge(configurations);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_169'/>
+169
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_169'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_170'/>
+170
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_170'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_171'/>
+171
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_171'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_172'/>
+172
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_172'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private Iterable&#60;ConfigParser&#62; getConfigParsers(Clock clock) throws JAXBException, ParserConfigurationException, SAXException, IOException {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_173'/>
+173
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_173'>3</a>
+<span>
+1. getConfigParsers : removed call to org/jmxtrans/utils/PropertyPlaceholderResolver::&#60;init&#62; &rarr; KILLED<br/>
+2. getConfigParsers : removed call to org/jmxtrans/core/config/PropertyPlaceholderResolverXmlPreprocessor::&#60;init&#62; &rarr; KILLED<br/>
+3. getConfigParsers : removed call to org/jmxtrans/core/config/XmlConfigParser::newInstance &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        ConfigParser configParser = XmlConfigParser.newInstance(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_174'/>
+174
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_174'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new PropertyPlaceholderResolverXmlPreprocessor(new PropertyPlaceholderResolver()),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_175'/>
+175
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_175'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                clock);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_176'/>
+176
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_176'>2</a>
+<span>
+1. getConfigParsers : removed call to java/util/Collections::singleton &rarr; KILLED<br/>
+2. getConfigParsers : mutated return of Object value for org/jmxtrans/core/config/JmxTransBuilder::getConfigParsers to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return singleton(configParser);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_177'/>
+177
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_177'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_178'/>
+178
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_178'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_179'/>
+179
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_179'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Nonnull</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_180'/>
+180
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_180'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private ScheduledExecutorService createScheduledExecutorService(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_181'/>
+181
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_181'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            @Nonnull String componentName,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_182'/>
+182
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_182'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            @Nonnull MBeanRegistry mBeanRegistry) throws MalformedObjectNameException {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_183'/>
+183
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_183'>4</a>
+<span>
+1. createScheduledExecutorService : removed call to java/util/concurrent/ScheduledThreadPoolExecutor::&#60;init&#62; &rarr; SURVIVED<br/>
+2. createScheduledExecutorService : Substituted 1 with 0 &rarr; SURVIVED<br/>
+3. createScheduledExecutorService : removed call to org/jmxtrans/core/scheduler/JmxTransThreadFactory::&#60;init&#62; &rarr; KILLED<br/>
+4. createScheduledExecutorService : removed call to java/util/concurrent/ThreadPoolExecutor$AbortPolicy::&#60;init&#62; &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, new JmxTransThreadFactory(componentName), new AbortPolicy());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_184'/>
+184
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_184'>7</a>
+<span>
+1. createScheduledExecutorService : removed call to org/jmxtrans/core/monitoring/MBeanRegistry::register &rarr; SURVIVED<br/>
+2. createScheduledExecutorService : removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED<br/>
+3. createScheduledExecutorService : removed call to javax/management/ObjectName::&#60;init&#62; &rarr; KILLED<br/>
+4. createScheduledExecutorService : removed call to org/jmxtrans/core/config/ThreadPoolExecutorMetrics::&#60;init&#62; &rarr; KILLED<br/>
+5. createScheduledExecutorService : removed call to java/lang/StringBuilder::append &rarr; KILLED<br/>
+6. createScheduledExecutorService : removed call to java/lang/StringBuilder::append &rarr; KILLED<br/>
+7. createScheduledExecutorService : removed call to java/lang/StringBuilder::toString &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        mBeanRegistry.register(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_185'/>
+185
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_185'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new ObjectName(&#34;org.jmxtrans.executors:type=ExecutorMetrics,name=&#34; + componentName),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_186'/>
+186
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_186'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new ThreadPoolExecutorMetrics(executor));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_187'/>
+187
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_187'>1</a>
+<span>
+1. createScheduledExecutorService : mutated return of Object value for org/jmxtrans/core/config/JmxTransBuilder::createScheduledExecutorService to ( if (x != null) null else throw new RuntimeException ) &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        return executor;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_188'/>
+188
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_188'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_189'/>
+189
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_189'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_190'/>
+190
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_190'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Nonnull</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_191'/>
+191
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_191'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private ExecutorService createExecutorService(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_192'/>
+192
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_192'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            @Nonnull String componentName,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_193'/>
+193
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_193'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            int maxThreads,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_194'/>
+194
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_194'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            int maxQueueSize,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_195'/>
+195
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_195'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            int keepAliveTime,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_196'/>
+196
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_196'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            @Nonnull TimeUnit unit,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_197'/>
+197
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_197'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            @Nonnull MBeanRegistry mBeanRegistry) throws MalformedObjectNameException {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_198'/>
+198
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_198'>5</a>
+<span>
+1. createExecutorService : removed call to java/util/concurrent/ThreadPoolExecutor::&#60;init&#62; &rarr; SURVIVED<br/>
+2. createExecutorService : Substituted 1 with 0 &rarr; SURVIVED<br/>
+3. createExecutorService : removed call to java/util/concurrent/ArrayBlockingQueue::&#60;init&#62; &rarr; KILLED<br/>
+4. createExecutorService : removed call to org/jmxtrans/core/scheduler/JmxTransThreadFactory::&#60;init&#62; &rarr; KILLED<br/>
+5. createExecutorService : removed call to java/util/concurrent/ThreadPoolExecutor$AbortPolicy::&#60;init&#62; &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        ThreadPoolExecutor executor = new ThreadPoolExecutor(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_199'/>
+199
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_199'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                1, maxThreads,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_200'/>
+200
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_200'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                keepAliveTime, unit,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_201'/>
+201
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_201'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new ArrayBlockingQueue&#60;Runnable&#62;(maxQueueSize),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_202'/>
+202
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_202'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new JmxTransThreadFactory(componentName),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_203'/>
+203
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_203'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new AbortPolicy());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_204'/>
+204
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_204'>7</a>
+<span>
+1. createExecutorService : removed call to org/jmxtrans/core/monitoring/MBeanRegistry::register &rarr; SURVIVED<br/>
+2. createExecutorService : removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED<br/>
+3. createExecutorService : removed call to javax/management/ObjectName::&#60;init&#62; &rarr; KILLED<br/>
+4. createExecutorService : removed call to org/jmxtrans/core/config/ThreadPoolExecutorMetrics::&#60;init&#62; &rarr; KILLED<br/>
+5. createExecutorService : removed call to java/lang/StringBuilder::append &rarr; KILLED<br/>
+6. createExecutorService : removed call to java/lang/StringBuilder::append &rarr; KILLED<br/>
+7. createExecutorService : removed call to java/lang/StringBuilder::toString &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        mBeanRegistry.register(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_205'/>
+205
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_205'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new ObjectName(&#34;org.jmxtrans.executors:type=ExecutorMetrics,name=&#34; + componentName),</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_206'/>
+206
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_206'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                new ThreadPoolExecutorMetrics(executor));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_207'/>
+207
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_207'>1</a>
+<span>
+1. createExecutorService : mutated return of Object value for org/jmxtrans/core/config/JmxTransBuilder::createExecutorService to ( if (x != null) null else throw new RuntimeException ) &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        return executor;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_208'/>
+208
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_208'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@447b1962_209'/>
+209
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_209'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_81'>81</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_81'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/utils/time/SystemClock::&#60;init&#62; &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_82'>82</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_82'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> Substituted 1000 with 1001 &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_84'>84</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_84'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>build<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/monitoring/MBeanRegistry::&#60;init&#62; &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to java/lang/management/ManagementFactory::getPlatformMBeanServer &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_86'>86</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_86'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> Substituted 2 with 3 &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> Substituted 1000 with 1001 &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> Substituted 1 with 0 &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/config/JmxTransBuilder::createExecutorService &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_87'>87</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_87'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> Substituted 2 with 3 &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> Substituted 1000 with 1001 &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> Substituted 1 with 0 &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/config/JmxTransBuilder::createExecutorService &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_88'>88</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_88'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/config/JmxTransBuilder::createScheduledExecutorService &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_90'>90</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_90'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>build<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/JmxTransBuilder::loadConfiguration &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_92'>92</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_92'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/config/JmxTransBuilder::registerMBeans &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_94'>94</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_94'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/scheduler/ResultProcessor::&#60;init&#62; &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/query/embedded/ResultNameStrategy::&#60;init&#62; &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/scheduler/QueryProcessor::&#60;init&#62; &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/scheduler/QueryGenerator::&#60;init&#62; &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>build<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/scheduler/NaiveScheduler::&#60;init&#62; &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/config/Configuration::getPeriod &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/config/Configuration::getServers &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>8.<span><b>8</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/config/Configuration::getOutputWriters &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>9.<span><b>9</b><br/><b>Location : </b>build<br/><b>Killed by : </b>none</span></span> removed call to java/util/Collections::singletonList &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>10.<span><b>10</b><br/><b>Location : </b>build<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> mutated return of Object value for org/jmxtrans/core/config/JmxTransBuilder::build to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_120'>120</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_120'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreIgnoredIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/Configuration::getServers &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/Iterable::iterator &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> removed call to java/util/Iterator::hasNext &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/util/Iterator::next &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_121'>121</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_121'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/query/embedded/Server::getQueries &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/config/JmxTransBuilder::registerMBeans &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_122'>122</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_122'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/Configuration::getOutputWriters &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/config/JmxTransBuilder::registerMBeans &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_127'>127</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_127'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/Iterable::iterator &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> removed call to java/util/Iterator::hasNext &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> removed call to java/util/Iterator::next &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_129'>129</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_129'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_133'>133</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_133'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>registerMBeans<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/monitoring/MBeanRegistry::register &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_141'>141</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_141'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/JmxTransBuilder::getConfigParsers &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_143'>143</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_143'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/util/ArrayList::&#60;init&#62; &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_145'>145</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_145'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/Iterable::iterator &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/util/Iterator::hasNext &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/util/Iterator::next &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_146'>146</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_146'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> Substituted 0 with 1 &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_147'>147</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_147'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/Iterable::iterator &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/util/Iterator::hasNext &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/util/Iterator::next &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_148'>148</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_148'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/ConfigParser::supports &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_150'>150</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_150'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/ConfigParser::parseConfiguration &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_151'>151</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_151'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>none</span></span> removed call to java/util/Collection::add &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_152'>152</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_152'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> Substituted 1 with 0 &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_154'>154</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_154'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::append &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/utils/io/Resource::getPath &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::append &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::toString &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_155'>155</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_155'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreIgnoredIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreIgnoredIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>none</span></span> removed conditional &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_158'>158</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_158'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/JmxtransConfigurationException::&#60;init&#62; &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_163'>163</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_163'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreIgnoredIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_164'>164</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_164'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/JmxtransConfigurationException::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::append &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/utils/io/Resource::getPath &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::append &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>none</span></span> removed call to java/lang/StringBuilder::toString &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_168'>168</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_168'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/ConfigurationMerger::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/ConfigurationMerger::merge &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>loadConfiguration<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> mutated return of Object value for org/jmxtrans/core/config/JmxTransBuilder::loadConfiguration to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_173'>173</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_173'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getConfigParsers<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/utils/PropertyPlaceholderResolver::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getConfigParsers<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/PropertyPlaceholderResolverXmlPreprocessor::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>getConfigParsers<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/XmlConfigParser::newInstance &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_176'>176</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_176'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getConfigParsers<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/util/Collections::singleton &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getConfigParsers<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> mutated return of Object value for org/jmxtrans/core/config/JmxTransBuilder::getConfigParsers to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_183'>183</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_183'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/scheduler/JmxTransThreadFactory::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/util/concurrent/ThreadPoolExecutor$AbortPolicy::&#60;init&#62; &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>none</span></span> removed call to java/util/concurrent/ScheduledThreadPoolExecutor::&#60;init&#62; &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>none</span></span> Substituted 1 with 0 &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_184'>184</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_184'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to javax/management/ObjectName::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/ThreadPoolExecutorMetrics::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::append &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::append &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::toString &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/monitoring/MBeanRegistry::register &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_187'>187</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_187'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>createScheduledExecutorService<br/><b>Killed by : </b>none</span></span> mutated return of Object value for org/jmxtrans/core/config/JmxTransBuilder::createScheduledExecutorService to ( if (x != null) null else throw new RuntimeException ) &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_198'>198</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_198'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/util/concurrent/ArrayBlockingQueue::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/scheduler/JmxTransThreadFactory::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/util/concurrent/ThreadPoolExecutor$AbortPolicy::&#60;init&#62; &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>none</span></span> removed call to java/util/concurrent/ThreadPoolExecutor::&#60;init&#62; &rarr; SURVIVED</p> <p class='SURVIVED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>none</span></span> Substituted 1 with 0 &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_204'>204</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_204'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to javax/management/ObjectName::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to org/jmxtrans/core/config/ThreadPoolExecutorMetrics::&#60;init&#62; &rarr; KILLED</p> <p class='KILLED'><span class='pop'>4.<span><b>4</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::append &rarr; KILLED</p> <p class='KILLED'><span class='pop'>5.<span><b>5</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::append &rarr; KILLED</p> <p class='KILLED'><span class='pop'>6.<span><b>6</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest)</span></span> removed call to java/lang/StringBuilder::toString &rarr; KILLED</p> <p class='SURVIVED'><span class='pop'>7.<span><b>7</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>none</span></span> removed call to org/jmxtrans/core/monitoring/MBeanRegistry::register &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@447b1962_207'>207</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@447b1962_207'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>createExecutorService<br/><b>Killed by : </b>none</span></span> mutated return of Object value for org/jmxtrans/core/config/JmxTransBuilder::createExecutorService to ( if (x != null) null else throw new RuntimeException ) &rarr; SURVIVED</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>INCREMENTS_MUTATOR</li>
+<li class='mutator'>CONDITIONALS_BOUNDARY_MUTATOR</li>
+<li class='mutator'>RETURN_VALS_MUTATOR</li>
+<li class='mutator'>VOID_METHOD_CALL_MUTATOR</li>
+<li class='mutator'>INVERT_NEGS_MUTATOR</li>
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_IF_MUTATOR</li>
+<li class='mutator'>MATH_MUTATOR</li>
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_ELSE_MUTATOR</li>
+<li class='mutator'>NON_VOID_METHOD_CALL_MUTATOR</li>
+<li class='mutator'>NEGATE_CONDITIONALS_MUTATOR</li>
+<li class='mutator'>INLINE_CONSTANT_MUTATOR</li>
+<li class='mutator'>CONSTRUCTOR_CALL_MUTATOR</li>
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_ELSE_MUTATOR</li>
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_IF_MUTATOR</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfNoParserFound(org.jmxtrans.core.config.JmxTransBuilderTest) (123 ms)</li><li>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreRaisedIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest) (133 ms)</li><li>org.jmxtrans.core.config.JmxTransBuilderTest.parsingErrorsAreIgnoredIfSoConfigured(org.jmxtrans.core.config.JmxTransBuilderTest) (656 ms)</li><li>org.jmxtrans.core.config.JmxTransBuilderTest.schedulerIsBuilt(org.jmxtrans.core.config.JmxTransBuilderTest) (210 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='http://pitest.org'>PIT</a> 1.1.4
+
+</body>
+</html>
