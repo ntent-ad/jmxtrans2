@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>BatchingOutputWriter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - output writers</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.output.writers.support</a> &gt; <span class="el_source">BatchingOutputWriter.java</span></div><h1>BatchingOutputWriter.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.output.writers.support;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.annotation.Nonnull;
+
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.output.OutputWriter;
+import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.core.results.QueryResultTimeComparator;
+
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.sort;
+
+public class BatchingOutputWriter&lt;T extends BatchedOutputWriter&gt; implements OutputWriter {
+
+<span class="fc" id="L45">    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());</span>
+
+    @Nonnull private final LinkedBlockingQueue&lt;QueryResult&gt; resultQueue;
+    private final int batchSize;
+    @Nonnull private final T outputWriter;
+<span class="fc" id="L50">    @Nonnull private final Comparator&lt;QueryResult&gt; batchOrder = new QueryResultTimeComparator();</span>
+
+<span class="fc" id="L52">    public BatchingOutputWriter(int batchSize, @Nonnull T outputWriter) {</span>
+<span class="fc" id="L53">        this.batchSize = batchSize;</span>
+<span class="fc" id="L54">        resultQueue = new LinkedBlockingQueue&lt;&gt;(batchSize);</span>
+<span class="fc" id="L55">        this.outputWriter = outputWriter;</span>
+<span class="fc" id="L56">    }</span>
+
+
+    @Override
+    public int write(@Nonnull QueryResult result) throws IOException {
+<span class="fc" id="L61">        List&lt;QueryResult&gt; batch = enqueueAndGetBatch(result);</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (batch.isEmpty()) return 0;</span>
+<span class="fc" id="L63">        return processBatch(batch);</span>
+    }
+
+    // FIXME: There is a problem with synchronization here. All operations on the resultQueue are synchronized so using
+    // a concurrent collection does not make much sense. But we still need to ensure that the queue is drained only
+    // once if multiple results arrive when the queue is full. This needs some more love ...
+    @Nonnull
+    private synchronized List&lt;QueryResult&gt; enqueueAndGetBatch(@Nonnull QueryResult result) {
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (!resultQueue.offer(result)) {</span>
+<span class="fc" id="L72">            List&lt;QueryResult&gt; batch = new ArrayList&lt;&gt;(batchSize);</span>
+<span class="fc" id="L73">            resultQueue.drainTo(batch);</span>
+            // I cannot see any reason why this offer could fail, so let's not check the result
+<span class="fc" id="L75">            resultQueue.offer(result);</span>
+<span class="fc" id="L76">            return batch;</span>
+        }
+<span class="fc" id="L78">        return emptyList();</span>
+    }
+
+    private int processBatch(@Nonnull List&lt;QueryResult&gt; batch) throws IOException {
+        try {
+<span class="fc" id="L83">            int counter = 0;</span>
+<span class="fc" id="L84">            outputWriter.beforeBatch();</span>
+<span class="fc" id="L85">            sort(batch, batchOrder);</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">            for (QueryResult result : batch) {</span>
+                try {
+<span class="fc" id="L88">                    outputWriter.write(result);</span>
+<span class="fc" id="L89">                    counter++;</span>
+<span class="nc" id="L90">                } catch (IOException ioe) {</span>
+<span class="nc" id="L91">                    logger.warn(format(&quot;Error writing result [%s] to output writer [%s].&quot;, result, outputWriter), ioe);</span>
+<span class="fc" id="L92">                }</span>
+<span class="fc" id="L93">            }</span>
+<span class="fc" id="L94">            return counter;</span>
+        } finally {
+<span class="pc" id="L96">            outputWriter.afterBatch();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
