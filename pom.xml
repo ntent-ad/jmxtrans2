@@ -686,6 +686,15 @@
                     <groupId>org.eluder.coveralls</groupId>
                     <artifactId>coveralls-maven-plugin</artifactId>
                     <version>3.0.1</version>
+                    <executions>
+                        <execution>
+                            <id>coveralls-report</id>
+                            <goals>
+                                <goal>report</goal>
+                            </goals>
+                            <phase>deploy</phase>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
