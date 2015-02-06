@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MBeanRegistry.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - core</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.core.monitoring</a> &gt; <span class="el_source">MBeanRegistry.java</span></div><h1>MBeanRegistry.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.core.monitoring;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.concurrent.ThreadSafe;
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
+
+import org.jmxtrans.core.lifecycle.LifecycleAware;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+
+import static java.lang.String.format;
+
+@ThreadSafe
+public class MBeanRegistry implements LifecycleAware {
+    
+<span class="fc" id="L46">    private final Logger logger = LoggerFactory.getLogger(getClass().getName());</span>
+    
+<span class="fc" id="L48">    private final Map&lt;Object, ObjectName&gt; mBeans = new ConcurrentHashMap&lt;&gt;();</span>
+    
+    private final MBeanServer mBeanServer;
+
+<span class="fc" id="L52">    public MBeanRegistry(MBeanServer mBeanServer) {</span>
+<span class="fc" id="L53">        this.mBeanServer = mBeanServer;</span>
+<span class="fc" id="L54">    }</span>
+
+    public &lt;T extends SelfNamedMBean&gt; SelfNamedMBean register(T mBean) throws MalformedObjectNameException {
+<span class="fc" id="L57">        register(mBean.getObjectName(), mBean);</span>
+<span class="fc" id="L58">        return mBean;</span>
+    }
+    
+    public &lt;T&gt; T register(ObjectName name, T mBean) {
+<span class="fc" id="L62">        mBeans.put(mBean, name);</span>
+<span class="fc" id="L63">        return mBean;</span>
+    }
+    
+    @Override
+    public void start() throws InstanceAlreadyExistsException, MBeanRegistrationException, InstanceNotFoundException {
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        for (Map.Entry&lt;Object, ObjectName&gt; entry : mBeans.entrySet()) {</span>
+<span class="fc" id="L69">            Object mBean = entry.getKey();</span>
+<span class="fc" id="L70">            ObjectName name = entry.getValue();</span>
+            
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            if (mBeanServer.isRegistered(name)) mBeanServer.unregisterMBean(name);</span>
+            
+            try {
+<span class="fc" id="L75">                logger.debug(&quot;Registering mbean &quot; + name);</span>
+<span class="fc" id="L76">                mBeanServer.registerMBean(mBean, name);</span>
+<span class="nc" id="L77">            } catch (NotCompliantMBeanException e) {</span>
+<span class="nc" id="L78">                logger.error(format(&quot;MBean [%s], named [%s] is not compliant.&quot;, mBean.toString(), name), e);</span>
+<span class="fc" id="L79">            }</span>
+<span class="fc" id="L80">        }</span>
+<span class="fc" id="L81">    }</span>
+    
+    @Override
+    public void stop() throws MBeanRegistrationException {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        for (ObjectName name : mBeans.values()) {</span>
+            try {
+<span class="fc" id="L87">                mBeanServer.unregisterMBean(name);</span>
+<span class="fc" id="L88">            } catch (InstanceNotFoundException ignore) {</span>
+<span class="fc" id="L89">            }</span>
+<span class="fc" id="L90">        }</span>
+<span class="fc" id="L91">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
