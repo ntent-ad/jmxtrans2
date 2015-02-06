@@ -220,11 +220,11 @@
 <a class="jxr_linenumber" name="L212" href="#L212">212</a>     }
 <a class="jxr_linenumber" name="L213" href="#L213">213</a> 
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>     @Nonnull
-<a class="jxr_linenumber" name="L215" href="#L215">215</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/RemoteServer.html">Builder</a> builder(@Nonnull String name) {
-<a class="jxr_linenumber" name="L216" href="#L216">216</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/RemoteServer.html">Builder</a>(name);
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/Query.html">Builder</a> builder(@Nonnull String name) {
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/Query.html">Builder</a>(name);
 <a class="jxr_linenumber" name="L217" href="#L217">217</a>     }
 <a class="jxr_linenumber" name="L218" href="#L218">218</a> 
-<a class="jxr_linenumber" name="L219" href="#L219">219</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/RemoteServer.html">Builder</a> {
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/Query.html">Builder</a> {
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>         @Nonnull
 <a class="jxr_linenumber" name="L221" href="#L221">221</a>         <strong class="jxr_keyword">private</strong> String name;
 <a class="jxr_linenumber" name="L222" href="#L222">222</a>         @Nullable
@@ -234,16 +234,16 @@
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>         @Nullable
 <a class="jxr_linenumber" name="L227" href="#L227">227</a>         <strong class="jxr_keyword">private</strong> Set&lt;String&gt; keys;
 <a class="jxr_linenumber" name="L228" href="#L228">228</a> 
-<a class="jxr_linenumber" name="L229" href="#L229">229</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/RemoteServer.html">Builder</a>(@Nonnull String name) {
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>         <strong class="jxr_keyword">private</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/Query.html">Builder</a>(@Nonnull String name) {
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>             <strong class="jxr_keyword">this</strong>.name = name;
 <a class="jxr_linenumber" name="L231" href="#L231">231</a>         }
 <a class="jxr_linenumber" name="L232" href="#L232">232</a> 
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/RemoteServer.html">Builder</a> withResultAlias(@Nullable String resultAlias) {
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/Query.html">Builder</a> withResultAlias(@Nullable String resultAlias) {
 <a class="jxr_linenumber" name="L234" href="#L234">234</a>             <strong class="jxr_keyword">this</strong>.resultAlias = resultAlias;
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>         }
 <a class="jxr_linenumber" name="L237" href="#L237">237</a> 
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/RemoteServer.html">Builder</a> withType(@Nullable String type) {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/Query.html">Builder</a> withType(@Nullable String type) {
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>             <strong class="jxr_keyword">this</strong>.type = type;
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>         }
@@ -253,7 +253,7 @@
 <a class="jxr_linenumber" name="L245" href="#L245">245</a>             keys.add(key);
 <a class="jxr_linenumber" name="L246" href="#L246">246</a>         }
 <a class="jxr_linenumber" name="L247" href="#L247">247</a> 
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/RemoteServer.html">Builder</a> withKeys(@Nullable Collection&lt;String&gt; keys) {
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>         <strong class="jxr_keyword">public</strong> <a href="../../../../../org/jmxtrans/core/query/embedded/Query.html">Builder</a> withKeys(@Nullable Collection&lt;String&gt; keys) {
 <a class="jxr_linenumber" name="L249" href="#L249">249</a>             <strong class="jxr_keyword">if</strong> (keys != <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>                 <strong class="jxr_keyword">this</strong>.keys = <strong class="jxr_keyword">new</strong> HashSet&lt;&gt;();
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>                 <strong class="jxr_keyword">this</strong>.keys.addAll(keys);
