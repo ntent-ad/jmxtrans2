@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Iterables2.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - utils</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.utils.collections</a> &gt; <span class="el_source">Iterables2.java</span></div><h1>Iterables2.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.utils.collections;
+
+import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+
+/**
+ * Inspired by &lt;code&gt;com.google.common.collect.Iterables&lt;/code&gt;.
+ *
+ * @author &lt;a href=&quot;mailto:cleclerc@cloudbees.com&quot;&gt;Cyrille Le Clerc&lt;/a&gt;
+ */
+public final class Iterables2 {
+
+<span class="nc" id="L40">    private Iterables2() {</span>
+<span class="nc" id="L41">    }</span>
+
+    /**
+     * Returns the element at the specified position in an iterable.
+     *
+     * @param iterable the iterable to search into
+     * @param position the position of the entry to return
+     * @return the entry at the given &lt;code&gt;location&lt;/code&gt; in the given &lt;code&gt;iterable&lt;/code&gt;
+     *         throws
+     * @throws IndexOutOfBoundsException if given {@code position} is negative or
+     *                                   greater than or equal to the size of given &lt;code&gt;iterable&lt;/code&gt;
+     */
+    @Nullable
+    public static &lt;T&gt; T get(@Nonnull Iterable&lt;T&gt; iterable, @Nonnegative int position) throws NullPointerException, IndexOutOfBoundsException {
+<span class="fc" id="L55">        Objects.requireNonNull(iterable);</span>
+
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (iterable instanceof List) {</span>
+<span class="fc" id="L58">            return ((List&lt;T&gt;) iterable).get(position);</span>
+        }
+
+<span class="fc bfc" id="L61" title="All 2 branches covered.">        if (position &lt; 0)</span>
+<span class="fc" id="L62">            throw new IndexOutOfBoundsException(&quot;Requested position must be greater than 0, '&quot; + position + &quot;' is invalid&quot;);</span>
+
+<span class="fc" id="L64">        int idx = 0;</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        for (T value : iterable) {</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">            if (idx == position) {</span>
+<span class="fc" id="L67">                return value;</span>
+            }
+<span class="fc" id="L69">            idx++;</span>
+<span class="fc" id="L70">        }</span>
+<span class="fc" id="L71">        throw new IndexOutOfBoundsException(&quot;Requested position must be smaller than iterable size (&quot; + idx + &quot;), '&quot; + position + &quot;' is invalid&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
