@@ -20,38 +20,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.config;
+package org.jmxtrans.core.template;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import org.junit.Test;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.query.Invocation;
-import org.jmxtrans.core.query.Server;
-import org.jmxtrans.utils.time.Interval;
-
-import lombok.Getter;
-import lombok.Setter;
-
-@NotThreadSafe
-final class ModifiableConfiguration implements Configuration {
-
-    @Setter private Interval period;
-    @Nonnull @Getter private final Collection<OutputWriter> outputWriters = new ArrayList<>();
-    @Nonnull @Getter private final Collection<Invocation> invocations = new ArrayList<>();
-    @Nonnull @Getter private final Collection<Server> servers = new ArrayList<>();
-
-    @Nonnull
-    @Override
-    public Interval getPeriod() {
-        if (period == null) return DefaultConfiguration.getInstance().getPeriod();
-        return period;
-    }
-
-    public void addServer(@Nonnull Server server) {
-        servers.add(server);
+public class KeepAlphaNumericTest {
+    
+    @Test
+    public void alphaNumericAreKept() {
+        KeepAlphaNumeric escaper = new KeepAlphaNumeric();
+        
+        StringBuilder result = new StringBuilder();
+        escaper.escape("a.b;c^D$E-F_0", result);
+        
+        assertThat(result.toString()).isEqualTo("a_b_c_D_E-F_0");
     }
 }

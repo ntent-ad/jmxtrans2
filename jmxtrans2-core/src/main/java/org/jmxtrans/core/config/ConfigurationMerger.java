@@ -32,7 +32,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.query.Invocation;
-import org.jmxtrans.core.query.embedded.Server;
+import org.jmxtrans.core.query.Server;
 
 // TODO : Very naive implementation, definitely needs to be improved !!!
 @ThreadSafe

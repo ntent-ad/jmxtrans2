@@ -20,13 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.query.embedded;
+package org.jmxtrans.core.query;
 
 import java.util.Arrays;
 
 import org.junit.Test;
 
-import static org.jmxtrans.core.query.embedded.QueryAttribute.builder;
+import static org.jmxtrans.core.query.QueryAttribute.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

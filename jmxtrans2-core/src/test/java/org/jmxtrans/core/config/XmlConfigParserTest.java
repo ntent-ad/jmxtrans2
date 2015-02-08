@@ -31,8 +31,8 @@ import javax.xml.bind.UnmarshalException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.jmxtrans.core.query.Invocation;
-import org.jmxtrans.core.query.embedded.Query;
-import org.jmxtrans.core.query.embedded.Server;
+import org.jmxtrans.core.query.Query;
+import org.jmxtrans.core.query.Server;
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
 import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.io.StandardResource;

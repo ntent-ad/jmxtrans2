@@ -72,16 +72,16 @@
             </deny>
         </access-rule>
         <access-rule>
-            <message>Naming package should ony depend on query package.</message>
+            <message>Template package should ony depend on query package.</message>
             <deny>
-                <from class="org.jmxtrans.core.naming.**"/>
+                <from class="org.jmxtrans.core.template.**"/>
                 <to>
                     <include class="org.jmxtrans.**"/>
                 </to>
                 <allow>
                     <to>
                         <include class="org.jmxtrans.core.query.**"/>
-                        <include class="org.jmxtrans.core.naming.**"/>
+                        <include class="org.jmxtrans.core.template.**"/>
                         <!-- common packages always allowed -->
                         <include class="org.jmxtrans.core.log.**"/>
                         <include class="org.jmxtrans.core.monitoring.**"/>
@@ -110,7 +110,7 @@
             </deny>
         </access-rule>
         <access-rule>
-            <message>Queries should only depend on QueryResults</message>
+            <message>Queries should only depend on QueryResults and template</message>
             <deny>
                 <from class="org.jmxtrans.core.query.**"/>
                 <to>
@@ -118,6 +118,7 @@
                 </to>
                 <allow>
                     <to>
+                        <include class="org.jmxtrans.core.template.**"/>
                         <include class="org.jmxtrans.core.query.**"/>
                         <include class="org.jmxtrans.core.results.**"/>
                         <!-- common packages always allowed -->

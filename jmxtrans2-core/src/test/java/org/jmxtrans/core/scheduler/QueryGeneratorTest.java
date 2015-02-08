@@ -25,8 +25,8 @@ package org.jmxtrans.core.scheduler;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.jmxtrans.core.query.embedded.Query;
-import org.jmxtrans.core.query.embedded.Server;
+import org.jmxtrans.core.query.Query;
+import org.jmxtrans.core.query.Server;
 import org.jmxtrans.utils.time.Interval;
 import org.jmxtrans.utils.time.ManualClock;
 

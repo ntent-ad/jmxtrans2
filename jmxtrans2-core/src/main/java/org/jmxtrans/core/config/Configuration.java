@@ -27,7 +27,7 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.query.Invocation;
-import org.jmxtrans.core.query.embedded.Server;
+import org.jmxtrans.core.query.Server;
 import org.jmxtrans.utils.time.Interval;
 
 @ThreadSafe

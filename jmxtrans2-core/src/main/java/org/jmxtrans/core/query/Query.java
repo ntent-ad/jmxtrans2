@@ -22,206 +22,129 @@
  */
 package org.jmxtrans.core.query;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
-import javax.annotation.concurrent.ThreadSafe;
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
-import javax.management.MBeanServer;
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import javax.management.ReflectionException;
-import javax.management.openmbean.CompositeData;
 
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.monitoring.SelfNamedMBean;
 import org.jmxtrans.core.results.QueryResult;
-import org.jmxtrans.utils.collections.ArrayUtils;
-import org.jmxtrans.utils.collections.Iterables2;
 import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.NanoChronometer;
 import org.jmxtrans.utils.time.SystemClock;
 
 import lombok.Getter;
 
+import static java.lang.String.format;
+import static java.util.Objects.hash;
+
 /**
- * @deprecated use @link{org.jmxtrans.core.query.embedded.Query} instead.
+ * Describe a JMX query on which metrics are collected.
+ *
+ * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ * @author Jon Stevens
  */
-@Immutable
-@ThreadSafe
-@Deprecated
-public class Query {
+public class Query implements QueryMBean, SelfNamedMBean {
 
     @Nonnull
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
-    @Nonnull
-    private final ResultNameStrategy resultNameStrategy;
+    /**
+     * ObjectName of the Query MBean(s) to monitor, can contain
+     */
+    @Nonnull private final ObjectName objectName;
 
-    @Nonnull @Getter
-    private final ObjectName objectName;
-    @Nonnull @Getter private final String resultAlias;
+    @Nullable @Getter private final String resultAlias;
     /**
-     * The attribute to retrieve ({@link javax.management.MBeanServer#getAttribute(javax.management.ObjectName, String)})
+     * JMX attributes to collect. As an array for {@link javax.management.MBeanServer#getAttributes(javax.management.ObjectName, String[])}
      */
-    @Nonnull @Getter private final String attribute;
+    @Nonnull
+    private final Map<String, QueryAttribute> attributesByName;
     /**
-     * If the MBean attribute value is a {@link javax.management.openmbean.CompositeData}, the key to lookup.
+     * Copy of {@link #attributesByName}'s {@link java.util.Map#entrySet()} for performance optimization
      */
-    @Nullable @Getter private final String key;
-    /**
-     * If the returned value is a {@link java.util.Collection}or an array, the position of the entry to lookup.
-     */
-    @Nullable @Getter private final Integer position;
-    /**
-     * Attribute type like '{@code gauge}' or '{@code counter}'. Used by monitoring systems like Librato who require this information.
-     */
-    @Nullable @Getter private final String type;
+    @Nonnull
+    private final String[] attributeNames;
 
     @Nonnull
-    private final Clock clock = new SystemClock();
+    private final QueryMetrics metrics;
 
     /**
-     * @see #Query(String, String, String, Integer, String, String, ResultNameStrategy)
+     * {@link javax.management.ObjectName} of this {@link QueryMBean}
      */
-    public Query(@Nonnull String objectName, @Nonnull String attribute, @Nonnull ResultNameStrategy resultNameStrategy) {
-        this(objectName, attribute, null, null, null, attribute, resultNameStrategy);
+    @Nonnull private final ObjectName queryMbeanObjectName;
+
+    @Getter private final int maxResults;
+    
+    private Query(@Nonnull ObjectName objectName,
+                  @Nullable String resultAlias,
+                  @Nonnull List<QueryAttribute> attributes,
+                  @Nonnull ObjectName queryMbeanObjectName,
+                  int maxResults,
+                  @Nonnull QueryMetrics metrics) {
+        this.objectName = objectName;
+        this.resultAlias = resultAlias;
+        this.maxResults = maxResults;
+        this.attributesByName = new HashMap<>();
+        for (QueryAttribute attribute : attributes) {
+            attributesByName.put(attribute.getName(), attribute);
+        }
+        this.attributeNames = attributesByName.keySet().toArray(new String[0]);
+        this.queryMbeanObjectName = queryMbeanObjectName;
+        this.metrics = metrics;
     }
 
-    /**
-     * @see #Query(String, String, String, Integer, String, String, ResultNameStrategy)
-     */
-    public Query(@Nonnull String objectName, @Nonnull String attribute, @Nullable Integer position, @Nonnull ResultNameStrategy resultNameStrategy) {
-        this(objectName, attribute, null, position, null, attribute, resultNameStrategy);
-    }
+    public Iterable<QueryResult> collectMetrics(@Nonnull MBeanServerConnection mbeanServer, @Nonnull ResultNameStrategy resultNameStrategy) throws IOException {
+        Collection<QueryResult> results = new ArrayList<>();
+        try (NanoChronometer chrono = metrics.collectionDurationChronometer()) {
+            /*
+             * Optimisation tip: no need to skip 'mbeanServer.queryNames()' if the ObjectName is not a pattern
+             * (i.e. not '*' or '?' wildcard) because the mbeanserver internally performs the check.
+             * Seen on com.sun.jmx.interceptor.DefaultMBeanServerInterceptor
+             */
+            Set<ObjectName> matchingObjectNames = mbeanServer.queryNames(this.objectName, null);
+            logger.debug(format("Query %s returned %s", objectName, matchingObjectNames));
 
-    /**
-     * @see #Query(String, String, String, Integer, String, String, ResultNameStrategy)
-     */
-    public Query(@Nonnull String objectName, @Nonnull String attribute, @Nonnull String resultAlias, @Nonnull ResultNameStrategy resultNameStrategy) {
-        this(objectName, attribute, null, null, null, resultAlias, resultNameStrategy);
-    }
+            for (ObjectName matchingObjectName : matchingObjectNames) {
+                try {
+                    AttributeList jmxAttributes = mbeanServer.getAttributes(matchingObjectName, this.attributeNames);
+                    logger.debug(format("Query %s returned %s", matchingObjectName, jmxAttributes));
+                    for (Attribute jmxAttribute : jmxAttributes.asList()) {
+                        attributesByName.get(jmxAttribute.getName()).collectMetrics(
+                                matchingObjectName, jmxAttribute.getValue(), results, this, resultNameStrategy, maxResults);
 
-    /**
-     * @param objectName         The {@link javax.management.ObjectName} to search for
-     *                           ({@link javax.management.MBeanServer#queryMBeans(javax.management.ObjectName, javax.management.QueryExp)}),
-     *                           can contain wildcards and return several entries.
-     * @param attribute          The attribute to retrieve ({@link javax.management.MBeanServer#getAttribute(javax.management.ObjectName, String)})
-     * @param key                if the MBean attribute value is a {@link javax.management.openmbean.CompositeData}, the key to lookup.
-     * @param position           if the returned value is a {@link java.util.Collection} or an array, the position of the entry to lookup.
-     * @param type               type of the metric ('counter', 'gauge', ...)
-     * @param resultAlias
-     * @param resultNameStrategy the {@link ResultNameStrategy} used during the
-     *                           {@link #collectMetrics(javax.management.MBeanServer, java.util.Queue)} phase.
-     */
-    public Query(
-            @Nonnull String objectName,
-            @Nonnull String attribute,
-            @Nullable String key,
-            @Nullable Integer position,
-            @Nullable String type,
-            @Nonnull String resultAlias,
-            @Nonnull ResultNameStrategy resultNameStrategy) {
-        try {
-            this.objectName = new ObjectName(Objects.requireNonNull(objectName));
-        } catch (MalformedObjectNameException e) {
-            throw new IllegalArgumentException("Invalid objectName '" + objectName + "'", e);
-        }
-        this.attribute = Objects.requireNonNull(attribute);
-        this.key = key;
-        this.resultAlias = Objects.requireNonNull(resultAlias);
-        this.position = position;
-        this.type = type;
-        this.resultNameStrategy = Objects.requireNonNull(resultNameStrategy, "resultNameStrategy");
-    }
-
-    public void collectMetrics(@Nonnull MBeanServer mbeanServer, @Nonnull Queue<QueryResult> resultQueue) {
-        Set<ObjectName> objectNames = mbeanServer.queryNames(objectName, null);
-
-        for (ObjectName on : objectNames) {
-
-            try {
-                Object attributeValue = mbeanServer.getAttribute(on, attribute);
-
-                processAttributeValues(on, attributeValue, resultQueue);
-            } catch (AttributeNotFoundException | MBeanException | ReflectionException | InstanceNotFoundException e) {
-                logCollectingException(on, e);
-            }
-        }
-    }
-
-    private void processAttributeValues(
-            @Nonnull ObjectName on,
-            @Nullable Object attributeValue,
-            @Nonnull Collection<QueryResult> resultQueue) {
-        if (attributeValue == null) {
-            // skip null values
-            return;
-        }
-
-        if (attributeValue instanceof CompositeData && key == null) {
-            logger.warn("Ignore compositeData without key specified for '" + on + "'#" + attribute + ": " + attributeValue);
-            return;
-        }
-
-        if (!(attributeValue instanceof CompositeData) && key != null) {
-            logger.warn("Ignore NON compositeData for specified key for '" + on + "'#" + attribute + "#" + key + ": " + attributeValue);
-            return;
-        }
-
-        Object value;
-        if (attributeValue instanceof CompositeData) {
-            value = ((CompositeData) attributeValue).get(key);
-        } else {
-            value = attributeValue;
-        }
-
-        value = ArrayUtils.transformToListIfIsArray(value);
-
-        String resultName = resultNameStrategy.getResultName(this, on, key);
-        if (value instanceof Iterable) {
-            Iterable iterable = (Iterable) value;
-            if (position == null) {
-                int idx = 0;
-                for (Object entry : iterable) {
-                    addResult(new QueryResult(resultName + "_" + idx++, type, entry, clock.currentTimeMillis()), resultQueue);
+                        // early return if we reach maxResults
+                        if (results.size() >= maxResults) return results;
+                    }
+                } catch (Exception e) {
+                    logger.warn(format("Exception processing query %s", this), e);
                 }
-            } else {
-                value = Iterables2.get(iterable, position);
-                addResult(new QueryResult(resultName, type, value, clock.currentTimeMillis()), resultQueue);
             }
-        } else {
-            addResult(new QueryResult(resultName, type, value, clock.currentTimeMillis()), resultQueue);
+            return results;
+        } finally {
+            metrics.incrementCollected(results.size());
+            metrics.incrementCollectionsCount();
         }
     }
 
-    private void addResult(QueryResult queryResult, Collection<QueryResult> resultQueue) {
-        try {
-            resultQueue.add(queryResult);
-        } catch (IllegalStateException e) {
-            throw new IllegalStateException("Result queue is full, could not add query " + queryResult
-                    + " further results for this query will be ignored.");
-        }
-    }
-
-    private void logCollectingException(ObjectName on, Exception e) {
-        logger.warn("Exception collecting " + on + "#" + attribute + (key == null ? "" : "#" + key), e);
-    }
-
-    @Override
-    public String toString() {
-        return "Query{" +
-                "objectName=" + objectName +
-                ", resultAlias='" + resultAlias + '\'' +
-                ", attribute='" + attribute + '\'' +
-                ", key='" + key + '\'' +
-                '}';
+    @Nonnull
+    public Collection<QueryAttribute> getQueryAttributes() {
+        return attributesByName.values();
     }
 
     @Override
@@ -229,28 +152,130 @@ public class Query {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Query query = (Query) o;
+        Query that = (Query) o;
 
-        if (!attribute.equals(query.attribute)) return false;
-        if (key != null ? !key.equals(query.key) : query.key != null) return false;
-        if (!objectName.equals(query.objectName)) return false;
-        if (position != null ? !position.equals(query.position) : query.position != null) return false;
-        if (!resultAlias.equals(query.resultAlias)) return false;
-        if (!resultNameStrategy.equals(query.resultNameStrategy)) return false;
-        if (type != null ? !type.equals(query.type) : query.type != null) return false;
-
-        return true;
+        return Objects.equals(attributesByName, that.attributesByName)
+                && Objects.equals(objectName, that.objectName)
+                && Objects.equals(resultAlias, that.resultAlias);
     }
 
     @Override
     public int hashCode() {
-        int result = resultNameStrategy.hashCode();
-        result = 31 * result + objectName.hashCode();
-        result = 31 * result + resultAlias.hashCode();
-        result = 31 * result + attribute.hashCode();
-        result = 31 * result + (key != null ? key.hashCode() : 0);
-        result = 31 * result + (position != null ? position.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        return result;
+        return hash(objectName, resultAlias, attributesByName);
+    }
+
+    @Override
+    @Nonnull
+    public String toString() {
+        return "Query{" +
+                "objectName=" + objectName +
+                ", resultAlias='" + resultAlias + '\'' +
+                ", attributes=" + attributesByName.values() +
+                '}';
+    }
+
+    @Override
+    public int getCollectedMetricsCount() {
+        return metrics.getCollectedCount();
+    }
+
+    @Override
+    public long getCollectionDurationInNanos() {
+        return metrics.getCollectionDurationNano();
+    }
+
+    @Override
+    public int getCollectionCount() {
+        return metrics.getCollectionsCount();
+    }
+
+    @Nonnull
+    @Override
+    public ObjectName getObjectName() {
+        return queryMbeanObjectName;
+    }
+
+    @Override
+    @Nonnull
+    public String getId() {
+        return queryMbeanObjectName.getCanonicalName();
+    }
+
+    @Nonnull
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        @Nonnull private static final AtomicInteger queryIdSequence = new AtomicInteger();
+
+        @Nullable private ObjectName objectName;
+        @Nullable private String resultAlias;
+        @Nonnull private final List<QueryAttribute> attributes = new ArrayList<>();
+        @Nonnull private final Clock clock;
+        private int maxResults = 50;
+
+        private Builder() {
+            this.clock = new SystemClock();
+        }
+
+        @Nonnull public Builder withObjectName(@Nonnull String objectName) {
+            try {
+                withObjectName(new ObjectName(objectName));
+                return this;
+            } catch (MalformedObjectNameException e) {
+                throw new RuntimeException("Object name [" + objectName + "] is not valid, cannot build query.");
+            }
+        }
+
+        @Nonnull
+        public Builder withObjectName(@Nonnull ObjectName objectName) {
+            this.objectName = objectName;
+            return this;
+        }
+
+        public Builder withResultAlias(@Nullable String resultAlias) {
+            this.resultAlias = resultAlias;
+            return this;
+        }
+        
+        public Builder withMaxResults(int maxResults) {
+            this.maxResults = maxResults;
+            return this;
+        }
+
+        public Builder addAttribute(@Nonnull String attributeName) {
+            addAttribute(QueryAttribute.builder(attributeName).build());
+            return this;
+        }
+
+        public Builder addAttribute(@Nonnull QueryAttribute attribute) {
+            attributes.add(attribute);
+            return this;
+        }
+
+        public Builder addAttributes(@Nonnull Collection<QueryAttribute> attributes) {
+            this.attributes.addAll(attributes);
+            return this;
+        }
+
+        @Nonnull
+        public Query build() {
+            try {
+                if (objectName == null) {
+                    throw new RuntimeException("Cannot create query without an object name, please check your code");
+                }
+                return new Query(
+                        objectName,
+                        resultAlias,
+                        attributes,
+                        new ObjectName("org.jmxtrans.query:Type=Query,id=" + queryIdSequence.incrementAndGet()),
+                        maxResults,
+                        new QueryMetrics(clock)
+                );
+            } catch (MalformedObjectNameException e) {
+                throw new RuntimeException("Object name [" + objectName + "] is not valid, cannot expose MBean for this query.");
+            }
+        }
     }
 }

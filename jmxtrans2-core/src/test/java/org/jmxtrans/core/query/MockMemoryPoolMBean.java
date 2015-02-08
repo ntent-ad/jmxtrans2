@@ -20,38 +20,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.config;
+package org.jmxtrans.core.query;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import javax.management.openmbean.CompositeData;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
+/**
+ * Mock {@link MockMemoryPoolMBean}
+ *
+ * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ */
+public interface MockMemoryPoolMBean {
 
-import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.query.Invocation;
-import org.jmxtrans.core.query.Server;
-import org.jmxtrans.utils.time.Interval;
+    public long getCollectionUsageThreshold();
 
-import lombok.Getter;
-import lombok.Setter;
+    /**
+     * @see java.lang.management.MemoryPoolMXBean#getName()
+     */
+    public String getName();
 
-@NotThreadSafe
-final class ModifiableConfiguration implements Configuration {
-
-    @Setter private Interval period;
-    @Nonnull @Getter private final Collection<OutputWriter> outputWriters = new ArrayList<>();
-    @Nonnull @Getter private final Collection<Invocation> invocations = new ArrayList<>();
-    @Nonnull @Getter private final Collection<Server> servers = new ArrayList<>();
-
-    @Nonnull
-    @Override
-    public Interval getPeriod() {
-        if (period == null) return DefaultConfiguration.getInstance().getPeriod();
-        return period;
-    }
-
-    public void addServer(@Nonnull Server server) {
-        servers.add(server);
-    }
+    /**
+     * @see java.lang.management.MemoryPoolMXBean#getUsage()
+     */
+    public CompositeData getUsage();
 }

@@ -20,23 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.naming;
+package org.jmxtrans.core.template;
 
 import javax.annotation.Nonnull;
-import javax.management.ObjectName;
 
-/**
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
-public interface ExpressionLanguageEngine {
+public class KeepAlphaNumericAndDots implements StringEscape {
     /**
-     * Replace all the '#' based keywords (e.g. <code>#hostname#</code>) by their value.
+     * Escape all non a->z,A->Z, 0->9 and '-' with a '_'.
+     * <p/>
+     * '.' is escaped with a '_' if {@code escapeDot} is <code>true</code>.
      *
-     * @param expression the expression to resolve (e.g. <code>"servers.#hostname#."</code>)
-     * @return the resolved expression (e.g. <code>"servers.tomcat5"</code>)
+     * @param str       the string to escape
+     * @param result    the {@linkplain StringBuilder} in which the escaped string is appended
      */
-    @Nonnull
-    String resolveExpression(@Nonnull String expression);
+    public void escape(@Nonnull String str, @Nonnull StringBuilder result) {
+        char[] chars = str.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            char ch = chars[i];
+            if (Character.isLetter(ch) || Character.isDigit(ch) || ch == '-' || ch == '.') {
+                result.append(ch);
+            } else if (ch == '"' && ((i == 0) || (i == chars.length - 1))) {
+                // ignore starting and ending '"' that are used to quote() objectname's values (see ObjectName.value())
+            } else {
+                result.append('_');
+            }
+        }
+    }
 
-    String resolveExpression(@Nonnull String expression, @Nonnull ObjectName exactObjectName);
 }
