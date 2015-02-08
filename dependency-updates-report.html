@@ -47,9 +47,6 @@
                           <a href="jmxtrans2-agent/index.html" title="JMXTrans - agent">JMXTrans - agent</a>
             </li>
                   <li class="none">
-                          <a href="jmxtrans2-output-writers/index.html" title="JMXTrans - output writers">JMXTrans - output writers</a>
-            </li>
-                  <li class="none">
                           <a href="jmxtrans2-servlet/index.html" title="JMXTrans - servlet">JMXTrans - servlet</a>
             </li>
                   <li class="none">
@@ -63,6 +60,9 @@
             </li>
                   <li class="none">
                           <a href="jmxtrans2-core/index.html" title="JMXTrans - core">JMXTrans - core</a>
+            </li>
+                  <li class="none">
+                          <a href="jmxtrans2-additional-writers/index.html" title="JMXTrans - additional writers">JMXTrans - additional writers</a>
             </li>
           </ul>
                        <h5>Documentation</h5>
@@ -131,7 +131,7 @@
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td># of dependencies using the latest version available</td>
-<td>23</td></tr>
+<td>22</td></tr>
 <tr class="b">
 <td><img src="images/icon_warning_sml.gif" alt="" /></td>
 <td># of dependencies where the next version available is smaller than an incremental version update</td>
@@ -310,18 +310,6 @@
 <tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.jmxtrans.jmxtrans2</td>
-<td>jmxtrans2-output-writers</td>
-<td>1.0-SNAPSHOT</td>
-<td></td>
-<td></td>
-<td>jar</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td></tr>
-<tr class="b">
-<td><img src="images/icon_success_sml.gif" alt="" /></td>
-<td>org.jmxtrans.jmxtrans2</td>
 <td>jmxtrans2-servlet</td>
 <td>1.0-SNAPSHOT</td>
 <td></td>
@@ -331,7 +319,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="a">
+<tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.jmxtrans.jmxtrans2</td>
 <td>jmxtrans2-spring</td>
@@ -343,7 +331,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="b">
+<tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.jmxtrans.jmxtrans2</td>
 <td>jmxtrans2-standalone</td>
@@ -355,7 +343,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="a">
+<tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.jmxtrans.jmxtrans2</td>
 <td>jmxtrans2-utils</td>
@@ -367,7 +355,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="b">
+<tr class="a">
 <td><img src="images/icon_warning_sml.gif" alt="" /></td>
 <td>org.mockito</td>
 <td>mockito-core</td>
@@ -379,7 +367,7 @@
 <td></td>
 <td><b>2.0.0-beta</b></td>
 <td><b>2.0.1-beta</b></td></tr>
-<tr class="a">
+<tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.projectlombok</td>
 <td>lombok</td>
@@ -391,7 +379,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="b">
+<tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.slf4j</td>
 <td>slf4j-api</td>
@@ -403,7 +391,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="a">
+<tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.slf4j</td>
 <td>slf4j-simple</td>
@@ -415,7 +403,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="b">
+<tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.springframework</td>
 <td>spring-beans</td>
@@ -427,7 +415,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="a">
+<tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.springframework</td>
 <td>spring-context</td>
@@ -439,7 +427,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="b">
+<tr class="a">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.springframework</td>
 <td>spring-core</td>
@@ -451,7 +439,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="a">
+<tr class="b">
 <td><img src="images/icon_success_sml.gif" alt="" /></td>
 <td>org.springframework</td>
 <td>spring-test</td>
@@ -463,7 +451,7 @@
 <td></td>
 <td></td>
 <td></td></tr>
-<tr class="b">
+<tr class="a">
 <th>Status</th>
 <th>Group Id</th>
 <th>Artifact Id</th>
@@ -484,25 +472,25 @@
 <div class="section">
 <h3><a name="com.beust:jcommander"></a>com.beust:jcommander</h3>
 <table border="0" class="bodyTable">
-<tr class="a">
+<tr class="b">
 <th width="80%">Status</th>
 <td><img src="images/icon_success_sml.gif" alt="" />&#160;No newer versions available.</td></tr>
-<tr class="b">
+<tr class="a">
 <th width="80%">Group Id</th>
 <td>com.beust</td></tr>
-<tr class="a">
+<tr class="b">
 <th width="80%">Artifact Id</th>
 <td>jcommander</td></tr>
-<tr class="b">
+<tr class="a">
 <th width="80%">Current Version</th>
 <td>1.47</td></tr>
-<tr class="a">
+<tr class="b">
 <th width="80%">Scope</th>
 <td></td></tr>
-<tr class="b">
+<tr class="a">
 <th width="80%">Classifier</th>
 <td></td></tr>
-<tr class="a">
+<tr class="b">
 <th width="80%">Type</th>
 <td>jar</td></tr></table></div>
 <div class="section">
@@ -760,30 +748,6 @@
 <tr class="a">
 <th width="80%">Artifact Id</th>
 <td>jmxtrans2-core</td></tr>
-<tr class="b">
-<th width="80%">Current Version</th>
-<td>1.0-SNAPSHOT</td></tr>
-<tr class="a">
-<th width="80%">Scope</th>
-<td></td></tr>
-<tr class="b">
-<th width="80%">Classifier</th>
-<td></td></tr>
-<tr class="a">
-<th width="80%">Type</th>
-<td>jar</td></tr></table></div>
-<div class="section">
-<h3><a name="org.jmxtrans.jmxtrans2:jmxtrans2-output-writers"></a>org.jmxtrans.jmxtrans2:jmxtrans2-output-writers</h3>
-<table border="0" class="bodyTable">
-<tr class="a">
-<th width="80%">Status</th>
-<td><img src="images/icon_success_sml.gif" alt="" />&#160;No newer versions available.</td></tr>
-<tr class="b">
-<th width="80%">Group Id</th>
-<td>org.jmxtrans.jmxtrans2</td></tr>
-<tr class="a">
-<th width="80%">Artifact Id</th>
-<td>jmxtrans2-output-writers</td></tr>
 <tr class="b">
 <th width="80%">Current Version</th>
 <td>1.0-SNAPSHOT</td></tr>
