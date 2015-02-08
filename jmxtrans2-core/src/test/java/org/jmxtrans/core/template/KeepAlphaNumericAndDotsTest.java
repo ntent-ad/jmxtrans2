@@ -20,26 +20,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.query.embedded;
+package org.jmxtrans.core.template;
 
-import javax.management.openmbean.CompositeData;
+import org.junit.Test;
 
-/**
- * Mock {@link MockMemoryPoolMBean}
- *
- * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
- */
-public interface MockMemoryPoolMBean {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    public long getCollectionUsageThreshold();
-
-    /**
-     * @see java.lang.management.MemoryPoolMXBean#getName()
-     */
-    public String getName();
-
-    /**
-     * @see java.lang.management.MemoryPoolMXBean#getUsage()
-     */
-    public CompositeData getUsage();
+public class KeepAlphaNumericAndDotsTest {
+    
+    @Test
+    public void alphaNumericAndDotsAreKept() {
+        KeepAlphaNumericAndDots escaper = new KeepAlphaNumericAndDots();
+        
+        StringBuilder result = new StringBuilder();
+        escaper.escape("a.b;c^D$E-F_0", result);
+        
+        assertThat(result.toString()).isEqualTo("a.b_c_D_E-F_0");
+    }
 }

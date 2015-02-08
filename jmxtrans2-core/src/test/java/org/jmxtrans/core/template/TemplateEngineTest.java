@@ -20,19 +20,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.query.embedded;
+package org.jmxtrans.core.template;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.management.MBeanServerConnection;
+import org.jmxtrans.core.template.ExpressionEvaluator;
+import org.jmxtrans.core.template.TemplateEngine;
 
-public interface Server {
-    @Nullable
-    String getHost();
+import org.junit.Test;
 
-    @Nonnull
-    MBeanServerConnection getServerConnection() throws Exception;
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @Nonnull
-    Iterable<Query> getQueries();
+public class TemplateEngineTest {
+    
+    @Test
+    public void simpleExpressionIsReplaced() {
+        TemplateEngine templateEngine = TemplateEngine.builder()
+                .addEvaluator('#', ExpressionEvaluator.builder()
+                        .addExpression("key", "value")
+                        .addExpression("to replace", "replaced")
+                        .build())
+                .build();
+        assertThat(templateEngine.evaluate("some text with a #key# #to replace#."))
+                .isEqualTo("some text with a value replaced.");
+    }
+    
 }

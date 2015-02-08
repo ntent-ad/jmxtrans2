@@ -30,9 +30,9 @@ import java.util.concurrent.Executor;
 import javax.management.MBeanServer;
 
 import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.query.embedded.InProcessServer;
-import org.jmxtrans.core.query.embedded.Query;
-import org.jmxtrans.core.query.embedded.ResultNameStrategy;
+import org.jmxtrans.core.query.InProcessServer;
+import org.jmxtrans.core.query.Query;
+import org.jmxtrans.core.query.ResultNameStrategy;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.time.ManualClock;
 

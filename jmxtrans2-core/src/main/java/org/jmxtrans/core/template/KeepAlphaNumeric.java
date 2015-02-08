@@ -20,31 +20,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.query;
+package org.jmxtrans.core.template;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.management.ObjectName;
 
-public final class DummyResultNameStrategy implements ResultNameStrategy {
-
-    private boolean hasBeenCalled = false;
-
-    @Nonnull
+public class KeepAlphaNumeric implements StringEscape {
+    /**
+     * Escape all non a->z,A->Z, 0->9 and '-' with a '_'.
+     * <p/>
+     * '.' is escaped with a '_' if {@code escapeDot} is <code>true</code>.
+     *
+     * @param str       the string to escape
+     * @param result    the {@linkplain StringBuilder} in which the escaped string is appended
+     */
     @Override
-    public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName) {
-        hasBeenCalled = true;
-        return query.getResultAlias();
+    public void escape(@Nonnull String str, @Nonnull StringBuilder result) {
+        char[] chars = str.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            char ch = chars[i];
+            if (Character.isLetter(ch) || Character.isDigit(ch) || ch == '-') {
+                result.append(ch);
+            } else if (ch == '"' && ((i == 0) || (i == chars.length - 1))) {
+                // ignore starting and ending '"' that are used to quote() objectname's values (see ObjectName.value())
+            } else {
+                result.append('_');
+            }
+        }
     }
 
-    @Nonnull
-    @Override
-    public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nullable String key) {
-        hasBeenCalled = true;
-        return query.getResultAlias();
-    }
-
-    public boolean hasBeenCalled() {
-        return hasBeenCalled;
-    }
 }

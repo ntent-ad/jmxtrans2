@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.query.embedded;
+package org.jmxtrans.core.query;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

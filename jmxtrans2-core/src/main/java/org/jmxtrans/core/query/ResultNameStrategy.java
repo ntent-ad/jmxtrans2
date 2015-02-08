@@ -22,73 +22,133 @@
  */
 package org.jmxtrans.core.query;
 
+import java.net.InetAddress;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.management.ObjectName;
 
-/**
- * Build a {@linkplain org.jmxtrans.core.results.QueryResult#name} from a collected metric ({@linkplain Query}).
- * <p/>
- * Build name must be escaped to be compatible with all OutputWriters.
- * The approach is to escape non alpha-numeric chars.
- * <p/>
- * Expressions support '#' based keywords (e.g. <code>#hostname#</code>) and with '%' based variables mapped to objectname properties.
- * <p/>
- * Supported '#' based 'functions':
- * <table>
- * <tr>
- * <th>Function</th>
- * <th>Description</th>
- * <th>Sample</th>
- * </tr>
- * <tr>
- * <th><code>#hostname#</code></th>
- * <td>localhost - hostname {@link java.net.InetAddress#getHostName()}</td>
- * <td></td>
- * </tr>
- * <tr>
- * <th><code>#reversed_hostname#</code></th>
- * <td>reversed localhost - hostname {@link java.net.InetAddress#getHostName()}</td>
- * <td></td>
- * </tr>
- * <tr>
- * <th><code>#escaped_hostname#</code></th>
- * <td>localhost - hostname {@link java.net.InetAddress#getHostName()} with '.' replaced by '_'</td>
- * <td></td>
- * </tr>
- * <tr>
- * <th><code>#canonical_hostname#</code></th>
- * <td>localhost - canonical hostname {@link java.net.InetAddress#getCanonicalHostName()}</td>
- * <td><code>server1.ecommerce.mycompany.com</code></td>
- * </tr>
- * <tr>
- * <th><code>#reversed_canonical_hostname#</code></th>
- * <td>reversed localhost - canonical hostname {@link java.net.InetAddress#getCanonicalHostName()}</td>
- * <td><code>com.mycompany.ecommerce.server1</code></td>
- * </tr>
- * <tr>
- * <th><code>#escaped_canonical_hostname#</code></th>
- * <td>localhost - canonical hostname {@link java.net.InetAddress#getCanonicalHostName()} with '.' replaced by '_'</td>
- * <td><code>server1_ecommerce_mycompany_com</code></td>
- * </tr>
- * <tr>
- * <th><code>#hostaddress#</code></th>
- * <td>localhost - hostaddress {@link java.net.InetAddress#getHostAddress()}</td>
- * <td></td>
- * </tr>
- * <tr>
- * <th><code>#escaped_hostname#</code></th>
- * <td>localhost - hostaddress {@link java.net.InetAddress#getHostAddress()} with '.' replaced by '_'</td>
- * <td></td>
- * </tr>
- * </table>
- *
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
-public interface ResultNameStrategy {
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.template.ExpressionEvaluator;
+import org.jmxtrans.core.template.KeepAlphaNumericAndDots;
+import org.jmxtrans.core.template.StringEscape;
+import org.jmxtrans.core.template.TemplateEngine;
+import org.jmxtrans.utils.StringUtils2;
+
+import static java.lang.String.format;
+import static java.util.Collections.list;
+import static java.util.Collections.sort;
+
+public class ResultNameStrategy {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+
+    @Nonnull private final ExpressionEvaluator expressionEvaluator;
+    @Nonnull private final StringEscape stringEscape;
+
+    public ResultNameStrategy() {
+        ExpressionEvaluator.Builder evaluatorsBuilder = ExpressionEvaluator.builder();
+        try {
+            InetAddress localHost = InetAddress.getLocalHost();
+            String hostName = localHost.getHostName();
+            String reversedHostName = StringUtils2.reverseTokens(hostName, ".");
+            String canonicalHostName = localHost.getCanonicalHostName();
+            String reversedCanonicalHostName = StringUtils2.reverseTokens(canonicalHostName, ".");
+            String hostAddress = localHost.getHostAddress();
+
+            evaluatorsBuilder
+                    .addExpression("hostname", hostName)
+                    .addExpression("reversed_hostname", reversedHostName)
+                    .addExpression("escaped_hostname", hostName.replaceAll("\\.", "_"))
+                    .addExpression("canonical_hostname", canonicalHostName)
+                    .addExpression("reversed_canonical_hostname", reversedCanonicalHostName)
+                    .addExpression("escaped_canonical_hostname", canonicalHostName.replaceAll("\\.", "_"))
+                    .addExpression("hostaddress", hostAddress)
+                    .addExpression("escaped_hostaddress", hostAddress.replaceAll("\\.", "_"));
+        } catch (Exception e) {
+            logger.error("Exception resolving localhost, expressions like #hostname#, #canonical_hostname# or #hostaddress# will not be available", e);
+        }
+        expressionEvaluator = evaluatorsBuilder.build();
+        stringEscape = new KeepAlphaNumericAndDots();
+    }
 
     @Nonnull
-    String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName);
+    public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nonnull QueryAttribute queryAttribute) {
+
+        StringBuilder result = _getResultName(query, objectName, queryAttribute);
+
+        return result.toString();
+    }
+
     @Nonnull
-    String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nullable String key);
+    public String getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nonnull QueryAttribute queryAttribute, @Nonnull String key) {
+        StringBuilder result = _getResultName(query, objectName, queryAttribute);
+        result.append(".");
+        result.append(key);
+        return result.toString();
+    }
+
+    @Nonnull
+    private StringBuilder _getResultName(@Nonnull Query query, @Nonnull ObjectName objectName, @Nonnull QueryAttribute queryAttribute) {
+        StringBuilder result = new StringBuilder();
+
+        String queryName;
+        if (query.getResultAlias() == null) {
+            queryName = escapeObjectName(objectName);
+        } else {
+            queryName = resolveExpression(query.getResultAlias(), objectName);
+        }
+
+        if (queryName != null && !queryName.isEmpty()) {
+            result.append(queryName).append(".");
+        }
+
+        String attributeName;
+        if (queryAttribute.getResultAlias() == null) {
+            attributeName = queryAttribute.getName();
+        } else {
+            attributeName = queryAttribute.getResultAlias();
+        }
+        result.append(attributeName);
+        return result;
+    }
+
+    @Nonnull
+    public String resolveExpression(@Nonnull String expression, @Nonnull ObjectName exactObjectName) {
+        return TemplateEngine.builder()
+                .addEvaluator('%', ExpressionEvaluator.builder()
+                        .addExpressions(exactObjectName.getKeyPropertyList())
+                        .build())
+                .addEvaluator('#', expressionEvaluator)
+                .doNotEscapeDots()
+                .build()
+                .evaluate(expression);
+    }
+
+    /**
+     * Transforms an {@linkplain javax.management.ObjectName} into a plain {@linkplain String} only composed of (a->Z, A-Z, '_').
+     * <p/>
+     * '_' is the escape char for not compliant chars.
+     */
+    @Nonnull
+    private String escapeObjectName(@Nonnull ObjectName objectName) {
+        StringBuilder result = new StringBuilder();
+        stringEscape.escape(objectName.getDomain(), result);
+        result.append('.');
+        List<String> keys = list(objectName.getKeyPropertyList().keys());
+        sort(keys);
+        for (Iterator<String> it = keys.iterator(); it.hasNext(); ) {
+            String key = it.next();
+            stringEscape.escape(key, result);
+            result.append("__");
+            stringEscape.escape(objectName.getKeyProperty(key), result);
+            if (it.hasNext()) {
+                result.append('.');
+            }
+        }
+        logger.debug(format("escapeObjectName(%s): %s", objectName, result));
+        return result.toString();
+    }
 }

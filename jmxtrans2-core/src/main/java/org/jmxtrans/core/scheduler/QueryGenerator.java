@@ -30,8 +30,8 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
-import org.jmxtrans.core.query.embedded.Query;
-import org.jmxtrans.core.query.embedded.Server;
+import org.jmxtrans.core.query.Query;
+import org.jmxtrans.core.query.Server;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.Interval;
 

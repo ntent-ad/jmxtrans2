@@ -20,54 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.config;
+package org.jmxtrans.core.template;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.query.Invocation;
-import org.jmxtrans.core.query.Server;
-import org.jmxtrans.utils.time.Interval;
-
-import static java.util.Collections.emptyList;
-import static java.util.concurrent.TimeUnit.SECONDS;
-
 @Immutable
 @ThreadSafe
-public class DefaultConfiguration implements Configuration {
+public class StaticExpression implements Expression {
 
-    private static final Configuration INSTANCE = new DefaultConfiguration();
+    @Nonnull private final String value;
 
-    private DefaultConfiguration() {
+    public StaticExpression(@Nonnull String value) {
+        this.value = value;
     }
 
-    @Nonnull
     @Override
-    public Iterable<Server> getServers() {
-        return emptyList();
+    public String evaluate(@Nonnull String key) {
+        return value;
     }
 
-    @Nonnull
-    @Override
-    public Interval getPeriod() {
-        return new Interval(60, SECONDS);
-    }
-
-    @Nonnull
-    @Override
-    public Iterable<OutputWriter> getOutputWriters() {
-        return emptyList();
-    }
-
-    @Nonnull
-    @Override
-    public Iterable<Invocation> getInvocations() {
-        return emptyList();
-    }
-
-    public static Configuration getInstance() {
-        return INSTANCE;
-    }
 }
