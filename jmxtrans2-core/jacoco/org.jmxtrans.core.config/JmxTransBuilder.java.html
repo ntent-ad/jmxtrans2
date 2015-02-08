@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>JmxTransBuilder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - core</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.core.config</a> &gt; <span class="el_source">JmxTransBuilder.java</span></div><h1>JmxTransBuilder.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.core.config;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.jmxtrans.core.lifecycle.LifecycleAware;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.monitoring.MBeanRegistry;
+import org.jmxtrans.core.monitoring.SelfNamedMBean;
+import org.jmxtrans.core.query.ResultNameStrategy;
+import org.jmxtrans.core.query.Server;
+import org.jmxtrans.core.scheduler.JmxTransThreadFactory;
+import org.jmxtrans.core.scheduler.NaiveScheduler;
+import org.jmxtrans.core.scheduler.QueryGenerator;
+import org.jmxtrans.core.scheduler.QueryProcessor;
+import org.jmxtrans.core.scheduler.ResultProcessor;
+import org.jmxtrans.utils.PropertyPlaceholderResolver;
+import org.jmxtrans.utils.io.Resource;
+import org.jmxtrans.utils.time.Clock;
+import org.jmxtrans.utils.time.SystemClock;
+
+import org.xml.sax.SAXException;
+
+import static java.lang.String.format;
+import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
+import static java.util.Collections.singleton;
+import static java.util.concurrent.TimeUnit.MINUTES;
+
+@ThreadSafe
+public class JmxTransBuilder {
+
+    private final boolean ignoreParsingErrors;
+    @Nonnull private final Iterable&lt;Resource&gt; configResources;
+<span class="fc" id="L73">    private final Logger logger = LoggerFactory.getLogger(getClass().getName());</span>
+
+<span class="fc" id="L75">    public JmxTransBuilder(boolean ignoreParsingErrors, @Nonnull Iterable&lt;Resource&gt; configResources) {</span>
+<span class="fc" id="L76">        this.ignoreParsingErrors = ignoreParsingErrors;</span>
+<span class="fc" id="L77">        this.configResources = configResources;</span>
+<span class="fc" id="L78">    }</span>
+
+    public NaiveScheduler build() throws ParserConfigurationException, IOException, SAXException, JAXBException, IllegalAccessException, InstantiationException, ClassNotFoundException, MalformedObjectNameException {
+<span class="fc" id="L81">        SystemClock clock = new SystemClock();</span>
+<span class="fc" id="L82">        long shutdownTimerMillis = 1000;</span>
+
+<span class="fc" id="L84">        MBeanRegistry mBeanRegistry = new MBeanRegistry(getPlatformMBeanServer());</span>
+
+<span class="fc" id="L86">        ExecutorService queryExecutor = createExecutorService(&quot;queries&quot;, 2, 1000, 1, MINUTES, mBeanRegistry);</span>
+<span class="fc" id="L87">        ExecutorService resultExecutor = createExecutorService(&quot;results&quot;, 2, 1000, 1, MINUTES, mBeanRegistry);</span>
+<span class="fc" id="L88">        ScheduledExecutorService queryTimer = createScheduledExecutorService(&quot;queryTimer&quot;, mBeanRegistry);</span>
+
+<span class="fc" id="L90">        Configuration configuration = loadConfiguration(clock);</span>
+        
+<span class="fc" id="L92">        registerMBeans(configuration, mBeanRegistry);</span>
+
+<span class="fc" id="L94">        return new NaiveScheduler(</span>
+                queryExecutor,
+                resultExecutor,
+                queryTimer,
+                new QueryGenerator(
+                        clock,
+                        configuration.getPeriod(),
+                        configuration.getServers(),
+                        new QueryProcessor(
+                                clock,
+                                configuration.getOutputWriters(),
+                                queryExecutor,
+                                new ResultProcessor(
+                                        clock,
+                                        resultExecutor
+                                ),
+                                new ResultNameStrategy()
+                        ),
+                        queryTimer
+                ),
+                Collections.&lt;LifecycleAware&gt;singletonList(mBeanRegistry),
+                shutdownTimerMillis
+        );
+    }
+
+    private void registerMBeans(Configuration configuration, MBeanRegistry mBeanRegistry) {
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        for (Server server : configuration.getServers()) {</span>
+<span class="fc" id="L121">            registerMBeans(mBeanRegistry, server.getQueries());</span>
+<span class="fc" id="L122">            registerMBeans(mBeanRegistry, configuration.getOutputWriters());</span>
+<span class="fc" id="L123">        }</span>
+<span class="fc" id="L124">    }</span>
+
+    private void registerMBeans(MBeanRegistry mBeanRegistry, Iterable&lt;?&gt; objects) {
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        for (Object object : objects) {</span>
+            
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">            if (!(object instanceof SelfNamedMBean)) break;</span>
+            
+<span class="fc" id="L131">            SelfNamedMBean selfNamedMBean = (SelfNamedMBean)object;</span>
+            try {
+<span class="fc" id="L133">                mBeanRegistry.register(selfNamedMBean);</span>
+<span class="nc" id="L134">            } catch (MalformedObjectNameException e) {</span>
+<span class="nc" id="L135">                logger.warn(format(&quot;Could not register bean [%s]&quot;, selfNamedMBean), e);</span>
+<span class="fc" id="L136">            }</span>
+<span class="fc" id="L137">        }</span>
+<span class="fc" id="L138">    }</span>
+
+    private Configuration loadConfiguration(Clock clock) throws JAXBException, ParserConfigurationException, SAXException, IOException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+<span class="fc" id="L141">        Iterable&lt;ConfigParser&gt; parsers = getConfigParsers(clock);</span>
+
+<span class="fc" id="L143">        Collection&lt;Configuration&gt; configurations = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        for (Resource configResource : configResources) {</span>
+<span class="fc" id="L146">            boolean parsed = false;</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">            for (ConfigParser parser : parsers) {</span>
+<span class="fc bfc" id="L148" title="All 2 branches covered.">                if (parser.supports(configResource)) {</span>
+                    try {
+<span class="fc" id="L150">                        Configuration configuration = parser.parseConfiguration(configResource);</span>
+<span class="fc" id="L151">                        configurations.add(configuration);</span>
+<span class="fc" id="L152">                        parsed = true;</span>
+<span class="fc" id="L153">                    } catch (Exception e) {</span>
+<span class="fc" id="L154">                        String message = &quot;Could not parse configuration &quot; + configResource.getPath();</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">                        if (ignoreParsingErrors) {</span>
+<span class="fc" id="L156">                            logger.info(message);</span>
+                        } else {
+<span class="fc" id="L158">                            throw new JmxtransConfigurationException(message, e);</span>
+                        }
+<span class="fc" id="L160">                    }</span>
+                }
+<span class="fc" id="L162">            }</span>
+<span class="fc bfc" id="L163" title="All 4 branches covered.">            if (!parsed &amp;&amp; !ignoreParsingErrors) {</span>
+<span class="fc" id="L164">                throw new JmxtransConfigurationException(&quot;Found no parsers supporting config file &quot; + configResource.getPath());</span>
+            }
+<span class="fc" id="L166">        }</span>
+
+<span class="fc" id="L168">        return new ConfigurationMerger().merge(configurations);</span>
+    }
+
+
+    private Iterable&lt;ConfigParser&gt; getConfigParsers(Clock clock) throws JAXBException, ParserConfigurationException, SAXException, IOException {
+<span class="fc" id="L173">        ConfigParser configParser = XmlConfigParser.newInstance(</span>
+                new PropertyPlaceholderResolverXmlPreprocessor(new PropertyPlaceholderResolver()),
+                clock);
+<span class="fc" id="L176">        return singleton(configParser);</span>
+    }
+
+    @Nonnull
+    private ScheduledExecutorService createScheduledExecutorService(
+            @Nonnull String componentName,
+            @Nonnull MBeanRegistry mBeanRegistry) throws MalformedObjectNameException {
+<span class="fc" id="L183">        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, new JmxTransThreadFactory(componentName), new AbortPolicy());</span>
+<span class="fc" id="L184">        mBeanRegistry.register(</span>
+                new ObjectName(&quot;org.jmxtrans.executors:type=ExecutorMetrics,name=&quot; + componentName),
+                new ThreadPoolExecutorMetrics(executor));
+<span class="fc" id="L187">        return executor;</span>
+    }
+
+    @Nonnull
+    private ExecutorService createExecutorService(
+            @Nonnull String componentName,
+            int maxThreads,
+            int maxQueueSize,
+            int keepAliveTime,
+            @Nonnull TimeUnit unit,
+            @Nonnull MBeanRegistry mBeanRegistry) throws MalformedObjectNameException {
+<span class="fc" id="L198">        ThreadPoolExecutor executor = new ThreadPoolExecutor(</span>
+                1, maxThreads,
+                keepAliveTime, unit,
+                new ArrayBlockingQueue&lt;Runnable&gt;(maxQueueSize),
+                new JmxTransThreadFactory(componentName),
+                new AbortPolicy());
+<span class="fc" id="L204">        mBeanRegistry.register(</span>
+                new ObjectName(&quot;org.jmxtrans.executors:type=ExecutorMetrics,name=&quot; + componentName),
+                new ThreadPoolExecutorMetrics(executor));
+<span class="fc" id="L207">        return executor;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
