@@ -32,6 +32,8 @@ import java.nio.file.Paths;
 
 import javax.annotation.Nonnull;
 
+import static org.jmxtrans.utils.io.Charsets.UTF_8;
+
 public final class IoUtils {
 
     private static final int COPY_BUFFER_SIZE = 512;
@@ -58,7 +60,7 @@ public final class IoUtils {
         try {
             fos = new FileOutputStream(destination, append);
             if (append) {
-                fos.write("\n".getBytes("UTF-8"));
+                fos.write("\n".getBytes(UTF_8));
             }
             fos.write(Files.readAllBytes(Paths.get(source.getAbsolutePath())));
         } finally {

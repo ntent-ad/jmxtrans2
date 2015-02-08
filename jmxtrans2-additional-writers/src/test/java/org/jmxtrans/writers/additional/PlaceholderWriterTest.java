@@ -20,29 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.output;
+package org.jmxtrans.writers.additional;
 
 import java.io.IOException;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import org.junit.Test;
 
-import org.jmxtrans.core.results.QueryResult;
+import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * By convention an {@link OutputWriter} must have a static inner class of type
- * {@link OutputWriterFactory} called {@code Factory}.
- *
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
-@ThreadSafe
-public interface OutputWriter {
-
-    /**
-     * @return the number of results actually processed
-     */
-    @CheckReturnValue
-    int write(@Nonnull QueryResult result) throws IOException;
-
+public class PlaceholderWriterTest {
+    
+    @Test
+    public void dummyTest() throws IOException {
+        assertThat(new PlaceholderWriter().write(null)).isEqualTo(0);
+    }
 }

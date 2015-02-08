@@ -36,6 +36,8 @@ import org.jmxtrans.core.log.ConsoleLogProvider;
 import com.google.common.io.ByteStreams;
 import org.junit.After;
 
+import static org.jmxtrans.utils.io.Charsets.UTF_8;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbstractAgentTest {
@@ -148,7 +150,7 @@ public class AbstractAgentTest {
         return new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return out.toString("UTF-8").contains(content);
+                return out.toString(UTF_8.name()).contains(content);
             }
         };
     }

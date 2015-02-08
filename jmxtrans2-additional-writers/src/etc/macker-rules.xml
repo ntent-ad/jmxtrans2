@@ -63,68 +63,15 @@
 
     <ruleset name="JmxTrans internal rules">
         <access-rule>
-            <message>Config package is the entry point into core, it should not be used internally.</message>
-            <deny>
-                <from class="org.jmxtrans.core.**"/>
-                <to>
-                    <include class="org.jmxtrans.core.config.**"/>
-                </to>
-                <allow>
-                    <from>
-                        <include class="org.jmxtrans.core.config.**"/>
-                    </from>
-                </allow>
-            </deny>
-        </access-rule>
-        <access-rule>
-            <message>Template package should ony depend on query package.</message>
-            <deny>
-                <from class="org.jmxtrans.core.template.**"/>
-                <to>
-                    <include class="org.jmxtrans.**"/>
-                </to>
-                <allow>
-                    <to>
-                        <include class="org.jmxtrans.core.query.**"/>
-                        <include class="org.jmxtrans.core.template.**"/>
-                        <!-- common packages always allowed -->
-                        <include class="org.jmxtrans.core.log.**"/>
-                        <include class="org.jmxtrans.core.monitoring.**"/>
-                        <include class="org.jmxtrans.utils.**"/>
-                    </to>
-                </allow>
-            </deny>
-        </access-rule>
-        <access-rule>
             <message>Output should only depend on QueryResults</message>
             <deny>
-                <from class="org.jmxtrans.core.output.**"/>
+                <from class="org.jmxtrans.writers.**"/>
                 <to>
                     <include class="org.jmxtrans.**"/>
                 </to>
                 <allow>
                     <to>
                         <include class="org.jmxtrans.core.output.**"/>
-                        <include class="org.jmxtrans.core.results.**"/>
-                        <!-- common packages always allowed -->
-                        <include class="org.jmxtrans.core.log.**"/>
-                        <include class="org.jmxtrans.core.monitoring.**"/>
-                        <include class="org.jmxtrans.utils.**"/>
-                    </to>
-                </allow>
-            </deny>
-        </access-rule>
-        <access-rule>
-            <message>Queries should only depend on QueryResults and template</message>
-            <deny>
-                <from class="org.jmxtrans.core.query.**"/>
-                <to>
-                    <include class="org.jmxtrans.**"/>
-                </to>
-                <allow>
-                    <to>
-                        <include class="org.jmxtrans.core.template.**"/>
-                        <include class="org.jmxtrans.core.query.**"/>
                         <include class="org.jmxtrans.core.results.**"/>
                         <!-- common packages always allowed -->
                         <include class="org.jmxtrans.core.log.**"/>

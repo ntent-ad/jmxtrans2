@@ -79,12 +79,12 @@
 
     <modules>
         <module>jmxtrans2-agent</module>
-        <module>jmxtrans2-output-writers</module>
         <module>jmxtrans2-servlet</module>
         <module>jmxtrans2-spring</module>
         <module>jmxtrans2-standalone</module>
         <module>jmxtrans2-utils</module>
         <module>jmxtrans2-core</module>
+        <module>jmxtrans2-additional-writers</module>
     </modules>
 
     <scm>
@@ -198,11 +198,6 @@
             <dependency>
                 <groupId>org.jmxtrans.jmxtrans2</groupId>
                 <artifactId>jmxtrans2-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jmxtrans.jmxtrans2</groupId>
-                <artifactId>jmxtrans2-output-writers</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

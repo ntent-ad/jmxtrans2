@@ -20,29 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.output;
+package org.jmxtrans.core.output.support;
 
 import java.io.IOException;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.core.output.OutputWriter;
 
 /**
- * By convention an {@link OutputWriter} must have a static inner class of type
- * {@link OutputWriterFactory} called {@code Factory}.
- *
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
+ * While {@link BatchedOutputWriter#beforeBatch()},
+ * {@link org.jmxtrans.core.output.OutputWriter#write(org.jmxtrans.core.results.QueryResult)} and
+ * {@link BatchedOutputWriter#afterBatch()} are always called in sequence in the same thread when a batch operation
+ * occurs, there could be multiple batch being processed in parallel.
  */
 @ThreadSafe
-public interface OutputWriter {
+public interface BatchedOutputWriter extends OutputWriter {
 
-    /**
-     * @return the number of results actually processed
-     */
-    @CheckReturnValue
-    int write(@Nonnull QueryResult result) throws IOException;
-
+    void beforeBatch() throws IOException;
+    void afterBatch() throws IOException;
 }
