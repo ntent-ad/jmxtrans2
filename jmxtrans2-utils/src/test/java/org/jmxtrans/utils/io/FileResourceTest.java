@@ -28,6 +28,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import static org.jmxtrans.utils.io.Charsets.UTF_8;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class FileResourceTest {
@@ -46,13 +48,13 @@ public class FileResourceTest {
     }
 
     private InputStream inputStreamWithContent(String content) throws UnsupportedEncodingException {
-        return new ByteArrayInputStream(content.getBytes("UTF-8"));
+        return new ByteArrayInputStream(content.getBytes(UTF_8));
     }
 
     private File createFileWithContent(String content) throws IOException {
         File file = testFolder.newFile();
         try (OutputStream out = new FileOutputStream(file)) {
-            out.write(content.getBytes("UTF-8"));
+            out.write(content.getBytes(UTF_8));
         }
         return file;
     }

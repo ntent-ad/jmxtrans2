@@ -20,29 +20,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.output;
+package org.jmxtrans.writers.additional;
 
 import java.io.IOException;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
 
+import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.results.QueryResult;
 
-/**
- * By convention an {@link OutputWriter} must have a static inner class of type
- * {@link OutputWriterFactory} called {@code Factory}.
- *
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
-@ThreadSafe
-public interface OutputWriter {
-
-    /**
-     * @return the number of results actually processed
-     */
-    @CheckReturnValue
-    int write(@Nonnull QueryResult result) throws IOException;
-
+public class PlaceholderWriter implements OutputWriter {
+    // placeholder to make sure directory structure is created in git
+    // will be removed once we have an actual writer implementation
+    @Override
+    public int write(@Nonnull QueryResult result) throws IOException {
+        return 0;
+    }
+    
 }

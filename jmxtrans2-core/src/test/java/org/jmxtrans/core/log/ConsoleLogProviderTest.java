@@ -30,6 +30,7 @@ import org.junit.After;
 import org.junit.Test;
 
 import static org.jmxtrans.core.log.ConsoleLogProvider.JMXTRANS_LOG_LEVEL_PROP;
+import static org.jmxtrans.utils.io.Charsets.UTF_8;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -75,7 +76,7 @@ public class ConsoleLogProviderTest {
             Logger logger = consoleLogProvider.getLogger("testLogger");
             logger.error("errorMessage");
 
-            assertThat(byteArray.toString("UTF-8")).contains("errorMessage");
+            assertThat(byteArray.toString(UTF_8.name())).contains("errorMessage");
         } finally {
             System.setOut(backup);
         }

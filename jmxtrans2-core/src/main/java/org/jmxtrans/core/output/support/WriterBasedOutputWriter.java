@@ -20,29 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.output;
+package org.jmxtrans.core.output.support;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
 
 import org.jmxtrans.core.results.QueryResult;
 
-/**
- * By convention an {@link OutputWriter} must have a static inner class of type
- * {@link OutputWriterFactory} called {@code Factory}.
- *
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
-@ThreadSafe
-public interface OutputWriter {
-
-    /**
-     * @return the number of results actually processed
-     */
+public interface WriterBasedOutputWriter {
     @CheckReturnValue
-    int write(@Nonnull QueryResult result) throws IOException;
-
+    int write(@Nonnull Writer writer, @Nonnull QueryResult result) throws IOException;
 }

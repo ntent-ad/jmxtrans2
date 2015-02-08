@@ -20,29 +20,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.output;
+package org.jmxtrans.core.output.writers;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Map;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
+import org.jmxtrans.core.output.support.MinimalFormatOutputWriter;
 
-import org.jmxtrans.core.results.QueryResult;
+import org.junit.Test;
 
-/**
- * By convention an {@link OutputWriter} must have a static inner class of type
- * {@link OutputWriterFactory} called {@code Factory}.
- *
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
-@ThreadSafe
-public interface OutputWriter {
+import static java.util.Collections.emptyMap;
 
-    /**
-     * @return the number of results actually processed
-     */
-    @CheckReturnValue
-    int write(@Nonnull QueryResult result) throws IOException;
+import static org.jmxtrans.core.results.QueryResultFixtures.standardQueryResult;
+import static org.jmxtrans.core.results.QueryResultFixtures.standardQueryResultMinimallyFormatted;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class ConsoleOutputWriterTest {
+    
+    @Test
+    public void resultsArePrintedAndFormatted() throws IOException {
+        StringWriter output = new StringWriter();
+
+        new ConsoleOutputWriter(new MinimalFormatOutputWriter(), output)
+                .write(standardQueryResult());
+        
+        assertThat(output.toString()).isEqualTo(standardQueryResultMinimallyFormatted());
+    }
+    
+    @Test
+    public void factoryCreatesConsoleWriter() {
+        Map<String, String> settings = emptyMap();
+        ConsoleOutputWriter consoleOutputWriter = new ConsoleOutputWriter.Factory().create(settings);
+        
+        assertThat(consoleOutputWriter).isNotNull();
+    }
+    
 }

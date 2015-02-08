@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     The MIT License
@@ -23,17 +23,27 @@
     THE SOFTWARE.
 
 -->
-<jmxtrans xmlns="http://jmxtrans.org/config/2.0"
-          collectIntervalInSeconds="1">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jmxtrans.jmxtrans2</groupId>
+        <artifactId>jmxtrans2</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-    <queries>
-        <query objectName="org.jmxtrans:type=Counter,name=myCounter" resultAlias="counter">
-            <queryAttribute name="Value" />
-        </query>
-    </queries>
+    <artifactId>jmxtrans2-additional-writers</artifactId>
+    <name>JMXTrans - additional writers</name>
+    
+    <description>
+        As we have strong requirements to have minimal dependencies in JmxTrans, OutputWriters which bring additional
+        dependencies should be in this package. This allow user to choose whether they want to bring those additional
+        dependencies or not.
+    </description>
 
-    <outputWriters>
-        <outputWriter class="org.jmxtrans.core.output.writers.ConsoleOutputWriter"/>
-    </outputWriters>
-
-</jmxtrans>
+    <dependencies>
+        <dependency>
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-core</artifactId>
+        </dependency>
+    </dependencies>
+</project>

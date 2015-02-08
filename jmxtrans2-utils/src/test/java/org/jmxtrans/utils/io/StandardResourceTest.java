@@ -28,6 +28,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import static org.jmxtrans.utils.io.Charsets.UTF_8;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StandardResourceTest {
@@ -97,6 +99,6 @@ public class StandardResourceTest {
     }
 
     private ByteArrayInputStream getTestStream(String content) throws UnsupportedEncodingException {
-        return new ByteArrayInputStream(content.getBytes("UTF-8"));
+        return new ByteArrayInputStream(content.getBytes(UTF_8));
     }
 }

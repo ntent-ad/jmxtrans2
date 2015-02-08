@@ -20,29 +20,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.output;
+package org.jmxtrans.core.output.support;
 
 import java.io.IOException;
+import java.io.Writer;
+import java.util.Objects;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.results.QueryResult;
 
-/**
- * By convention an {@link OutputWriter} must have a static inner class of type
- * {@link OutputWriterFactory} called {@code Factory}.
- *
- * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
- */
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 @ThreadSafe
-public interface OutputWriter {
-
-    /**
-     * @return the number of results actually processed
-     */
-    @CheckReturnValue
-    int write(@Nonnull QueryResult result) throws IOException;
-
+public class MinimalFormatOutputWriter implements WriterBasedOutputWriter {
+    @Override
+    public int write(@Nonnull Writer writer, @Nonnull QueryResult result) throws IOException {
+        LoggerFactory.getLogger(getClass().getName()).error("toto" + writer);
+        writer.write(result.getName());
+        writer.write(" ");
+        writer.write(Objects.toString(result.getValue()));
+        writer.write(" ");
+        writer.write(Long.toString(result.getEpoch(MILLISECONDS)));
+        writer.write("\n"); // Let's be platform agnostic and make sure we output the same format all the time by not
+                            // using System.lineSeparator()
+        return 1;
+    }
 }

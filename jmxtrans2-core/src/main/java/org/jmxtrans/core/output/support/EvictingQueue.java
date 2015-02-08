@@ -20,29 +20,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.core.output;
+package org.jmxtrans.core.output.support;
 
-import java.io.IOException;
+import java.util.Collection;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
-import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.ThreadSafe;
-
-import org.jmxtrans.core.results.QueryResult;
 
 /**
- * By convention an {@link OutputWriter} must have a static inner class of type
- * {@link OutputWriterFactory} called {@code Factory}.
- *
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-@ThreadSafe
-public interface OutputWriter {
+public class EvictingQueue<E> extends ForwardingQueue<E> implements Queue<E> {
 
-    /**
-     * @return the number of results actually processed
-     */
-    @CheckReturnValue
-    int write(@Nonnull QueryResult result) throws IOException;
+    private LinkedBlockingQueue delegate;
+    private int maxRetry = 10;
 
+    public EvictingQueue(int capacity) {
+        delegate = new LinkedBlockingQueue(capacity);
+    }
+
+    public static <E> EvictingQueue<E> create(int maxCapacity) {
+        return new EvictingQueue<E>(maxCapacity);
+    }
+
+    @Nonnull
+    @Override
+    protected Queue<E> delegate() {
+        return delegate;
+    }
+
+    @Override
+    public boolean add(E e) {
+        return addEvictingIfNeeded(e);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends E> c) {
+        return standardAddAll(c);
+    }
+
+    @Override
+    public boolean offer(E e) {
+        return addEvictingIfNeeded(e);
+    }
+
+    protected boolean addEvictingIfNeeded(E e) {
+
+        for (int i = 0; i < maxRetry; i++) {
+            boolean offered = delegate().offer(e);
+            if (offered) {
+                return true;
+            }
+            delegate().poll();
+        }
+
+        return false;
+    }
 }

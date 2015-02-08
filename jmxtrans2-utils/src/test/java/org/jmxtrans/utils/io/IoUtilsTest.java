@@ -24,12 +24,12 @@ package org.jmxtrans.utils.io;
 
 import java.io.*;
 
-import org.jmxtrans.utils.DummyFiles;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.jmxtrans.utils.io.Charsets.UTF_8;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,7 +41,7 @@ public class IoUtilsTest {
 
     @Before
     public void setUp() throws Exception {
-        testContentBytes = TEST_CONTENT.getBytes("UTF-8");
+        testContentBytes = TEST_CONTENT.getBytes(UTF_8);
     }
 
     @Test(expected = IOException.class)
@@ -110,7 +110,7 @@ public class IoUtilsTest {
 
     @Test
     public void canCopyStreamToEmptyDestination() throws IOException {
-        testContentBytes = TEST_CONTENT.getBytes("UTF-8");
+        testContentBytes = TEST_CONTENT.getBytes(UTF_8);
         InputStream in = new ByteArrayInputStream(testContentBytes);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         IoUtils.copy(in, out);

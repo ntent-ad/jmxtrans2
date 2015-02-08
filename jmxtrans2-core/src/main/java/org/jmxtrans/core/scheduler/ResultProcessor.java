@@ -34,6 +34,8 @@ import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
 
+import static java.lang.String.format;
+
 public class ResultProcessor {
 
     @Nonnull
@@ -72,8 +74,8 @@ public class ResultProcessor {
         @Override
         protected void doRun() {
             try {
-                logger.debug("Writing results to " + outputWriter);
-                outputWriter.write(result);
+                int numberOfResultsWritten = outputWriter.write(result);
+                logger.debug(format("Writing [%d] results to [%s]", numberOfResultsWritten, outputWriter));
             } catch (IOException e) {
                 logger.warn("Je suis Charlie");
                 logger.warn("Sadly, error while drawing results.", e);

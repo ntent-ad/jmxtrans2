@@ -38,6 +38,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.jmxtrans.servlet.JmxTransLoaderListener.CONFIG_LOCATION_PARAM;
 import static org.jmxtrans.servlet.JmxTransLoaderListener.SYSTEM_CONFIG_LOCATION_PARAM;
+import static org.jmxtrans.utils.io.Charsets.UTF_8;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -59,7 +60,7 @@ public class JmxTransLoaderListenerTest {
 
         assertThat(config.getPath()).isEqualTo("classpath:org/jmxtrans/servlet/test.config");
         try (InputStream in = config.getInputStream()) {
-            assertThat(in).hasContentEqualTo(new ByteArrayInputStream("hello world".getBytes("UTF-8")));
+            assertThat(in).hasContentEqualTo(new ByteArrayInputStream("hello world".getBytes(UTF_8)));
         }
     }
 
@@ -77,7 +78,7 @@ public class JmxTransLoaderListenerTest {
 
             assertThat(config.getPath()).isEqualTo("classpath:org/jmxtrans/servlet/test.config");
             try (InputStream in = config.getInputStream()) {
-                assertThat(in).hasContentEqualTo(new ByteArrayInputStream("hello world".getBytes("UTF-8")));
+                assertThat(in).hasContentEqualTo(new ByteArrayInputStream("hello world".getBytes(UTF_8)));
             }
         } finally {
             System.getProperties().remove("jmxtrans.config");

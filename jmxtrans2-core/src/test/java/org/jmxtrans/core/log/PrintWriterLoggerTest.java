@@ -41,6 +41,7 @@ import static org.jmxtrans.core.log.Level.DEBUG;
 import static org.jmxtrans.core.log.Level.ERROR;
 import static org.jmxtrans.core.log.Level.INFO;
 import static org.jmxtrans.core.log.Level.WARN;
+import static org.jmxtrans.utils.io.Charsets.UTF_8;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,7 +64,7 @@ public class PrintWriterLoggerTest {
         logger.info("infoMessage");
         logger.warn("warnMessage");
         logger.error("errorMessage");
-        assertThat(byteArray.toString("UTF-8"))
+        assertThat(byteArray.toString(UTF_8.name()))
                 .contains("debugMessage")
                 .contains("infoMessage")
                 .contains("warnMessage")
@@ -77,7 +78,7 @@ public class PrintWriterLoggerTest {
         logger.info("infoMessage");
         logger.warn("warnMessage");
         logger.error("errorMessage");
-        assertThat(byteArray.toString("UTF-8"))
+        assertThat(byteArray.toString(UTF_8.name()))
                 .doesNotContain("debugMessage")
                 .contains("infoMessage")
                 .contains("warnMessage")
@@ -91,7 +92,7 @@ public class PrintWriterLoggerTest {
         logger.info("infoMessage");
         logger.warn("warnMessage");
         logger.error("errorMessage");
-        assertThat(byteArray.toString("UTF-8"))
+        assertThat(byteArray.toString(UTF_8.name()))
                 .doesNotContain("debugMessage")
                 .doesNotContain("infoMessage")
                 .contains("warnMessage")
@@ -105,7 +106,7 @@ public class PrintWriterLoggerTest {
         logger.info("infoMessage");
         logger.warn("warnMessage");
         logger.error("errorMessage");
-        assertThat(byteArray.toString("UTF-8"))
+        assertThat(byteArray.toString(UTF_8.name()))
                 .doesNotContain("debugMessage")
                 .doesNotContain("infoMessage")
                 .doesNotContain("warnMessage")
@@ -116,7 +117,7 @@ public class PrintWriterLoggerTest {
     public void logLineContainsAllRequiredInformation() throws UnsupportedEncodingException {
         Logger logger = createLogger(DEBUG);
         logger.debug("testMessage");
-        assertThat(byteArray.toString("UTF-8"))
+        assertThat(byteArray.toString(UTF_8.name()))
                 .contains("testMessage")
                 .contains(DEBUG.toString())
                 .contains("testLogger")
@@ -128,7 +129,7 @@ public class PrintWriterLoggerTest {
     public void logLineContainsException() throws UnsupportedEncodingException {
         Logger logger = createLogger(DEBUG);
         logger.debug("testMessage", new Exception("myException"));
-        assertThat(byteArray.toString("UTF-8"))
+        assertThat(byteArray.toString(UTF_8.name()))
                 .contains("testMessage")
                 .contains(DEBUG.toString())
                 .contains("testLogger")
@@ -142,19 +143,19 @@ public class PrintWriterLoggerTest {
         Logger logger = createLogger(DEBUG);
 
         logger.debug("debugMessage");
-        assertThat(byteArray.toString("UTF-8")).contains(DEBUG.toString());
+        assertThat(byteArray.toString(UTF_8.name())).contains(DEBUG.toString());
         byteArray.reset();
 
         logger.info("infoMessage");
-        assertThat(byteArray.toString("UTF-8")).contains(INFO.toString());
+        assertThat(byteArray.toString(UTF_8.name())).contains(INFO.toString());
         byteArray.reset();
 
         logger.warn("warnMessage");
-        assertThat(byteArray.toString("UTF-8")).contains(WARN.toString());
+        assertThat(byteArray.toString(UTF_8.name())).contains(WARN.toString());
         byteArray.reset();
 
         logger.error("errorMessage");
-        assertThat(byteArray.toString("UTF-8")).contains(ERROR.toString());
+        assertThat(byteArray.toString(UTF_8.name())).contains(ERROR.toString());
         byteArray.reset();
     }
 
