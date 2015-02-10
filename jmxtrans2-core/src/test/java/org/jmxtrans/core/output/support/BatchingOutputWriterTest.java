@@ -25,15 +25,13 @@ package org.jmxtrans.core.output.support;
 import java.io.IOException;
 
 import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.output.support.BatchedOutputWriter;
-import org.jmxtrans.core.output.support.BatchingOutputWriter;
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -42,7 +40,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class BatchingOutputWriterTest {
 
     @Mock private BatchedOutputWriter targetOutputWriter;

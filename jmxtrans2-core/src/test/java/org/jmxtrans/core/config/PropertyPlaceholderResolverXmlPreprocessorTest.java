@@ -27,9 +27,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.jmxtrans.utils.PropertyPlaceholderResolver;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -39,12 +39,12 @@ public class PropertyPlaceholderResolverXmlPreprocessorTest {
 
     private PropertyPlaceholderResolverXmlPreprocessor preprocessor;
 
-    @Before
+    @BeforeMethod
     public void configureProperties() {
         System.setProperty("property.name", "property.value");
     }
 
-    @Before
+    @BeforeMethod
     public void createPreprocessor() {
         preprocessor = new PropertyPlaceholderResolverXmlPreprocessor(new PropertyPlaceholderResolver());
     }
@@ -75,7 +75,7 @@ public class PropertyPlaceholderResolverXmlPreprocessorTest {
         assertThat(processedRoot.getTextContent()).isEqualTo("some value property.value");
     }
 
-    @After
+    @AfterMethod
     public void resetProperties() {
         System.getProperties().remove("property.name");
     }

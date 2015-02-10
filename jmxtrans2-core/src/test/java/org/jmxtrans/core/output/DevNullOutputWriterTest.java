@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.jmxtrans.core.results.QueryResult;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static java.util.Collections.emptyMap;
 

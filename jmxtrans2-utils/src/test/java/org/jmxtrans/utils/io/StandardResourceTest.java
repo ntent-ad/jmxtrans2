@@ -22,11 +22,15 @@
  */
 package org.jmxtrans.utils.io;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static org.jmxtrans.utils.io.Charsets.UTF_8;
 
@@ -37,8 +41,12 @@ public class StandardResourceTest {
     public static final String HELLO_WORLD_PATH = "org/jmxtrans/utils/io/hello.world";
     public static final String HELLO_WORLD_CONTENT = "hello world";
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    private TemporaryFolder temporaryFolder;
+
+    @BeforeMethod
+    public void createTemporaryFolder() throws IOException {
+        temporaryFolder = new TemporaryFolder();
+    }
 
     @Test
     public void canLoadClasspathResource() throws IOException {
@@ -49,7 +57,7 @@ public class StandardResourceTest {
         }
     }
 
-    @Test(expected = IOException.class)
+    @Test(expectedExceptions = IOException.class)
     public void nonExistingClasspathResourceThrowsException() throws IOException {
         Resource resource = new StandardResource("classpath:non/existing/resource");
         try (InputStream in = resource.getInputStream()){
@@ -78,7 +86,7 @@ public class StandardResourceTest {
         }
     }
 
-    @Test(expected = FileNotFoundException.class)
+    @Test(expectedExceptions = FileNotFoundException.class)
     public void nonExistingFileThrowException() throws IOException {
         Resource resource = new StandardResource("/non/existing/file");
         try (InputStream in = resource.getInputStream()) {
@@ -86,7 +94,7 @@ public class StandardResourceTest {
         }
     }
 
-    @Test(expected = FileNotFoundException.class)
+    @Test(expectedExceptions = FileNotFoundException.class)
     public void directoryThrowsException() throws IOException {
         Resource resource = new StandardResource(temporaryFolder.newFolder("test").getPath());
         try (InputStream in = resource.getInputStream()) {
@@ -101,4 +109,10 @@ public class StandardResourceTest {
     private ByteArrayInputStream getTestStream(String content) throws UnsupportedEncodingException {
         return new ByteArrayInputStream(content.getBytes(UTF_8));
     }
+
+    @AfterMethod
+    public void destroyTempFolder() throws IOException {
+        temporaryFolder.destroy();
+    }
+
 }

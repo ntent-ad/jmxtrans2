@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.utils.time;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;

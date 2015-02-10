@@ -21,10 +21,13 @@
  * THE SOFTWARE.
  */
 package org.jmxtrans.utils.collections;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
-import java.util.*;
-
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,13 +50,13 @@ public class Iterables2Test {
         assertThat(actual).isEqualTo("val2");
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
     public void get_negative_position_throws_an_exception() {
         Set<String> in = new HashSet<String>(Arrays.asList("val0", "val1", "val2", "val3"));
         Iterables2.get(in, -1);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
     public void get_out_of_range_position_throws_an_exception() {
         Set<String> in = new HashSet<String>(Arrays.asList("val0", "val1", "val2", "val3"));
         Iterables2.get(in, 10);

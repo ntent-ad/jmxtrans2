@@ -26,21 +26,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
+
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class AppInfoTest {
 
     @Mock private GitRepositoryState repositoryState;
     private AppInfo<AppInfo> appInfo;
 
-    @Before
+    @BeforeMethod
     public void initializeAppInfo() throws IOException {
         appInfo = AppInfo.load(AppInfo.class);
     }

@@ -29,22 +29,22 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
 import org.jmxtrans.utils.time.ManualClock;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class MetricCollectingOutputWriterTest {
     
     @Nonnull private final ManualClock clock = new ManualClock();
@@ -53,7 +53,7 @@ public class MetricCollectingOutputWriterTest {
     private ObjectName objectName;
     private MetricCollectingOutputWriter metricCollectingOutputWriter;
 
-    @Before
+    @BeforeMethod
     public void createMetricCollectingOutputWriter() throws MalformedObjectNameException {
         objectName = new ObjectName("org.jmxtrans:type=MetricCollectingOutputWriter");
         metricCollectingOutputWriter = new MetricCollectingOutputWriter(clock, outputWriter, objectName);
@@ -81,7 +81,7 @@ public class MetricCollectingOutputWriterTest {
         assertThat(metricCollectingOutputWriter.getProcessingTimeMillis()).isEqualTo(100);
     }
     
-    @Test(expected = IOException.class)
+    @Test(expectedExceptions = IOException.class)
     public void processingTimeIsCountedAlsoWhenExceptionIsThrown() throws IOException {
         when(outputWriter.write(result)).then(new Answer<Integer>() {
             @Override

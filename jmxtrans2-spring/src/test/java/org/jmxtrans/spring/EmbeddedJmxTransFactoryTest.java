@@ -22,8 +22,8 @@
  */
 package org.jmxtrans.spring;
 
-import org.junit.Test;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

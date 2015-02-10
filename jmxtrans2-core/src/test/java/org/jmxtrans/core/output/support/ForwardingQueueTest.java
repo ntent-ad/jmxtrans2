@@ -26,19 +26,20 @@ import java.util.Queue;
 
 import javax.annotation.Nonnull;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
+
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.inOrder;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class ForwardingQueueTest {
     
     @Mock private Queue<String> queue;
-    
+
     @Test
     public void methodsAreDelegated() {
         InOrder inOrder = inOrder(queue);

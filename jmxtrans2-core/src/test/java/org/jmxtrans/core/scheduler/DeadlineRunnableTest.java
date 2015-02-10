@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.ManualClock;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 

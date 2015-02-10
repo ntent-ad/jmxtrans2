@@ -25,7 +25,7 @@ package org.jmxtrans.utils;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,7 +37,7 @@ public class ConfigurationUtilsTest {
         assertThat(ConfigurationUtils.getInt(settings, "integerKey")).isEqualTo(1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class, expectedExceptionsMessageRegExp = ".*'integerKey=hello' is not an integer.*")
     public void invalidIntegerThrowsException() {
         Map<String, String> settings = ImmutableMap.of("integerKey", "hello");
         try {
@@ -51,7 +51,7 @@ public class ConfigurationUtilsTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void nonExistingIntegerThrowsException() {
         Map<String, String> settings = ImmutableMap.of();
         try {
@@ -70,7 +70,7 @@ public class ConfigurationUtilsTest {
         assertThat(ConfigurationUtils.getInt(settings, "integerKey", 2)).isEqualTo(1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void invalidIntegerWithDefaultValueThrowsException() {
         Map<String, String> settings = ImmutableMap.of("integerKey", "hello");
         try {
@@ -96,7 +96,7 @@ public class ConfigurationUtilsTest {
         assertThat(ConfigurationUtils.getLong(settings, "longKey", 2L)).isEqualTo(1L);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void invalidLongWithDefaultValueThrowsException() {
         Map<String, String> settings = ImmutableMap.of("longKey", "hello");
         try {
@@ -140,7 +140,7 @@ public class ConfigurationUtilsTest {
         assertThat(ConfigurationUtils.getString(settings, "stringKey")).isEqualTo("hello");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void nonExistingStringThrowsException() {
         Map<String, String> settings = ImmutableMap.of();
         try {

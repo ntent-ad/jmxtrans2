@@ -22,23 +22,24 @@
  */
 package org.jmxtrans.core.monitoring;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MalformedObjectNameException;
 
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MBeanRegistryTest {
 
     private MBeanRegistry registry;
 
-    @Before
+    @BeforeMethod
     public void createRegistry() {
         registry = new MBeanRegistry(getPlatformMBeanServer());
     }
@@ -78,7 +79,7 @@ public class MBeanRegistryTest {
         registry.start();
     }
     
-    @After
+    @AfterMethod
     public void stopRegistry() throws MBeanRegistrationException {
         registry.stop();
     }

@@ -25,7 +25,7 @@ package org.jmxtrans.utils.collections;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.jmxtrans.utils.collections.ArrayUtils.transformToListIfIsArray;
 

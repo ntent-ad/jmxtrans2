@@ -27,7 +27,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.jmxtrans.core.scheduler.JmxTransThreadFactory;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 

@@ -27,7 +27,7 @@ import java.io.StringWriter;
 
 import org.jmxtrans.core.results.QueryResult;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

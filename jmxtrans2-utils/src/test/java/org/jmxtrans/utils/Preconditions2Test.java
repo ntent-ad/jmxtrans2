@@ -23,8 +23,7 @@
 package org.jmxtrans.utils;
 
 import java.util.Objects;
-
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.jmxtrans.utils.Preconditions2.checkArgument;
 import static org.jmxtrans.utils.Preconditions2.checkNotEmpty;
@@ -33,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Preconditions2Test {
 
-    @Test(expected = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void checkNotNullThrowsExceptionOnNull() {
         Objects.requireNonNull(null);
     }
@@ -44,7 +43,7 @@ public class Preconditions2Test {
         assertThat(Objects.requireNonNull(argument)).isEqualTo(argument);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void checkNotNullThrowsExceptionWithMessage() {
         try {
             Objects.requireNonNull(null, "message");
@@ -54,12 +53,12 @@ public class Preconditions2Test {
         }
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void checkNotEmptyThrowsExceptionOnNullArgument() {
         checkNotEmpty(null);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void checkNotEmptyThrowsExceptionOnEmptyArgument() {
         checkNotEmpty("");
     }
@@ -69,7 +68,7 @@ public class Preconditions2Test {
         assertThat(checkNotEmpty("argument")).isEqualTo("argument");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void checkArgumentThrowsExceptionOnFalse() {
         checkArgument(false);
     }
@@ -79,7 +78,7 @@ public class Preconditions2Test {
         checkArgument(true);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void checkArgumentPublishMessageInException() {
         try {
             checkArgument(false, "message");

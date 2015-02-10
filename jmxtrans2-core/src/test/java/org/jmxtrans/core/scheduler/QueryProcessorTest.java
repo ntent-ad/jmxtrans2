@@ -34,13 +34,13 @@ import org.jmxtrans.core.query.InProcessServer;
 import org.jmxtrans.core.query.Query;
 import org.jmxtrans.core.query.ResultNameStrategy;
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
 import org.jmxtrans.utils.time.ManualClock;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static java.util.Collections.singleton;
 
@@ -49,7 +49,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class QueryProcessorTest {
 
     private ManualClock clock = new ManualClock();
@@ -63,7 +63,7 @@ public class QueryProcessorTest {
 
     private QueryProcessor queryProcessor;
 
-    @Before
+    @BeforeMethod
     public void createQueryProcessor() throws IOException {
         results = singleton(result);
         queryProcessor = new QueryProcessor(clock, singleton(outputWriter), queryExecutor, resultProcessor, new ResultNameStrategy());

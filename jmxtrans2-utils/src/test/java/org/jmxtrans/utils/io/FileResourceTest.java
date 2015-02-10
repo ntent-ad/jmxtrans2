@@ -22,11 +22,17 @@
  */
 package org.jmxtrans.utils.io;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static org.jmxtrans.utils.io.Charsets.UTF_8;
 
@@ -34,9 +40,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class FileResourceTest {
 
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+    private TemporaryFolder testFolder;
 
+    @BeforeMethod
+    public void createTemporaryFolder() throws IOException {
+        testFolder = new TemporaryFolder();
+    }
+    
     @Test
     public void fileResourceCanBeRead() throws IOException {
         File file = createFileWithContent("hello world");
@@ -59,4 +69,9 @@ public class FileResourceTest {
         return file;
     }
 
+    @AfterMethod
+    public void destroyTempFolder() throws IOException {
+        testFolder.destroy();
+    }
+    
 }

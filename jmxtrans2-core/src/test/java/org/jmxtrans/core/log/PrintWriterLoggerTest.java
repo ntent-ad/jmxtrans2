@@ -28,9 +28,9 @@ import java.io.UnsupportedEncodingException;
 
 import org.jmxtrans.utils.time.ManualClock;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static java.lang.System.lineSeparator;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -48,12 +48,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PrintWriterLoggerTest {
 
     private ManualClock clock = new ManualClock();
-    private ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-    private PrintStream out = new PrintStream(byteArray);
+    private ByteArrayOutputStream byteArray;
+    private PrintStream out;
 
-    @Before
+    @BeforeMethod
     public void initializeClock() {
         clock.setTime(1000, SECONDS);
+        byteArray = new ByteArrayOutputStream();
+        out = new PrintStream(byteArray);
     }
 
     @Test
@@ -163,7 +165,7 @@ public class PrintWriterLoggerTest {
         return new PrintWriterLogger("testLogger", level, clock, out);
     }
 
-    @After
+    @AfterMethod
     public void closePrintWriter() {
         out.close();
     }

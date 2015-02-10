@@ -22,22 +22,36 @@
  */
 package org.jmxtrans.standalone.cli;
 
+import java.io.IOException;
+
+import org.jmxtrans.utils.io.TemporaryFolder;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public class JmxTransParameterTest {
 
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+    private TemporaryFolder temporaryFolder;
 
-    @Test(expected = ParameterException.class)
+    @BeforeMethod
+    public void createTemporaryFolder() throws IOException {
+        temporaryFolder = new TemporaryFolder();
+    }
+
+    @Test(expectedExceptions = ParameterException.class)
     public void failOnNonExistingConfigFile() {
         String[] arguments = new String[] {
                 "-configFile", "non-existing-file"
         };
         new JCommander(new JmxTransParameters(), arguments);
     }
+    
+    @AfterMethod
+    public void destroyTempFolder() throws IOException {
+        temporaryFolder.destroy();
+    }
+    
 }

@@ -24,7 +24,7 @@ package org.jmxtrans.core.query;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.jmxtrans.core.query.QueryAttribute.builder;
 
