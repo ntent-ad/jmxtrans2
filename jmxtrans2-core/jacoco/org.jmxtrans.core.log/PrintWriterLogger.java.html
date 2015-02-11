@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PrintWriterLogger.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - core</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.core.log</a> &gt; <span class="el_source">PrintWriterLogger.java</span></div><h1>PrintWriterLogger.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.core.log;
+
+import java.io.PrintStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.jmxtrans.utils.time.Clock;
+
+import lombok.Getter;
+
+import static org.jmxtrans.core.log.Level.DEBUG;
+import static org.jmxtrans.core.log.Level.ERROR;
+import static org.jmxtrans.core.log.Level.INFO;
+import static org.jmxtrans.core.log.Level.WARN;
+
+public class PrintWriterLogger implements Logger {
+
+<span class="fc" id="L44">    @Nonnull @Getter private final String name;</span>
+    @Nonnull private final Level level;
+    @Nonnull private final Clock clock;
+    @Nonnull private final PrintStream out;
+
+<span class="fc" id="L49">    private final ThreadLocal&lt;DateFormat&gt; dateFormat = new ThreadLocal&lt;DateFormat&gt;() {</span>
+        @Override
+        protected DateFormat initialValue() {
+<span class="fc" id="L52">            return new SimpleDateFormat(&quot;yyyy.MM.dd HH:mm:ss.SSS&quot;);</span>
+        }
+    };
+
+<span class="fc" id="L56">    public PrintWriterLogger(@Nonnull String name, @Nonnull Level level, @Nonnull Clock clock, @Nonnull PrintStream out) {</span>
+<span class="fc" id="L57">        this.level = level;</span>
+<span class="fc" id="L58">        this.out = out;</span>
+<span class="fc" id="L59">        this.name = name;</span>
+<span class="fc" id="L60">        this.clock = clock;</span>
+<span class="fc" id="L61">    }</span>
+
+    @Override
+    public boolean isDebugEnabled() {
+<span class="fc" id="L65">        return level.isEnabled(DEBUG);</span>
+    }
+
+    @Override
+    public void debug(@Nullable String msg) {
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (isDebugEnabled()) {</span>
+<span class="fc" id="L71">            write(DEBUG, msg);</span>
+        }
+<span class="fc" id="L73">    }</span>
+
+    @Override
+    public void debug(@Nullable String msg, @Nullable Throwable throwable) {
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (isDebugEnabled()) {</span>
+<span class="fc" id="L78">            write(DEBUG, msg, throwable);</span>
+        }
+<span class="fc" id="L80">    }</span>
+
+    @Override
+    public boolean isInfoEnabled() {
+<span class="fc" id="L84">        return level.isEnabled(INFO);</span>
+    }
+
+    @Override
+    public void info(@Nullable String msg) {
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (isInfoEnabled()) {</span>
+<span class="fc" id="L90">            write(INFO, msg);</span>
+        }
+<span class="fc" id="L92">    }</span>
+
+    @Override
+    public void info(@Nullable String msg, @Nullable Throwable throwable) {
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (isInfoEnabled()) {</span>
+<span class="nc" id="L97">            write(INFO, msg, throwable);</span>
+        }
+<span class="nc" id="L99">    }</span>
+
+    @Override
+    public boolean isWarnEnabled() {
+<span class="fc" id="L103">        return level.isEnabled(WARN);</span>
+    }
+
+    @Override
+    public void warn(@Nullable String msg) {
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (isWarnEnabled()) {</span>
+<span class="fc" id="L109">            write(WARN, msg);</span>
+        }
+<span class="fc" id="L111">    }</span>
+
+    @Override
+    public void warn(@Nullable String msg, @Nullable Throwable throwable) {
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        if (isWarnEnabled()) {</span>
+<span class="nc" id="L116">            write(WARN, msg, throwable);</span>
+        }
+<span class="nc" id="L118">    }</span>
+
+    @Override
+    public boolean isErrorEnabled() {
+<span class="fc" id="L122">        return level.isEnabled(ERROR);</span>
+    }
+
+    @Override
+    public void error(@Nullable String msg) {
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">        if (isErrorEnabled()) {</span>
+<span class="fc" id="L128">            write(ERROR, msg);</span>
+        }
+<span class="fc" id="L130">    }</span>
+
+    @Override
+    public void error(@Nullable String msg, @Nullable Throwable throwable) {
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if (isErrorEnabled()) {</span>
+<span class="nc" id="L135">            write(ERROR, msg, throwable);</span>
+        }
+<span class="nc" id="L137">    }</span>
+
+    private void write(Level logLevel, @Nullable String msg) {
+<span class="fc" id="L140">        out.print(dateFormat.get().format(new Date(clock.currentTimeMillis())));</span>
+<span class="fc" id="L141">        out.print(&quot; - &quot;);</span>
+<span class="fc" id="L142">        out.print(logLevel);</span>
+<span class="fc" id="L143">        out.print(&quot; - &quot;);</span>
+<span class="fc" id="L144">        out.print(name);</span>
+<span class="fc" id="L145">        out.print(&quot; - &quot;);</span>
+<span class="fc" id="L146">        out.println(msg);</span>
+<span class="fc" id="L147">        out.flush();</span>
+<span class="fc" id="L148">    }</span>
+
+    private void write(Level logLevel, @Nullable String msg, @Nullable Throwable throwable) {
+<span class="fc" id="L151">        write(logLevel, msg);</span>
+<span class="pc bpc" id="L152" title="1 of 2 branches missed.">        if (throwable != null) throwable.printStackTrace(out);</span>
+<span class="fc" id="L153">        out.flush();</span>
+<span class="fc" id="L154">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
