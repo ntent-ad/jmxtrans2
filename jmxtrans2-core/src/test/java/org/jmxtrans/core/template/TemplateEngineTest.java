@@ -22,10 +22,7 @@
  */
 package org.jmxtrans.core.template;
 
-import org.jmxtrans.core.template.ExpressionEvaluator;
-import org.jmxtrans.core.template.TemplateEngine;
-
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

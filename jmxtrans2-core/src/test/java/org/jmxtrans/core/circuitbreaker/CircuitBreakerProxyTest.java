@@ -24,8 +24,8 @@ package org.jmxtrans.core.circuitbreaker;
 
 import org.jmxtrans.utils.time.ManualClock;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -38,7 +38,7 @@ public class CircuitBreakerProxyTest {
 
     private final ManualClock clock = new ManualClock();
 
-    @Before
+    @BeforeMethod
     public void setTime() {
         clock.setTime(100, SECONDS);
     }
@@ -61,7 +61,7 @@ public class CircuitBreakerProxyTest {
         assertThat(counter.getCurrentValue()).isEqualTo(0);
     }
 
-    @Test(expected = CircuitBreakerOpenException.class)
+    @Test(expectedExceptions = CircuitBreakerOpenException.class)
     public void circuitBreakerIsOpenedForMultipleExceptions() {
         ExceptionThrowingCounter target = new ExceptionThrowingCounter();
         Counter counter = create(clock, Counter.class, target, 2, 1000);

@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.utils.concurrent;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

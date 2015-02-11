@@ -34,7 +34,7 @@ import java.util.concurrent.Callable;
 import org.jmxtrans.core.log.ConsoleLogProvider;
 
 import com.google.common.io.ByteStreams;
-import org.junit.After;
+import org.testng.annotations.AfterMethod;
 
 import static org.jmxtrans.utils.io.Charsets.UTF_8;
 
@@ -66,7 +66,7 @@ public class AbstractAgentTest {
         Thread.sleep(PAUSE);
     }
 
-    @After
+    @AfterMethod
     public void stopDummyApplication() throws InterruptedException {
         if (process != null) {
             process.destroy();

@@ -26,8 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DiscardingBlockingQueueTest {
     DiscardingBlockingQueue<Integer> queue;
 
-    @Before
+    @BeforeMethod
     public void before() {
         queue = new DiscardingBlockingQueue<Integer>(5);
     }

@@ -27,14 +27,14 @@ import java.util.concurrent.TimeUnit;
 
 import org.jmxtrans.core.query.Query;
 import org.jmxtrans.core.query.Server;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
 import org.jmxtrans.utils.time.Interval;
 import org.jmxtrans.utils.time.ManualClock;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
@@ -48,7 +48,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class QueryGeneratorTest {
 
     private ManualClock clock = new ManualClock();
@@ -59,7 +59,7 @@ public class QueryGeneratorTest {
     @Mock private ScheduledExecutorService queryTimer;
     private QueryGenerator queryGenerator;
 
-    @Before
+    @BeforeMethod
     public void createQueryGenerator() {
         clock.setTime(1, SECONDS);
         when(server.getQueries()).thenReturn(singleton(query));

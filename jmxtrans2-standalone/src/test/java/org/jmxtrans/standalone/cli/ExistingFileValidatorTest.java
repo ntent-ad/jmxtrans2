@@ -25,34 +25,45 @@ package org.jmxtrans.standalone.cli;
 import java.io.File;
 import java.io.IOException;
 
+import org.jmxtrans.utils.io.TemporaryFolder;
+
 import com.beust.jcommander.ParameterException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public class ExistingFileValidatorTest {
 
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+    private TemporaryFolder temporaryFolder;
+
+    @BeforeMethod
+    public void createTemporaryFolder() throws IOException {
+        temporaryFolder = new TemporaryFolder();
+    }
 
     @Test
     public void validationPassIfFileExists() throws IOException {
-        File existingFile = testFolder.newFile();
+        File existingFile = temporaryFolder.newFile();
         new ExistingFileValidator().validate("", existingFile);
     }
 
-    @Test(expected = ParameterException.class)
+    @Test(expectedExceptions = ParameterException.class)
     public void validationFailsIfFileDoesNotExist() throws IOException {
-        File nonExistingFile = testFolder.newFile();
+        File nonExistingFile = temporaryFolder.newFile();
         nonExistingFile.delete();
         new ExistingFileValidator().validate("", nonExistingFile);
     }
 
-    @Test(expected = ParameterException.class)
+    @Test(expectedExceptions = ParameterException.class)
     public void validationFailsIfFileIsADirectory() throws IOException {
-        File nonExistingFile = testFolder.newFolder();
+        File nonExistingFile = temporaryFolder.newFolder();
         nonExistingFile.delete();
         new ExistingFileValidator().validate("", nonExistingFile);
     }
-
+    
+    @AfterMethod
+    public void destroyTempFolder() throws IOException {
+        temporaryFolder.destroy();
+    }
+    
 }

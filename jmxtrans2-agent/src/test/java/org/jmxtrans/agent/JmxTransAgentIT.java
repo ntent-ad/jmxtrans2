@@ -24,7 +24,7 @@ package org.jmxtrans.agent;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static com.jayway.awaitility.Awaitility.await;
 

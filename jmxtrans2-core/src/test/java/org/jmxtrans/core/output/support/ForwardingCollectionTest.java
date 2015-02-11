@@ -28,19 +28,20 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
+
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.inOrder;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class ForwardingCollectionTest {
     
     @Mock private Collection<String> collection;
-    
+
     @Test
     public void methodsAreDelegated() {
         InOrder inOrder = inOrder(collection);

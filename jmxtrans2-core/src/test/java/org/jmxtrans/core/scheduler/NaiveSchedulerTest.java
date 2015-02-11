@@ -26,14 +26,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 
 import org.jmxtrans.core.lifecycle.LifecycleAware;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
@@ -43,7 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class NaiveSchedulerTest {
 
     private NaiveScheduler scheduler;
@@ -52,7 +52,7 @@ public class NaiveSchedulerTest {
     private ScheduledExecutorService queryTimer;
     @Mock private LifecycleAware lifecycleListener;
 
-    @Before
+    @BeforeMethod
     public void createScheduler() {
         queryExecutor = newSingleThreadExecutor();
         resultExecutor = newSingleThreadExecutor();
@@ -61,12 +61,12 @@ public class NaiveSchedulerTest {
         scheduler = new NaiveScheduler(queryExecutor, resultExecutor, queryTimer, queryGenerator, singletonList(lifecycleListener), 1);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expectedExceptions = IllegalStateException.class)
     public void cannotStopServiceIfNotRunning() throws Exception {
         scheduler.stop();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expectedExceptions = IllegalStateException.class)
     public void cannotStartServiceTwice() throws Exception {
         scheduler.start();
         scheduler.start();
@@ -95,7 +95,7 @@ public class NaiveSchedulerTest {
         verify(lifecycleListener).stop();
     }
 
-    @After
+    @AfterMethod
     public void stopScheduler() throws Exception {
         try {
             scheduler.stop();

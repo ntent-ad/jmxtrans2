@@ -39,8 +39,8 @@ import org.jmxtrans.utils.io.StandardResource;
 import org.jmxtrans.utils.time.Interval;
 import org.jmxtrans.utils.time.SystemClock;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -51,14 +51,14 @@ public class XmlConfigParserTest {
 
     private XmlConfigParser parser;
 
-    @Before
+    @BeforeMethod
     public void createConfigurationParser() throws JAXBException, ParserConfigurationException, IOException, SAXException {
         parser = XmlConfigParser.newInstance(
                 new PropertyPlaceholderResolverXmlPreprocessor(new PropertyPlaceholderResolver()),
                 new SystemClock());
     }
 
-    @Test(expected = UnmarshalException.class)
+    @Test(expectedExceptions = UnmarshalException.class)
     public void invalidConfigurationThrowsException() throws JAXBException, SAXException, IOException, IllegalAccessException, InstantiationException, ClassNotFoundException, MalformedObjectNameException {
         Resource resource = new StandardResource("classpath:org/jmxtrans/core/config/invalid-configuration.xml");
         parser.parseConfiguration(resource);

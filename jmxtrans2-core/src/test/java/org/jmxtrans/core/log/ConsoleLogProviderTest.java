@@ -26,8 +26,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
-import org.junit.After;
-import org.junit.Test;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
 
 import static org.jmxtrans.core.log.ConsoleLogProvider.JMXTRANS_LOG_LEVEL_PROP;
 import static org.jmxtrans.utils.io.Charsets.UTF_8;
@@ -82,7 +82,7 @@ public class ConsoleLogProviderTest {
         }
     }
 
-    @After
+    @AfterMethod
     public void resetJmxTransLogLevelEnv() {
         System.getProperties().remove(JMXTRANS_LOG_LEVEL_PROP);
     }

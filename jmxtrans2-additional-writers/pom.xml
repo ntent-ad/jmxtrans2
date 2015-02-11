@@ -33,12 +33,10 @@
 
     <artifactId>jmxtrans2-additional-writers</artifactId>
     <name>JMXTrans - additional writers</name>
-    
-    <description>
-        As we have strong requirements to have minimal dependencies in JmxTrans, OutputWriters which bring additional
+
+    <description>As we have strong requirements to have minimal dependencies in JmxTrans, OutputWriters which bring additional
         dependencies should be in this package. This allow user to choose whether they want to bring those additional
-        dependencies or not.
-    </description>
+        dependencies or not.</description>
 
     <dependencies>
         <dependency>

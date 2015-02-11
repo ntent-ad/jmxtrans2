@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.core.log;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.jmxtrans.core.log.Level.DEBUG;
 import static org.jmxtrans.core.log.Level.ERROR;

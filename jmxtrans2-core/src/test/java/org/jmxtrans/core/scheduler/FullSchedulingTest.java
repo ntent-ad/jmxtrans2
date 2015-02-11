@@ -25,6 +25,7 @@ package org.jmxtrans.core.scheduler;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -41,26 +42,26 @@ import org.jmxtrans.core.query.Query;
 import org.jmxtrans.core.query.ResultNameStrategy;
 import org.jmxtrans.core.query.Server;
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.Interval;
 import org.jmxtrans.utils.time.SystemClock;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static java.util.Collections.singleton;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+import static com.jayway.awaitility.Awaitility.await;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class FullSchedulingTest {
 
     @Mock private Query query;
@@ -70,7 +71,7 @@ public class FullSchedulingTest {
     @Nonnull private final Clock clock = new SystemClock();
     @Nonnull private final Interval queryPeriod = new Interval(1, SECONDS);
 
-    @Before
+    @BeforeMethod
     public void prepareQueryResults() {
         this.results = singleton(result);
     }
@@ -110,7 +111,7 @@ public class FullSchedulingTest {
         );
 
         scheduler.start();
-        verify(outputWriter, timeout(1000)).write(result);
+        await().until(new ResultWritten());
         scheduler.stop();
     }
 
@@ -133,4 +134,16 @@ public class FullSchedulingTest {
                 new ThreadPoolExecutor.AbortPolicy());
     }
 
+    private class ResultWritten implements Callable<Boolean> {
+        // NOTE: This is necessary as Mockito verification with timeout depends on JUnit classes (ugly but ...)
+        @Override
+        public Boolean call() throws Exception {
+            try {
+                verify(outputWriter).write(result);
+                return true;
+            } catch (AssertionError ae) {
+                return false;
+            }
+        }
+    }
 }

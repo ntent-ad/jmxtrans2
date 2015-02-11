@@ -30,9 +30,9 @@ import javax.management.ObjectName;
 
 import org.jmxtrans.core.results.QueryResult;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import static java.util.Arrays.asList;
 

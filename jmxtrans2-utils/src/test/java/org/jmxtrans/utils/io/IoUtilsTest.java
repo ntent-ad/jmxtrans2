@@ -22,12 +22,15 @@
  */
 package org.jmxtrans.utils.io;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static org.jmxtrans.utils.io.Charsets.UTF_8;
 
@@ -39,12 +42,12 @@ public class IoUtilsTest {
     private byte[] testContentBytes;
     private final DummyFiles dummyFiles = new DummyFiles();
 
-    @Before
+    @BeforeMethod
     public void setUp() throws Exception {
         testContentBytes = TEST_CONTENT.getBytes(UTF_8);
     }
 
-    @Test(expected = IOException.class)
+    @Test(expectedExceptions = IOException.class)
     public void cannotCopySmallFilesToDirectory() throws IOException {
         File destination = dummyFiles.testDirectory();
         try {
@@ -55,8 +58,7 @@ public class IoUtilsTest {
         }
     }
 
-    @Test
-    @Ignore("Current implementation does not copy files, but move them when destination does not exist")
+    @Test(enabled = false, description = "Current implementation does not copy files, but move them when destination does not exist")
     public void copyFileToNonExistingDestination() throws IOException {
         File source = dummyFiles.testFile(TEST_CONTENT);
         File destination = dummyFiles.nonExistingFile();
@@ -118,7 +120,7 @@ public class IoUtilsTest {
         assertThat(out.toByteArray()).isEqualTo(testContentBytes);
     }
 
-    @After
+    @AfterMethod
     public void cleanUpDummyFiles() {
         dummyFiles.cleanUpTestFiles();
     }

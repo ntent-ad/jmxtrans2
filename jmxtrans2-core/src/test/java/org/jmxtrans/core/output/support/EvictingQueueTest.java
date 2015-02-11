@@ -24,18 +24,18 @@ package org.jmxtrans.core.output.support;
 
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EvictingQueueTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void creating_negative_evictingQueue_fails() throws Exception {
         EvictingQueue.create(-1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void creating_zeroSize_evictingQueue_fails() throws Exception {
         EvictingQueue.create(0);
     }

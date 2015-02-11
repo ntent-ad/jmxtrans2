@@ -24,8 +24,7 @@ package org.jmxtrans.utils;
 
 import java.util.Arrays;
 import java.util.List;
-
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,7 +55,7 @@ public class StringUtils2Test {
         assertThat(StringUtils2.join(null, ".")).isEqualTo(null);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void joiningWithNullDelimiterIsNotAllowed() {
         StringUtils2.join(Arrays.asList("com", "mycompany"), null);
     }
@@ -72,7 +71,7 @@ public class StringUtils2Test {
         assertThat(StringUtils2.reverseTokens(null, ".")).isNull();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void reversingWithNullDelimiterIsNotAllowed() {
         try {
             StringUtils2.reverseTokens("com.mycompany", null);

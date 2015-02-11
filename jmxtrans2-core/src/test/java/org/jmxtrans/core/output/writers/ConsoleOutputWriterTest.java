@@ -28,7 +28,7 @@ import java.util.Map;
 
 import org.jmxtrans.core.output.support.MinimalFormatOutputWriter;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static java.util.Collections.emptyMap;
 

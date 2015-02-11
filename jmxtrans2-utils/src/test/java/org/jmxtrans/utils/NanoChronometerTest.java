@@ -27,9 +27,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.jmxtrans.utils.time.ManualClock;
 import org.jmxtrans.utils.time.NanoChronometer;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -29,20 +29,20 @@ import java.util.concurrent.Executor;
 
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
 import org.jmxtrans.utils.time.ManualClock;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class ResultProcessorTest {
 
     private final ManualClock clock = new ManualClock();
@@ -52,8 +52,9 @@ public class ResultProcessorTest {
     private final BlockingQueue<QueryResult> results = new ArrayBlockingQueue<>(1);
     @Mock private OutputWriter outputWriter;
 
-    @Before
+    @BeforeMethod
     public void createResultProcessor() {
+        results.clear();
         resultProcessor = new ResultProcessor(clock, resultExecutor);
         results.add(result);
     }

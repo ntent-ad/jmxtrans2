@@ -29,27 +29,27 @@ import java.nio.charset.Charset;
 import javax.annotation.Nonnull;
 
 import org.jmxtrans.core.results.QueryResult;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static org.jmxtrans.utils.io.Charsets.UTF_8;
 
 import static com.jayway.awaitility.Awaitility.await;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class TcpOutputWriterTest {
 
     @Mock private QueryResult result;
     private TcpSinkServer server;
     private Charset charset = UTF_8;
 
-    @Before
+    @BeforeMethod
     public void startTcpServer() throws IOException {
         server = new TcpSinkServer(charset);
         server.start();
@@ -71,7 +71,7 @@ public class TcpOutputWriterTest {
         await().until(server.hasReceived("test"));
     }
 
-    @After
+    @AfterMethod
     public void stopTcpServer() throws IOException {
         server.stop();
     }

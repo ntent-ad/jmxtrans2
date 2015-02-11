@@ -24,7 +24,7 @@ package org.jmxtrans.utils.io;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 public class NullOutputStreamTest {
 

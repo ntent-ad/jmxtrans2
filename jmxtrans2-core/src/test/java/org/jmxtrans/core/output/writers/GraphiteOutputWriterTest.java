@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.jmxtrans.core.output.OutputWriter;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.jmxtrans.core.results.QueryResultFixtures.standardQueryResult;
 
@@ -48,7 +48,7 @@ public class GraphiteOutputWriterTest {
                 .endsWith("some.value 2 3");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void hostnameIsRequired() {
         Map<String, String> settings = new HashMap<>();
         settings.put("port", "80");
@@ -60,7 +60,7 @@ public class GraphiteOutputWriterTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void portIsRequired() {
         Map<String, String> settings = new HashMap<>();
         settings.put("hostname", "localhost");

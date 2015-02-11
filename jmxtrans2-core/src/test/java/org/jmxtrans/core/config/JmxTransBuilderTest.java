@@ -34,7 +34,7 @@ import org.jmxtrans.core.scheduler.NaiveScheduler;
 import org.jmxtrans.utils.io.Resource;
 import org.jmxtrans.utils.io.StandardResource;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 import org.xml.sax.SAXException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -55,14 +55,14 @@ public class JmxTransBuilderTest {
         assertThat(scheduler).isNotNull();
     }
 
-    @Test(expected = JmxtransConfigurationException.class)
+    @Test(expectedExceptions = JmxtransConfigurationException.class)
     public void parsingErrorsAreRaisedIfSoConfigured() throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException, MalformedObjectNameException {
         NaiveScheduler scheduler = new JmxTransBuilder(false,
                 Collections.<Resource>singletonList(new StandardResource("non-existing.xml"))).build();
         assertThat(scheduler).isNotNull();
     }
 
-    @Test(expected = JmxtransConfigurationException.class)
+    @Test(expectedExceptions = JmxtransConfigurationException.class)
     public void parsingErrorsAreRaisedIfNoParserFound() throws SAXException, IllegalAccessException, IOException, JAXBException, InstantiationException, ParserConfigurationException, ClassNotFoundException, MalformedObjectNameException {
         NaiveScheduler scheduler = new JmxTransBuilder(false,
                 Collections.<Resource>singletonList(new StandardResource("non-parseable.txt"))).build();

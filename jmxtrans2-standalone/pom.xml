@@ -64,6 +64,12 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jmxtrans.jmxtrans2</groupId>
+            <artifactId>jmxtrans2-utils</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

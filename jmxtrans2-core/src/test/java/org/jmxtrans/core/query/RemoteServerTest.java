@@ -24,7 +24,7 @@ package org.jmxtrans.core.query;
 
 import java.net.MalformedURLException;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

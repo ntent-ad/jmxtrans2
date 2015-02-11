@@ -22,18 +22,19 @@
  */
 package org.jmxtrans.core.log;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.jmxtrans.utils.mockito.MockitoTestNGListener;
+
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.Logger;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
-@RunWith(MockitoJUnitRunner.class)
+@Listeners(MockitoTestNGListener.class)
 public class Slf4JLoggerTest {
 
     @Mock private Logger slf4jLogger;
-
+    
     @Test
     public void allMethodsAreDelegatedToSlf4J() {
         Slf4JLogger logger = new Slf4JLogger(slf4jLogger);

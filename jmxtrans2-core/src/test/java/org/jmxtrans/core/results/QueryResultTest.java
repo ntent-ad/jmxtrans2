@@ -22,7 +22,7 @@
  */
 package org.jmxtrans.core.results;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class QueryResultTest {
 
-    @Test(expected = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void cannotCreateQueryResultWithNullName() {
         new QueryResult(null, "type", new Object(), 1L);
     }
