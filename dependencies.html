@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>JMXTrans &#x2013; Project Dependencies</title>
+    <title>JMXTrans - additional writers &#x2013; Project Dependencies</title>
     <style type="text/css" media="all">
       @import url("./css/maven-base.css");
       @import url("./css/maven-theme.css");
@@ -17,7 +17,7 @@
   <body class="composite">
     <div id="banner">
                     <div id="bannerLeft">
-                JMXTrans
+                JMXTrans - additional writers
                 </div>
                     <div class="clear">
         <hr/>
@@ -41,31 +41,13 @@
       <div id="navcolumn">
              
                     
-                                          <h5>Modules</h5>
+                                <h5>Parent Project</h5>
                   <ul>
                   <li class="none">
-                          <a href="jmxtrans2-agent/index.html" title="JMXTrans - agent">JMXTrans - agent</a>
-            </li>
-                  <li class="none">
-                          <a href="jmxtrans2-servlet/index.html" title="JMXTrans - servlet">JMXTrans - servlet</a>
-            </li>
-                  <li class="none">
-                          <a href="jmxtrans2-spring/index.html" title="JMXTrans - spring">JMXTrans - spring</a>
-            </li>
-                  <li class="none">
-                          <a href="jmxtrans2-standalone/index.html" title="JMXTrans - standalone">JMXTrans - standalone</a>
-            </li>
-                  <li class="none">
-                          <a href="jmxtrans2-utils/index.html" title="JMXTrans - utils">JMXTrans - utils</a>
-            </li>
-                  <li class="none">
-                          <a href="jmxtrans2-core/index.html" title="JMXTrans - core">JMXTrans - core</a>
-            </li>
-                  <li class="none">
-                          <a href="jmxtrans2-additional-writers/index.html" title="JMXTrans - additional writers">JMXTrans - additional writers</a>
+                          <a href="../index.html" title="JMXTrans">JMXTrans</a>
             </li>
           </ul>
-                       <h5>Documentation</h5>
+                                 <h5>Documentation</h5>
                   <ul>
                   <li class="none">
                           <a href="architecture.html" title="Architecture">Architecture</a>
@@ -96,7 +78,7 @@
           </li>
               </ul>
         </li>
-                                                                                                                                                                                                                    <li class="collapsed">
+                                                                                                                                                                                                                                                                                            <li class="collapsed">
                           <a href="project-reports.html" title="Project Reports">Project Reports</a>
                   </li>
           </ul>
@@ -130,13 +112,20 @@
 <th>License</th>
 <th>Optional</th></tr>
 <tr class="b">
+<td>org.jmxtrans.jmxtrans2</td>
+<td><a class="externalLink" href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core">jmxtrans2-core</a></td>
+<td>1.0-SNAPSHOT</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></td>
+<td>No</td></tr>
+<tr class="a">
 <td>com.google.code.findbugs</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/">annotations</a></td>
 <td>3.0.0</td>
 <td>jar</td>
 <td><a class="externalLink" href="http://www.gnu.org/licenses/lgpl.html">GNU Lesser Public License</a></td>
 <td>Yes</td></tr>
-<tr class="a">
+<tr class="b">
 <td>com.google.code.findbugs</td>
 <td><a class="externalLink" href="http://findbugs.sourceforge.net/">jsr305</a></td>
 <td>3.0.0</td>
@@ -167,7 +156,23 @@
 <td><a class="externalLink" href="http://apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a></td></tr></table></div></div><a name="Project_Transitive_Dependencies"></a>
 <div class="section">
 <h2><a name="Project_Transitive_Dependencies"></a>Project Transitive Dependencies</h2>
-<p>The following is a list of transitive dependencies for this project. Transitive dependencies are the dependencies of the project dependencies.</p><a name="Project_Transitive_Dependencies_test"></a>
+<p>The following is a list of transitive dependencies for this project. Transitive dependencies are the dependencies of the project dependencies.</p><a name="Project_Transitive_Dependencies_compile"></a>
+<div class="section">
+<h3><a name="compile"></a>compile</h3>
+<p>The following is a list of compile dependencies for this project. These dependencies are required to compile and run the application:</p>
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>GroupId</th>
+<th>ArtifactId</th>
+<th>Version</th>
+<th>Type</th>
+<th>License</th></tr>
+<tr class="b">
+<td>org.jmxtrans.jmxtrans2</td>
+<td><a class="externalLink" href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-utils">jmxtrans2-utils</a></td>
+<td>1.0-SNAPSHOT</td>
+<td>jar</td>
+<td><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></td></tr></table></div><a name="Project_Transitive_Dependencies_test"></a>
 <div class="section">
 <h3><a name="test"></a>test</h3>
 <p>The following is a list of test dependencies for this project. These dependencies are only required to compile and run unit tests for the application:</p>
@@ -212,17 +217,42 @@
 <div class="section">
 <h3><a name="Dependency_Tree"></a>Dependency Tree</h3>
 <ul>
-<li>org.jmxtrans.jmxtrans2:jmxtrans2:pom:1.0-SNAPSHOT <img id="_img1" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep0', '_img1' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep0" style="display:none">
+<li>org.jmxtrans.jmxtrans2:jmxtrans2-additional-writers:jar:1.0-SNAPSHOT <img id="_img1" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep0', '_img1' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep0" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
-<th>JMXTrans</th></tr>
+<th>JMXTrans - additional writers</th></tr>
 <tr class="b">
 <td>
-<p><b>Description: </b>There is currently no description associated with this project.</p>
-<p><b>URL: </b><a class="externalLink" href="http://www.jmxtrans.org/jmxtrans2">http://www.jmxtrans.org/jmxtrans2</a></p>
+<p><b>Description: </b>As we have strong requirements to have minimal dependencies in JmxTrans, OutputWriters which bring additional
+        dependencies should be in this package. This allow user to choose whether they want to bring those additional
+        dependencies or not.</p>
+<p><b>URL: </b><a class="externalLink" href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-additional-writers">http://www.jmxtrans.org/jmxtrans2/jmxtrans2-additional-writers</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p></td></tr></table></div>
 <ul>
-<li>com.google.code.findbugs:annotations:jar:3.0.0 (compile) <img id="_img3" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep2', '_img3' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep2" style="display:none">
+<li>org.jmxtrans.jmxtrans2:jmxtrans2-core:jar:1.0-SNAPSHOT (compile) <img id="_img3" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep2', '_img3' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep2" style="display:none">
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>JMXTrans - core</th></tr>
+<tr class="b">
+<td>
+<p><b>Description: </b>Core functionality of JmxTrans is found here. Integration with specific runtime environment is kept outside this
+        module (agent, spring, standalone, ...), but if you just want some code to help you easily query JMX beans, this
+        is what you need.</p>
+<p><b>URL: </b><a class="externalLink" href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core">http://www.jmxtrans.org/jmxtrans2/jmxtrans2-core</a></p>
+<p><b>Project License: </b><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p></td></tr></table></div>
+<ul>
+<li>org.jmxtrans.jmxtrans2:jmxtrans2-utils:jar:1.0-SNAPSHOT (compile) <img id="_img5" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep4', '_img5' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep4" style="display:none">
+<table border="0" class="bodyTable">
+<tr class="a">
+<th>JMXTrans - utils</th></tr>
+<tr class="b">
+<td>
+<p><b>Description: </b>Utilities which have no direct connections with JmxTrans. All classes found in this module could potentially be
+        reused by other projects. Some duplicate functionality already found in standard libraries like Guava, but as we
+        want to keep external dependencies to a bare minimum, we have to reimplement them.</p>
+<p><b>URL: </b><a class="externalLink" href="http://www.jmxtrans.org/jmxtrans2/jmxtrans2-utils">http://www.jmxtrans.org/jmxtrans2/jmxtrans2-utils</a></p>
+<p><b>Project License: </b><a class="externalLink" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a></p></td></tr></table></div></li></ul></li>
+<li>com.google.code.findbugs:annotations:jar:3.0.0 (compile) <img id="_img7" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep6', '_img7' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep6" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>FindBugs-Annotations</th></tr>
@@ -231,7 +261,7 @@
 <p><b>Description: </b>Annotation supports the FindBugs tool</p>
 <p><b>URL: </b><a class="externalLink" href="http://findbugs.sourceforge.net/">http://findbugs.sourceforge.net/</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.gnu.org/licenses/lgpl.html">GNU Lesser Public License</a></p></td></tr></table></div></li>
-<li>com.google.code.findbugs:jsr305:jar:3.0.0 (compile) <img id="_img5" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep4', '_img5' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep4" style="display:none">
+<li>com.google.code.findbugs:jsr305:jar:3.0.0 (compile) <img id="_img9" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep8', '_img9' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep8" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>FindBugs-jsr305</th></tr>
@@ -240,7 +270,7 @@
 <p><b>Description: </b>JSR305 Annotations for Findbugs</p>
 <p><b>URL: </b><a class="externalLink" href="http://findbugs.sourceforge.net/">http://findbugs.sourceforge.net/</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.apache.org/licenses/LICENSE-2.0.txt">The Apache Software License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.assertj:assertj-core:jar:1.7.1 (test) <img id="_img7" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep6', '_img7' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep6" style="display:none">
+<li>org.assertj:assertj-core:jar:1.7.1 (test) <img id="_img11" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep10', '_img11' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep10" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>AssertJ fluent assertions</th></tr>
@@ -249,7 +279,7 @@
 <p><b>Description: </b>Rich and fluent assertions for testing</p>
 <p><b>URL: </b><a class="externalLink" href="http://nexus.sonatype.org/oss-repository-hosting.html/assertj-parent-pom/assertj-core">http://nexus.sonatype.org/oss-repository-hosting.html/assertj-parent-pom/assertj-core</a></p>
 <p><b>Project License: </b><a href="LICENSE.txt">Apache License, Version 2.0</a></p></td></tr></table></div></li>
-<li>org.testng:testng:jar:6.8.21 (test) <img id="_img9" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep8', '_img9' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep8" style="display:none">
+<li>org.testng:testng:jar:6.8.21 (test) <img id="_img13" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep12', '_img13' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep12" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>TestNG</th></tr>
@@ -259,7 +289,7 @@
 <p><b>URL: </b><a class="externalLink" href="http://testng.org">http://testng.org</a></p>
 <p><b>Project License: </b><a class="externalLink" href="http://apache.org/licenses/LICENSE-2.0">Apache License, Version 2.0</a></p></td></tr></table></div>
 <ul>
-<li>org.beanshell:bsh:jar:2.0b4 (test) <img id="_img11" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep10', '_img11' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep10" style="display:none">
+<li>org.beanshell:bsh:jar:2.0b4 (test) <img id="_img15" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep14', '_img15' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep14" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>BeanShell</th></tr>
@@ -267,7 +297,7 @@
 <td>
 <p><b>Description: </b>BeanShell</p>
 <p><b>Project License: </b><a class="externalLink" href="http://www.gnu.org/licenses/lgpl.txt">GNU LESSER GENERAL PUBLIC LICENSE</a></p></td></tr></table></div></li>
-<li>com.beust:jcommander:jar:1.47 (test) <img id="_img13" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep12', '_img13' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep12" style="display:none">
+<li>com.beust:jcommander:jar:1.47 (test) <img id="_img17" src="./images/icon_info_sml.gif" alt="Information" onclick="toggleDependencyDetail( '_dep16', '_img17' );" style="cursor: pointer;vertical-align:text-bottom;"></img><div id="_dep16" style="display:none">
 <table border="0" class="bodyTable">
 <tr class="a">
 <th>JCommander</th></tr>
@@ -281,7 +311,7 @@
 <p><b>GNU LESSER GENERAL PUBLIC LICENSE: </b>BeanShell</p>
 <p><b>Apache License, Version 2.0: </b>AssertJ fluent assertions, TestNG</p>
 <p><b>The Apache Software License, Version 2.0: </b>FindBugs-jsr305, JCommander</p>
-<p><b>MIT License: </b>JMXTrans</p>
+<p><b>MIT License: </b>JMXTrans - additional writers, JMXTrans - core, JMXTrans - utils</p>
 <p><b>GNU Lesser Public License: </b>FindBugs-Annotations</p></div><a name="Dependency_File_Details"></a>
 <div class="section">
 <h2><a name="Dependency_File_Details"></a>Dependency File Details</h2>
@@ -319,6 +349,22 @@
 <td>1.2</td>
 <td>release</td></tr>
 <tr class="a">
+<td>jmxtrans2-core/target/classes</td>
+<td>-</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>-</td>
+<td>release</td></tr>
+<tr class="b">
+<td>jmxtrans2-utils/target/classes</td>
+<td>-</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>-</td>
+<td>release</td></tr>
+<tr class="a">
 <td>testng-6.8.21.jar</td>
 <td>817.19 kB</td>
 <td>595</td>
@@ -351,16 +397,16 @@
 <th>JDK Rev</th>
 <th>Debug</th></tr>
 <tr class="a">
-<td>6</td>
-<td>1.82 MB</td>
+<td>8</td>
+<td>1.83 MB</td>
 <td>1,627</td>
 <td>1,342</td>
 <td>65</td>
 <td>1.6</td>
 <td>5</td></tr>
 <tr class="b">
-<td>compile: 2</td>
-<td>compile: 107.66 kB</td>
+<td>compile: 4</td>
+<td>compile: 115.66 kB</td>
 <td>compile: 210</td>
 <td>compile: 99</td>
 <td>compile: 8</td>
@@ -411,6 +457,14 @@
 <td>-</td>
 <td><a class="externalLink" href="https://repo.maven.apache.org/maven2/org/beanshell/bsh/2.0b4/bsh-2.0b4.jar"><img alt="Found at https://repo.maven.apache.org/maven2" src="images/icon_success_sml.gif" /></a></td></tr>
 <tr class="a">
+<td>org.jmxtrans.jmxtrans2:jmxtrans2-core:jar:1.0-SNAPSHOT</td>
+<td>-</td>
+<td>-</td></tr>
+<tr class="b">
+<td>org.jmxtrans.jmxtrans2:jmxtrans2-utils:jar:1.0-SNAPSHOT</td>
+<td>-</td>
+<td>-</td></tr>
+<tr class="a">
 <td>org.testng:testng:jar:6.8.21</td>
 <td>-</td>
 <td><a class="externalLink" href="https://repo.maven.apache.org/maven2/org/testng/testng/6.8.21/testng-6.8.21.jar"><img alt="Found at https://repo.maven.apache.org/maven2" src="images/icon_success_sml.gif" /></a></td></tr>
@@ -427,7 +481,7 @@
 <th>sonatype-nexus-snapshots</th>
 <th>central</th></tr>
 <tr class="a">
-<td>6 (compile: 2, test: 4)</td>
+<td>8 (compile: 4, test: 4)</td>
 <td>0</td>
 <td>6</td></tr></table></div>
       </div>
