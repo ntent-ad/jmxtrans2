@@ -1,5 +1,0 @@
-GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-JMXTrans - spring,org.jmxtrans.spring,EmbeddedJmxTransBeanDefinitionParser,115,0,10,0,25,0,9,0,4,0
-JMXTrans - spring,org.jmxtrans.spring,EmbeddedJmxTransNamespaceHandler,10,0,0,0,3,0,2,0,2,0
-JMXTrans - spring,org.jmxtrans.spring,SpringEmbeddedJmxTrans,8,6,0,0,4,3,2,1,2,1
-JMXTrans - spring,org.jmxtrans.spring,EmbeddedJmxTransFactory,30,74,5,3,11,17,9,3,5,3

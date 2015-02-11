@@ -18,5 +18,6 @@ org.jmxtrans.utils.appinfo
 org.jmxtrans.utils.collections
 org.jmxtrans.utils.concurrent
 org.jmxtrans.utils.io
+org.jmxtrans.utils.mockito
 org.jmxtrans.utils.time
 org.jmxtrans.writers.additional
