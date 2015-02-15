@@ -20,55 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.standalone.cli;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Objects;
 
-import javax.annotation.Nonnull;
+import com.beust.jcommander.IValueValidator;
 
-public class FileResource implements Resource {
+public class ExistingFileCollectionValidator extends CollectionValidator<File> {
 
-    @Nonnull private final File file;
-
-    public FileResource(@Nonnull File file) {
-        this.file = file;
-    }
-
-    @Nonnull
-    @Override
-    public String getPath() {
-        return file.getAbsolutePath();
-    }
-
-    @Nonnull
-    @Override
-    public InputStream getInputStream() throws IOException {
-        return new FileInputStream(file);
-    }
+    private final ExistingFileValidator existingFileValidator = new ExistingFileValidator();
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FileResource that = (FileResource) o;
-
-        return Objects.equals(this.file, that.file);
-    }
-
-    @Override
-    public int hashCode() {
-        return file.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "FileResource{" +
-                "file=" + file.getAbsolutePath() +
-                '}';
+    protected IValueValidator<File> getValueValidator() {
+        return existingFileValidator;
     }
 }

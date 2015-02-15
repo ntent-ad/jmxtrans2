@@ -20,55 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.standalone;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Objects;
 
-import javax.annotation.Nonnull;
+import org.testng.annotations.Test;
 
-public class FileResource implements Resource {
+import static com.jayway.awaitility.Awaitility.await;
 
-    @Nonnull private final File file;
+public class JmxTransformerIT {
 
-    public FileResource(@Nonnull File file) {
-        this.file = file;
+    private AgentLog agentLog = new AgentLog();
+    
+    @Test
+    public void applicationInfoAreDisplayedAtStartup() throws IOException, InterruptedException {
+        await().until(agentLog.hasLineContaining("JMXTrans - standalone"));
+        await().until(agentLog.hasLineContaining("version:"));
+        await().until(agentLog.hasLineContaining("last modified:"));
+        await().until(agentLog.hasLineContaining("build time:"));
     }
 
-    @Nonnull
-    @Override
-    public String getPath() {
-        return file.getAbsolutePath();
+    @Test
+    public void agentIsCollectingMetrics() throws IOException, InterruptedException {
+        await().until(agentLog.hasLineContaining("counter.Value 0"));
+        await().until(agentLog.hasLineContaining("counter.Value 1"));
     }
 
-    @Nonnull
-    @Override
-    public InputStream getInputStream() throws IOException {
-        return new FileInputStream(file);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FileResource that = (FileResource) o;
-
-        return Objects.equals(this.file, that.file);
-    }
-
-    @Override
-    public int hashCode() {
-        return file.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "FileResource{" +
-                "file=" + file.getAbsolutePath() +
-                '}';
-    }
 }

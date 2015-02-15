@@ -20,55 +20,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.standalone;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nonnull;
+class Counter implements CounterMBean {
+    private final AtomicInteger counter = new AtomicInteger();
+    private final String name;
 
-public class FileResource implements Resource {
-
-    @Nonnull private final File file;
-
-    public FileResource(@Nonnull File file) {
-        this.file = file;
-    }
-
-    @Nonnull
-    @Override
-    public String getPath() {
-        return file.getAbsolutePath();
-    }
-
-    @Nonnull
-    @Override
-    public InputStream getInputStream() throws IOException {
-        return new FileInputStream(file);
+    public Counter(String name) {
+        this.name = name;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FileResource that = (FileResource) o;
-
-        return Objects.equals(this.file, that.file);
+    public Integer getValue() {
+        return counter.getAndIncrement();
     }
 
     @Override
-    public int hashCode() {
-        return file.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "FileResource{" +
-                "file=" + file.getAbsolutePath() +
-                '}';
+    public String getName() {
+        return name;
     }
 }

@@ -24,6 +24,7 @@ package org.jmxtrans.core.scheduler;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -31,6 +32,8 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.jmxtrans.core.lifecycle.LifecycleAware;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
+
+import lombok.Getter;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -44,7 +47,7 @@ public class NaiveScheduler {
 
     // Synchronization around state transition is primitive and actually wrong. Using Guava would be cleaner, but
     // current naive implementation has a fairly low potential for trouble.
-    @Nonnull private volatile State state = State.NEW;
+    @Nonnull @Getter private volatile State state = State.NEW;
     @Nonnull private final ScheduledExecutorService queryTimer;
     @Nonnull private final QueryGenerator queryGenerator;
     @Nonnull private final Iterable<LifecycleAware> lifecycleListeners;
@@ -109,8 +112,12 @@ public class NaiveScheduler {
         }
     }
 
+    public void awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+        resultExecutor.awaitTermination(timeout, unit);
+    }
+
     @ThreadSafe
-    private static enum State {
+    public static enum State {
         NEW,
         STARTING,
         RUNNING,

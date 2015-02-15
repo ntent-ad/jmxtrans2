@@ -20,55 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.standalone;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Objects;
+import java.nio.file.Path;
+import java.util.Scanner;
+import java.util.concurrent.Callable;
 
-import javax.annotation.Nonnull;
+public class AgentLog {
 
-public class FileResource implements Resource {
+    public static final String LOG_FILE_NAME = "jmxtrans-standalone.log";
+    private BuildContext buildContext = new BuildContext();
 
-    @Nonnull private final File file;
-
-    public FileResource(@Nonnull File file) {
-        this.file = file;
-    }
-
-    @Nonnull
-    @Override
-    public String getPath() {
-        return file.getAbsolutePath();
-    }
-
-    @Nonnull
-    @Override
-    public InputStream getInputStream() throws IOException {
-        return new FileInputStream(file);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FileResource that = (FileResource) o;
-
-        return Objects.equals(this.file, that.file);
-    }
-
-    @Override
-    public int hashCode() {
-        return file.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "FileResource{" +
-                "file=" + file.getAbsolutePath() +
-                '}';
+    public Callable<Boolean> hasLineContaining(final String content) throws IOException {
+        return new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                Path logFile = buildContext.getBuildDirectory().resolve(LOG_FILE_NAME);
+                try (Scanner log = new Scanner(logFile)) {
+                    while (log.hasNextLine()) {
+                        if (log.nextLine().contains(content)) return true;
+                    }
+                }
+                return false;
+            }
+        };
     }
 }

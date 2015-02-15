@@ -23,40 +23,79 @@
 package org.jmxtrans.standalone.cli;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.jmxtrans.utils.io.FileResource;
+import org.jmxtrans.utils.io.Resource;
 
 import com.beust.jcommander.Parameter;
 import lombok.Getter;
 
+import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.Files.walkFileTree;
+
 public class JmxTransParameters {
 
+    @Nullable
     @Parameter(
-            names = { "--configFiles", "-c"},
+            names = { "--configFiles", "-c" },
             description = "List of configuration files.",
-            validateValueWith = ExistingFileValidator.class)
+            validateValueWith = ExistingFileCollectionValidator.class)
     private List<File> configFiles;
 
+    @Nullable
     @Parameter(
-            names = { "--configDir", "-d"},
+            names = { "--configDirectories", "-d" },
             description = "List of configuration directories, all files in those directories will be loaded.",
-            validateValueWith = ExistingDirectoryValidator.class)
-    private List<File> configDirs;
+            validateValueWith = ExistingDirectoryCollectionValidator.class)
+    private List<File> configDirectories;
 
     @Getter
     @Parameter(
-            names = { "--ignoreParsingErrors", "-i"},
+            names = { "--ignoreParsingErrors", "-i" },
             description = "Start JmxTrans even if errors are found in configuration files.")
     private boolean ignoringParsingErrors = false;
 
-    public Iterable<File> getConfigFiles() {
-        return configFiles;
+    @Getter
+    @Parameter(
+            names = { "--help", "-h" },
+            description = "Display this help message",
+            help = true)
+    private boolean help;
+    
+    @Nonnull
+    public Iterable<Resource> getConfigResources() throws IOException {
+        List<Resource> configurations = new ArrayList<>();
+        if (configFiles != null) {
+            for (File configFile : configFiles) {
+                configurations.add(new FileResource(configFile));
+            }
+        }
+        if (configDirectories != null) {
+            for (File configDir : configDirectories) {
+                recursivelyFindFiles(configDir, configurations);
+            }
+        }
+        return configurations;
     }
 
-    public Iterable<File> getConfigDirs() {
-        return configDirs;
-    }
-
-    public boolean isIgnoringParsingErrors() {
-        return ignoringParsingErrors;
+    private void recursivelyFindFiles(@Nonnull File directory, @Nonnull final Collection<Resource> accumulator) throws IOException {
+        walkFileTree(directory.toPath(), new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                accumulator.add(new FileResource(file.toFile()));
+                return CONTINUE;
+            }
+        });
     }
 }
