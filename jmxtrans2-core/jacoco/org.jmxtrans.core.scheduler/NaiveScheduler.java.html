@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>NaiveScheduler.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - core</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.core.scheduler</a> &gt; <span class="el_source">NaiveScheduler.java</span></div><h1>NaiveScheduler.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.core.scheduler;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
+
+import org.jmxtrans.core.lifecycle.LifecycleAware;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+
+import lombok.Getter;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
+@ThreadSafe // actually, not threadsafe, but should be &quot;safe enough&quot;, see comment below...
+public class NaiveScheduler {
+
+<span class="fc" id="L43">    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());</span>
+
+    @Nonnull private final ExecutorService queryExecutor;
+    @Nonnull private final ExecutorService resultExecutor;
+
+    // Synchronization around state transition is primitive and actually wrong. Using Guava would be cleaner, but
+    // current naive implementation has a fairly low potential for trouble.
+<span class="pc" id="L50">    @Nonnull @Getter private volatile State state = State.NEW;</span>
+    @Nonnull private final ScheduledExecutorService queryTimer;
+    @Nonnull private final QueryGenerator queryGenerator;
+    @Nonnull private final Iterable&lt;LifecycleAware&gt; lifecycleListeners;
+    private final long shutdownTimeoutMillis;
+
+    public NaiveScheduler(
+            @Nonnull ExecutorService queryExecutor,
+            @Nonnull ExecutorService resultExecutor,
+            @Nonnull ScheduledExecutorService queryTimer,
+            @Nonnull QueryGenerator queryGenerator,
+            @Nonnull Iterable&lt;LifecycleAware&gt; lifecycleListeners,
+<span class="fc" id="L62">            long shutdownTimeoutMillis) {</span>
+<span class="fc" id="L63">        this.queryTimer = queryTimer;</span>
+<span class="fc" id="L64">        this.lifecycleListeners = lifecycleListeners;</span>
+<span class="fc" id="L65">        this.shutdownTimeoutMillis = shutdownTimeoutMillis;</span>
+<span class="fc" id="L66">        this.queryExecutor = queryExecutor;</span>
+<span class="fc" id="L67">        this.resultExecutor = resultExecutor;</span>
+<span class="fc" id="L68">        this.queryGenerator = queryGenerator;</span>
+<span class="fc" id="L69">    }</span>
+
+    public void start() throws Exception {
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (!state.equals(State.NEW)) {</span>
+<span class="fc" id="L73">            throw new IllegalStateException(&quot;Already started&quot;);</span>
+        }
+        try {
+<span class="fc" id="L76">            logger.debug(&quot;Starting scheduler&quot;);</span>
+<span class="fc" id="L77">            this.state = State.STARTING;</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            for (LifecycleAware lifecycleListener : lifecycleListeners) {</span>
+<span class="fc" id="L79">                lifecycleListener.start();</span>
+<span class="fc" id="L80">            }</span>
+<span class="fc" id="L81">            queryGenerator.start();</span>
+<span class="fc" id="L82">            this.state = State.RUNNING;</span>
+<span class="fc" id="L83">            logger.debug(&quot;Scheduler started&quot;);</span>
+<span class="nc" id="L84">        } catch (Exception e) {</span>
+<span class="nc" id="L85">            this.state = State.FAILED;</span>
+<span class="nc" id="L86">            throw e;</span>
+<span class="fc" id="L87">        }</span>
+<span class="fc" id="L88">    }</span>
+
+    public void stop() throws Exception {
+<span class="pc bpc" id="L91" title="1 of 4 branches missed.">        if (!state.equals(State.STARTING) &amp;&amp; !state.equals(State.RUNNING)) {</span>
+<span class="fc" id="L92">            throw new IllegalStateException(&quot;Not running&quot;);</span>
+        }
+        try {
+<span class="fc" id="L95">            logger.debug(&quot;Stopping scheduler&quot;);</span>
+<span class="fc" id="L96">            this.state = State.STOPPING;</span>
+<span class="fc" id="L97">            queryGenerator.stop();</span>
+<span class="fc" id="L98">            queryTimer.shutdown();</span>
+<span class="fc" id="L99">            queryExecutor.shutdown();</span>
+<span class="fc" id="L100">            resultExecutor.shutdown();</span>
+<span class="fc" id="L101">            queryTimer.awaitTermination(shutdownTimeoutMillis, MILLISECONDS);</span>
+<span class="fc" id="L102">            queryExecutor.awaitTermination(shutdownTimeoutMillis, MILLISECONDS);</span>
+<span class="fc" id="L103">            resultExecutor.awaitTermination(shutdownTimeoutMillis, MILLISECONDS);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">            for (LifecycleAware lifecycleListener : lifecycleListeners) {</span>
+<span class="fc" id="L105">                lifecycleListener.stop();</span>
+<span class="fc" id="L106">            }</span>
+<span class="fc" id="L107">            this.state = State.TERMINATED;</span>
+<span class="fc" id="L108">            logger.debug(&quot;Scheduler stopped&quot;);</span>
+<span class="nc" id="L109">        } catch (Exception e) {</span>
+<span class="nc" id="L110">            this.state = State.FAILED;</span>
+<span class="nc" id="L111">            throw e;</span>
+<span class="fc" id="L112">        }</span>
+<span class="fc" id="L113">    }</span>
+
+    public void awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+<span class="nc" id="L116">        resultExecutor.awaitTermination(timeout, unit);</span>
+<span class="nc" id="L117">    }</span>
+
+<span class="pc" id="L119">    @ThreadSafe</span>
+<span class="fc" id="L120">    public static enum State {</span>
+<span class="fc" id="L121">        NEW,</span>
+<span class="fc" id="L122">        STARTING,</span>
+<span class="fc" id="L123">        RUNNING,</span>
+<span class="fc" id="L124">        STOPPING,</span>
+<span class="fc" id="L125">        TERMINATED,</span>
+<span class="fc" id="L126">        FAILED</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
