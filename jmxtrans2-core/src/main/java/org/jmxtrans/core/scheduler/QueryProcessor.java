@@ -37,6 +37,8 @@ import org.jmxtrans.core.query.Server;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
 
+import static java.lang.String.format;
+
 public class QueryProcessor {
 
     @Nonnull private final Clock clock;
@@ -91,7 +93,7 @@ public class QueryProcessor {
         @Override
         protected void doRun() {
             try {
-                logger.debug("Collecting metrics for " + query);
+                logger.debug(format("Collecting metrics from query [%s] for server [%s]", query, server));
                 Iterable<QueryResult> results = query.collectMetrics(server.getServerConnection(), resultNameStrategy);
                 for (OutputWriter outputWriter : outputWriters) {
                     for (QueryResult result : results) {
@@ -103,7 +105,10 @@ public class QueryProcessor {
                     }
                 }
             } catch (Exception e) {
-                // TODO
+                logger.warn(format("Error while collecting metrics from query [%s] for server [%s]", query, server), e);
+            } catch (Throwable t) {
+                logger.error(format("Error while collecting metrics from query [%s] for server [%s]", query, server), t);
+                throw t;
             }
         }
     }

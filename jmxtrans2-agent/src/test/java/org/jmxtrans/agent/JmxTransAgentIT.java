@@ -33,7 +33,7 @@ public class JmxTransAgentIT {
     private AgentLog agentLog = new AgentLog();
     
     @Test
-    public void agentIsStarting() throws IOException, InterruptedException {
+    public void agentIsCollectingMetrics() throws IOException, InterruptedException {
         await().until(agentLog.hasLineContaining("counter.Value 0"));
         await().until(agentLog.hasLineContaining("counter.Value 1"));
     }
