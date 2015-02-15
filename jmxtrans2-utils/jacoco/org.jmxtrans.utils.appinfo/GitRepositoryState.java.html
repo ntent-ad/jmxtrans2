@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GitRepositoryState.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JMXTrans - utils</a> &gt; <a href="index.source.html" class="el_package">org.jmxtrans.utils.appinfo</a> &gt; <span class="el_source">GitRepositoryState.java</span></div><h1>GitRepositoryState.java</h1><pre class="source lang-java linenums">/**
+ * The MIT License
+ * Copyright (c) 2014 JMXTrans Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.jmxtrans.utils.appinfo;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import lombok.Getter;
+
+@Getter
+public class GitRepositoryState {
+<span class="fc" id="L33">    private final String branch;</span>
+<span class="fc" id="L34">    private final String tags;</span>
+<span class="fc" id="L35">    private final String describe;</span>
+<span class="fc" id="L36">    private final String describeShort;</span>
+<span class="fc" id="L37">    private final String commitId;</span>
+<span class="fc" id="L38">    private final String buildUserName;</span>
+<span class="fc" id="L39">    private final String buildUserEmail;</span>
+<span class="fc" id="L40">    private final String buildTime;</span>
+<span class="nc" id="L41">    private final String commitUserName;</span>
+<span class="nc" id="L42">    private final String commitUserEmail;</span>
+<span class="fc" id="L43">    private final String commitMessageShort;</span>
+<span class="fc" id="L44">    private final String commitMessageFull;</span>
+<span class="fc" id="L45">    private final String commitTime;</span>
+
+<span class="fc" id="L47">    private GitRepositoryState(Properties properties) {</span>
+<span class="fc" id="L48">        this.branch = properties.get(&quot;git.branch&quot;).toString();</span>
+<span class="fc" id="L49">        this.tags = properties.get(&quot;git.tags&quot;).toString();</span>
+<span class="fc" id="L50">        this.describe = properties.get(&quot;git.commit.id.describe&quot;).toString();</span>
+<span class="fc" id="L51">        this.describeShort = properties.get(&quot;git.commit.id.describe-short&quot;).toString();</span>
+<span class="fc" id="L52">        this.commitId = properties.get(&quot;git.commit.id&quot;).toString();</span>
+<span class="fc" id="L53">        this.buildUserName = properties.get(&quot;git.build.user.name&quot;).toString();</span>
+<span class="fc" id="L54">        this.buildUserEmail = properties.get(&quot;git.build.user.email&quot;).toString();</span>
+<span class="fc" id="L55">        this.buildTime = properties.get(&quot;git.build.time&quot;).toString();</span>
+<span class="fc" id="L56">        this.commitUserName = properties.get(&quot;git.commit.user.name&quot;).toString();</span>
+<span class="fc" id="L57">        this.commitUserEmail = properties.get(&quot;git.commit.user.email&quot;).toString();</span>
+<span class="fc" id="L58">        this.commitMessageShort = properties.get(&quot;git.commit.message.short&quot;).toString();</span>
+<span class="fc" id="L59">        this.commitMessageFull = properties.get(&quot;git.commit.message.full&quot;).toString();</span>
+<span class="fc" id="L60">        this.commitTime = properties.get(&quot;git.commit.time&quot;).toString();</span>
+<span class="fc" id="L61">    }</span>
+
+    public static GitRepositoryState load() throws IOException {
+<span class="pc" id="L64">        try (InputStream in = GitRepositoryState.class.getClassLoader().getResourceAsStream(&quot;git.properties&quot;)) {</span>
+<span class="fc" id="L65">            Properties properties = new Properties();</span>
+<span class="fc" id="L66">            properties.load(in);</span>
+<span class="fc" id="L67">            return new GitRepositoryState(properties);</span>
+<span class="pc bpc" id="L68" title="6 of 8 branches missed.">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
