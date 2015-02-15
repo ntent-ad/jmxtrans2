@@ -38,10 +38,10 @@ import static java.lang.String.format;
 
 public class ResultProcessor {
 
-    @Nonnull
-    private final Clock clock;
-    @Nonnull
-    private final Executor resultExecutor;
+    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+
+    @Nonnull private final Clock clock;
+    @Nonnull private final Executor resultExecutor;
 
     public ResultProcessor(@Nonnull Clock clock, @Nonnull Executor resultExecutor) {
         this.clock = clock;
@@ -52,6 +52,7 @@ public class ResultProcessor {
             long deadline,
             @Nonnull QueryResult result,
             @Nonnull OutputWriter outputWriter) {
+        logger.debug(format("Enquing query results [%s] to output writer [%s]", result, outputWriter));
         resultExecutor.execute(new Processor(clock, deadline, result, outputWriter));
     }
 
@@ -78,7 +79,10 @@ public class ResultProcessor {
                 logger.debug(format("Writing [%d] results to [%s]", numberOfResultsWritten, outputWriter));
             } catch (IOException e) {
                 logger.warn("Je suis Charlie");
-                logger.warn("Sadly, error while drawing results.", e);
+                logger.warn(format("Sadly, error while drawing [%s] to [%s].", result, outputWriter), e);
+            } catch (Throwable t) {
+                logger.error(format("Error writing [%s] to [%s].", result, outputWriter));
+                throw t;
             }
         }
     }

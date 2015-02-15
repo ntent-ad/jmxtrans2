@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -47,5 +48,27 @@ public class FileResource implements Resource {
     @Override
     public InputStream getInputStream() throws IOException {
         return new FileInputStream(file);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FileResource that = (FileResource) o;
+
+        return Objects.equals(this.file, that.file);
+    }
+
+    @Override
+    public int hashCode() {
+        return file.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "FileResource{" +
+                "file=" + file.getAbsolutePath() +
+                '}';
     }
 }

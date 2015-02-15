@@ -47,6 +47,7 @@ import static org.jmxtrans.utils.Preconditions2.checkNotEmpty;
 
 public class RemoteServer implements Server {
 
+    @Nullable private final String host;
     @Nonnull private final JMXServiceURL url;
     @Nullable private final String username;
     @Nullable private final String password;
@@ -55,11 +56,13 @@ public class RemoteServer implements Server {
     private final Iterable<Query> queries;
 
     private RemoteServer(
+            @Nullable String host,
             @Nonnull JMXServiceURL url,
             @Nullable String username,
             @Nullable String password,
             @Nullable String protocolProviderPackages,
             @Nonnull Iterable<Query> queries) {
+        this.host = host;
         this.url = url;
         this.username = username;
         this.password = password;
@@ -70,7 +73,8 @@ public class RemoteServer implements Server {
     @Nullable
     @Override
     public String getHost() {
-        return url.getHost();
+        if (url.getHost() != null && url.getHost().length() > 0) return url.getHost();
+        return host;
     }
 
     @Nonnull
@@ -175,6 +179,7 @@ public class RemoteServer implements Server {
         @Nonnull
         public RemoteServer build() throws MalformedURLException {
             return new RemoteServer(
+                    host,
                     computeUrl(),
                     username,
                     password,
@@ -186,7 +191,17 @@ public class RemoteServer implements Server {
         @Nonnull
         private JMXServiceURL computeUrl() throws MalformedURLException {
             if (url != null) return url;
-            return new JMXServiceURL(null, checkNotEmpty(host), requireNonNull(port, "port has to be specified"));
+
+            // FIXME: we should use one of the nice constructors of JMXServiceURL instead of String
+            //        but that requires configuring initial context correctly
+            return new JMXServiceURL(
+                    "service:jmx:rmi://"
+                            + checkNotEmpty(host) + ":"
+                            + requireNonNull(port, "port has to be specified")
+                            + "/jndi/rmi://"
+                            + checkNotEmpty(host) + ":"
+                            + requireNonNull(port, "port has to be specified")
+                            + "/jmxrmi");
         }
     }
 }

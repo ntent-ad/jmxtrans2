@@ -57,6 +57,35 @@ public class FileResourceTest {
         }
     }
 
+    @Test
+    public void resourcesForSameFileAreEqual() {
+        Resource resource1 = new FileResource(new File("/tmp"));
+        Resource resource2 = new FileResource(new File("/tmp"));
+        assertThat(resource1).isEqualTo(resource2);
+    }
+
+    @Test
+    public void resourcesForSameFileHaveSameHashCode() {
+        Resource resource1 = new FileResource(new File("/tmp"));
+        Resource resource2 = new FileResource(new File("/tmp"));
+        assertThat(resource1.hashCode()).isEqualTo(resource2.hashCode());
+    }
+
+    @Test
+    public void resourcesForDifferentFilesAreNotEqual() {
+        Resource resource1 = new FileResource(new File("/tmp"));
+        Resource resource2 = new FileResource(new File("/toto"));
+        assertThat(resource1).isNotEqualTo(resource2);
+    }
+
+    @Test
+    public void resourcesForDifferentFilesHaveDifferentHashcodes() {
+        // Ok, we could have collisions ... but let's not take that into account for this test
+        Resource resource1 = new FileResource(new File("/tmp"));
+        Resource resource2 = new FileResource(new File("/toto"));
+        assertThat(resource1.hashCode()).isNotEqualTo(resource2.hashCode());
+    }
+
     private InputStream inputStreamWithContent(String content) throws UnsupportedEncodingException {
         return new ByteArrayInputStream(content.getBytes(UTF_8));
     }

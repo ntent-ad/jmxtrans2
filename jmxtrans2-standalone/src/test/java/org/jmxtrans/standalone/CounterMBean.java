@@ -20,29 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.standalone;
 
-import java.io.IOException;
+public interface CounterMBean {
+    Integer getValue();
 
-import org.testng.annotations.Test;
-
-import static com.jayway.awaitility.Awaitility.await;
-
-public class JmxTransAgentIT {
-
-    private AgentLog agentLog = new AgentLog();
-    
-    @Test
-    public void agentIsCollectingMetrics() throws IOException, InterruptedException {
-        await().until(agentLog.hasLineContaining("counter.Value 0"));
-        await().until(agentLog.hasLineContaining("counter.Value 1"));
-    }
-
-    @Test
-    public void applicationInfoAreDisplayedAtStartup() throws IOException, InterruptedException {
-        await().until(agentLog.hasLineContaining("JMXTrans - agent"));
-        await().until(agentLog.hasLineContaining("version:"));
-        await().until(agentLog.hasLineContaining("last modified:"));
-        await().until(agentLog.hasLineContaining("build time:"));
-    }
+    String getName();
 }

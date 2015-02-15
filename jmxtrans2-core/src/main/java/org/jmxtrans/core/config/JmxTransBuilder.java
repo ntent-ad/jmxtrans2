@@ -72,7 +72,9 @@ public class JmxTransBuilder {
     @Nonnull private final Iterable<Resource> configResources;
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
 
-    public JmxTransBuilder(boolean ignoreParsingErrors, @Nonnull Iterable<Resource> configResources) {
+    public JmxTransBuilder(
+            boolean ignoreParsingErrors,
+            @Nonnull Iterable<Resource> configResources) {
         this.ignoreParsingErrors = ignoreParsingErrors;
         this.configResources = configResources;
     }

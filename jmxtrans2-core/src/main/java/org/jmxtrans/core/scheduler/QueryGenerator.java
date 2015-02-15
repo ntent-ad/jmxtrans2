@@ -22,7 +22,6 @@
  */
 package org.jmxtrans.core.scheduler;
 
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 
 import javax.annotation.Nonnull;
@@ -63,28 +62,33 @@ public class QueryGenerator implements Runnable {
 
     @Override
     public void run() {
+        try {
             long deadline = clock.currentTimeMillis() + queryPeriod.getDuration(MILLISECONDS);
-        for (Server server : servers) {
-            for (final Query query : server.getQueries()) {
-                try {
-                    logger.debug("Enquing query " + query);
-                    queryProcessor.process(deadline, server, query);
-                } catch (RejectedExecutionException e) {
-                    logger.warn("Could not enqueue query " + query, e);
+            for (Server server : servers) {
+                for (final Query query : server.getQueries()) {
+                    try {
+                        logger.debug("Enqueue query " + query);
+                        queryProcessor.process(deadline, server, query);
+                    } catch (Exception e) {
+                        logger.warn("Could not enqueue query " + query, e);
+                    }
                 }
             }
-        }
 
-        if (running) {
-            logger.debug("Scheduling next run in " + queryPeriod.getDuration(SECONDS) + " seconds.");
-            try {
-                queryTimer.schedule(
-                        this,
-                        queryPeriod.getDuration(MILLISECONDS),
-                        MILLISECONDS);
-            } catch (RejectedExecutionException e) {
-                logger.error("Could not schedule next task");
+            if (running) {
+                logger.debug("Scheduling next run in " + queryPeriod.getDuration(SECONDS) + " seconds.");
+                try {
+                    queryTimer.schedule(
+                            this,
+                            queryPeriod.getDuration(MILLISECONDS),
+                            MILLISECONDS);
+                } catch (Exception e) {
+                    logger.error("Could not schedule next task", e);
+                }
             }
+        } catch (Throwable t) {
+            logger.error("Exception trying to enqueue", t);
+            throw t;
         }
     }
 

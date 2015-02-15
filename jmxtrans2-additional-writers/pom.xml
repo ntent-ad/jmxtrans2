@@ -44,4 +44,21 @@
             <artifactId>jmxtrans2-core</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <configuration>
+                    <merge>true</merge>
+                    <message>Creating site for ${project.name} ${project.version}</message>
+                    <path>${project.artifactId}</path>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>de.andrena.tools.macker</groupId>
+                <artifactId>macker-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

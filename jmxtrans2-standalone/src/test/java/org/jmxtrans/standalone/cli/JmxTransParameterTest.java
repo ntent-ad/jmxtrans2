@@ -22,8 +22,10 @@
  */
 package org.jmxtrans.standalone.cli;
 
+import java.io.File;
 import java.io.IOException;
 
+import org.jmxtrans.utils.io.FileResource;
 import org.jmxtrans.utils.io.TemporaryFolder;
 
 import com.beust.jcommander.JCommander;
@@ -31,6 +33,8 @@ import com.beust.jcommander.ParameterException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JmxTransParameterTest {
 
@@ -41,14 +45,44 @@ public class JmxTransParameterTest {
         temporaryFolder = new TemporaryFolder();
     }
 
-    @Test(expectedExceptions = ParameterException.class)
+    @Test(
+            expectedExceptions = ParameterException.class,
+            expectedExceptionsMessageRegExp = "Parameter \\[--configFiles\\] is a non existing file \\[.*non-existing-file\\]")
     public void failOnNonExistingConfigFile() {
         String[] arguments = new String[] {
-                "-configFile", "non-existing-file"
+                "--configFiles", "non-existing-file"
         };
         new JCommander(new JmxTransParameters(), arguments);
     }
     
+    @Test(
+            expectedExceptions = ParameterException.class,
+            expectedExceptionsMessageRegExp = "Parameter \\[--configDirectories\\] is a non existing directory \\[.*non-existing-directory\\]")
+    public void failOnNonExistingConfigDirectory() {
+        String[] arguments = new String[] {
+                "--configDirectories", "non-existing-directory"
+        };
+        new JCommander(new JmxTransParameters(), arguments);
+    }
+    
+    @Test
+    public void configFilesAndDirectoriesAreAggregated() throws IOException {
+        File configFile = temporaryFolder.newFile();
+        File configDir = temporaryFolder.newFolder();
+        File configFileInConfigDir = new File(configDir, "configFile");
+        configFileInConfigDir.createNewFile();
+
+        String[] arguments = new String[] {
+                "--configFiles", configFile.getAbsolutePath(),
+                "--configDirectories", configDir.getAbsolutePath()
+        };
+        JmxTransParameters parameters = new JmxTransParameters();
+        new JCommander(parameters, arguments);
+        assertThat(parameters.getConfigResources())
+                .contains(new FileResource(configFile))
+                .contains(new FileResource(configFileInConfigDir));
+    }
+
     @AfterMethod
     public void destroyTempFolder() throws IOException {
         temporaryFolder.destroy();

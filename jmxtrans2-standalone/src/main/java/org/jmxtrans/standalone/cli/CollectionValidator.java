@@ -20,29 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.agent;
+package org.jmxtrans.standalone.cli;
 
-import java.io.IOException;
+import java.util.Collection;
 
-import org.testng.annotations.Test;
+import com.beust.jcommander.IValueValidator;
+import com.beust.jcommander.ParameterException;
 
-import static com.jayway.awaitility.Awaitility.await;
+public abstract class CollectionValidator<T> implements IValueValidator<Collection<T>> {
 
-public class JmxTransAgentIT {
-
-    private AgentLog agentLog = new AgentLog();
-    
-    @Test
-    public void agentIsCollectingMetrics() throws IOException, InterruptedException {
-        await().until(agentLog.hasLineContaining("counter.Value 0"));
-        await().until(agentLog.hasLineContaining("counter.Value 1"));
+    @Override
+    public void validate(String name, Collection<T> values) throws ParameterException {
+        for (T value : values) {
+            getValueValidator().validate(name, value);
+        }
     }
 
-    @Test
-    public void applicationInfoAreDisplayedAtStartup() throws IOException, InterruptedException {
-        await().until(agentLog.hasLineContaining("JMXTrans - agent"));
-        await().until(agentLog.hasLineContaining("version:"));
-        await().until(agentLog.hasLineContaining("last modified:"));
-        await().until(agentLog.hasLineContaining("build time:"));
-    }
+    protected abstract IValueValidator<T> getValueValidator();
+
 }

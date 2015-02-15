@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 import org.jmxtrans.utils.time.Clock;
 
 import lombok.Getter;
+import lombok.Synchronized;
 
 import static org.jmxtrans.core.log.Level.DEBUG;
 import static org.jmxtrans.core.log.Level.ERROR;
@@ -147,6 +148,7 @@ public class PrintWriterLogger implements Logger {
         out.flush();
     }
 
+    @Synchronized
     private void write(Level logLevel, @Nullable String msg, @Nullable Throwable throwable) {
         write(logLevel, msg);
         if (throwable != null) throwable.printStackTrace(out);

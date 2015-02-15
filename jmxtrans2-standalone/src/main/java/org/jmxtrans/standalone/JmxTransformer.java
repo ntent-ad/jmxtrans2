@@ -22,35 +22,60 @@
  */
 package org.jmxtrans.standalone;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.jmxtrans.core.config.JmxTransBuilder;
+import org.jmxtrans.core.log.Logger;
+import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.scheduler.NaiveScheduler;
 import org.jmxtrans.standalone.cli.JmxTransParameters;
 import org.jmxtrans.utils.appinfo.AppInfo;
-import org.jmxtrans.utils.io.FileResource;
-import org.jmxtrans.utils.io.Resource;
 
 import com.beust.jcommander.JCommander;
 
+import static org.jmxtrans.core.scheduler.NaiveScheduler.State.TERMINATED;
+
 public class JmxTransformer {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(JmxTransformer.class.getName());
 
     public static void main(String[] args) throws Exception {
 
-        AppInfo.load(JmxTransformer.class).print(System.out);
+        AppInfo<JmxTransformer> appInfo = AppInfo.load(JmxTransformer.class);
+        appInfo.print(System.out);
 
         JmxTransParameters parameters = new JmxTransParameters();
-        new JCommander(parameters, args);
+        JCommander jCommander = new JCommander(parameters, args);
+        jCommander.setProgramName(appInfo.getName());
 
-        List<Resource> configurations = new ArrayList<>();
-        for (File configFile : parameters.getConfigFiles()) {
-            configurations.add(new FileResource(configFile));
+        if (parameters.isHelp()) {
+            jCommander.usage();
+            System.exit(0);
         }
 
-        new JmxTransBuilder(parameters.isIgnoringParsingErrors(), configurations)
-                .build()
-                .start();
+        final NaiveScheduler scheduler = new JmxTransBuilder(
+                parameters.isIgnoringParsingErrors(),
+                parameters.getConfigResources())
+                .build();
+        
+        scheduler.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    scheduler.stop();
+                } catch (Exception e) {
+                    LOGGER.error("Could not stop JmxTrans cleanly", e);
+                } catch (Throwable t) {
+                    LOGGER.error("Could not stop JmxTrans cleanly", t);
+                    throw t;
+                }
+            }
+        }));
+
+        // there should be a better way to do this ...
+        while (!scheduler.getState().equals(TERMINATED)) scheduler.awaitTermination(1, TimeUnit.HOURS);
     }
 
 }

@@ -65,6 +65,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.jayway.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jmxtrans.jmxtrans2</groupId>
             <artifactId>jmxtrans2-utils</artifactId>
             <type>test-jar</type>
@@ -73,7 +78,67 @@
     </dependencies>
 
     <build>
+        <testResources>
+            <testResource>
+                <filtering>true</filtering>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
         <plugins>
+            <plugin>
+                <groupId>com.bazaarvoice.maven.plugins</groupId>
+                <artifactId>process-exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>start-dummy-app</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <name>dummy-application</name>
+                            <arguments>
+                                <argument>java</argument>
+                                <argument>-cp</argument>
+                                <argument>${project.build.testOutputDirectory}</argument>
+                                <argument>-Dcom.sun.management.jmxremote.authenticate=false</argument>
+                                <argument>-Dcom.sun.management.jmxremote.port=54321</argument>
+                                <argument>-Dcom.sun.management.jmxremote.ssl=false</argument>
+                                <argument>org.jmxtrans.standalone.DummyApp</argument>
+                            </arguments>
+                            <processLogFile>${project.build.directory}/dummy-app.log</processLogFile>
+                            <waitAfterLaunch>0</waitAfterLaunch>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>start-jmxtrans-standalone</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <name>jmxtrans-standalone</name>
+                            <arguments>
+                                <argument>java</argument>
+                                <argument>-Dorg.jmxtrans.log.level=DEBUG</argument>
+                                <argument>-jar</argument>
+                                <argument>${project.build.finalName}-all.jar</argument>
+                                <argument>--configFiles</argument>
+                                <argument>${project.build.testOutputDirectory}/config.xml</argument>
+                            </arguments>
+                            <processLogFile>${project.build.directory}/jmxtrans-standalone.log</processLogFile>
+                            <waitAfterLaunch>5</waitAfterLaunch>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-all</id>
+                        <goals>
+                            <goal>stop-all</goal>
+                        </goals>
+                        <phase>post-integration-test</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
