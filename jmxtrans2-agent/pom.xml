@@ -73,6 +73,39 @@
         </testResources>
         <plugins>
             <plugin>
+                <groupId>com.bazaarvoice.maven.plugins</groupId>
+                <artifactId>process-exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>start-jmxtrans-agent</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <name>dummy-application</name>
+                            <arguments>
+                                <argument>java</argument>
+                                <argument>-cp</argument>
+                                <argument>${project.build.testOutputDirectory}</argument>
+                                <argument>-javaagent:${project.build.finalName}-all.jar=${project.build.testOutputDirectory}/config.xml</argument>
+                                <argument>-Dorg.jmxtrans.log.level=DEBUG</argument>
+                                <argument>org.jmxtrans.agent.DummyApp</argument>
+                            </arguments>
+                            <processLogFile>${project.build.directory}/jmxtrans-agent.log</processLogFile>
+                            <waitAfterLaunch>0</waitAfterLaunch>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-all</id>
+                        <goals>
+                            <goal>stop-all</goal>
+                        </goals>
+                        <phase>post-integration-test</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
                 <configuration>

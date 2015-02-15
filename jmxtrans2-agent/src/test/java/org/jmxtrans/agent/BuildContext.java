@@ -20,37 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.standalone;
+package org.jmxtrans.agent;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Properties;
 
-import org.jmxtrans.core.config.JmxTransBuilder;
-import org.jmxtrans.standalone.cli.JmxTransParameters;
-import org.jmxtrans.utils.appinfo.AppInfo;
-import org.jmxtrans.utils.io.FileResource;
-import org.jmxtrans.utils.io.Resource;
-
-import com.beust.jcommander.JCommander;
-
-public class JmxTransformer {
-
-    public static void main(String[] args) throws Exception {
-
-        AppInfo.load(JmxTransformer.class).print(System.out);
-
-        JmxTransParameters parameters = new JmxTransParameters();
-        new JCommander(parameters, args);
-
-        List<Resource> configurations = new ArrayList<>();
-        for (File configFile : parameters.getConfigFiles()) {
-            configurations.add(new FileResource(configFile));
+public class BuildContext {
+    
+    public Path getBuildDirectory() throws IOException {
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream("project-info.properties")) {
+            Properties props = new Properties();
+            props.load(in);
+            return Paths.get(props.getProperty("project.build.directory"));
         }
-
-        new JmxTransBuilder(parameters.isIgnoringParsingErrors(), configurations)
-                .build()
-                .start();
     }
 
 }

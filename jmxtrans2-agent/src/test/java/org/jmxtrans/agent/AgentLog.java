@@ -20,37 +20,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.standalone;
+package org.jmxtrans.agent;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Scanner;
+import java.util.concurrent.Callable;
 
-import org.jmxtrans.core.config.JmxTransBuilder;
-import org.jmxtrans.standalone.cli.JmxTransParameters;
-import org.jmxtrans.utils.appinfo.AppInfo;
-import org.jmxtrans.utils.io.FileResource;
-import org.jmxtrans.utils.io.Resource;
+public class AgentLog {
 
-import com.beust.jcommander.JCommander;
+    public static final String LOG_FILE_NAME = "jmxtrans-agent.log";
+    private BuildContext buildContext = new BuildContext();
 
-public class JmxTransformer {
-
-    public static void main(String[] args) throws Exception {
-
-        AppInfo.load(JmxTransformer.class).print(System.out);
-
-        JmxTransParameters parameters = new JmxTransParameters();
-        new JCommander(parameters, args);
-
-        List<Resource> configurations = new ArrayList<>();
-        for (File configFile : parameters.getConfigFiles()) {
-            configurations.add(new FileResource(configFile));
-        }
-
-        new JmxTransBuilder(parameters.isIgnoringParsingErrors(), configurations)
-                .build()
-                .start();
+    public Callable<Boolean> hasLineContaining(final String content) throws IOException {
+        return new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                Path logFile = buildContext.getBuildDirectory().resolve(LOG_FILE_NAME);
+                try (Scanner log = new Scanner(logFile)) {
+                    while (log.hasNextLine()) {
+                        if (log.nextLine().contains(content)) return true;
+                    }
+                }
+                return false;
+            }
+        };
     }
-
 }

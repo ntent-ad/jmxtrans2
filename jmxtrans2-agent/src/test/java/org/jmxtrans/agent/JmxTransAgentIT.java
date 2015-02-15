@@ -28,23 +28,21 @@ import org.testng.annotations.Test;
 
 import static com.jayway.awaitility.Awaitility.await;
 
-public class JmxTransAgentIT extends AbstractAgentTest {
+public class JmxTransAgentIT {
 
+    private AgentLog agentLog = new AgentLog();
+    
     @Test
     public void agentIsStarting() throws IOException, InterruptedException {
-        startDummyApplication();
-
-        await().until(stdOutContains("counter.Value 0"));
-        await().until(stdOutContains("counter.Value 1"));
+        await().until(agentLog.hasLineContaining("counter.Value 0"));
+        await().until(agentLog.hasLineContaining("counter.Value 1"));
     }
 
     @Test
     public void applicationInfoAreDisplayedAtStartup() throws IOException, InterruptedException {
-        startDummyApplication();
-
-        await().until(stdOutContains("JMXTrans - agent"));
-        await().until(stdOutContains("version:"));
-        await().until(stdOutContains("last modified:"));
-        await().until(stdOutContains("build time:"));
+        await().until(agentLog.hasLineContaining("JMXTrans - agent"));
+        await().until(agentLog.hasLineContaining("version:"));
+        await().until(agentLog.hasLineContaining("last modified:"));
+        await().until(agentLog.hasLineContaining("build time:"));
     }
 }
