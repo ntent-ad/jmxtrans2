@@ -23,26 +23,27 @@
 package org.jmxtrans.agent;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Scanner;
+import java.util.concurrent.Callable;
 
-import org.testng.annotations.Test;
+public class AgentLog {
 
-import static com.jayway.awaitility.Awaitility.await;
+    public static final String LOG_FILE_NAME = "jmxtrans-agent.log";
+    private BuildContext buildContext = new BuildContext();
 
-public class JmxTransAgentIT {
-
-    private AgentLog agentLog = new AgentLog();
-    
-    @Test
-    public void agentIsStarting() throws IOException, InterruptedException {
-        await().until(agentLog.hasLineContaining("counter.Value 0"));
-        await().until(agentLog.hasLineContaining("counter.Value 1"));
-    }
-
-    @Test
-    public void applicationInfoAreDisplayedAtStartup() throws IOException, InterruptedException {
-        await().until(agentLog.hasLineContaining("JMXTrans - agent"));
-        await().until(agentLog.hasLineContaining("version:"));
-        await().until(agentLog.hasLineContaining("last modified:"));
-        await().until(agentLog.hasLineContaining("build time:"));
+    public Callable<Boolean> hasLineContaining(final String content) throws IOException {
+        return new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                Path logFile = buildContext.getBuildDirectory().resolve(LOG_FILE_NAME);
+                try (Scanner log = new Scanner(logFile)) {
+                    while (log.hasNextLine()) {
+                        if (log.nextLine().contains(content)) return true;
+                    }
+                }
+                return false;
+            }
+        };
     }
 }

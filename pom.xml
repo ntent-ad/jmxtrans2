@@ -314,6 +314,11 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>com.bazaarvoice.maven.plugins</groupId>
+                    <artifactId>process-exec-maven-plugin</artifactId>
+                    <version>0.7</version>
+                </plugin>
+                <plugin>
                     <groupId>com.github.github</groupId>
                     <artifactId>site-maven-plugin</artifactId>
                     <!--

@@ -23,26 +23,19 @@
 package org.jmxtrans.agent;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Properties;
 
-import org.testng.annotations.Test;
-
-import static com.jayway.awaitility.Awaitility.await;
-
-public class JmxTransAgentIT {
-
-    private AgentLog agentLog = new AgentLog();
+public class BuildContext {
     
-    @Test
-    public void agentIsStarting() throws IOException, InterruptedException {
-        await().until(agentLog.hasLineContaining("counter.Value 0"));
-        await().until(agentLog.hasLineContaining("counter.Value 1"));
+    public Path getBuildDirectory() throws IOException {
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream("project-info.properties")) {
+            Properties props = new Properties();
+            props.load(in);
+            return Paths.get(props.getProperty("project.build.directory"));
+        }
     }
 
-    @Test
-    public void applicationInfoAreDisplayedAtStartup() throws IOException, InterruptedException {
-        await().until(agentLog.hasLineContaining("JMXTrans - agent"));
-        await().until(agentLog.hasLineContaining("version:"));
-        await().until(agentLog.hasLineContaining("last modified:"));
-        await().until(agentLog.hasLineContaining("build time:"));
-    }
 }
