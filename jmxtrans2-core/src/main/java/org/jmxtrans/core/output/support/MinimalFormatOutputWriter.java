@@ -29,7 +29,6 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.results.QueryResult;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -38,7 +37,6 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 public class MinimalFormatOutputWriter implements WriterBasedOutputWriter {
     @Override
     public int write(@Nonnull Writer writer, @Nonnull QueryResult result) throws IOException {
-        LoggerFactory.getLogger(getClass().getName()).error("toto" + writer);
         writer.write(result.getName());
         writer.write(" ");
         writer.write(Objects.toString(result.getValue()));

@@ -48,10 +48,9 @@ public class JmxTransformer {
             configurations.add(new FileResource(configFile));
         }
 
-        new JmxTransBuilder(
-                parameters.isIgnoringParsingErrors(),
-                configurations).build().start();
-
+        new JmxTransBuilder(parameters.isIgnoringParsingErrors(), configurations)
+                .build()
+                .start();
     }
 
 }
