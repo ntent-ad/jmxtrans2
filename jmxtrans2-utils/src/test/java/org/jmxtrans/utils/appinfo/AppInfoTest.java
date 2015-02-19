@@ -60,7 +60,7 @@ public class AppInfoTest {
     public void fullVersionContainsVersionAndGitHash() {
         assertThat(appInfo.getFullVersion())
                 .startsWith(appInfo.getVersion())
-                .contains("/");
+                .contains("-");
     }
 
     @Test
@@ -84,6 +84,21 @@ public class AppInfoTest {
                     .contains("license: MIT")
                     .contains("in case of problem");
         }
+    }
+    
+    @Test
+    public void userAgentContainsAppropriateInformation() {
+        String userAgent = appInfo.getUserAgent();
+
+        assertThat(userAgent)
+                .contains("org.jmxtrans.jmxtrans2")
+                .contains("jmxtrans")
+                .contains(System.getProperty("java.vm.name"))
+                .contains(System.getProperty("java.version"))
+                .contains(System.getProperty("os.name"))
+                .contains(System.getProperty("os.arch"))
+                .contains(System.getProperty("os.version"));
+        
     }
 
 }

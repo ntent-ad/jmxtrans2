@@ -59,7 +59,15 @@ public class AppInfo<T> {
 
     @Nonnull
     public String getFullVersion() {
-        return getVersion() + " / " + repositoryState.getDescribe();
+        return getVersion() + "-" + repositoryState.getDescribe();
+    }
+
+    public String getUserAgent() {
+        return groupId + ":" + artifactId + "/" + getFullVersion()
+                + " ("
+                + System.getProperty("java.vm.name") + "/" + System.getProperty("java.version") + "; "
+                + System.getProperty("os.name") + "-" + System.getProperty("os.arch") + "/" + System.getProperty("os.version")
+                + ")";
     }
 
     public void print(@Nonnull PrintStream out) {

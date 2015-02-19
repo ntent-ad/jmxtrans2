@@ -23,15 +23,16 @@
 package org.jmxtrans.writers.additional;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
-import org.testng.annotations.Test;
+import javax.annotation.Nonnull;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.jmxtrans.core.output.support.OutputStreamBasedOutputWriter;
+import org.jmxtrans.core.results.QueryResult;
 
-public class PlaceholderWriterTest {
-    
-    @Test
-    public void dummyTest() throws IOException {
-        assertThat(new PlaceholderWriter().write(null)).isEqualTo(0);
+public class LibratoWriter implements OutputStreamBasedOutputWriter {
+    @Override
+    public int write(@Nonnull OutputStream out, @Nonnull QueryResult result) throws IOException {
+        return 1;
     }
 }

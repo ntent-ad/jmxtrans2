@@ -20,12 +20,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.utils.io;
+package org.jmxtrans.core.output.support;
 
-import java.nio.charset.Charset;
+import java.io.IOException;
+import java.io.OutputStream;
 
-public class Charsets {
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 
-    public static final Charset UTF_8 = Charset.forName("UTF-8");
-    public static final Charset US_ASCII = Charset.forName("US-ASCII");
+import org.jmxtrans.core.results.QueryResult;
+
+public interface OutputStreamBasedOutputWriter {
+    @CheckReturnValue
+    int write(@Nonnull OutputStream out, @Nonnull QueryResult result) throws IOException;
 }

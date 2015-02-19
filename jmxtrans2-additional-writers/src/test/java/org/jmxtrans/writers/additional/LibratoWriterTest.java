@@ -22,19 +22,5 @@
  */
 package org.jmxtrans.writers.additional;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
-import org.jmxtrans.core.output.OutputWriter;
-import org.jmxtrans.core.results.QueryResult;
-
-public class PlaceholderWriter implements OutputWriter {
-    // placeholder to make sure directory structure is created in git
-    // will be removed once we have an actual writer implementation
-    @Override
-    public int write(@Nonnull QueryResult result) throws IOException {
-        return 0;
-    }
-    
+public class LibratoWriterTest {
 }
