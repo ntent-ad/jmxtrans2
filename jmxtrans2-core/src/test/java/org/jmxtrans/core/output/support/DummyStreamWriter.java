@@ -40,8 +40,17 @@ public class DummyStreamWriter implements OutputStreamBasedOutputWriter {
     }
 
     @Override
+    public void beforeBatch(@Nonnull OutputStream out) throws IOException {
+    }
+
+    @Override
     public int write(@Nonnull OutputStream out, @Nonnull QueryResult result) throws IOException {
         out.write(message.getBytes(UTF_8));
         return 1;
+    }
+
+    @Override
+    public int afterBatch(@Nonnull OutputStream out) throws IOException {
+        return 0;
     }
 }

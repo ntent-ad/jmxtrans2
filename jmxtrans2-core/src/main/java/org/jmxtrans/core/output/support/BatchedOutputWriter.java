@@ -24,6 +24,7 @@ package org.jmxtrans.core.output.support;
 
 import java.io.IOException;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.jmxtrans.core.output.OutputWriter;
@@ -38,5 +39,5 @@ import org.jmxtrans.core.output.OutputWriter;
 public interface BatchedOutputWriter extends OutputWriter {
 
     void beforeBatch() throws IOException;
-    void afterBatch() throws IOException;
+    @CheckReturnValue int afterBatch() throws IOException;
 }

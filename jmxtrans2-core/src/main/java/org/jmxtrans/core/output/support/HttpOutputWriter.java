@@ -36,7 +36,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.jmxtrans.core.log.Logger;
-import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.appinfo.AppInfo;
 import org.jmxtrans.utils.io.NullOutputStream;
@@ -52,9 +51,11 @@ import static org.jmxtrans.core.log.LoggerFactory.getLogger;
 import static org.jmxtrans.utils.io.Charsets.US_ASCII;
 import static org.jmxtrans.utils.io.IoUtils.copy;
 
-public class HttpOutputWriter<T extends OutputStreamBasedOutputWriter> implements OutputWriter {
+public class HttpOutputWriter<T extends OutputStreamBasedOutputWriter> implements BatchedOutputWriter {
 
     @Nonnull private final Logger logger = getLogger(getClass().getName());
+    
+    @Nonnull private final ThreadLocal<HttpURLConnection> connection = new ThreadLocal<>();
 
     @Nonnull final private URL url;
     private final int timeoutInMillis;
@@ -82,18 +83,40 @@ public class HttpOutputWriter<T extends OutputStreamBasedOutputWriter> implement
     }
 
     @Override
+    public void beforeBatch() throws IOException {
+        HttpURLConnection urlConnection = openConnection();
+        configureConnection(urlConnection);
+        connection.set(urlConnection);
+        target.beforeBatch(getURLConnection().getOutputStream());
+    }
+
+    @Override
     public int write(@Nonnull QueryResult result) throws IOException {
-        HttpURLConnection urlConnection = null;
+        HttpURLConnection urlConnection = getURLConnection();
+        int count = target.write(urlConnection.getOutputStream(), result);
+        return count;
+    }
+
+    private HttpURLConnection getURLConnection() {
+        HttpURLConnection urlConnection = connection.get();
+        if (urlConnection == null) throw new IllegalStateException("Connection has not been initialized");
+        return urlConnection;
+    }
+
+    @Override
+    public int afterBatch() throws IOException {
+        HttpURLConnection urlConnection = getURLConnection();
         try {
-            urlConnection = openConnection();
-            configureConnection(urlConnection);
-            int count = target.write(urlConnection.getOutputStream(), result);
+            return target.afterBatch(urlConnection.getOutputStream());
+        } finally {
             if (urlConnection.getResponseCode() != HTTP_OK) {
                 throw new IOException("Error connecting to server, response code is not OK but " + urlConnection.getResponseCode());
             }
-            return count;
-        } finally {
-            disposeOfConnection(urlConnection);
+            try {
+                disposeOfConnection(connection.get());
+            } finally {
+                connection.remove();
+            }
         }
     }
 

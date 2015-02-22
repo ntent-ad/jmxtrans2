@@ -30,6 +30,7 @@ import org.jmxtrans.utils.mockito.MockitoTestNGListener;
 
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -39,6 +40,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Listeners(MockitoTestNGListener.class)
 public class BatchingOutputWriterTest {
@@ -46,6 +48,12 @@ public class BatchingOutputWriterTest {
     @Mock private BatchedOutputWriter targetOutputWriter;
     @Mock private QueryResult result;
 
+    @BeforeMethod
+    public void setupBatchedOutputWriter() throws IOException {
+        when(targetOutputWriter.write(any(QueryResult.class)))
+                .thenReturn(1);
+    }
+    
     @Test
     public void resultsAreNotWrittenWhenBatchSizeIsNotReached() throws IOException {
         int processedResultCount = 0;

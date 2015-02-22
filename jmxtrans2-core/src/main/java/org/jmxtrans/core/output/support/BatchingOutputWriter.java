@@ -79,21 +79,20 @@ public class BatchingOutputWriter<T extends BatchedOutputWriter> implements Outp
     }
 
     private int processBatch(@Nonnull List<QueryResult> batch) throws IOException {
+        int counter = 0;
         try {
-            int counter = 0;
             outputWriter.beforeBatch();
             sort(batch, batchOrder);
             for (QueryResult result : batch) {
                 try {
-                    outputWriter.write(result);
-                    counter++;
+                    counter += outputWriter.write(result);
                 } catch (IOException ioe) {
                     logger.warn(format("Error writing result [%s] to output writer [%s].", result, outputWriter), ioe);
                 }
             }
-            return counter;
         } finally {
-            outputWriter.afterBatch();
+            counter += outputWriter.afterBatch();
         }
+        return counter;
     }
 }

@@ -97,7 +97,10 @@ public class HttpOutputWriterTest {
                 .builder(new URL("http://localhost:" + wireMockServer.port()), appInfo, new DummyStreamWriter("hello world"))
                 .build();
 
+        outputWriter.beforeBatch();
         int count = outputWriter.write(result);
+        outputWriter.afterBatch();
+        
         assertThat(count).isEqualTo(1);
 
         verify(postRequestedFor(urlEqualTo("/"))
@@ -116,7 +119,10 @@ public class HttpOutputWriterTest {
                 .withContentType("text/plain")
                 .build();
 
+        outputWriter.beforeBatch();
         int count = outputWriter.write(result);
+        outputWriter.afterBatch();
+        
         assertThat(count).isEqualTo(1);
 
         verify(postRequestedFor(urlEqualTo("/"))
@@ -135,7 +141,10 @@ public class HttpOutputWriterTest {
                 .withAuthentication("username", "password")
                 .build();
 
+        outputWriter.beforeBatch();
         int count = outputWriter.write(result);
+        outputWriter.afterBatch();
+        
         assertThat(count).isEqualTo(1);
 
         verify(postRequestedFor(urlEqualTo("/"))
@@ -153,7 +162,10 @@ public class HttpOutputWriterTest {
                 .builder(new URL("http://localhost:" + wireMockServer.port()), appInfo, new DummyStreamWriter("hello world"))
                 .build();
 
+        outputWriter.beforeBatch();
         int count = outputWriter.write(result);
+        outputWriter.afterBatch();
+        
         assertThat(count).isEqualTo(1);
 
         verify(postRequestedFor(urlEqualTo("/"))
@@ -172,7 +184,9 @@ public class HttpOutputWriterTest {
                 .builder(new URL("http://localhost:" + wireMockServer.port()), appInfo, new DummyStreamWriter("hello world"))
                 .build();
 
+        outputWriter.beforeBatch();
         outputWriter.write(result);
+        outputWriter.afterBatch();
     }
 
     @Test(expectedExceptions = SocketTimeoutException.class)
@@ -187,7 +201,9 @@ public class HttpOutputWriterTest {
                 .withTimeout(10, MILLISECONDS)
                 .build();
 
+        outputWriter.beforeBatch();
         outputWriter.write(result);
+        outputWriter.afterBatch();
     }
     
     @AfterClass

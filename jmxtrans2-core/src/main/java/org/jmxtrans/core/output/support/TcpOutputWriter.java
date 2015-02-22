@@ -130,7 +130,8 @@ public class TcpOutputWriter<T extends WriterBasedOutputWriter> implements Batch
     }
 
     @Override
-    public void afterBatch() throws IOException {
+    public int afterBatch() throws IOException {
         releaseSocket();
+        return 0;
     }
 }

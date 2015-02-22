@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
 import org.jmxtrans.core.results.QueryResult;
 
 public interface OutputStreamBasedOutputWriter {
-    @CheckReturnValue
-    int write(@Nonnull OutputStream out, @Nonnull QueryResult result) throws IOException;
+    void beforeBatch(@Nonnull OutputStream out) throws IOException;
+    @CheckReturnValue int write(@Nonnull OutputStream out, @Nonnull QueryResult result) throws IOException;
+    @CheckReturnValue int afterBatch(@Nonnull OutputStream out) throws IOException;
 }
