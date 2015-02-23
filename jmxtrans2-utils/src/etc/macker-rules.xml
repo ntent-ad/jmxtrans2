@@ -51,6 +51,8 @@
                         <include class="org.jmxtrans.utils.time.SystemClock"/>
                         <include class="org.jmxtrans.utils.time.NanoChronometer"/>
                         <include class="org.jmxtrans.utils.PropertyPlaceholderResolver"/>
+                        <!-- AppInfo exposes system information -->
+                        <include class="org.jmxtrans.utils.appinfo.AppInfo"/>
                     </from>
                 </allow>
             </deny>

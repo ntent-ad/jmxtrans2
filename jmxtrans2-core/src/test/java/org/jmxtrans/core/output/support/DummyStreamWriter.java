@@ -20,18 +20,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.writers.additional;
+package org.jmxtrans.core.output.support;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
-import org.testng.annotations.Test;
+import javax.annotation.Nonnull;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.jmxtrans.core.results.QueryResult;
 
-public class PlaceholderWriterTest {
-    
-    @Test
-    public void dummyTest() throws IOException {
-        assertThat(new PlaceholderWriter().write(null)).isEqualTo(0);
+import static org.jmxtrans.utils.io.Charsets.UTF_8;
+
+public class DummyStreamWriter implements OutputStreamBasedOutputWriter {
+
+    private final String message;
+
+    public DummyStreamWriter(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public void beforeBatch(@Nonnull OutputStream out) throws IOException {
+    }
+
+    @Override
+    public int write(@Nonnull OutputStream out, @Nonnull QueryResult result) throws IOException {
+        out.write(message.getBytes(UTF_8));
+        return 1;
+    }
+
+    @Override
+    public int afterBatch(@Nonnull OutputStream out) throws IOException {
+        return 0;
     }
 }

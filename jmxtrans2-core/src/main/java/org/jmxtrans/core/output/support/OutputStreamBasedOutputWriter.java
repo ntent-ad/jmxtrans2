@@ -20,21 +20,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.jmxtrans.writers.additional;
+package org.jmxtrans.core.output.support;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
+import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
-import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.results.QueryResult;
 
-public class PlaceholderWriter implements OutputWriter {
-    // placeholder to make sure directory structure is created in git
-    // will be removed once we have an actual writer implementation
-    @Override
-    public int write(@Nonnull QueryResult result) throws IOException {
-        return 0;
-    }
-    
+public interface OutputStreamBasedOutputWriter {
+    void beforeBatch(@Nonnull OutputStream out) throws IOException;
+    @CheckReturnValue int write(@Nonnull OutputStream out, @Nonnull QueryResult result) throws IOException;
+    @CheckReturnValue int afterBatch(@Nonnull OutputStream out) throws IOException;
 }

@@ -144,6 +144,16 @@
                 <version>1.47</version>
             </dependency>
             <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.5.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock</artifactId>
+                <version>1.53</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>annotations</artifactId>
                 <version>3.0.0</version>
@@ -350,13 +360,6 @@
                         </sourceFiles>
                         <outputDirectory>${project.build.directory}/site/images</outputDirectory>
                     </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>net.sourceforge.plantuml</groupId>
-                            <artifactId>plantuml</artifactId>
-                            <version>8018</version>
-                        </dependency>
-                    </dependencies>
                     <executions>
                         <execution>
                             <goals>

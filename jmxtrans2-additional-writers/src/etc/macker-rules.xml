@@ -35,11 +35,6 @@
                     <include class="java.util.logging.**"/>
                     <include class="org.slf4j.**"/>
                 </to>
-                <allow>
-                    <from>
-                        <include class="org.jmxtrans.core.log.**"/>
-                    </from>
-                </allow>
             </deny>
         </access-rule>
         <access-rule>
@@ -65,12 +60,13 @@
         <access-rule>
             <message>Output should only depend on QueryResults</message>
             <deny>
-                <from class="org.jmxtrans.writers.**"/>
+                <from class="org.jmxtrans.writers.additional.**"/>
                 <to>
                     <include class="org.jmxtrans.**"/>
                 </to>
                 <allow>
                     <to>
+                        <include class="org.jmxtrans.writers.additional.**"/>
                         <include class="org.jmxtrans.core.output.**"/>
                         <include class="org.jmxtrans.core.results.**"/>
                         <!-- common packages always allowed -->
