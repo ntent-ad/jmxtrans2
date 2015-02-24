@@ -53,6 +53,14 @@ public class MBeanRegistryTest {
 
         assertThat(getPlatformMBeanServer().isRegistered(counter.getObjectName())).isTrue();
     }
+    
+    @Test
+    public void beanIsReturnedAfterRegistration() throws MalformedObjectNameException {
+        Counter counter = new Counter();
+        Counter registeredBean = registry.register(counter);
+
+        assertThat(registeredBean == counter).isTrue();
+    }
 
     @Test
     public void mBeanIsUnregistered() throws MalformedObjectNameException, InstanceNotFoundException, InstanceAlreadyExistsException, MBeanRegistrationException {

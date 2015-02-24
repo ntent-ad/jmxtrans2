@@ -53,7 +53,7 @@ public class MBeanRegistry implements LifecycleAware {
         this.mBeanServer = mBeanServer;
     }
 
-    public <T extends SelfNamedMBean> SelfNamedMBean register(T mBean) throws MalformedObjectNameException {
+    public <T extends SelfNamedMBean> T register(T mBean) throws MalformedObjectNameException {
         register(mBean.getObjectName(), mBean);
         return mBean;
     }
