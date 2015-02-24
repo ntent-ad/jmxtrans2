@@ -56,6 +56,7 @@ import org.jmxtrans.core.config.jaxb.QueryType;
 import org.jmxtrans.core.config.jaxb.ServerType;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.monitoring.ObjectNameFactory;
 import org.jmxtrans.core.output.MetricCollectingOutputWriter;
 import org.jmxtrans.core.output.OutputWriter;
 import org.jmxtrans.core.output.OutputWriterFactory;
@@ -88,20 +89,23 @@ public class XmlConfigParser implements ConfigParser {
     public static final int MAX_FAILURES = 5;
     public static final int DISABLE_DURATION_MILLIS = 60 * 1000;
 
-    private final Clock clock;
-    private final PropertyPlaceholderResolverXmlPreprocessor preprocessor;
-    private final DocumentBuilder documentBuilder;
-    private final Unmarshaller unmarshaller;
+    @Nonnull private final Clock clock;
+    @Nonnull private final PropertyPlaceholderResolverXmlPreprocessor preprocessor;
+    @Nonnull private final DocumentBuilder documentBuilder;
+    @Nonnull private final Unmarshaller unmarshaller;
+    @Nonnull private final ObjectNameFactory outputObjectNameFactory;
 
     private XmlConfigParser(
             @Nonnull DocumentBuilder documentBuilder,
             @Nonnull Unmarshaller unmarshaller,
             @Nonnull PropertyPlaceholderResolverXmlPreprocessor preprocessor,
-            @Nonnull Clock clock) {
+            @Nonnull Clock clock,
+            @Nonnull ObjectNameFactory outputObjectNameFactory) {
         this.documentBuilder = documentBuilder;
         this.unmarshaller = unmarshaller;
         this.preprocessor = preprocessor;
         this.clock = clock;
+        this.outputObjectNameFactory = outputObjectNameFactory;
     }
 
     @Override
@@ -234,7 +238,7 @@ public class XmlConfigParser implements ConfigParser {
     }
 
     private OutputWriter wrapInMetricCollectingOutputWriter(OutputWriter outputWriter) throws MalformedObjectNameException {
-        ObjectName objectName = new ObjectName("org.jmxtrans.output", "name", outputWriter.toString());
+        ObjectName objectName = outputObjectNameFactory.create(outputWriter.toString());
         return new MetricCollectingOutputWriter(clock, outputWriter, objectName);
     }
 
@@ -250,7 +254,8 @@ public class XmlConfigParser implements ConfigParser {
     @Nonnull
     public static XmlConfigParser newInstance(
             @Nonnull PropertyPlaceholderResolverXmlPreprocessor preprocessor,
-            @Nonnull Clock clock) throws JAXBException, ParserConfigurationException, SAXException, IOException {
+            @Nonnull Clock clock,
+            @Nonnull ObjectNameFactory outputObjectNameFactory) throws JAXBException, ParserConfigurationException, SAXException, IOException {
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
@@ -264,8 +269,8 @@ public class XmlConfigParser implements ConfigParser {
                 dbf.newDocumentBuilder(),
                 unmarshaller,
                 preprocessor,
-                clock
-        );
+                clock,
+                outputObjectNameFactory);
     }
 
     @Nonnull

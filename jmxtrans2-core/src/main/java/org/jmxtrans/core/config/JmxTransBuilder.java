@@ -37,7 +37,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -45,6 +44,7 @@ import org.jmxtrans.core.lifecycle.LifecycleAware;
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.monitoring.MBeanRegistry;
+import org.jmxtrans.core.monitoring.ObjectNameFactory;
 import org.jmxtrans.core.monitoring.SelfNamedMBean;
 import org.jmxtrans.core.query.ResultNameStrategy;
 import org.jmxtrans.core.query.Server;
@@ -71,6 +71,8 @@ public class JmxTransBuilder {
     private final boolean ignoreParsingErrors;
     @Nonnull private final Iterable<Resource> configResources;
     private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+    @Nonnull private final ObjectNameFactory executorObjectNameFactory = new ObjectNameFactory("executor");
+    @Nonnull private final ObjectNameFactory outputObjectNameFactory = new ObjectNameFactory("outputWriter");
 
     public JmxTransBuilder(
             boolean ignoreParsingErrors,
@@ -174,7 +176,8 @@ public class JmxTransBuilder {
     private Iterable<ConfigParser> getConfigParsers(Clock clock) throws JAXBException, ParserConfigurationException, SAXException, IOException {
         ConfigParser configParser = XmlConfigParser.newInstance(
                 new PropertyPlaceholderResolverXmlPreprocessor(new PropertyPlaceholderResolver()),
-                clock);
+                clock,
+                outputObjectNameFactory);
         return singleton(configParser);
     }
 
@@ -184,7 +187,7 @@ public class JmxTransBuilder {
             @Nonnull MBeanRegistry mBeanRegistry) throws MalformedObjectNameException {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1, new JmxTransThreadFactory(componentName), new AbortPolicy());
         mBeanRegistry.register(
-                new ObjectName("org.jmxtrans.executors:type=ExecutorMetrics,name=" + componentName),
+                executorObjectNameFactory.create(componentName),
                 new ThreadPoolExecutorMetrics(executor));
         return executor;
     }
@@ -204,7 +207,7 @@ public class JmxTransBuilder {
                 new JmxTransThreadFactory(componentName),
                 new AbortPolicy());
         mBeanRegistry.register(
-                new ObjectName("org.jmxtrans.executors:type=ExecutorMetrics,name=" + componentName),
+                executorObjectNameFactory.create(componentName),
                 new ThreadPoolExecutorMetrics(executor));
         return executor;
     }

@@ -30,6 +30,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.jmxtrans.core.monitoring.ObjectNameFactory;
 import org.jmxtrans.core.query.Invocation;
 import org.jmxtrans.core.query.Query;
 import org.jmxtrans.core.query.Server;
@@ -55,7 +56,8 @@ public class XmlConfigParserTest {
     public void createConfigurationParser() throws JAXBException, ParserConfigurationException, IOException, SAXException {
         parser = XmlConfigParser.newInstance(
                 new PropertyPlaceholderResolverXmlPreprocessor(new PropertyPlaceholderResolver()),
-                new SystemClock());
+                new SystemClock(),
+                new ObjectNameFactory("outputWriter"));
     }
 
     @Test(expectedExceptions = UnmarshalException.class)
