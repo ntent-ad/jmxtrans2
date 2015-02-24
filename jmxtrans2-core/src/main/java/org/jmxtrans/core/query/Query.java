@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,6 +41,7 @@ import javax.management.ObjectName;
 
 import org.jmxtrans.core.log.Logger;
 import org.jmxtrans.core.log.LoggerFactory;
+import org.jmxtrans.core.monitoring.ObjectNameFactory;
 import org.jmxtrans.core.monitoring.SelfNamedMBean;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
@@ -207,7 +207,7 @@ public class Query implements QueryMBean, SelfNamedMBean {
     }
 
     public static final class Builder {
-        @Nonnull private static final AtomicInteger queryIdSequence = new AtomicInteger();
+        @Nonnull private static final ObjectNameFactory objectNameFactory = new ObjectNameFactory("query");
 
         @Nullable private ObjectName objectName;
         @Nullable private String resultAlias;
@@ -269,7 +269,7 @@ public class Query implements QueryMBean, SelfNamedMBean {
                         objectName,
                         resultAlias,
                         attributes,
-                        new ObjectName("org.jmxtrans.query:Type=Query,id=" + queryIdSequence.incrementAndGet()),
+                        objectNameFactory.create(objectName.toString()),
                         maxResults,
                         new QueryMetrics(clock)
                 );
