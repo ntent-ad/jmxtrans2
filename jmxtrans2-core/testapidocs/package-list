@@ -1,0 +1,11 @@
+org.jmxtrans.core.circuitbreaker
+org.jmxtrans.core.config
+org.jmxtrans.core.log
+org.jmxtrans.core.monitoring
+org.jmxtrans.core.output
+org.jmxtrans.core.output.support
+org.jmxtrans.core.output.writers
+org.jmxtrans.core.query
+org.jmxtrans.core.results
+org.jmxtrans.core.scheduler
+org.jmxtrans.core.template
