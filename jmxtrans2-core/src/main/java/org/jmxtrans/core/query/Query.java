@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -48,10 +47,11 @@ import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.NanoChronometer;
 import org.jmxtrans.utils.time.SystemClock;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import static java.lang.String.format;
-import static java.util.Objects.hash;
 
 /**
  * Describe a JMX query on which metrics are collected.
@@ -59,6 +59,8 @@ import static java.util.Objects.hash;
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  * @author Jon Stevens
  */
+@EqualsAndHashCode(of = {"objectName", "attributesByName", "resultAlias"}, doNotUseGetters = true)
+@ToString(of = {"objectName", "attributesByName", "resultAlias"}, doNotUseGetters = true)
 public class Query implements QueryMBean, SelfNamedMBean {
 
     @Nonnull
@@ -145,33 +147,6 @@ public class Query implements QueryMBean, SelfNamedMBean {
     @Nonnull
     public Collection<QueryAttribute> getQueryAttributes() {
         return attributesByName.values();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Query that = (Query) o;
-
-        return Objects.equals(attributesByName, that.attributesByName)
-                && Objects.equals(objectName, that.objectName)
-                && Objects.equals(resultAlias, that.resultAlias);
-    }
-
-    @Override
-    public int hashCode() {
-        return hash(objectName, resultAlias, attributesByName);
-    }
-
-    @Override
-    @Nonnull
-    public String toString() {
-        return "Query{" +
-                "objectName=" + objectName +
-                ", resultAlias='" + resultAlias + '\'' +
-                ", attributes=" + attributesByName.values() +
-                '}';
     }
 
     @Override

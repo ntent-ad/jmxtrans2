@@ -22,11 +22,9 @@
  */
 package org.jmxtrans.core.query;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -41,10 +39,11 @@ import org.jmxtrans.utils.Preconditions2;
 import org.jmxtrans.utils.time.Clock;
 import org.jmxtrans.utils.time.SystemClock;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import static java.lang.String.format;
-import static java.util.Objects.hash;
 
 /**
  * Describe a JMX MBean attribute to collect and hold the attribute collection logic.
@@ -56,6 +55,8 @@ import static java.util.Objects.hash;
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  * @author Jon Stevens
  */
+@EqualsAndHashCode(exclude = {"logger", "clock"})
+@ToString(exclude = {"logger", "clock"})
 public class QueryAttribute {
 
     @Nonnull
@@ -181,34 +182,6 @@ public class QueryAttribute {
                 logger.debug(format("Skip non supported value %s:%s:%s:%s=%s", query, objectName, this, key, compositeValue));
             }
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        QueryAttribute that = (QueryAttribute) o;
-
-        return Objects.equals(keys, that.keys)
-                && Objects.equals(name, that.name)
-                && Objects.equals(resultAlias, that.resultAlias)
-                && Objects.equals(type, that.type);
-    }
-
-    @Override
-    public int hashCode() {
-        return hash(name, resultAlias, type, keys);
-    }
-
-    @Override
-    @Nonnull
-    public String toString() {
-        return "QueryAttribute{" +
-                "name='" + getName() + '\'' +
-                ", resultAlias='" + getResultAlias() + '\'' +
-                ", keys=" + (keys == null ? null : Arrays.asList(keys)) +
-                '}';
     }
 
     @Nonnull

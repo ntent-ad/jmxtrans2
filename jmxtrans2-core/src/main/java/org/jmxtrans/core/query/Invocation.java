@@ -23,15 +23,12 @@
 package org.jmxtrans.core.query;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
 import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
 import org.jmxtrans.core.log.Logger;
@@ -39,42 +36,33 @@ import org.jmxtrans.core.log.LoggerFactory;
 import org.jmxtrans.core.results.QueryResult;
 import org.jmxtrans.utils.time.Clock;
 
-import static java.util.Objects.hash;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * @author <a href="mailto:cleclerc@cloudbees.com">Cyrille Le Clerc</a>
  */
-@Immutable
 @ThreadSafe
+@EqualsAndHashCode(exclude = {"logger", "clock"})
+@ToString(exclude = {"logger", "clock"})
 public class Invocation {
 
-    @Nonnull
-    private final Logger logger = LoggerFactory.getLogger(getClass().getName());
-    @Nonnull
-    public final ObjectName objectName;
-    @Nonnull
-    public final String operationName;
-    @Nonnull
-    public final String resultAlias;
-    @Nonnull
-    private final Object[] params;
-    @Nonnull
-    private final String[] signature;
-    @Nonnull
-    private final Clock clock;
+    @Nonnull private final Logger logger = LoggerFactory.getLogger(getClass().getName());
+    @Nonnull private final ObjectName objectName;
+    @Nonnull private final String operationName;
+    @Nonnull private final String resultAlias;
+    @Nonnull private final Object[] params;
+    @Nonnull private final String[] signature;
+    @Nonnull private final Clock clock;
 
     public Invocation(
-            @Nonnull String objectName,
+            @Nonnull ObjectName objectName,
             @Nonnull String operationName,
             @Nonnull Object[] params,
             @Nonnull String[] signature,
             @Nonnull String resultAlias,
             @Nonnull Clock clock) {
-        try {
-            this.objectName = new ObjectName(objectName);
-        } catch (MalformedObjectNameException e) {
-            throw new IllegalArgumentException("Invalid objectName '" + objectName + "'", e);
-        }
+        this.objectName = objectName;
         this.operationName = operationName;
         this.params = params.clone();
         this.signature = signature.clone();
@@ -92,35 +80,5 @@ public class Invocation {
                 logger.warn("Exception invoking " + on + "#" + operationName + "(" + Arrays.toString(params) + ")", e);
             }
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Invocation that = (Invocation) o;
-        return Objects.equals(objectName, that.objectName)
-                && Objects.equals(operationName, that.operationName)
-                && Objects.deepEquals(params, that.params)
-                && Objects.deepEquals(signature, that.signature)
-                && Objects.equals(resultAlias, that.resultAlias);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return hash(objectName, operationName, params, signature, resultAlias);
-    }
-
-    @Override
-    public String toString() {
-        return "Invocation{" +
-                "objectName=" + objectName +
-                ", operationName='" + operationName + '\'' +
-                ", resultAlias='" + resultAlias + '\'' +
-                ", params=" + Arrays.toString(params) +
-                ", signature=" + Arrays.toString(signature) +
-                '}';
     }
 }

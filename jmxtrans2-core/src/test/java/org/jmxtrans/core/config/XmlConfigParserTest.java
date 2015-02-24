@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.UnmarshalException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -115,11 +116,11 @@ public class XmlConfigParserTest {
         Iterator<Invocation> invocationIterator = configuration.getInvocations().iterator();
 
         Invocation gc = invocationIterator.next();
-        assertThat(gc).isEqualTo(new Invocation("java.lang:type=Memory", "gc", new Object[0], new String[0], "jvm.gc", new SystemClock()));
+        assertThat(gc).isEqualTo(new Invocation(new ObjectName("java.lang:type=Memory"), "gc", new Object[0], new String[0], "jvm.gc", new SystemClock()));
 
         Invocation threadCpuTime = invocationIterator.next();
         assertThat(threadCpuTime).isEqualTo(new Invocation(
-                "java.lang:type=Threading",
+                new ObjectName("java.lang:type=Threading"),
                 "getThreadCpuTime",
                 new Object[] { "1" },
                 new String[] { "long" },
