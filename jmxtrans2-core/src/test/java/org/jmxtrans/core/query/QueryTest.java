@@ -125,6 +125,13 @@ public class QueryTest {
         assertThat(results).hasSize(2);
     }
 
+    @Test(
+            expectedExceptions = RuntimeException.class,
+            expectedExceptionsMessageRegExp = "Object name \\[invalid object name\\] is not valid.*")
+    public void cannotBuildQueryWithInvalidObjectName() {
+        Query.builder().withObjectName("invalid object name");
+    }
+    
     @Test
     public void queryWithSameNameAreEquals() {
         Query query1 = Query.builder()
@@ -135,5 +142,6 @@ public class QueryTest {
                 .build();
 
         assertThat(query1).isEqualTo(query2);
+        query1.equals("");
     }
 }

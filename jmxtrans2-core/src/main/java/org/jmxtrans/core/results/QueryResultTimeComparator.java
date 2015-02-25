@@ -25,8 +25,13 @@ package org.jmxtrans.core.results;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
+
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+@Immutable
+@ThreadSafe
 public class QueryResultTimeComparator implements Comparator<QueryResult>, Serializable {
 
     private static final long serialVersionUID = 0L;

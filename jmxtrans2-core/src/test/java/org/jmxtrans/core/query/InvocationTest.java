@@ -22,6 +22,9 @@
  */
 package org.jmxtrans.core.query;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 import org.jmxtrans.utils.time.SystemClock;
 
 import org.testng.annotations.Test;
@@ -31,15 +34,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class InvocationTest {
 
     @Test
-    public void sameInvocationsAreEquals() {
+    public void sameInvocationsAreEquals() throws MalformedObjectNameException {
         Invocation firstInvocation = new Invocation(
-                "java.lang:type=Memory",
+                new ObjectName("java.lang:type=Memory"),
                 "getThreadCpuTime",
                 new Object[] { 1 },
                 new String[] {},
                 "jvm.thread.cpu", new SystemClock());
         Invocation secondInvocation = new Invocation(
-                "java.lang:type=Memory",
+                new ObjectName("java.lang:type=Memory"),
                 "getThreadCpuTime",
                 new Object[] { 1 },
                 new String[] {},

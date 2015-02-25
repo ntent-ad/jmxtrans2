@@ -22,8 +22,6 @@
  */
 package org.jmxtrans.core.results;
 
-import java.sql.Timestamp;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
@@ -33,9 +31,10 @@ import javax.annotation.concurrent.ThreadSafe;
 
 import org.jmxtrans.utils.Preconditions2;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
-import static java.util.Objects.hash;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
@@ -43,9 +42,10 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  */
 @Immutable
 @ThreadSafe
+@EqualsAndHashCode
+@ToString
 public class QueryResult {
-    @Nonnull @Getter
-    private final String name;
+    @Nonnull @Getter private final String name;
     private final long epochInMillis;
     @Nullable @Getter private final Object value;
     @Nullable @Getter private final String type;
@@ -76,30 +76,4 @@ public class QueryResult {
         return timeUnit.convert(epochInMillis, MILLISECONDS);
     }
 
-    @Override
-    public String toString() {
-        return "QueryResult{" +
-                "name='" + name + '\'' +
-                ", epoch=" + new Timestamp(epochInMillis) +
-                ", value=" + value +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null) return false;
-
-        if (getClass() != o.getClass()) return false;
-
-        QueryResult that = (QueryResult) o;
-        return Objects.equals(name, that.name)
-                && Objects.equals(epochInMillis, that.epochInMillis)
-                && Objects.equals(value, that.value)
-                && Objects.equals(type, that.type);
-    }
-
-    @Override
-    public int hashCode() {
-        return hash(name, epochInMillis, value, type);
-    }
 }

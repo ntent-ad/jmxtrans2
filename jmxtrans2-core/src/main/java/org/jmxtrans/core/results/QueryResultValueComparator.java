@@ -25,8 +25,13 @@ package org.jmxtrans.core.results;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
+
 import static java.lang.String.format;
 
+@Immutable
+@ThreadSafe
 public class QueryResultValueComparator implements Comparator<QueryResult>, Serializable {
 
     private static final long serialVersionUID = 0L;

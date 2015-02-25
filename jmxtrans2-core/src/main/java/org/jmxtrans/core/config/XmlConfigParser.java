@@ -192,7 +192,7 @@ public class XmlConfigParser implements ConfigParser {
         return result;
     }
 
-    private void parse(@Nonnull Jmxtrans.Invocations invocations, @Nonnull ModifiableConfiguration configuration) {
+    private void parse(@Nonnull Jmxtrans.Invocations invocations, @Nonnull ModifiableConfiguration configuration) throws MalformedObjectNameException {
         for (InvocationType invocation : invocations.getInvocation()) {
             List<String> params = new ArrayList<>();
             List<String> signature = new ArrayList<>();
@@ -200,9 +200,10 @@ public class XmlConfigParser implements ConfigParser {
                 params.add(parameter.getValue());
                 signature.add(parameter.getType());
             }
+
             configuration.getInvocations().add(
                     new Invocation(
-                            invocation.getObjectName(),
+                            new ObjectName(invocation.getObjectName()),
                             invocation.getOperationName(),
                             params.toArray(),
                             signature.toArray(new String[0]),
