@@ -133,18 +133,26 @@
 <a class="jxr_linenumber" name="L125" href="#L125">125</a>         assertThat(results).hasSize(2);
 <a class="jxr_linenumber" name="L126" href="#L126">126</a>     }
 <a class="jxr_linenumber" name="L127" href="#L127">127</a> 
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     @Test
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> queryWithSameNameAreEquals() {
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>         Query query1 = Query.builder()
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>                 .withObjectName(<span class="jxr_string">"test:type=MemoryPool,name=PS Perm Gen"</span>)
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>                 .build();
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>         Query query2 = Query.builder()
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>                 .withObjectName(<span class="jxr_string">"test:type=MemoryPool,name=PS Perm Gen"</span>)
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>                 .build();
-<a class="jxr_linenumber" name="L136" href="#L136">136</a> 
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>         assertThat(query1).isEqualTo(query2);
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>     }
-<a class="jxr_linenumber" name="L139" href="#L139">139</a> }
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>     @Test(
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>             expectedExceptions = RuntimeException.<strong class="jxr_keyword">class</strong>,
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>             expectedExceptionsMessageRegExp = <span class="jxr_string">"Object name &#92;&#92;[invalid object name&#92;&#92;] is not valid.*"</span>)
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> cannotBuildQueryWithInvalidObjectName() {
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>         Query.builder().withObjectName(<span class="jxr_string">"invalid object name"</span>);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     }
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     @Test
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> queryWithSameNameAreEquals() {
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>         Query query1 = Query.builder()
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>                 .withObjectName(<span class="jxr_string">"test:type=MemoryPool,name=PS Perm Gen"</span>)
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>                 .build();
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>         Query query2 = Query.builder()
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>                 .withObjectName(<span class="jxr_string">"test:type=MemoryPool,name=PS Perm Gen"</span>)
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>                 .build();
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>         assertThat(query1).isEqualTo(query2);
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         query1.equals(<span class="jxr_string">""</span>);
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     }
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2014&#x2013;2015 <a href="http://jmxtrans.org">JMXTrans Team</a>. All rights reserved.</div>
