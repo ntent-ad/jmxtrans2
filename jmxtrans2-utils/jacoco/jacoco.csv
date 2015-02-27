@@ -1,8 +1,8 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 JMXTrans - utils,org.jmxtrans.utils,Preconditions2,20,28,5,5,8,9,5,5,2,3
 JMXTrans - utils,org.jmxtrans.utils,ConfigurationUtils,3,146,0,10,2,26,1,11,1,6
-JMXTrans - utils,org.jmxtrans.utils,PropertyPlaceholderResolver,34,123,7,13,6,30,7,6,0,3
 JMXTrans - utils,org.jmxtrans.utils,StringUtils2,8,168,3,31,4,40,5,18,2,4
+JMXTrans - utils,org.jmxtrans.utils,PropertyPlaceholderResolver,34,123,7,13,6,30,7,6,0,3
 JMXTrans - utils,org.jmxtrans.utils.appinfo,AppInfo,30,190,6,2,0,27,4,8,0,8
 JMXTrans - utils,org.jmxtrans.utils.appinfo,GitRepositoryState,36,141,6,2,2,31,6,13,2,13
 JMXTrans - utils,org.jmxtrans.utils.concurrent,DiscardingBlockingQueue,26,60,1,5,5,19,4,9,3,7
