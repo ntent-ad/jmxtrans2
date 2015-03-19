@@ -137,10 +137,25 @@ public class ResultNameStrategy {
         StringBuilder result = new StringBuilder();
         stringEscape.escape(objectName.getDomain(), result);
         result.append('.');
+
         List<String> keys = list(objectName.getKeyPropertyList().keys());
         sort(keys);
+
+        // Treat "type" and "name" attributes in special way:
+        // do not write key, only values. This will result in metric like "java.lang.Memory" instead of "java.lang.type__Memory"
+        String type = objectName.getKeyProperty("type");
+        String name = objectName.getKeyProperty("name");
+        if(type != null && type.length() > 0)
+            result.append(type);
+        if(name != null && name.length()> 0)
+            result.append(name);
+
         for (Iterator<String> it = keys.iterator(); it.hasNext(); ) {
             String key = it.next();
+            if(key.equalsIgnoreCase("type") || key.equalsIgnoreCase("name"))
+                continue;
+
+            result.append('.');
             stringEscape.escape(key, result);
             result.append("__");
             stringEscape.escape(objectName.getKeyProperty(key), result);
