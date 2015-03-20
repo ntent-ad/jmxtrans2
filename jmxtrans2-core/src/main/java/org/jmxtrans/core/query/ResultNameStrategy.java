@@ -136,7 +136,6 @@ public class ResultNameStrategy {
     private String escapeObjectName(@Nonnull ObjectName objectName) {
         StringBuilder result = new StringBuilder();
         stringEscape.escape(objectName.getDomain(), result);
-        result.append('.');
 
         List<String> keys = list(objectName.getKeyPropertyList().keys());
         sort(keys);
@@ -145,10 +144,14 @@ public class ResultNameStrategy {
         // do not write key, only values. This will result in metric like "java.lang.Memory" instead of "java.lang.type__Memory"
         String type = objectName.getKeyProperty("type");
         String name = objectName.getKeyProperty("name");
-        if(type != null && type.length() > 0)
+        if(type != null && type.length() > 0) {
+            result.append('.');
             result.append(type);
-        if(name != null && name.length()> 0)
+        }
+        if(name != null && name.length()> 0) {
+            result.append('.');
             result.append(name);
+        }
 
         for (Iterator<String> it = keys.iterator(); it.hasNext(); ) {
             String key = it.next();
@@ -159,9 +162,6 @@ public class ResultNameStrategy {
             stringEscape.escape(key, result);
             result.append("__");
             stringEscape.escape(objectName.getKeyProperty(key), result);
-            if (it.hasNext()) {
-                result.append('.');
-            }
         }
         logger.debug(format("escapeObjectName(%s): %s", objectName, result));
         return result.toString();

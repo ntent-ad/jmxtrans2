@@ -48,4 +48,14 @@ public class ResultNameStrategyTest {
         assertThat(resultNameStrategy.getResultName(query, objectName, QueryAttribute.builder("Count").build()))
                 .isEqualTo("java.nio.BufferPool.direct.other__value.Count");
     }
+
+    @Test
+    public void typeButNoNameAttribute() throws MalformedObjectNameException {
+        Hashtable<String, String> properties = new Hashtable<>();
+        properties.put("type", "Memory");
+        ObjectName objectName = new ObjectName("java.lang", properties);
+
+        assertThat(resultNameStrategy.getResultName(query, objectName, QueryAttribute.builder("ObjectPendingFinalizationCount").build()))
+                .isEqualTo("java.lang.Memory.ObjectPendingFinalizationCount");
+    }
 }
